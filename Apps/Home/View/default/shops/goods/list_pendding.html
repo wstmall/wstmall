@@ -1,0 +1,125 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+<style type="text/css">
+#preview{border:1px solid #cccccc; background:#CCC;color:#fff; padding:5px; display:none; position:absolute;}
+</style>
+<script>
+	$(document).ready(function(){
+		$('.imgPreview').imagePreview();
+		<notempty name='shopCatId1'>
+		getShopCatListForGoods('{$shopCatId1}','{$shopCatId2}');
+		</notempty>
+	});
+</script>
+       <div class="wst-body"> 
+       <div class='wst-page-header'>卖家中心 > 待审核商品</div>
+       <div class='wst-page-content'>
+        <div class='wst-tbar-query'>
+        门店分类：<select id='shopCatId1' onchange='javascript:getShopCatListForGoods(this.value,"{$object['shopCatId2']}")'>
+	         <option value='0'>请选择</option>
+	         <volist name="shopCatsList" id="vo">
+	         <option value='{$vo['catId']}' <if condition="$shopCatId1 == $vo['catId'] ">selected</if>>{$vo['catName']}</option>
+	         </volist>
+	     </select>
+	     <select id='shopCatId2'>
+	         <option value='0'>请选择</option>
+	     </select>
+        商品：<input type='text' id='goodsName' value='{$goodsName}'/>
+      <button class='wst-btn-query' onclick='javascript:queryPendding()'>查询</button>
+        </div>
+        <div class='wst-tbar-group'>
+           <a href='javascript:batchDel()'><span  class='del btn'></span>删除</a>
+           <a href='javascript:sale(0)'><span class='unSale btn'></span>下架</a>
+           <a href='javascript:goodsSet("isRecomm","queryUnSaleByPage")'><span class='recomm btn'></span>推荐</a>
+           <a href='javascript:goodsSet("isBest","queryUnSaleByPage")'><span class='hot btn'></span>精品</a>
+           <a href='javascript:goodsSet("isNew","queryUnSaleByPage")'><span class='new btn'></span>新品</a>
+           <a href='javascript:goodsSet("isHot","queryUnSaleByPage")'><span class='hot btn'></span>热销</a>
+        </div>
+        <table class='wst-list'>
+           <thead>
+             <tr>
+               <th width='40'><input type='checkbox' onclick='javascript:checkAll(this)'/></th>
+               <th>商品名称</th>
+               <th>商品编号</th>
+               <th>价格</th>
+               <th>推荐</th>
+               <th>精品</th>
+               <th>新品</th>
+               <th>热销</th>
+               <th>上架</th>
+               <th>库存</th>
+               <th width='150'>操作</th>
+             </tr>
+           </thead>
+           <tbody>
+            <volist name="Page['root']" id="vo" key='i'>
+             <tr>
+               <td><input class='chk' type='checkbox' value='{$vo['goodsId']}'/></td>
+               <td img='{$vo['goodsThums']}' class='imgPreview'>
+               <img src="__ROOT__/{$vo['goodsThums']}" height="50" width="50"/>
+               {$vo['goodsName']}
+               </td>
+               <td>{$vo['goodsSn']}</td>
+               <td>{$vo['shopPrice']}</td>
+               <td>
+               <if condition="$vo['isRecomm'] == 1 ">
+               <span class='wst-state_yes'></span>
+               <else/>
+               <span class='wst-state_no'></span>
+               </if>
+               </td>
+               <td>
+               <if condition="$vo['isBest'] == 1 ">
+               <span class='wst-state_yes'></span>
+               <else/>
+               <span class='wst-state_no'></span>
+               </if>
+               </td>
+               <td>
+               <if condition="$vo['isNew'] == 1 ">
+               <span class='wst-state_yes'></span>
+               <else/>
+               <span class='wst-state_no'></span>
+               </if>
+               </td>
+               <td>
+               <if condition="$vo['isHot'] == 1 ">
+               <span class='wst-state_yes'></span>
+               <else/>
+               <span class='wst-state_no'></span>
+               </if>
+               </td>
+               <td>
+               <if condition="$vo['isSale'] == 1 ">
+               <span class='wst-state_yes'></span>
+               <else/>
+               <span class='wst-state_no'></span>
+               </if>
+               </td>
+               <td>{$vo['goodsStock']}</td>
+               <td>
+               <a href="javascript:toViewGoods({$vo['goodsId']})" class='btn view'></a>
+               <a href="javascript:toEditGoods({$vo['goodsId']},'queryPenddingByPage')" class='btn edit'></a>
+               <a href="javascript:delGoods({$vo['goodsId']})" class='btn del'></a>
+               &nbsp;
+               </td>
+             </tr>
+             </volist>
+             <tfoot>
+             <tr>
+                <td colspan='12' align='center'>{$Page['pager']}</td>
+             </tr>
+             </tfoot>
+           </tbody>
+        </table>
+        <div class='wst-tbar-group'>
+           <a href='javascript:batchDel()'><span  class='del btn'></span>删除</a>
+           <a href='javascript:sale(0)'><span class='unSale btn'></span>下架</a>
+           <a href='javascript:goodsSet("isRecomm","queryUnSaleByPage")'><span class='recomm btn'></span>推荐</a>
+           <a href='javascript:goodsSet("isBest","queryUnSaleByPage")'><span class='hot btn'></span>精品</a>
+           <a href='javascript:goodsSet("isNew","queryUnSaleByPage")'><span class='new btn'></span>新品</a>
+           <a href='javascript:goodsSet("isHot","queryUnSaleByPage")'><span class='hot btn'></span>热销</a>
+        </div>
+        </div>
+       </div>
+</block> 

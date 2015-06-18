@@ -1,0 +1,83 @@
+.wst-brands-box {
+	min-height: 300px;
+	padding-left:6px;
+	padding-top:6px;
+	padding-bottom:6px;
+	border: 1px solid #cccccc;
+	
+	
+}
+
+.wst-brands-box li {
+	cursor: pointer;
+	border:2px solid #ffffff;
+	/*opacity: 0.5;
+	filter: alpha(opacity = 50);*/
+}
+
+.wst-brands-box li:hover {
+	border:2px solid #e23c3d;
+	color: #000000;
+	/*opacity: 1;
+	filter: alpha(opacity = 100);*/
+}
+
+.wst-brands-box .liselected {
+	background-color: #c7e6f5;
+	color: #000000;
+}
+
+.wst-shop-box {
+	padding: 8px;
+	border-radius: 12px;
+	border: 1px solid green;
+	background-color: #ffffff;
+	margin-bottom: 10px;
+}
+
+.wst-shadow {
+	-moz-box-shadow: 3px 3px 4px #eeeeee;
+	-webkit-box-shadow: 3px 3px 4px #eeeeee;
+	box-shadow: 3px 3px 4px #eeeeee;
+	/* For IE 8 */
+	-ms-filter:
+		"progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#000000')";
+	/* For IE 5.5 - 7 */
+	filter: progid : DXImageTransform.Microsoft.Shadow ( Strength = 4,
+		Direction = 135, Color = '#000000' );
+}
+
+.wst-shop-list {
+	width: 670px;
+	margin: 0 auto;
+	height: 480px;
+	padding-top: 10px;
+}
+
+.wst-brands {
+	border:2px solid #ffffff;
+	width:188px;
+	height:188px;
+	line-height:188px;
+	float:left;
+	border-bottom: 1px dotted #cccccc;
+	margin: 4px;
+}
+
+.wst-brands .wst-shopname {
+	line-height: 25px;
+	border-bottom: 1px dotted #cccccc;
+	margin: 4px;
+}
+
+.wst-shop-container {
+	min-height: 500px;
+	width: 710px;
+	float: right;
+	background-color: #e9b589;
+}
+.wst-brands-ads{
+	width:1210;margin:0 auto;padding-top:4px;
+}
+.wst-brands-area{width:1210;margin:0 auto;height:50px;line-height:50px;}
+.wst-brands-items{padding:4px;line-height:180px;vertical-align:middle;display: inline-block;}

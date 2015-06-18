@@ -1,0 +1,164 @@
+<!DOCTYPE >
+<html lang="zh-cn">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{$CONF['shopTitle']['fieldValue']} - Powered By WSTMall</title>
+<meta name="keywords" content="{$CONF['shopKeywords']['fieldValue']}" />
+<meta name="description" content="{$CONF['shopDesc']['fieldValue']}" />
+<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
+<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/index.css" />
+<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
+<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />
+</head>
+<body>
+	<include file="./Apps/Home/View/default/header_common.html" />
+	<!----加载广告start----->
+	<div class="wst-ad">
+		<div class="wst-slide" id="wst-slide">
+			<ul class="wst-slide-items">
+				<volist name="indexAds" id="vo" key="k">
+				<li style="z-index: 1;"><a target="_blank"
+					href="__ROOT__/index.php/Home/Index/access/?id={$vo['adId']}&url={$vo['adURL']}">
+						<img data-original="__ROOT__/{$vo['adFile']}" height="360" width="100%"
+						title="{$vo['adName']}" />
+				</a></li>
+				</volist>
+			</ul>
+		</div>
+	</div>
+	<div class='wst-clear'></div>
+	<!----加载商品楼层start----->
+	<div class="wst-container">
+		<!-------------F1层---------------->
+		<volist name="catList" key="k1" id="vo1">
+		<div class="wst-floor">
+			<div class="wst-fl-left wst-fl{$k1}" style="position: relative;">
+				<div
+					style="position: absolute; top: 40px; width: 210px; height: 275px;">
+					<volist name="catAds[$vo1['catId']]" id="vo" key="kv"> <a
+						href="__ROOT__/index.php/Home/Index/access/?id={$vo['adId']}&url={$vo['adURL']}"
+						target="_blank"> <img data-original="__ROOT__/{$vo['adFile']}"
+						height="275" width="210" title="{$vo['adName']}" />
+					</a> </volist>
+				</div>
+				<div
+					style="position: absolute; top: 0px; left: 0px; width: 99%; height: 40px; padding-left: 10px; color: #ffffff; line-height: 38px; font-weight: bolder; background: url(__ROOT__/Apps/Home/View/default/images/{$k1}fhd.png) no-repeat 100% 100%;">
+					<a
+						href="__ROOT__/index.php/Home/goods/getGoodsList/?c1Id={$vo1['catId']}">
+						<span style="font-size: 18px;">F{$k1}</span> {$vo1["catName"]}
+					</a>
+				</div>
+				<div class='wst-cat' style="height: 220px; overflow: hidden;">
+					<volist name="vo1['catChildren']" key="k2" id="vo2"> <volist
+						name="vo2['catChildren']" key="k3" id="vo3"> <a
+						href="__ROOT__/index.php/Home/goods/getGoodsList/?c1Id={$vo1['catId']}&c2Id={$vo2['catId']}&c3Id={$vo3['catId']}"><li
+						class="wst-cat-left">{$vo3["catName"]}</li></a> </volist> </volist>
+
+				</div>
+			</div>
+			<div class="wst-fl-right">
+				<div class="wst-fl-nvg{$k1}">
+					<ul>
+						<li id="fl_{$k1}_0" style="line-height: 32px; width: 100px;"
+							onmouseover="gpanelOver(this);">精品推荐</li>
+						<volist name="vo1['catChildren']" key="k2" id="vo2">
+						<li id="fl_{$k1}_{$k2}" style="line-height: 32px; width: 100px;"
+							onmouseover="gpanelOver(this);">{$vo2["catName"]}</li>
+						</volist>
+					</ul>
+				</div>
+				<div>
+
+					<div id="fl_{$k1}_0_pl" class="wst-goods-container">
+						<volist name="vo1['jpgoods']" key="k2" id="vo2">
+						<li class="wst-goodsbox">
+							<div class="wst-goods-thumb">
+								<a
+									href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$vo2['goodsId']}">
+									<img data-original="__ROOT__/{$vo2['goodsThums']}" width="180" />
+								</a>
+							</div>
+							<div class="wst-goods-thumb-des">
+								<div class="goodsname">
+								<a class="wst-goods-name"
+									href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$vo2['goodsId']}">{$k2}{$vo2['goodsName']}</a>
+								</div>
+								<div>
+									<em class="wst-left wst-goods-price">￥{$vo2['shopPrice']|number_format=2}</em>
+									<a href="javascript:addCart({$vo2['goodsId']},0,'{$vo2['goodsThums']}')" class="wst-right btnCart"> <img
+										data-original="__ROOT__/Apps/Home/View/default/images/btn_addcart.png"
+										width="85" />
+									</a>
+									<div class='wst-clear'></div>
+								</div>
+							</div>
+						</li>
+						</volist>
+						<div class='wst-clear'></div>
+					</div>
+
+
+					<volist name="vo1['catChildren']" key="k2" id="vo2">
+					<div id="fl_{$k1}_{$k2}_pl" class="wst-goods-container"
+						style="display: none;">
+						<volist name="vo2['goods']" key="k3" id="vo3">
+						<li class="wst-goodsbox">
+							<div class="wst-goods-thumb">
+								<a
+									href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$vo3['goodsId']}">
+									<img data-original="__ROOT__/{$vo3['goodsThums']}" width="180" />
+								</a>
+							</div>
+							<div class="wst-goods-thumb-des">
+								<div class="goodsname">
+									<a class="wst-goods-name"
+										href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$vo3['goodsId']}">{$vo3['goodsName']}</a>
+								</div>
+								<div>
+									<em class="wst-left wst-goods-price">￥{$vo3['shopPrice']|number_format=2}</em>
+									<a href="javascript:addCart({$vo3['goodsId']},0,'{$vo3['goodsThums']}')"
+										class="wst-right btnCart"> <img
+										data-original="__ROOT__/Apps/Home/View/default/images/btn_addcart.png"
+										width="85" />
+									</a>
+									<div class='wst-clear'></div>
+								</div>
+							</div>
+							
+						</li>
+						</volist>
+						<div class='wst-clear'></div>
+					</div>
+					</volist>
+					<div style="float: right; width: 180px; height: 180px;">
+						<volist name="vo1['recommendShops']" key="k2" id="vo2">
+						<div style="width: 180px; margin-top: 10px;">
+							<div style="width: 180px;">
+								<a
+									href="__ROOT__/index.php/Home/Shops/toShopHome/?shopId={$vo2['shopId']}">
+									<img  data-original="__ROOT__/{$vo2['shopImg']}" height="120" width="180" />
+								</a>
+							</div>
+						</div>
+						</volist>
+					</div>
+				</div>
+			</div>
+			<div style="clear: both; font-size: 0px;"></div>
+		</div>
+		</volist>
+	</div>
+	<include file="./Apps/Home/View/default/footer.html" />
+	<include file="./Apps/Home/View/default/right_cart.html" />
+	<script src="__PUBLIC__/js/common.js"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/index.js"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/global.js" type="text/javascript"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/head.js" type="text/javascript"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/goods.js" type="text/javascript"></script>
+</body>
+
+</html>
+

@@ -1,0 +1,164 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+<style>
+.ATRoot{height:22px;line-height:22px;margin-left:5px;clear:both;cursor:pointer;}
+.ATNode{margin-left:5px;line-height:22px;margin-left:17px;clear:both;cursor:pointer;}
+.Hide{display:none;}
+dl.areaSelect{padding:0 5px; display: inline-block; width:100%; margin-bottom: 0;/*border:1px solid #eee;*/}
+dl.areaSelect:hover{border:1px solid #E5CD29;}
+dl.areaSelect:hover dd{display: block;}
+dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
+</style>
+<link rel="stylesheet" href="__PUBLIC__/plugins/uploadify/uploadify.css">
+<script src="__PUBLIC__/plugins/uploadify/jquery.uploadify.min.js"></script>
+<script src="__PUBLIC__/plugins/kindeditor/kindeditor.js"></script>
+<script src="__PUBLIC__/plugins/kindeditor/lang/zh_CN.js"></script>
+<script>
+var relateCommunity = "{$object['relateCommunity']}".split(',');
+var relateArea = "{$object['relateArea']}".split(',');
+var areaId = '{$object['areaId2']}';
+$(function () {
+	   //展开按钮
+	   $("#expendAll").click(function(){
+			if ($(this).prop('checked')==true) {$("dl.areaSelect dd").removeClass('Hide')}
+			else{$("dl.areaSelect dd").addClass('Hide')}
+	   })
+	   $.formValidator.initConfig({
+		   theme:'Default',mode:'AutoTip',formID:"myform",debug:true,submitOnce:true,onSuccess:function(){
+			   editShop();
+			   return false;
+			},onError:function(msg){
+		}});
+	    $("#shopName").formValidator({onShow:"",onFocus:"店铺名称不能超过20个字符",onCorrect:"输入正确"}).inputValidator({min:1,max:20,onError:"店铺名称不符合要求,请确认"});
+		$("#shopName").formValidator({onShow:"",onFocus:"店铺名称不能超过20个字符",onCorrect:"输入正确"}).inputValidator({min:1,max:20,onError:"店铺名称不符合要求,请确认"});
+		$("#userName").formValidator({onShow:"",onFocus:"请输入店主姓名",onCorrect:"输入正确"}).inputValidator({min:1,max:20,onError:"店主姓名不能为空,请确认"});
+		$("#shopCompany").formValidator({onShow:"",onFocus:"请输入公司名称",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"门店关键字不能为空,请确认"});
+		$("#shopAddress").formValidator({onShow:"",onFocus:"请输入公司地址",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"公司地址不能为空,请确认"});
+		$("#bankNo").formValidator({onShow:"",onFocus:"请输入银行卡号",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"银行卡号不能为空,请确认"});
+		$("#deliveryFreeMoney").formValidator({onShow:"",onFocus:"请输入包邮起步价",onCorrect:"输入正确"}).inputValidator({min:1,max:4,onError:"包邮起步价不能为空,请确认"});
+		$("#deliveryMoney").formValidator({onShow:"",onFocus:"请输入邮费",onCorrect:"输入正确"}).inputValidator({min:1,max:4,onError:"邮费不能为空,请确认"});
+		$("#avgeCostMoney").formValidator({onShow:"",onFocus:"请输入平均消费金额",onCorrect:"输入正确"}).inputValidator({min:1,max:4,onError:"平均消费金额不能为空,请确认"});
+		$("#shopImgUpload").uploadify({
+		    formData      : {'dir':'shops','width':0,'height':120},
+		    buttonText    : '选择图标',
+		    fileTypeDesc  : 'Image Files',
+	        fileTypeExts  : '*.gif; *.jpg; *.png',
+	        swf           : publicurl+'/plugins/uploadify/uploadify.swf',
+	        uploader      : rooturl+'/index.php/Home/shops/uploadPic',
+	        onUploadSuccess : function(file, data, response) {
+	        	var json = WST.toJson(data);
+	        	$('#preview').attr('src',rooturl+'/'+json.Filedata.savepath+json.Filedata.savethumbname).show();
+	        	$('#shopImg').val(json.Filedata.savepath+json.Filedata.savename);
+        }
+	    });
+		getCommunitysForShopEdit();
+});
+</script>
+   <div class="wst-body"> 
+       <div class='wst-page-header'>卖家中心 > 店铺资料</div>
+       <div class='wst-page-content'>
+       <form name="myform" method="post" id="myform">
+        <input type='hidden' id='id' value='{$object.shopId}'/>
+        <input type='hidden' id='shopImg' value='{$object.shopImg}'/>
+        <table class="table table-hover table-striped table-bordered wst-form">
+           <tr>
+             <th width='130' align='right'>店铺名称<font color='red'>*</font>：</th>
+             <td><input type='text' id='shopName' class="form-control wst-ipt" value='{$object.shopName}' style='width:250px;' maxLength='25'/></td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>店主姓名<font color='red'>*</font>：</th>
+             <td><input type='text' id='userName' class="form-control wst-ipt" value='{$object.userName}' style='width:250px;' maxLength='25'/></td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>公司名称<font color='red'>*</font>：</th>
+             <td><input type='text' id='shopCompany' class="form-control wst-ipt" value='{$object.shopCompany}' style='width:250px;' maxLength='25'/></td>
+           </tr>
+            <tr>
+             <th width='120' align='right'>公司名称<font color='red'>*</font>：</th>
+             <td><input type='text' id='shopCompany' class="form-control wst-ipt" value='{$object.shopCompany}' style='width:250px;' maxLength='25'/></td>
+           </tr>
+          
+           <tr>
+             <th width='120' align='right'>店铺图标<font color='red'>*</font>：</th>
+             <td>
+             <div style="position:relative;">
+             <input type='text' id='shopImgUpload' class="form-control wst-ipt"/>
+             <span style="position:absolute;top:4px;left:140px;">图片大小:150 x 120 (px)</span></div>
+             <div style="padding-top:4px;">
+             	<img id='preview' src='__ROOT__/{$object.shopImg}' width='140' height="100" <if condition="$object['shopImg'] =='' ">style='display:none'</if> />
+             </div>
+             </td>
+           </tr>
+           
+           <tr>
+             <th width='120' align='right'>店铺电话：</th>
+             <td><input type='text' id='shopTel' class="form-control wst-ipt" value='{$object.shopTel}' maxLength='25'/></td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>店铺地址<font color='red'>*</font>：</th>
+             <td><input type='text' id='shopAddress' class="form-control wst-ipt" value='{$object.shopAddress}' style='width:350px;' maxLength='100'/></td>
+           </tr>
+           <tr>
+             <th align='right'>营业状态<font color='red'>*</font>：</th>
+             <td>
+             <label>
+             <input type='radio' id='shopAtive1' name='shopAtive' value='1' <if condition="$object['shopAtive'] ==1 ">checked</if> />营业中&nbsp;&nbsp;
+             </label>
+             <label>
+             <input type='radio' id='shopAtive0' name='shopAtive' value='0' <if condition="$object['shopAtive'] ==0 ">checked</if> />休息中
+             </label>
+             </td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>配送区域<font color='red'>*</font>：</th>
+             <td>
+             <div class="text-gray Hide">展开全部：<input type="checkbox" id="expendAll" checked></div>
+             <div id='areaTree'></div>
+             </td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>包邮起步价<font color='red'>*</font>：</th>
+             <td><input type='text' id='deliveryFreeMoney' class="form-control wst-ipt" value='{$object.deliveryFreeMoney}' maxLength='25'/></td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>邮费<font color='red'>*</font>：</th>
+             <td><input type='text' id='deliveryMoney' class="form-control wst-ipt" value='{$object.deliveryMoney}' maxLength='25'/></td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>平均消费金额<font color='red'>*</font>：</th>
+             <td><input type='text' id='avgeCostMoney' class="form-control wst-ipt" value='{$object.avgeCostMoney}' maxLength='25'/></td>
+           </tr>
+           <tr>
+             <th align='right'>能否开发票<font color='red'>*</font>：</th>
+             <td>
+             <label>
+             <input type='radio' id='isInvoice1' name='isInvoice' value='1' <if condition="$object['isInvoice'] ==1 ">checked</if> />能&nbsp;&nbsp;
+             </label>
+             <label>
+             <input type='radio' id='isInvoice0' name='isInvoice' value='0' <if condition="$object['isInvoice'] ==0 ">checked</if> />否
+             </label>
+             </td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>发票说明<font color='red'>*</font>：</th>
+             <td><input type='text' id='invoiceRemarks' class="form-control wst-ipt" value='{$object.invoiceRemarks}' style='width:350px;' maxLength='100'/></td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>营业时间<font color='red'>*</font>：</th>
+             <td>
+             <input type='text' id='serviceStartTime' class="form-control wst-ipt" value='{$object.serviceStartTime}' maxLength='25'/>
+             <input type='text' id='serviceEndTime' class="form-control wst-ipt" value='{$object.serviceEndTime}' maxLength='25'/>
+             </td>
+           </tr>
+           <tr>
+             <td colspan='2' style='text-align:center;padding:20px;'>
+                 <button type="submit" class='wst-btn-query'>保&nbsp;存</button>&nbsp;&nbsp;
+                 <button type="button" class='wst-btn-query' onclick='javascript:location.reload();'>重&nbsp;置</button>
+             	
+             </td>
+           </tr>
+        </table>
+       </form>
+       </div>
+   </div>
+</block>  

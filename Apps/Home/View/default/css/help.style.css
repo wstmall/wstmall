@@ -1,0 +1,365 @@
+/*页面除去头尾部分全局css*/
+#help_top_line {
+	position: relative;
+	height: 22px;
+	line-height: 22px;
+	color: #888888;
+	border-bottom: 1px solid #c0c0c0;
+	margin-bottom: 4px;
+	text-align: right;
+	padding-right: 32px;
+}
+
+#help_top_line img {
+	margin-left: 5px;
+}
+
+#plate {
+	position: absolute;
+	right: 0;
+	top: 7px;
+	display: block;
+	height: 21px;
+	width: 15px;
+	background: url(../image/plate.gif) no-repeat top left;
+}
+
+.top_nav {
+	height: 40px;
+	line-height: 40px;
+	color: #9f9f9f;
+}
+
+.top_nav a {
+	padding: 0 2px;
+	color: #999;
+}
+
+.top_nav a:link {
+	color: #999;
+}
+
+.top_nav a:visited {
+	color: #999;
+}
+
+.top_nav a:hover {
+	color: #c90809;
+}
+
+.top_nav span {
+	color: #c90809;
+	padding-left: 2px;
+}
+
+#help_left {
+	float: left;
+	width: 180px;
+}
+
+#help_left_box {
+	height: auto;
+	background-color: #f1f1f1;
+	margin-bottom: 15px;
+}
+
+.help_left_topbox {
+	top: -2PX;
+	left: -2PX;
+	width: 178px;
+	border: 1PX solid #dbdbdb;
+	background-color: #FFF;
+	position: relative;
+}
+
+#help_left_top {
+	height: 70px;
+	background: url(../image/help_info_title.gif) no-repeat 12px 12px;
+	background-color: #FFF;
+}
+
+.help_left_list {
+	top: -2PX;
+	left: -2PX;
+	margin: 0;
+	width: 178px;
+	border: 1PX solid #dbdbdb;
+	border-bottom: 1px solid #dbdbdb;
+	border-top: none;
+	background-color: #FFF;
+	position: relative;
+	font-family: Arial;
+	line-height: 31px;
+	padding: 15px 0;
+}
+
+.help_left_list dt {
+	padding-left: 15px;
+	margin: 0;
+}
+
+.help_left_list dt b {
+	color: #9a9a9a;
+	font-weight: bold;
+	background: none;
+}
+
+.help_left_list dt span {
+	color: #c90809;
+}
+
+.help_left_list dd {
+	padding-left: 25px;
+	margin: 0;
+}
+
+.help_left_list dd a font {
+	color: #999;
+	font-size: 30px;
+	_font-size: 12px;
+	vertical-align: middle;
+}
+
+.help_left_list_selected {
+	color: #c90809;
+}
+
+.help_left_list_selected a {
+	color: #c90809;
+}
+
+.help_left_list_selected  font {
+	color: #c90809;
+}
+
+.help_left_list_selected a:link {
+	color: #c90809;
+}
+
+.help_left_list_selected a:visited {
+	color: #c90809;
+}
+
+.help_left_list_selected a:hover {
+	color: #c90809;
+}
+
+#help_right_box {
+	float: right;
+	width: 809px;
+	height: auto;
+}
+
+#help_right_box_1220 {
+	float: right;
+	width: 1029px;
+	height: auto;
+}
+
+#help_right_view_position {
+	margin-top: 52px;
+	height: 21px;
+	line-height: 21px;
+	background-color: #f9f9f9;
+	padding-left: 25px;
+	color: #bababa;
+	margin-bottom: 27px;
+}
+
+#help_right_index_box {
+	height: 21px;
+	border-bottom: 4px solid #e4e4e4;
+	margin-left: 20px;
+	position: relative;
+}
+
+.help_right_index_box_ul {
+	position: absolute;
+	display: block;
+	left: 0;
+	top: 0;
+}
+
+.help_right_index_box_ul li {
+	display: block;
+	float: left;
+	width: 80px;
+	margin-right: 4px;
+	line-height: 21px;
+	text-align: center;
+	background: url(../image/help_right_index_bg_2.gif) no-repeat top left;
+	border-bottom: none;
+}
+
+#help_right_index_box_li_selected {
+	display: block;
+	float: left;
+	width: 80px;
+	height: 39px;
+	color: #fff;
+	margin-right: 4px;
+	background: url(../image/help_right_index_bg_1.gif) no-repeat top left;
+}
+
+#help_right_index_icon {
+	position: absolute;
+	width: 87px;
+	height: 61px;
+	background: url(../image/explain_way.gif) no-repeat top left;
+	right: -3px;
+	bottom: 6px;
+}
+
+#help_right_index_icon1 {
+	position: absolute;
+	width: 87px;
+	height: 61px;
+	background: url(../image/fishman_way.gif) no-repeat top left;
+	right: -3px;
+	bottom: 6px;
+}
+
+#way_title {
+	margin-left: 20px;
+	margin-top: 30px;
+	height: 14px;
+	padding-bottom: 8px;
+	border-bottom: 1px solid #e9e9e9;
+	background: url(../image/way_square.gif) no-repeat 0 2px;
+	color: #d10000;
+	font-weight: bold;
+	line-height: 14px;
+	padding-left: 20px;
+}
+
+.question_title {
+	margin-left: 20px;
+	margin-top: 30px;
+	height: 14px;
+	padding-bottom: 8px;
+	border-bottom: 1px solid #e9e9e9;
+	color: #d10000;
+	font-weight: bold;
+	line-height: 14px;
+}
+
+.question_title span {
+	float: left;
+}
+
+.to_top_box {
+	float: right;
+}
+
+.to_top_box a {
+	color: #ca2c23;
+	display: block;
+	background: url(../image/top_arrow.gif) no-repeat top left;
+	width: 30px;
+	padding-left: 15px;
+}
+
+.to_top_box a:link {
+	color: #ca2c23;
+}
+
+.to_top_box a:visited {
+	color: #ca2c23;
+}
+
+.to_top_box a:hover {
+	color: #ca2c23;
+}
+
+#special_notice {
+	margin-left: 20px;
+	margin-top: 30px;
+	padding-top: 2px;
+	height: 14px;
+	padding-bottom: 8px;
+	border-bottom: 1px solid #e9e9e9;
+	background: url(../image/star_empty.gif) no-repeat 0 0;
+	color: #979797;
+	font-weight: bold;
+	line-height: 14px;
+	padding-left: 20px;
+}
+
+.help_text_box {
+	margin-left: 20px;
+	line-height: 22px;
+	color: #6f6f6f;
+}
+
+.help_text_boxx a {
+	color: #3399cc;
+}
+
+.help_text_box a:link {
+	color: #3399cc;
+}
+
+.help_text_box a:visited {
+	color: #3399cc;
+}
+
+.help_text_box a:hover {
+	color: #3399cc;
+	text-decoration: underline;
+}
+
+.help_tel_box {
+	background-color: #f7f7f7;
+	height: auto;
+	padding: 35px;
+	line-height: 35px;
+	padding-left: 45px;
+	margin-bottom: 15px;
+}
+
+/*分页控件样式*/
+.page_box {
+	height: 24px;
+	line-height: 23px;
+	padding-bottom: 18px;
+	padding-top: 15px;
+	text-align: center;
+}
+
+.page_box a {
+	display: inline-block;
+	height: 23px;
+	padding: 0 9px;
+}
+
+.page_box span {
+	border: 1px solid #DBDBDB;
+	display: inline-block;
+	height: 23px;
+	line-height: 23px;
+	margin: 0 3px;
+}
+
+.page_box font {
+	font-size: 12px;
+	padding: 0 5px;
+}
+
+.page_box b {
+	color: #CC0809;
+	font-weight: normal;
+}
+
+#page_on {
+	background-color: #FFF9EB;
+	border: 1px solid #CA0809;
+	color: #CA0809;
+	padding: 0 9px;
+}
+
+.page_on {
+	background-color: #FFF9EB;
+	border: 1px solid #CA0809;
+	color: #CA0809;
+	padding: 0 9px;
+}

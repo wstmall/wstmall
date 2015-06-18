@@ -1,0 +1,116 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+<link rel="stylesheet" href="__PUBLIC__/plugins/uploadify/uploadify.css">
+<script src="__PUBLIC__/plugins/uploadify/jquery.uploadify.min.js"></script>
+<script>
+$(function () {
+	   $.formValidator.initConfig({
+		   theme:'Default',mode:'AutoTip',formID:"myform",debug:true,submitOnce:true,onSuccess:function(){
+			   setShop();
+			   return false;
+			},onError:function(msg){
+		}});
+	   
+	   //$("#shopTitle").formValidator({onShow:"",onFocus:"请输入店铺SEO标题",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"店铺SEO标题不能为空,请确认"});
+	   $("#shopKeywords").formValidator({onShow:"",onFocus:"请输入店铺SEO关键字",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"店铺SEO关键字不能为空,请确认"});
+		$("#shopImgUpload").uploadify({
+		    formData      : {'dir':'shopads','width':1400,'height':120},
+		    buttonText    : '选择图标',
+		    fileTypeDesc  : 'Image Files',
+	        fileTypeExts  : '*.gif; *.jpg; *.png',
+	        swf           : publicurl+'/plugins/uploadify/uploadify.swf',
+	        uploader      : rooturl+'/index.php/Home/shops/uploadPic',
+	        onUploadSuccess : function(file, data, response) {
+	        	var json = WST.toJson(data);
+	        	$('#preview').attr('src',domainURL+json.Filedata.savepath+json.Filedata.savethumbname).show();
+	        	$('#shopBanner').val(json.Filedata.savepath+json.Filedata.savename);
+        }
+	    });
+		
+		$("#galleryImgUpload").uploadify({
+		    formData      : {'dir':'shopads','width':1400,'height':350},
+		    buttonText    : '选择店铺广告图片',
+		    fileTypeDesc  : 'Image Files',
+	        fileTypeExts  : '*.gif; *.jpg; *.png',
+	        swf           : publicurl+'/plugins/uploadify/uploadify.swf',
+	        uploader      : rooturl+'/index.php/Home/shops/uploadPic',
+	        onUploadSuccess : function(file, data, response) {
+	        	var json = WST.toJson(data);
+	        	if(json.status && json.status==1){
+	        		$('<div class="wst-gallery-img" onmouseover="imgmouseover(this);" onmouseout="imgmouseout(this);" style="height:132px;"><span class="wst-gallery-del" onclick="javascript:delImg(this)"></span><img width="140" height="100" class="gallery-img" iv="'+json.Filedata.savepath+json.Filedata.savethumbname+'" v="'+json.Filedata.savepath+json.Filedata.savename+'" src="'+domainURL+json.Filedata.savepath+json.Filedata.savethumbname+'"/><input class="gallery-img-url" placeholder="广告路径" type="text" style="width:118px;"/></div>').appendTo('#galleryImgs');
+	        	}
+       }
+	   });
+		
+});
+function imgmouseover(obj){
+
+	$(obj).find('.wst-gallery-del').show();
+}
+function imgmouseout(obj){
+	$(obj).find('.wst-gallery-del').hide();
+}
+function delImg(obj){
+	  $(obj).parent().remove();
+}
+</script>
+   <div class="wst-body"> 
+       <div class='wst-page-header'>卖家中心 > 店铺设置</div>
+       <div class='wst-page-content'>
+       <form name="myform" method="post" id="myform">
+       	<input type='hidden' id='id' value='0'/>
+        <input type='hidden' id='shopBanner' value='{$object.shopBanner}'/>
+        <table class="table table-hover table-striped table-bordered wst-form">
+            <!-- tr >
+             <th width='120' align='right'>店铺SEO标题<font color='red'>*</font>：</th>
+             <td><input type='text' id='shopTitle' class="form-control wst-ipt" value='{$object.shopTitle}' style='width:250px;' maxLength='25'/></td>
+           </tr -->
+           <tr>
+             <th width='120' align='right'>店铺SEO关键字<font color='red'>*</font>：</th>
+             <td><input type='text' id='shopKeywords' class="form-control wst-ipt" value='{$object.shopKeywords}' style='width:350px;' maxLength='25'/></td>
+           </tr>
+           <tr>
+	         <th width='120'>店铺SEO描述：</th>
+	         <td colspan='3'>
+	             <textarea rows="2" style='width:350px;' id='shopDesc' name='shopDesc' >{$object.shopDesc}</textarea>
+	         </td>
+	      </tr>
+           <tr>
+             <th width='120' align='right'>顶部广告<font color='red'>*</font>：</th>
+             <td>
+             <div style="position:relative;">
+             <input type='text' id='shopImgUpload' class="form-control wst-ipt"/>
+             <span style="position:absolute;top:4px;left:140px;">图片大小:1400 x 120 (px)</span></div>
+             <div style="padding-top:4px;">
+             	<img id='preview' src='__ROOT__/{$object.shopBanner}' width='140' height="100" <if condition="$object['shopBanner'] =='' ">style='display:none'</if> />
+             </div>
+             </td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>滚动广告<font color='red'>*</font>：</th>
+             <td>
+             	<div style="position:relative;"><input type='text' id='galleryImgUpload'/><span style="position:absolute;top:4px;left:140px;">图片大小:1400 x 350 (px)</span></div>
+	       
+		       <div id='galleryImgs' class='wst-gallery-imgs' style="width:600px;">
+		           <volist name="object['shopAds']" id="vo" key='i'>
+			       <div class="wst-gallery-img" onmouseover="imgmouseover(this);" onmouseout="imgmouseout(this);" style="height:132px;">
+				       <span class="wst-gallery-del" onclick="javascript:delImg(this)"></span>
+				       <img width="140" height="100" class="gallery-img" iv="{$vo.adImg_thumb}" v="{$vo.adImg}" src="__ROOT__/{$vo.adImg_thumb}"/>
+			       	   <input class="gallery-img-url"  placeholder="广告路径" type="text" style="width:118px;" value="{$vo.adUrl}"/>
+			       </div>
+			       </volist>
+		       </div>
+		       <div style='clear:both;'></div>
+             </td>
+           </tr>
+           <tr>
+             <td colspan='2' style='text-align:center;padding:20px;'>
+                 <button type="submit" class='wst-btn-query'>保&nbsp;存</button>&nbsp;&nbsp;
+                 <button type="button" class='wst-btn-query' onclick='javascript:location.reload();'>重&nbsp;置</button>
+             </td>
+           </tr>
+        </table>
+       </form>
+       </div>
+   </div>
+</block>  

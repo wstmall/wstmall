@@ -1,0 +1,182 @@
+<extend name="./Apps/Home/View/default/users/layout.html" />
+<block name="content">
+<style>
+.ATRoot{padding:0px 5px;height:22px;line-height:22px;clear:both;cursor:pointer;}
+.ATNode{margin-right:5px;;line-height:22px;clear:both;cursor:pointer;}
+.Hide{display:none;}
+dl.areaSelect{display: inline-block; width:100%; margin-bottom: 0;/*border:1px solid #eee;*/}
+dl.areaSelect:hover{border:1px solid #E5CD29;}
+dl.areaSelect:hover dd{display: block;}
+dl.areaSelect dd{float: left;cursor: pointer;}
+</style>
+<link rel="stylesheet" href="__PUBLIC__/plugins/uploadify/uploadify.css">
+<script src="__PUBLIC__/plugins/uploadify/jquery.uploadify.min.js"></script>
+<script src="__PUBLIC__/plugins/kindeditor/kindeditor.js"></script>
+<script src="__PUBLIC__/plugins/kindeditor/lang/zh_CN.js"></script>
+   <script>
+   var relateCommunity = "{$object['relateCommunity']}".split(',');
+   var relateArea = "{$object['relateArea']}".split(',');
+   </script>
+   <div class="wst-body"> 
+       <div class='wst-page-header'>买家中心 > 我要开店</div>
+       <div class='wst-page-content'>
+       <form name="myshop" method="post" id="myshop">
+        <input type='hidden' id='id' value='0'/>
+        <input type='hidden' id='shopImg' value=''/>
+        <table class="table table-hover table-striped table-bordered wst-form">
+           <tr>
+             <th width='130' align='right'>店铺名称<font color='red'>*</font>：</th>
+             <td><input type='text' id='shopName' class="form-control wst-ipt" style='width:250px;' maxLength='25'/></td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>店主姓名<font color='red'>*</font>：</th>
+             <td><input type='text' id='userName' class="form-control wst-ipt" style='width:250px;' maxLength='25' value='{$Think.session.USER.userName}'/></td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>公司名称<font color='red'>*</font>：</th>
+             <td><input type='text' id='shopCompany' class="form-control wst-ipt"  style='width:250px;' maxLength='25'/></td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>店铺图标<font color='red'>*</font>：</th>
+             <td>
+             <input type='text' id='shopImgUpload' class="form-control wst-ipt"/>
+             <img id='preview' src='__ROOT__/Apps/Home/View/default/images/logo.jpg' width='150' height='150' />
+             </td>
+           </tr>
+           
+           <tr>
+             <th width='120' align='right'>店铺电话：</th>
+             <td><input type='text' id='shopTel' class="form-control wst-ipt" maxLength='25'/></td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>所属地区<font color='red'>*</font>：</th>
+             <td>
+             <select id='areaId1' onchange='javascript:getAreaList("areaId2",this.value,0)'>
+               <option value=''>请选择</option>
+               <volist name="areaList" id="vo">
+               <option value='{$vo['areaId']}'>{$vo['areaName']}</option>
+               </volist>
+             </select>
+             <select id='areaId2' onchange='javascript:getAreaList("areaId3",this.value,1);getCommunitys()'>
+               <option value=''>请选择</option>
+             </select>
+             <select id='areaId3'>
+               <option value=''>请选择</option>
+             </select>
+             </td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>店铺地址<font color='red'>*</font>：</th>
+             <td><input type='text' id='shopAddress' class="form-control wst-ipt" style='width:350px;' maxLength='100'/></td>
+           </tr>
+           <tr>
+             <th align='right'>所属行业<font color='red'>*</font>：</th>
+             <td>
+             <select id='goodsCatId1'>
+                <option value=''>请选择</option>
+                <volist name="goodsCatsList" id="vo">
+                <option value='{$vo['catId']}' <if condition="$object['goodsCatId1'] == $vo['catId'] ">selected</if>>{$vo['catName']}</option>
+                </volist>
+             </select>
+             </td>
+           </tr>
+           <tr>
+             <th align='right'>营业状态<font color='red'>*</font>：</th>
+             <td>
+             <label>
+             <input type='radio' id='shopAtive1' name='shopAtive' value='1' />营业中&nbsp;&nbsp;
+             </label>
+             <label>
+             <input type='radio' id='shopAtive0' name='shopAtive' value='0' checked />休息中
+             </label>
+             </td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>配送区域<font color='red'>*</font>：</th>
+             <td>
+             <div class="text-gray Hide">展开全部：<input type="checkbox" id="expendAll"></div>
+             <div id='areaTree'>
+             </div>
+             </td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>包邮起步价<font color='red'>*</font>：</th>
+             <td><input type='text' id='deliveryFreeMoney' class="form-control wst-ipt" onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:jQueryTool.isChinese(this,1)" maxLength='25'/></td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>邮费<font color='red'>*</font>：</th>
+             <td><input type='text' id='deliveryMoney' class="form-control wst-ipt" onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:jQueryTool.isChinese(this,1)" maxLength='25'/></td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>平均消费金额<font color='red'>*</font>：</th>
+             <td><input type='text' id='avgeCostMoney' class="form-control wst-ipt" onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:jQueryTool.isChinese(this,1)" maxLength='25'/></td>
+           </tr>
+           <tr>
+             <th align='right'>能否开发票<font color='red'>*</font>：</th>
+             <td>
+             <label>
+             <input type='radio' id='isInvoice1' onclick='javascript:isInvoce(true)' name='isInvoice' value='1' />能&nbsp;&nbsp;
+             </label>
+             <label>
+             <input type='radio' id='isInvoice0' onclick='javascript:isInvoce(false)' name='isInvoice' value='0' />否
+             </label>
+             </td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>所属银行<font color='red'>*</font>：</th>
+             <td>
+             <select id='bankId'>
+                <option value=''>请选择</option>
+                <volist name="bankList" id="vo">
+                <option value='{$vo['bankId']}'>{$vo['bankName']}</option>
+                </volist>
+             </select>
+             </td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>银行卡卡号<font color='red'>*</font>：</th>
+             <td><input type='text' id='bankNo' maxLength='25'/></td>
+           </tr>
+           <tr id='invoiceRemarkstr' style='display:none'>
+             <th width='120' align='right'>发票说明<font color='red'>*</font>：</th>
+             <td><input type='text' id='invoiceRemarks' class="form-control wst-ipt" value='{$object.invoiceRemarks}' style='width:350px;' maxLength='100'/></td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>营业时间<font color='red'>*</font>：</th>
+             <td>
+             <select id='serviceStartTime'></select>
+             至
+             <select id='serviceEndTime'></select>
+             </td>
+           </tr>
+           <tr>
+             <th>&nbsp;</th>
+             <td>
+             <label>
+	           <input class="checkbox" id="protocol" name="protocol" type="checkbox"/>
+	                                 我已阅读并同意</label><a href="javascript:;" class="blue" id="protocolInfo" onclick="showXiey();">《WST店铺注册协议》</a>                       
+	         <label id="protocol_error" class="error hide">请接受服务条款</label>
+             </td>
+           </tr>
+           <tr>
+             <th align='right'>验证码<font color='red'>*</font>：</th>
+             <td>
+             <input id="authcode" style="ime-mode:disabled" name="authcode" class="text text-1" tabindex="6" autocomplete="off" maxlength="6" type="text"/>
+	         <label class="img">
+	            <img style='vertical-align:middle;cursor:pointer;height:25px;' class='verifyImg' title='刷新验证码' onclick='javascript:getVerify()'/> 
+			 </label>      	
+	         <label class="ftx23">&nbsp;看不清？<a href="javascript:getVerify()" class="flk13">换一张</a></label>
+             </td>
+           </tr>
+           <tr>
+             <td colspan='2' style='padding-left:320px;'>
+                 <button class='wst-btn-query' type="submit">保&nbsp;存</button>
+                 <button class='wst-btn-query' type="button" onclick='javascript:location.reload();'>重&nbsp;置</button>
+             </td>
+           </tr>
+        </table>
+       </form>
+       </div>
+   </div>
+   <script src="__ROOT__/Apps/Home/View/default/js/users/open_shop.js" type="text/javascript"></script> 
+</block>  

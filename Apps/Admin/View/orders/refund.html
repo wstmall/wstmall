@@ -1,0 +1,58 @@
+<meta charset="utf-8">
+   <script>
+   $(function () {
+	   $.formValidator.initConfig({
+		   theme:'Default',mode:'AutoTip',formID:"myform",debug:true,submitOnce:true,onSuccess:function(){
+				   edit();
+			       return false;
+			}});
+	   $("#content").formValidator({onFocus:"请输入退款说明",onCorrect:"输入正确"}).inputValidator({min:1,max:200,onError:"你输入的长度不正确,请确认"});
+   });
+   function edit(){
+	   var params = {};
+	   params.content = $.trim($('#content').val());
+	   params.id = $('#id').val();
+	   Plugins.waitTips({title:'信息提示',content:'正在提交数据，请稍后...'});
+	   $.post("__ROOT__/index.php/Admin/Orders/refund",params,function(data,textStatus){
+			var json = WST.toJson(data);
+			if(json.status=='1'){
+				Plugins.setWaitTipsMsg({content:'操作成功',timeout:1000,callback:function(){
+					   location.href='__ROOT__/index.php/Admin/Orders/queryRefundByPage';
+				}});
+			}else if(json.status=='-2'){
+				Plugins.setWaitTipsMsg({content:'操作失败，订单早已经退款！',timeout:1000,callback:function(){
+					location.href='__ROOT__/index.php/Admin/Orders/queryRefundByPage';
+				}});
+			}else{
+				Plugins.setWaitTipsMsg({content:'操作失败！',timeout:1000,callback:function(){
+					location.href='__ROOT__/index.php/Admin/Orders/queryRefundByPage';
+				}});
+			}
+		});
+   }
+   </script>
+       <form name="myform" method="post" id="myform">
+        <input type='hidden' id='id' value='{$object.orderId}'/>
+        <table class="table table-hover table-striped table-bordered wst-form">
+           <tr>
+             <th width='120' align='right'>订单：</th>
+             <td>{$object['orderNo']}</td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>订单金额：</th>
+             <td>订单总金额：<font color='red'>￥{$object['totalMoney']+$object['deliverMoney']}</font>&nbsp;(商品总金额：￥{$object['totalMoney']} + 运费：￥{$object['deliverMoney']})  </td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>退款说明：</th>
+             <td>
+             <textarea style='width:450px;height:100px' id='content' name='content'></textarea>
+             </td>
+           </tr> 
+           <tr>
+             <td colspan='2' style='padding-left:250px;'>
+                 <button type="submit" class="btn btn-success">确&nbsp;定</button>
+                 <button type="button" class="btn btn-primary" data-dismiss="modal">返&nbsp;回</button>
+             </td>
+           </tr>
+        </table>
+       </form>

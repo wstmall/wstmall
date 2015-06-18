@@ -1,0 +1,93 @@
+<extend name="./Apps/Home/View/default/users/layout.html" />
+<block name="content">
+   <script>
+   $(function () {
+	   $.formValidator.initConfig({
+		   theme:'Default',mode:'AutoTip',formID:"myform",debug:true,submitOnce:true,onSuccess:function(){
+				   edit();
+			       return false;
+			},onError:function(msg){
+		}});
+	   <if condition="$object['addressId'] != 0">
+	   getAreaList('areaId2','{$object['areaId1']}',0,'{$object['areaId2']}');
+	   getAreaList("areaId3",'{$object.areaId2}',1,'{$object.areaId3}');
+	   getCommunitys('{$object.areaId3}','{$object.communityId}');
+	   </if>
+   });
+  
+   </script>
+   <div class="wst-body"> 
+       <div class='wst-page-header'>买家中心 > <if condition="$object['addressId'] == 0">新增<else/>修改</if>地址</div>
+       <div class='wst-page-content'>
+       <input type='hidden' id='id' value='{$object['addressId']}'/>
+       <form name="myform" method="post" id="myform">
+        <table class="table table-hover table-striped table-bordered wst-form">
+           <tr>
+             <th align='right'>区县<font color='red'>*</font>：</th>
+             <td>
+             <select id='areaId1' onchange='javascript:getAreaList("areaId2",this.value,0)'>
+               <option value=''>请选择</option>
+               <volist name="areaList" id="vo">
+               <option value='{$vo['areaId']}' <if condition="$object['areaId1'] == $vo['areaId'] ">selected</if>>{$vo['areaName']}</option>
+               </volist>
+             </select>
+             <select id='areaId2' onchange='javascript:getAreaList("areaId3",this.value,1);'>
+               <option value=''>请选择</option>
+             </select>
+             <select id='areaId3' onchange="javascript:getCommunitys(this.value,'{$vo['communityId']}')">
+               <option value=''>请选择</option>
+             </select>
+             <select id='communityId' >
+               <option value=''>请选择</option>
+             </select>
+             </td>
+           </tr>
+           <tr>
+             <th align='right'>邮编 <font color='red'>*</font>：</th>
+             <td>
+             <input type='postCode' id='postCode' name='postCode' value='{$object['postCode']}' maxLength='6'/>
+             </td>
+           </tr>
+           <tr>
+             <th align='right'>详细地址 <font color='red'>*</font>：</th>
+             <td>
+             <input type='address' id='address' name='address'  value='{$object['address']}' style='width:350px;'/>
+             </td>
+           </tr>
+           <tr>
+             <th align='right'>联系人名称 <font color='red'>*</font>：</th>
+             <td>
+             <input type='text' id='userName' name='userName'  value='{$object['userName']}'/>
+             </td>
+           </tr>
+           <tr>
+             <th align='right'>联系人电话 <font color='red'>*</font>：</th>
+             <td>
+             	手机:<input type='text' maxlength="11" id='userPhone' name='userPhone' value='{$object['userPhone']}' onkeyup="javascript:WST.isChinese(this,1)" onkeypress="return WST.isNumberdoteKey(event)"/>
+             		或&nbsp;&nbsp;&nbsp;&nbsp;固定电话<input type='text' id='userTel' name='userTel' value='{$object['userTel']}' onkeyup="javascript:WST.isChinese(this,1)" />
+             	(例：020-88888888)
+             </td>
+           </tr>
+           <tr>
+             <th align='right'>是否默认地址 <font color='red'>*</font>：</th>
+             <td>
+             <label>
+               <input type='radio' id='isDefault1' name='isDefault' value='1' <if condition="$object['isDefault'] == 1">checked</if>/>是
+             </label>
+             <label>
+               <input type='radio' id='isDefault0' name='isDefault' value='0' <if condition="$object['isDefault'] == 0">checked</if>/>否
+             </label>
+             </td>
+           </tr>
+           <tr>
+             <td colspan='2' style='padding-left:250px;'>
+                 <button class='wst-btn-query' type="submit">保&nbsp;存</button>
+                 <button class='wst-btn-query' type="reset">重&nbsp;置</button>
+             </td>
+           </tr>
+        </table>
+       </form>
+       </div>
+   </div>
+   <script src="__ROOT__/Apps/Home/View/default/js/users/address.js" type="text/javascript"></script> 
+</block> 

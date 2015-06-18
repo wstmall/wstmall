@@ -1,0 +1,23 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+<style type="text/css">
+.del {
+	background: url('__ROOT__/Apps/Home/View/default/images/icon_edit_01.png') no-repeat;
+}
+.msgContent{padding: 20px;}
+</style>
+<script>
+var domainURL = '__ROOT__/';
+</script>
+    <div class="wst-body"> 
+       <div class='wst-page-header'>卖家中心 > 商城消息 > 消息详情</div>
+       <div class='wst-page-content'>  
+	      <div class='wst-tbar-group'>
+	          <a href="{:U('Home/Messages/queryByPage')}" class='back btn' style='float:right;padding-right:5px;'>返回</a>           
+	      </div>  
+          <div class="msgContent">            
+            {$info['msgContent']}
+          </div>
+        </div>
+    </div>
+</block> 

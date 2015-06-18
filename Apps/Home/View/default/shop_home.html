@@ -1,0 +1,234 @@
+<!DOCTYPE>
+<html lang="zh-cn">
+	<head>
+  		<meta charset="utf-8">
+      	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+      	<meta name="viewport" content="width=device-width, initial-scale=1">
+      	<title>{$shops['shopName']} - 首页</title>
+      	<meta name="keywords" content="{$shops['shopKeywords']}" />
+      	<meta name="description" content="{$CONF['shopTitle']['fieldValue']},{$shops['shopDesc']}" />
+      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/shophome.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />
+		<link href="__PUBLIC__/plugins/slide/css/slide.css" type="text/css" media="all" rel="stylesheet" />
+		<style>
+		.ck-slide { width: 100%; height: 320px; margin: 0 auto;}
+		.ck-slide ul.ck-slide-wrapper { height: 320px;}
+		</style>
+   	</head>
+   	<body>
+   		<input type="hidden" id="msort" value="{$msort}"/>   		
+   		<input type="hidden" id="sj" value="{$sj}"/>
+   		<input type="hidden" id="shopId" value="{$shopId}"/>
+   		<input type="hidden" id="ct1" value="{$ct1}"/>
+   		<input type="hidden" id="ct2" value="{$ct2}"/>
+		<include file="./Apps/Home/View/default/header.html" />
+		<div>
+			<if condition="$shops['shopBanner'] neq ''">
+				<img data-original="__ROOT__/{$shops['shopBanner']}" width="100%" height="120"/>
+			</if>
+		</div>
+		<div class="wst-shophome-nav">
+			<div class="wst-shophome-nav-box">
+				<a href="__ROOT__/index.php/Home/Shops/toShopHome/?shopId={$shopId}&ct1=-1"><li <if condition="$ct1 eq -1">class="liselected"</if>>本店所有商品</li></a>
+				<a href="__ROOT__/index.php/Home/Shops/toShopHome/?shopId={$shopId}&ct1=0"><li <if condition="$ct1 eq 0">class="liselected"</if>>店铺首页</li></a>
+				<volist name="shopscates" key="k" id="vo">
+				<a href="__ROOT__/index.php/Home/Shops/toShopHome/?shopId={$vo['shopId']}&ct1={$vo['catId']}"><li <if condition="$ct1 eq $vo['catId']">class="liselected"</if>>{$vo["catName"]}</li></a>
+				</volist>
+			</div>
+		</div>
+		<if condition="count($shops['shopAds']) gt 0">
+		<div>
+			<div class="ck-slide">
+				<ul class="ck-slide-wrapper">
+					<volist name="shops['shopAds']" id="vo" key='i'>
+						<li>
+							<a target="_blank" href="{$vo.adUrl}">
+								<img data-original="__ROOT__/{$vo.adImg}" width="100%" height="350"/>
+							</a>
+						</li>
+					</volist>
+				</ul>
+				<a href="javascript:;" class="ctrl-slide ck-prev" ></a> 
+				<a href="javascript:;" class="ctrl-slide ck-next" ></a>
+				<div class="ck-slidebox">
+					<div class="slideWrap">
+						<ul class="dot-wrap">
+							<volist name="shops['shopAds']" id="vo" key='i'>
+								<if condition="$i eq 1">
+									<li class="current"><em>{$i}</em></li>
+								<else/>
+									<li><em>{$i}</em></li>
+								</if>
+							</volist>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		</if>
+		<!----加载商品楼层start----->
+		<div class="wst-container">
+			<div class="wst-shop-container">
+				<div class="shop-left">
+					<div class="shop-left-box">
+						<table class="details-tab">
+							<tbody>
+								<tr>
+									<td class="title">店铺名称：</td>
+									<td>{$shops['shopName']}</td>
+								</tr>
+								<tr>
+									<td class="title">营业时间：</td>
+									<td>{$shops['serviceStartTime']}-{$shops['serviceEndTime']}</td>
+								</tr>
+								<tr>
+									<td class="title">配送说明：</td>
+									<td style="line-height:30px;padding-bottom:10px;">{$shops['deliveryStartMoney']}元起，配送费{$shops['deliveryMoney']}元，<br/>{$shops['deliveryFreeMoney']}元起免配送费<br/></td>
+								</tr>
+								<tr>
+									<td class="title">配送地址：</td>
+									<td>{$shops['shopAddress']}</td>
+								</tr>
+								<tr>
+									<td class="title">店铺电话：</td>
+									<td>{$shops['shopTel']}</td>
+								</tr>
+								<tr>
+									<td ></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td colspan="2" class="wst-shop-eval">
+										<div class="shop-eval-box" style="width:214px;margin:0 auto;">
+											<li>商品<br/>{$shopScores["goodsScore"]}</li>
+											<li class="li-center">时效<br/>{$shopScores["timeScore"]}</li>
+											<li>服务<br/>{$shopScores["serviceScore"]}</li>
+											<div class="wst-clear"></div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td ></td>
+									<td></td>
+								</tr>
+								
+							</tbody>
+						</table>
+					</div>
+					<div class="wst-goods-cate-box">
+						<div class="cate-title">商品分类</div>
+						<div class="hotsale-goods-box" >
+							<volist name="shopscates" key="k" id="vo">
+								<li data="pcate-{$k}" class="pcate-{$k} pcate" style=""><span id="pcate-{$k}-s" class="span2"></span>&nbsp;&nbsp;&nbsp;&nbsp;{$vo["catName"]}</li>
+								<volist name="vo['children']" key="k2" id="vo2">
+									<a href="__ROOT__/index.php/Home/Shops/toShopHome/?shopId={$vo2['shopId']}&ct1={$vo['catId']}&ct2={$vo2['catId']}"><li class="pcate-{$k}-c ccate" ><img src="__ROOT__/Apps/Home/View/default/images/icon_dire_more.png" width="5" height="10"/>&nbsp;{$vo2["catName"]}</li></a>
+								</volist>
+							</volist>
+						</div>
+					</div>
+					<div class="wst-goods-hotsale-box">
+						<div class="hotsale-title">热销排名</div>
+						<volist name="shops['hotgoods']" key="k" id="vo">
+						<div class="hotsale-goods-box">
+							<div class="hotsale-goods-img">
+								<img data-original="__ROOT__/{$vo['goodsThums']}" width="65" height="65" />
+							</div>
+							<div class="hotsale-goods-title">
+								<a href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$vo['goodsId']}">{$vo['goodsName']}</a>
+								<div><span class="span1">￥{$vo['shopPrice']}</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="span2">￥{$vo['marketPrice']}</span></div>
+							</div>
+							<div class="wst-clear"></div>
+						</div>
+						</volist>
+					</div>
+				</div>
+				
+				<div class="shop-right">
+					<div class="wst-goods-search">
+						<input id="goodsName" value="{$goodsName}" type="text" style="width:300px;height:28px;padding-left:6px;" placeholder="商品名称"/>
+						<button class="searchwst" onclick="searchwst();">&nbsp;</button>
+						<button class="searchshop"  onclick="searchShopsGoods(1);">&nbsp;</button>
+					</div>
+					<div class="wst-goods-list">
+						<div class="wst-goods-header">
+							<li <if condition="$msort eq 1">class="licurr"</if> onclick="searchShopsGoods(1);">综合排序<s <if condition="$msort eq 1">class="bscurr"</if>></s></li>
+							<li <if condition="$msort eq 2">class="licurr"</if> onclick="searchShopsGoods(2);">人气<s <if condition="$msort eq 2">class="bscurr"</if>></s></li>
+							<li <if condition="$msort eq 3">class="licurr"</if> onclick="searchShopsGoods(3);">销量<s <if condition="$msort eq 3">class="bscurr"</if>></s></li>
+							<li <if condition="$msort eq 4 or $msort eq 5">class="licurr"</if> onclick="searchShopsGoods(4);">价格<b <if condition="$msort eq 4">class="bscurr"</if><if condition="$msort eq 5">class="bscurr_up"</if>></b></li>
+							<li <if condition="$msort eq 6">class="licurr"</if> onclick="searchShopsGoods(6);">好评度<s <if condition="$msort eq 6">class="bscurr"</if>></s></li>
+							<li <if condition="$msort eq 7">class="licurr"</if> onclick="searchShopsGoods(7);">上架时间<s <if condition="$msort eq 7">class="bscurr"</if>></s></li>
+							<div style="float:left;position: relative;">
+								&nbsp;&nbsp;&nbsp;&nbsp;
+								<s class="rmb1"></s>
+								<s class="rmb2"></s>
+								<input type="text" style="width:85px;height:25px;padding-left:20px;" id="sprice" value="{$sprice}"/>-
+								<input type="text" style="width:85px;height:25px;padding-left:20px;" id="eprice" value="{$eprice}"/>
+								<button style="width:50px;height:25px;" onclick="searchShopsGoods(6);">确定</button>
+							</div>
+							<div class="wst-clear"></div>
+						</div>
+						<div class="wst-goods-page">
+							<volist name="shopsgoods" key="k" id="vo">
+							
+							<li class="wst-goods-item">
+								<div class="goods-img">
+									<a href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$vo['goodsId']}">
+										<img data-original="__ROOT__/{$vo['goodsThums']}" width="180" />
+									</a>
+								</div>
+								<div class="goods-des">
+									<div class="goods-title"><a href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$vo['goodsId']}">{$vo['goodsName']}</a></div>
+									<div class="goods-price"><span class="span1">￥{$vo['shopPrice']}</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="span2">￥{$vo['marketPrice']}</span></div>
+									<div class="goods-buy">
+										<div class="goods-left">
+											<span style="color:green;font-weight:bolder;margin-left:2px;">{$vo["totalnum"]?$vo["totalnum"]:0}</span>人已购买
+										</div>
+										<div class="goods-right">
+										   <if condition="$vo['goodsStock'] gt 0">
+										   <a href="javascript:addCart({$vo['goodsId']},0,'{$vo['goodsThums']}')" class="btnCart">
+											<img data-original="__ROOT__/Apps/Home/View/default/images/btn_addcart.png" width="85"/>
+										   </a>
+										   <else/>
+										   &nbsp;&nbsp;&nbsp;&nbsp;<font color='red'>(暂无商品)</font>
+										   </if>
+										</div>
+										<div class="wst-clear"></div>
+									</div>
+								</div>
+							</li>
+							</volist>
+							<div class="wst-clear"></div>
+						</div>
+					</div>
+				
+				</div>
+				<div class="wst-clear"></div>
+			</div>
+		</div>
+		<include file="./Apps/Home/View/default/footer.html" />
+		<include file="./Apps/Home/View/default/right_cart.html" />
+   	</body>
+   	
+   	<script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
+	<script src="__ROOT__/Apps/Home/View/default/js/shophome.js"></script>
+	<script src="__PUBLIC__/js/common.js"></script>
+	<script src="__ROOT__/Apps/Home/View/default/js/head.js" type="text/javascript"></script>
+	<script src="__ROOT__/Apps/Home/View/default/js/common.js" type="text/javascript"></script>
+	<script src="__PUBLIC__/plugins/slide/js/slide.js"></script>
+	<script src="__ROOT__/Apps/Home/View/default/js/goods.js"></script>
+	
+	<script type="text/javascript">
+	$(document).ready(function(){
+		var docwidth = $(document).width();
+		$(".ck-slide-wrapper img").width(docwidth);
+		$('.ck-slide').ckSlide({
+			autoPlay: true,
+			dir: 'x'
+		});
+	});
+	</script>
+</html> 
+
+

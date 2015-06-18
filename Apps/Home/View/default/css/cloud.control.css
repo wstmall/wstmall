@@ -1,0 +1,79 @@
+@charset "utf-8";
+
+/** 渐变 **/
+.linear_fe_f2 {
+	background-image: -moz-linear-gradient(rgb(254, 254, 254),
+		rgb(221, 233, 247) );
+	background-image: -o-linear-gradient(rgb(254, 254, 254),
+		rgb(221, 233, 247) );
+	background-image: -webkit-linear-gradient(rgb(254, 254, 254),
+		rgb(221, 233, 247) );
+	background-image: linear-gradient(rgb(254, 254, 254), rgb(221, 233, 247)
+		);
+	filter: progid : DXImageTransform.Microsoft.gradient ( startColorstr =
+		#FEFEFE, endColorstr = #DDE9F7, GradientType = 0 );
+	*zoom: 1;
+}
+
+.linear_7c_4c {
+	background-image: -moz-linear-gradient(rgb(221, 233, 249),
+		rgb(255, 255, 255) );
+	background-image: -o-linear-gradient(rgb(221, 233, 249),
+		rgb(255, 255, 255) );
+	background-image: -webkit-linear-gradient(rgb(221, 233, 249),
+		rgb(255, 255, 255) );
+	background-image: linear-gradient(rgb(221, 233, 249), rgb(255, 255, 255)
+		);
+	filter: progid : DXImageTransform.Microsoft.gradient ( startColorstr =
+		#DDE9F9, endColorstr = #FFFFFF, GradientType = 0 );
+	*zoom: 1;
+}
+
+/** 表单样式 **/
+/** 星评 **/
+/*.star, .star b { background-image: url(../image/star.gif); background-repeat: no-repeat; border: medium none; font-family: '宋体'; font-size: 14px; line-height: 14px; overflow: visible;}
+.star { padding: 0 37px; position: relative;}
+.star b { background-position: 0 center; left: 0; position: absolute;}
+.star_0 { background-position: -80px center;}
+.star_1 { background-position: -64px center;}
+.star_2 { background-position: -48px center;}
+.star_3 { background-position: -32px center;}
+.star_4 { background-position: -16px center;}
+.star_5 { background-position: 0 center;}
+.star_0 b, .star_1 b, .star_2 b, .star_3 b, .star_4 b, .star_5 b { display: none;}
+.star_0_5, .star_1_5, .star_2_5, .star_3_5, .star_4_5 { background-position: -80px 0.5px;}
+.star_0_5 b {left: 0; padding: 0 1px; top: 0;}
+.star_1_5 b {left: 0; padding: 0 9px; top: 0;}
+.star_2_5 b {left: 0; padding: 0 17px; top: 0;}
+.star_3_5 b {left: 0; padding: 0 25px; top: 0;}
+.star_4_5 b {left: 0; padding: 0 33px; top: 0;}*/
+/** 灰色按钮样式 **/
+.btn {
+	display: inline-block;
+}
+
+.vm {
+	vertical-align: middle;
+}
+
+.line {
+	display: block;
+	*display: inline-block;
+	margin: 0 1px;
+	padding-top: 1px;
+}
+
+.gray_btn {
+	padding: 0px 5px;
+	color: #666;
+	border-color: #bbb;
+	border-style: solid;
+	border-width: 0 1px;
+	background-image: -webkit-linear-gradient(top, #fcfcfc, #e9e9e9);
+	background-image: -moz-linear-gradient(top, #fcfcfc, #e9e9e9);
+	background-image: -ms-linear-gradient(top, #fcfcfc, #e9e9e9);
+	background-image: -o-linear-gradient(top, #fcfcfc, #e9e9e9);
+	background-image: linear-gradient(top, #fcfcfc, #e9e9e9);
+	filter: progid : DXImageTransform.Microsoft.gradient ( startColorstr =
+		#fcfcfc, endColorstr = #e9e9e9, GradientType = 0 );
+}

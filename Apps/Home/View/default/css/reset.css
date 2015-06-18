@@ -1,0 +1,75 @@
+@charset "utf-8";
+body,div,dl,dt,dd,ul,li,h1,h2,h3,h4,h5,h6,p,pre,code,form,fieldset,legend,input,button,textarea,blockquote {
+	margin: 0;
+	padding: 0
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0
+}
+
+ul,ol {
+	list-style: none
+}
+
+h1,h2,h3,h4,h5,h6 {
+	font-weight: normal
+}
+h1{
+    font-size:36px;
+}
+h2{
+    font-size:28px;
+}
+h3{
+    font-size:24px;
+}
+h4{
+    font-size:20px;
+}
+h5{
+    font-size:18px;
+}
+h6{
+    font-size:16px;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:link {
+	text-decoration: none;
+}
+
+a:active {
+	text-decoration: none;
+}
+
+input[type=text]:focus,input[type=password]:focus,textarea:focus {
+	outline: 0
+}
+
+textarea {
+	resize: none;
+	font-family: Arial;
+	overflow: auto
+}
+
+input {
+	font-size: 14px
+}
+
+.clearfix {
+	zoom: 1;
+	_height: 1px
+}
+
+.clearfix:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden
+}

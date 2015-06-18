@@ -1,0 +1,343 @@
+<!doctype html>
+<html>
+	<head>
+  		<meta charset="utf-8">
+      	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+      	<meta name="viewport" content="width=device-width, initial-scale=1">
+      	<title>{$goodsDetails["goodsName"]} - {$CONF['shopTitle']['fieldValue']}</title>
+      	<meta name="keywords" content="{$goodsDetails['goodsName']}" />
+      	<meta name="description" content="{$CONF['shopTitle']['fieldValue']},{$goodsDetails['goodsName']}" />
+      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/goodsdetails.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/pslocation.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/magnifier.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/pageCode.css" />
+     	<script src="__PUBLIC__/js/jquery.min.js"></script>
+     	<script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
+   	</head>
+   	<body>
+		<include file="./Apps/Home/View/default/header.html" />
+	
+		<input id="goodsId" type="hidden" value="{$goodsDetails['goodsId']}"/>
+		<!----加载商品楼层start----->
+		<div class="wst-container">
+			<div class="wst-nvg-title" style='display:none;'></div>
+			<div class="wst-goods-details">
+				<div class="details-left" style="">
+					<div class="goods-img-box" style= " ">
+						 <!--产品参数开始-->
+						  <div>
+						    <div id="preview" class="spec-preview"> 
+							    <span class="jqzoom" style="">
+							    	<img jqimg="__ROOT__/{$goodsDetails['goodsImg']}" src="__ROOT__/{$goodsDetails['goodsImg']}" height="350" width="350"/>
+							    </span> 
+						    </div>
+						    <!--缩图开始-->
+						    <div class="spec-scroll"> <a class="prev">&lt;</a> <a class="next">&gt;</a>
+						      <div class="items">
+						        <ul>
+						        	<li><img alt="" bimg="__ROOT__/{$goodsDetails['goodsImg']}" src="__ROOT__/{$goodsDetails['goodsImg']}" onmousemove="preview(this);"></li>
+						        	<volist name="goodsImgs" key="k" id="vo">
+						          		<li><img alt="" bimg="__ROOT__/{$vo['goodsImg']}" src="__ROOT__/{$vo['goodsImg']}" onmousemove="preview(this);"></li>
+						          	</volist>
+						        
+						        </ul>
+						      </div>
+						    </div>
+						    <!--缩图结束-->
+						  </div>
+						  <!--产品参数结束-->
+					</div>
+					<div class="goods-des-box" style="">
+						<table class="goods-des-tab">
+							<tbody>
+								<tr>
+									<td colspan="2">
+										<div class="des-title">
+											<a href="">
+											{$goodsDetails["goodsName"]}
+											</a>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<div class="des-chux">
+											促销：<span>￥{$goodsDetails["shopPrice"]}</span>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td width="70"><span class="des-title-span">商品编号：</span></td>
+									<td>{$goodsDetails["goodsSn"]}</td>
+								</tr>
+								<tr>
+									<td width="70"><span class="des-title-span">配&nbsp;&nbsp;送&nbsp;&nbsp;至：</span></td>
+									<td>
+										<li id="summary-stock">
+											<div class="dd">
+												<div id="store-selector">
+													<div class="text"><div></div><b></b></div>                   
+													
+												</div><!--store-selector end-->
+												<div id="store-prompt"><strong></strong></div><!--store-prompt end--->
+											</div>
+										</li>有货
+										<div class="wst-clear"></div>
+									</td>
+								</tr>
+								<tr>
+									<td width="70"><span class="des-title-span">运&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;费：</span></td>
+									<td>{$goodsDetails["deliveryStartMoney"]}元起，配送费{$goodsDetails["deliveryMoney"]}元，{$goodsDetails["deliveryFreeMoney"]}元起免配送费</td>
+								</tr>
+								<tr>
+									<td width="70"><span class="des-title-span">服&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;务：</span></td>
+									<td>由<if condition="$goodsDetails['deliveryType'] eq 0">WST商城<else/><a href="__ROOT__/index.php/Home/Shops/toShopHome/?shopId={$goodsDetails['shopId']}">{$goodsDetails['shopName']}</a></if>配送，并提供售后服务</td>
+								</tr>
+								
+								<if condition="$goodsDetails['shopServiceStatus'] eq 1">
+								<tr>
+									<td width="70"><span style="display:inline-block;width:70px;">购买数量：</span></td>
+									<td>
+										<div id="haveGoodsToBuy" <if condition="$goodsDetails['goodsStock'] elt 0">style="display:none;"</if>>
+											<div class="goods-buy-cnt" style="text-align:center;padding-top:2px;">
+												<div class="buy-cnt-plus" style="cursor:pointer;position:absolute;width:28px;height:36px;top:0px;left:0px;" onclick="changebuynum({$goodsDetails['goodsId']},1)"></div>
+												<input id="buy-num" type="text" style="border:0px;height:15px;width:56px;text-align:center;padding-top:8px;padding-bottom:6px;" value="1" onkeyup="changebuynum({$goodsDetails['goodsId']},0);"/>
+												<div class="buy-cnt-add" style="cursor:pointer;position:absolute;width:28px;height:36px;top:0px;right:0px;" onclick="changebuynum({$goodsDetails['goodsId']},2)"></div>
+											</div>
+										</div>
+										<div id="noGoodsToBuy" <if condition="$goodsDetails['goodsStock'] gt 0">style="display:none;"</if>>
+											<div style="font-weight: bold;">所选地区该商品暂时无货，非常抱歉！</div>
+											<div style="clear: both;"></div>
+											<br />
+											<div>
+												<a id="InitCartUrl" class="btn-append " href="javascript:void(0);" title="">
+													<span>
+														<img src="__ROOT__/Apps/Home/View/default/images/hcat.jpg" />
+													</span>
+												</a>
+											</div>
+										</div>
+									</td>
+								</tr>
+								<else/>
+								<tr>
+									<td colspan="2">
+										<div style="font-weight: bold;color:red;">休息中,暂停营业</div>
+									</td>
+								</tr>
+								</if>
+								<tr>
+									<td ></td>
+									<td></td>
+								</tr>
+								<if condition="$goodsDetails['goodsStock'] gt 0">
+								<tr>
+									<td width="70"></td>
+									<td>
+										<if condition="$comefrom eq 1">
+											<img src="__ROOT__/Apps/Home/View/default/images/hcat.jpg" />
+										<else/>
+											<if condition="$goodsDetails['shopServiceStatus'] eq 1">
+												<a href="javascript:addCart({$goodsDetails['goodsId']},0,'{$goodsDetails['goodsThums']}')" class="btnCart"><img src="__ROOT__/Apps/Home/View/default/images/btn_buy_01_hover.png" width="112" height="38"/></a>
+												&nbsp;&nbsp;
+												<a href="javascript:addCart({$goodsDetails['goodsId']},1)">
+													<img src="__ROOT__/Apps/Home/View/default/images/btn_buy_02.png" width="112" height="38"/>
+												</a>
+											</if>
+											<if condition="$goodsDetails['shopServiceStatus'] eq 0">
+												bb<img src="__ROOT__/Apps/Home/View/default/images/hcat.jpg" />
+											</if>
+										</if>
+									</td>
+								</tr>
+								</if>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="details-right">
+					<table class="details-tab">
+						<tbody>
+							<tr>
+								<td class="title">店铺名称：</td>
+								<td>{$goodsDetails["shopName"]}</td>
+							</tr>
+							<tr>
+								<td class="title">营业时间：</td>
+								<td>{$goodsDetails['serviceStartTime']}-{$goodsDetails['serviceEndTime']}</td>
+							</tr>
+							<tr>
+								<td class="title">配送说明：</td>
+								<td>{$goodsDetails["deliveryStartMoney"]}元起，配送费{$goodsDetails["deliveryMoney"]}元<br/>{$goodsDetails["deliveryFreeMoney"]}元起免配送费<br/><br/></td>
+							</tr>
+							<tr>
+								<td class="title">门店地址：</td>
+								<td>{$goodsDetails['shopAddress']}</td>
+							</tr>
+							<tr>
+								<td class="title">店铺电话：</td>
+								<td>{$goodsDetails['shopTel']}</td>
+							</tr>
+							<tr>
+								<td ></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td colspan="2" class="wst-shop-eval">
+									<div class="shop-eval-box" style="width:220px;margin:0 auto;">
+										    <li>商品<br/>{$shopScores["goodsScore"]}</li>
+											<li class="li-center">时效<br/>{$shopScores["timeScore"]}</li>
+											<li>服务<br/>{$shopScores["serviceScore"]}</li>
+										<div class="wst-clear"></div>
+									</div>
+								</td>
+							</tr>
+							<tr>
+								<td ></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td colspan="2" class="wst-shop-eval">
+									<div class="shop-eval-box" style="width:214px;margin:0 auto;">
+										<a href="__ROOT__/index.php/Home/Shops/toShopHome/?shopId={$goodsDetails['shopId']}"><img src="__ROOT__/Apps/Home/View/default/images/btn_into.png" width="112" height="38"/></a>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="wst-clear"></div>
+			</div>
+			
+			<div class="wst-goods-pdetails">
+				<div class="wst-goods-pdetails-left">
+					<div class="wst-goods-hotsale-box">
+						<div class="hotsale-title">热销商品</div>
+						<volist name="hotgoods" key="k" id="vo">
+						<div class="hotsale-goods-box">
+							<div class="hotsale-goods-img">
+								<img data-original="__ROOT__/{$vo['goodsThums']}" width="65" height="65" />
+							</div>
+							<div class="hotsale-goods-title">
+								<a href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$vo['goodsId']}">{$vo['goodsName']}</a>
+								<div><span class="span1">￥{$vo['shopPrice']}</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="span2">￥{$vo['marketPrice']}</span></div>
+							</div>
+							<div class="wst-clear"></div>
+						</div>
+						</volist>
+						
+					</div>
+				</div>
+				<div id="wst-goods-pdetails-right" class="wst-goods-pdetails-right">
+					<div class="goods-nvg">
+						<ul class="tab">
+							<li onclick="tabs('#wst-goods-pdetails-right',0)" class="curr">商品介绍</li>
+							<li onclick="tabs('#wst-goods-pdetails-right',1)">商品评价</li>
+						</ul>
+						<div class="wst-clear"></div>
+					</div>
+					<div class="tabcon">
+						<div style="font-weight:bolder;height:auto;line-height:30px;padding-left:8px;">
+						{$goodsDetails["goodsDesc"]}
+						</div>
+					</div>
+					<div class="tabcon"  style="display:none;">						
+						<table id="appraiseTab" width="100%">
+							<tr>
+								<td>
+		                      	 	<div style="margin-top: 10px;" id="allgoodsppraises">
+		                           		 请稍等...
+		                        	</div>
+		                        </td>
+		                	</tr>
+	                   	</table>  
+	                   	<div id="wst-page-items" style="text-align:right;"></div>                  
+					</div>
+					<div class="wst-clear"></div>
+				</div>
+				<div class="wst-clear"></div>
+			</div>
+			<div class="wst-clear"></div>
+		</div>
+		<include file="./Apps/Home/View/default/footer.html" />
+		<include file="./Apps/Home/View/default/right_cart.html" />
+   	</body>
+   	
+   	<script src="__ROOT__/Apps/Home/View/default/js/goods.js"></script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__ROOT__/Apps/Home/View/default/js/head.js" type="text/javascript"></script>
+<script src="__ROOT__/Apps/Home/View/default/js/common.js" type="text/javascript"></script>
+<script src="__ROOT__/Apps/Home/View/default/js/pslocation.js" type="text/javascript"></script>
+<script src="__ROOT__/Apps/Home/View/default/js/jquery.jqzoom.js" type="text/javascript"></script>
+<script src="__ROOT__/Apps/Home/View/default/js/magnifier.js" type="text/javascript"></script>
+<script src="__ROOT__/Apps/Home/View/default/js/jquery.page.js" type="text/javascript"></script>
+<script> 
+$("#store-selector").hover(function() {
+}, function() {
+	$("#store-selector").removeClass("hover");
+});
+
+
+$(function(){
+	var params = {}; 
+	var goodsId = $.trim($("#goodsId").val());
+	params.goodsId = goodsId;	
+	
+	//加载商品评价
+	jQuery.post(rooturl+"/index.php/Home/Goods/getGoodsappraises/" ,params,function(data) {
+		var json = WST.toJson(data);
+			
+		var html = new Array();		    	
+		for(var j=0;j<json.root.length;j++){
+		    var appraises = json.root[j];
+		    	
+		    html.push('<tr height="75" style="border:1px dotted #eeeeee;">');
+			    html.push('<td width="150" style="padding-left:6px;"><div>'+appraises.userName+'</div></td>');
+			    html.push('<td width="*"><div>'+appraises.content+'</div></td>');
+			    html.push('<td width="180">');
+			    html.push('<div>商品评分：');
+				for(var i=0;i<appraises.goodsScore;i++){
+					html.push('<img src="'+rooturl+'/Apps/Home/View/default/images/icon_score_yes.png"/>');
+				}
+				html.push('</div>');
+				html.push('<div>时效评分：');
+				for(var i=0;i<appraises.timeScore;i++){
+					html.push('<img src="'+rooturl+'/Apps/Home/View/default/images/icon_score_yes.png"/>');
+				}
+				html.push('</div>');
+				html.push('<div>服务评分：');
+				for(var i=0;i<appraises.serviceScore;i++){
+					html.push('<img src="'+rooturl+'/Apps/Home/View/default/images/icon_score_yes.png"/>');
+				}
+				html.push('</div>');
+				html.push('</td>');
+				
+		    html.push('</tr>');
+		    	
+		}
+		 
+		if(json.root.length>0){
+		    $("#appraiseTab").html(html.join(""));
+		}else{
+		 	$("#appraiseTab").html("<tr><td><div style='font-size:15px;text-align:center;'>没有评价信息</div></td></tr>");
+		}
+		
+		$(".wst-page-items").createPage({
+	        pageCount:json.totalPage,
+	        current:json.currPage,
+	        backFn:function(p){
+	        	getPage(p);
+	        }
+	    });
+		
+	});
+	
+});
+</script>
+   	
+</html>
+
+

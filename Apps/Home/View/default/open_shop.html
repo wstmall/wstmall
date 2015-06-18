@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+  		<meta charset="utf-8">
+      	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+      	<meta name="viewport" content="width=device-width, initial-scale=1">
+      	<title>店铺注册 - {$CONF['shopTitle']['fieldValue']}</title>
+      	<meta name="keywords" content="{$CONF['shopKeywords']['fieldValue']}" />
+      	<meta name="description" content="{$CONF['shopTitle']['fieldValue']},店铺注册" />
+      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css">
+      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/regist.css">
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/passport.css">
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/footer.css">
+     	<link rel="stylesheet" href="__PUBLIC__/plugins/uploadify/uploadify.css">
+      	
+      	
+   	</head>
+   	<body>
+    <style>
+    .yj-select select{height:30px;font-size:17px;margin-right:5px;}
+    </style>
+	<div id="shortcut-2013">
+		<include file="./Apps/Home/View/default/header_nav.html" />
+	</div>
+	<div class="w" id="registhd">
+	    <div style="margin-top:10px;"> 
+	    <a href="#">
+	    	<span style="font-size:30px;color:black;">店铺注册</span>
+   		 </a>
+   
+	    </div>
+	</div>
+	<div class="w" id="regist">	    
+	    <div class="mc">
+	        <form name="myform" method="post" id="myform" >
+	            <input type='hidden' id='shopImg' value='{$object.shopImg}'/>
+	            <div class="form">
+	                <div class="item" id="select-regName">
+	                    <span class="label"><b class="ftx04">*</b>登录账户：</span>	
+	                    <div class="fl item-ifo">
+	                        <div class="o-intelligent-regName" style="position:relative;">	                       
+	                            <input id="loginName" name="loginName" class="text" tabindex="1" maxlength="30" type="text"/>
+	                            <div id="loginNameTip" style="display: inline-block; "></div>
+	                        </div>	                        
+	                    </div>
+	                </div>	                
+	                <div id="o-password">
+	                    <div class="item">
+	                        <span class="label"><b class="ftx04">*</b>请设置密码：</span>	
+	                        <div class="fl item-ifo">
+	                            <input id="loginPwd" name="loginPwd" class="text" tabindex="2" style="ime-mode:disabled;" autocomplete="off" type="password"/>
+	                            <label id="pwd_succeed" class="pwdblank"></label>	                           
+	                        </div>
+	                    </div>	
+	                    <div class="item">
+	                        <span class="label"><b class="ftx04">*</b>请确认密码：</span>	
+	                        <div class="fl item-ifo">
+	                            <input id="reUserPwd" name="reUserPwd" class="text" tabindex="3" autocomplete="off" type="password"/>	                            
+	                            <label id="pwdRepeat_succeed" class="pwdblank"></label>	                           
+	                        </div>
+	                    </div>
+	                    <div class="item">
+	                        <span class="label"><b class="ftx04">*</b>店铺名称：</span>	
+	                        <div class="fl item-ifo">
+	                            <input id="shopName" name="shopName" class="text" tabindex="3" type='text'/>	                            
+	                            <label id="shopName_succeed" class="pwdblank"></label>	                           
+	                        </div>
+	                    </div>
+	                    <div class="item">
+	                        <span class="label"><b class="ftx04">*</b>店主姓名：</span>	
+	                        <div class="fl item-ifo">
+	                            <input id="userName" name="userName" class="text" tabindex="3" type='text'/>	                            
+	                            <label id="userName_succeed" class="pwdblank"></label>	                           
+	                        </div>
+	                    </div>	                    
+	                    <div class="item">
+	                        <span class="label"><b class="ftx04">*</b>公司名称：</span>	
+	                        <div class="fl item-ifo">
+	                            <input id="shopCompany" name="shopCompany" class="text" tabindex="3" autocomplete="off" style="" type="text"/>	                           
+	                            <label id="shopCompany_succeed" ></label>	                           
+	                        </div>
+	                    </div>
+	                    <div class="item" style='height:auto;position:relative;'>
+	                        <span class="label">店铺图标：</span>	
+	                        <div class="fl item-ifo">
+	                            <input type='text' id='shopImgUpload' class="form-control wst-ipt"/>
+                                <img id='preview' src='' ref='' width='100' style='display:none'/>	                           
+	                        </div>
+	                        <span class="label" style="position:absolute;top:6px;left:322px;">图片大小：150 × 120 (px) </span>
+	                    </div>
+	                   
+	                    <div class="item">
+	                        <span class="label"><b class="ftx04">*</b>所属地区：</span>	
+	                        <div class="fl item-ifo yj-select">
+	                            <select id='areaId1' onchange='javascript:getAreaList("areaId2",this.value,0)'>
+					               <option value=''>请选择</option>
+					               <volist name="areaList" id="vo">
+					               <option value='{$vo['areaId']}' <if condition="$area['parentId'] == $vo['areaId'] ">selected</if>>{$vo['areaName']}</option>
+					               </volist>
+					             </select>
+					             <select id='areaId2' onchange='javascript:getAreaList("areaId3",this.value,1);'>
+					               <option value=''>请选择</option>
+					             </select>
+					             <select id='areaId3'>
+					               <option value=''>请选择</option>
+					             </select>
+	                            <label id="shopTel_succeed" ></label>	                           
+	                        </div>
+	                    </div>
+	                    <div class="item">
+	                        <span class="label"><b class="ftx04">*</b>店铺地址：</span>	
+	                        <div class="fl item-ifo">
+	                            <input id="shopAddress" name="shopAddress" class="text" tabindex="3" autocomplete="off" style="" type="text"/>	                           
+	                            <label id="shopAddress_succeed" ></label>	                           
+	                        </div>
+	                    </div>
+						<div class="item">
+	                        <span class="label"><b class="ftx04">*</b>行业：</span>	
+	                        <div class="fl item-ifo yj-select">
+	                            <select id='goodsCatId1'>
+					                <option value=''>请选择</option>
+					                <volist name="goodsCatsList" id="vo">
+					                <option value='{$vo['catId']}' <if condition="$object['goodsCatId1'] == $vo['catId'] ">selected</if>>{$vo['catName']}</option>
+					                </volist>
+					            </select>
+	                            <label id="shopTel_succeed" ></label>	                           
+	                        </div>
+	                    </div>      
+	                    <div class="item">
+	                        <span class="label"><b class="ftx04">*</b>手机号码：</span>	
+	                        <div class="fl item-ifo">
+	                            <input id="userPhone" name="userPhone" class="text" tabindex="3" autocomplete="off" type="text" maxlength="11"/>	                           
+	                            <label id="userPhone_succeed" ></label>	                           
+	                        </div>
+	                    </div> 
+	                  	<div class="item" id="authcodeDiv">
+	                            <span class="label"><b class="ftx04">*</b>验证码：</span>	
+	                            <div class="fl item-ifo">
+	                                <input id="authcode" style="ime-mode:disabled" name="authcode" class="text text-1" tabindex="6" autocomplete="off" maxlength="6" type="text"/>
+	                                <label class="img">
+	                                    <img style='vertical-align:middle;cursor:pointer;height:39px;' class='verifyImg' src='' title='刷新验证码' onclick='javascript:getVerify()'/> 
+									 </label>      	
+	                                <label class="ftx23">&nbsp;看不清？<a href="javascript:getVerify()" onclick="setTimeout(verc,50);" class="flk13">换一张</a></label>
+	                            </div>
+	                 	</div>	
+	                 	 
+	                </div>
+	                <input name="qVoCgWxtvu" value="EqaRK" type="hidden"/>	
+	                <div class="item item-new">
+	                    <span class="label">&nbsp;</span>	
+	                    <div class="fl item-ifo">
+	                        <label>
+	                        <input class="checkbox" id="protocol" name="protocol" type="checkbox"/>
+	                                                                        我已阅读并同意</label><a href="javascript:;" class="blue" id="protocolInfo" onclick="showXiey();">《WST店铺注册协议》</a>                       
+	                        <label id="protocol_error" class="error hide">请接受服务条款</label>
+	                    </div>
+	                </div>
+	                <div class="item">
+	                    <span class="label">&nbsp;</span>
+	                    <input class="btn-img btn-regist" id="registsubmit" value="立即注册" tabindex="8"  type="submit"/>
+	                </div>
+	            </div>
+	            <div class="phone">
+	                
+	            </div>
+	      		<span class="clr"></span>
+	        </form>
+	    </div>
+	</div>
+	<!--footer start--> 
+	<include file="./Apps/Home/View/default/footer.html" />
+	<!--footer end-->
+	<script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
+   	<script src="__PUBLIC__/plugins/formValidator/formValidator-4.1.3.js"></script>
+   	<script src="__PUBLIC__/plugins/uploadify/jquery.uploadify.min.js"></script>
+    <script src="__PUBLIC__/js/common.js"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/open_shop.js"></script>
+    <script type="text/javascript">
+       $(function(){
+    	   getAreaList("areaId2",'{$area["parentId"]}',0,'{$area["areaId"]}');
+	       getAreaList("areaId3",'{$area["areaId"]}',1);
+       })
+       
+   </script>
+</body>
+</html>

@@ -1,0 +1,255 @@
+@CHARSET "UTF-8";
+
+body {
+	margin: 0px auto;
+	background: #F5F5F5
+}
+
+a:link,a:visited,a:active,a:hover,a:hover {
+	text-decoration: none;
+	color: #000000;
+}
+
+.wst-wrap {
+	margin: 0px auto
+}
+
+.wst-header {
+	
+}
+
+.wst-main {
+	margin: auto;
+	width: 1020px;
+	min-height: 600px;
+	height: auto;
+	padding-top: 15px;
+}
+
+.wst-menu {
+	background: #FFFFFF;
+	width: 198px;
+	float: left;
+	border: 1px solid #ccc;
+	margin-right: 15px;
+	filter: progid : DXImageTransform.Microsoft.Shadow ( color = #909090,
+		direction = 120, strength = 4 );
+	-moz-box-shadow: 2px 2px 10px #909090;
+	-webkit-box-shadow: 2px 2px 10px #909090;
+	box-shadow: 2px 2px 10px #909090;
+}
+
+.wst-content {
+	background: #FFFFFF;
+	min-height: 600px;
+	height: auto;
+	width: 805px;
+	float: right;
+	filter: progid : DXImageTransform.Microsoft.Shadow ( color = #909090,
+		direction = 120, strength = 4 );
+	-moz-box-shadow: 2px 2px 10px #909090;
+	-webkit-box-shadow: 2px 2px 10px #909090;
+	box-shadow: 2px 2px 10px #909090;
+}
+
+.wst-footer {
+	height: 100px;
+	border-top: 1px solid #ddd;
+	margin-top: 5px;
+}
+
+.wst-menu-title {
+	position: relative;
+	width: 143px;
+	display: block;
+	padding: 5px 5px 5px 50px;
+	border-top: 1px solid #ccc;
+	color: #949494;
+}
+
+.wst-menu {
+	width: 198px;
+	margin: 0px;
+	padding: 0px;
+	min-height: 600px;
+}
+
+.wst-menu li {
+	list-style-type: none;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	padding: 0px 0px 0px 50px;
+	height: 30px;
+	line-height: 30px;
+	cursor: pointer
+}
+
+.wst-menu li:hover {
+	background-color: #e23e3d;
+	font-weight: bolder;
+	color: #ffffff;
+}
+
+.wst-menu .selected {
+	background-color: #e23e3d;
+	font-weight: bolder;
+	color: #ffffff;
+}
+
+.wst-menu .liselect {
+	background-color: #e23e3d;
+	font-weight: bolder;
+	color: #ffffff;
+}
+
+.wst-page-header {
+	height: 36px;
+	background: #F1BC8D;
+	color: #FFFFFF;
+	font-weight: bold;
+	line-height: 36px;
+	padding-left: 15px;
+}
+
+.wst-page-content {
+	width: 785px;
+	padding: 10px;
+}
+
+.wst-tbar-query {
+	width: 775px;
+	height: 76px;
+	height: 36px;
+	margin-bottom: 4px;
+}
+
+.wst-tbar-group {
+	width: 785px;
+	height: 76px;
+	height: 36px;
+	background: #F5F5F5
+}
+
+.wst-list {
+	width: 100%;
+	border: 1px solid #ddd;
+	border-collapse: collapse;
+}
+
+.wst-list thead tr th {
+	height: 40px;
+	line-height: 40px;
+	border-bottom: 1px solid #eeeeee;
+	text-align: left;
+	padding-left:5px;
+}
+
+.wst-list tbody tr td {
+	height: 40px;
+	line-height: 40px;
+	text-align: left;
+	padding-left:5px;
+}
+
+.wst-list tbody tr:nth-child(even) {
+	background: #FCFAE1;
+}
+
+.wst-page-content .btn {
+	padding-left: 23px;
+	height: 40px;
+	line-height: 40px;
+	margin-left: 5px;
+	cursor: pointer;
+}
+
+.wst-page-content a:link,a:visited,a:active,a:hover,a:hover {
+	text-decoration: none;
+	color: #707070;
+}
+
+.wst-form {
+	border-collapse: collapse;
+}
+
+.wst-form tr {
+	height: 30px;
+	line-height: 30px;
+}
+
+.wst-form tr th {
+	color: #707070;
+	text-align: right
+}
+
+.wst-form tr td {
+	text-align: left
+}
+
+.wst-form input,textarea{
+	background-color: white;
+	border: 1px solid #ccc;
+	border-radius: 2px;
+	box-shadow: 1px 1px 1px #f0f0f0 inset;
+	font-family: inherit;
+	font-size: 100%;
+	margin: 3px;
+	padding: 5px;
+	vertical-align: middle;
+}
+.wst-form select{
+	box-shadow: 2px 2px 2px #f0f0f0 inset;
+	font-family: inherit;
+	font-size: 100%;
+	padding: 2px;
+	vertical-align: middle;
+}
+.wst-shop-nav {
+	background-color: #333333;
+	height: 36px;
+	text-align: center;
+}
+
+.wst-nav-box {
+	width: 1020px;
+	margin: 0 auto;
+	height: 36px;
+	line-height: 36px;
+	color: #ffffff;
+}
+
+.wst-nav-box li {
+	width: 110px;
+	text-align: center;
+	float: left;
+	color: #ffffff;
+	cursor: pointer
+}
+
+.wst-nav-box li:hover {
+	background-color: #e23e3d;
+	font-weight: bolder;
+}
+
+.wst-nav-box .liselect {
+	background-color: #e23e3d;
+	font-weight: bolder;
+}
+
+.wst-appsaler {
+	margin-top: 30px;
+	text-align: center;
+	margin-bottom: 30px;
+	line-height: 30px;
+}
+
+.wst-menu-title span {
+	position: absolute;
+	left: 20px;
+	top: 8px;
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	background-image: url(../../../View/default/images/icon_leftmenu.png);
+	background-repeat: no-repeat;
+}

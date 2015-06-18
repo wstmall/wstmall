@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>{$CONF['shopTitle']['fieldValue']}后台管理中心</title>
+      <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
+      <!--[if lt IE 9]>
+      <script src="__PUBLIC__/js/html5shiv.min.js"></script>
+      <script src="__PUBLIC__/js/respond.min.js"></script>
+      <![endif]-->
+      <script src="__PUBLIC__/js/jquery.min.js"></script>
+      <script src="__PUBLIC__/plugins/bootstrap/js/bootstrap.min.js"></script>
+      <script src="__PUBLIC__/js/common.js"></script>
+      <script src="__PUBLIC__/plugins/plugins/plugins.js"></script>
+      <style type="text/css">
+		#preview{border:1px solid #cccccc; background:#CCC;color:#fff; padding:5px; display:none; position:absolute;}
+	  </style>
+   </head>
+   <script>
+   function query(){
+	   var shopName = $('#shopName').val();
+	   var goodsName = $('#goodsName').val();
+	   var areaId1 = $('#areaId1').val();
+	   var areaId2 = $('#areaId2').val();
+	   location.href='__ROOT__/index.php/Admin/Goods/queryPenddingByPage/?goodsName='+goodsName+"&shopName="+shopName+'&areaId1='+areaId1+'&areaId2='+areaId2; 
+   }
+   function edit(id){
+       location.href='__ROOT__/index.php/Admin/Goods/toEdit/?id='+id;     
+   }
+   function del(id){
+	   Plugins.confirm({title:'信息提示',content:'您确定要删除该商品吗?',okText:'确定',cancelText:'取消',okFun:function(){
+		   Plugins.closeWindow();
+		   Plugins.waitTips({title:'信息提示',content:'正在操作，请稍后...'});
+		   $.post("__ROOT__/index.php/Admin/Goods/del",{id:id},function(data,textStatus){
+					var json = WST.toJson(data);
+					if(json.status=='1'){
+						Plugins.setWaitTipsMsg({content:'操作成功',timeout:1000,callback:function(){
+						location.reload();
+						}});
+					}else{
+						Plugins.closeWindow();
+						Plugins.Tips({title:'信息提示',icon:'error',content:'操作失败!',timeout:1000});
+					}
+		   });
+		       
+		}});
+   }
+   function changeStatus(id,v){
+	   Plugins.waitTips({title:'信息提示',content:'正在操作，请稍后...'});
+	   $.post("__ROOT__/index.php/Admin/Goods/changePenddingGoodsStatus",{id:id,status:v},function(data,textStatus){
+				var json = WST.toJson(data);
+				if(json.status=='1'){
+					Plugins.setWaitTipsMsg({content:'操作成功',timeout:1000,callback:function(){
+					    location.reload();
+					}});
+				}else{
+					Plugins.closeWindow();
+					Plugins.Tips({title:'信息提示',icon:'error',content:'操作失败!',timeout:1000});
+				
+				}
+	   });
+   }
+   function toView(id){
+	   location.href='__ROOT__/index.php/Admin/Goods/toPenddingView/?id='+id; 
+   }
+   $.fn.imagePreview = function(options){
+		var defaults = {}; 
+		var opts = $.extend(defaults, options);
+		var t = this;
+		xOffset = 5;
+		yOffset = 20;
+		if(!$('#preview')[0])$("body").append("<div id='preview'><img width='200' src=''/></div>");
+		$(this).hover(function(e){
+			   $('#preview img').attr('src',"__ROOT__/"+$(this).attr('img'));      
+			   $("#preview").css("top",(e.pageY - xOffset) + "px").css("left",(e.pageX + yOffset) + "px").show();      
+		  },
+		  function(){
+			$("#preview").hide();
+		}); 
+		$(this).mousemove(function(e){
+			   $("#preview").css("top",(e.pageY - xOffset) + "px").css("left",(e.pageX + yOffset) + "px");
+		});
+	}
+   function getAreaList(objId,parentId,t,id){
+	   var params = {};
+	   params.parentId = parentId;
+	   $('#'+objId).empty();
+	   if(t<1){
+		   $('#areaId3').empty();
+		   $('#areaId3').html('<option value="">请选择</option>');
+	   }
+	   var html = [];
+	   $.post("__ROOT__/index.php/Admin/Areas/queryByList",params,function(data,textStatus){
+		    html.push('<option value="">请选择</option>');
+			var json = WST.toJson(data);
+			if(json.status=='1' && json.list.length>0){
+				var opts = null;
+				for(var i=0;i<json.list.length;i++){
+					opts = json.list[i];
+					html.push('<option value="'+opts.areaId+'" '+((id==opts.areaId)?'selected':'')+'>'+opts.areaName+'</option>');
+				}
+			}
+			$('#'+objId).html(html.join(''));
+	   });
+   }
+  $(document).ready(function(){
+	    $('.imgPreview').imagePreview();
+	    <notempty name='areaId1'>
+		getAreaList("areaId2",'{$areaId1}',0,'{$areaId2}');
+		</notempty>
+  });
+   </script>
+   <body class='wst-page'>
+       <div class='wst-tbar'> 
+      地区：<select id='areaId1' onchange='javascript:getAreaList("areaId2",this.value,0)'>
+               <option value=''>请选择</option>
+               <volist name="areaList" id="vo">
+               <option value='{$vo['areaId']}' <if condition="$areaId1 == $vo['areaId'] ">selected</if>>{$vo['areaName']}</option>
+               </volist>
+             </select>
+             <select id='areaId2'>
+               <option value=''>请选择</option>
+             </select>
+       所属店铺：<input type='text' id='shopName' value='{$shopName}'/>          
+       商品：<input type='text' id='goodsName' name='goodsName' class='form-control wst-ipt-10' value='{$goodsName}'/> 
+  <button type="button" class="btn btn-primary glyphicon glyphicon-search" onclick='javascript:query()'>查询</button> 
+       </div>
+       <div class='wst-body'>
+        <table class="table table-hover table-striped table-bordered wst-list">
+           <thead>
+             <tr>
+               <th width='10'>序号</th>
+               <th width='80'>商品名称</th>
+               <th width='80'>商品编号</th>
+               <th width='60'>价格</th>
+               <th width='80'>商城分类</th>
+               <th width='80'>分类店铺</th>
+               <th width='50'>操作</th>
+             </tr>
+           </thead>
+           <tbody>
+            <volist name="Page['root']" id="vo" key='i'>
+             <tr>
+               <td>{$i}</td>
+               <td img='{$vo['goodsThums']}' class='imgPreview'>
+               <img src='__ROOT__/{$vo['goodsThums']}' width='50'/>
+               {$vo['goodsName']}
+               </td>
+               <td>{$vo['goodsSn']}&nbsp;</td>
+               <td>{$vo['shopPrice']}&nbsp;</td>
+               <td>{$vo['catName']}&nbsp;</td>
+               <td>{$vo['shopCatName']}&nbsp;</td>
+               <td>
+               <button type="button" class="btn btn-primary glyphicon" onclick='javascript:toView({$vo['goodsId']})'>查看</button> 
+               <php>if(in_array('spsh_04',$_SESSION['STAFF']['grant'])){</php>
+               <if condition="$vo['goodsStatus']==1 ">
+               <button type="button" class="btn btn-danger glyphicon glyphicon-pencil" onclick="javascript:changeStatus({$vo['goodsId']},0)">不通过</button>&nbsp;
+               <else/>
+               <button type="button" class="btn btn-success glyphicon glyphicon-pencil" onclick="javascript:changeStatus({$vo['goodsId']},1)">通过</button>&nbsp;
+               </if>
+               <php>}</php>
+               </td>
+             </tr>
+             </volist>
+             <tr>
+                <td colspan='11' align='center'>{$Page['pager']}</td>
+             </tr>
+           </tbody>
+        </table>
+       </div>
+   </body>
+</html>

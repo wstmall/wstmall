@@ -1,0 +1,14 @@
+.wst-checkout li{
+	background-image: url(../../../View/default/images/save_consignor.jpg);
+	background-repeat: no-repeat;
+	height:30px;
+	width:145px;
+}
+
+.wst-checkout li:hover{
+	background-image: url(../../../View/default/images/save_consignor.jpg);
+	background-repeat: no-repeat;
+	height:30px;
+	width:145px;
+	background-position: 0px -30px;
+}

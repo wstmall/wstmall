@@ -1,0 +1,69 @@
+<extend name="./Apps/Home/View/default/users/layout.html" />
+<block name="content">
+<script>
+
+</script>
+    <div class="wst-body"> 
+       <div class='wst-page-header'>买家中心 > 待评价交易</div>
+       <div class='wst-page-content'>
+        <table class='wst-list' style="font-size:13px;">
+           <thead>
+             <tr>
+               <th width='*'>商品信息</th>
+               <th>商品评分</th>
+               <th>时效评分</th>
+               <th>服务评分</th>
+             </tr>
+           </thead>
+           <tbody>
+            <volist name="appraiseList['root']" id="appraise" key='key1'>
+             <tr style="border-bottom:1px solid #eeeeee;">
+                <td width='130' rowspan='2'>
+                    <div style='width:200px;'>
+                    <div style='width:70px;float:left'>
+					<a target='_blank' href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$appraise['goodsId']}">
+						<img src="__ROOT__/{$appraise['goodsThums']}" height="60" width="60"/>
+					</a>
+					</div>
+					<div style='width:130px;float:left;line-height:25px;'>
+					<div>{$appraise['goodsName']}</div><div>订单：{$appraise['orderNo']}</div>
+					</div>
+					</div>
+				</td>
+               	<td >
+               	<for start="0" end="$appraise['goodsScore']">
+					<img src="__ROOT__/Apps/Home/View/default/images/icon_score_yes.png"/>
+				</for>&nbsp;{$appraise["goodsScore"]} 分
+				</td>
+				<td >
+				<for start="0" end="$appraise['timeScore']">
+					<img src="__ROOT__/Apps/Home/View/default/images/icon_score_yes.png"/>
+				</for>&nbsp;{$appraise["timeScore"]} 分
+				</td>
+				<td>
+				<for start="0" end="$appraise['serviceScore']">
+					<img src="__ROOT__/Apps/Home/View/default/images/icon_score_yes.png"/>
+				</for>&nbsp;{$appraise["serviceScore"]} 分
+               	</td>
+             </tr>
+             <tr>
+                <td colspan='3'>评价：{$appraise["content"]}</td>
+             </tr>
+             </volist>
+             <if condition="$receiveOrders['totalPage'] gt 0">
+             <tfoot>
+             <tr>
+                <td colspan='8' align='center'>
+					<div class="wst-page" style="float:right;padding-bottom:10px;">
+						<div class="wst-page-items">
+						</div>
+					</div>
+				</td>
+             </tr>
+             </tfoot>
+             </if>
+           </tbody>
+        </table>
+        </div>
+    </div>
+</block> 

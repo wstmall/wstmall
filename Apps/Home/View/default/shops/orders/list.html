@@ -1,0 +1,305 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+	<script>
+	var statusMark = 0;
+	$(function () {
+		$('#tab').TabPanel({tab:statusMark,callback:function(tab){
+			statusMark = tab;
+			queryOrderPager(statusMark,0);
+		}});
+	});
+	</script>
+	<div class="wst-body"> 
+		<div class='wst-page-header'>卖家中心 > 订单管理</div>
+		<div class='wst-page-content' style="padding-top:10px;">
+		   <div id='tab' class="wst-tab-box">
+			<ul class="wst-tab-nav">
+				<li>待受理订单</li>
+				<li>已受理订单</li>
+				<li>打包中订单</li>
+				<li>配送中订单</li>
+				<li>已到货订单</li>
+				<li>确认已收货订单</li>
+				<li>拒收订单</li>
+			</ul>
+			<div class="wst-tab-content" style='width:98%;'>
+				<div class='wst-tab-item'>
+					<div>
+						<table class='wst-list' style="font-size:13px;">
+							<thead>
+								<tr>
+									<th colspan="6" class="wst-form">
+									订单号：<input type="text" id="orderNo_0" style='width:120px;'/>
+									收货人：<input type="text" id="userName_0" style='width:120px;'/>
+									收货地址：<input type="text" id="userAddress_0" style='width:120px;'/>
+									<button class='wst-btn-query' onclick="queryOrderPager(0,0)">查询</button>
+									</th>
+								</tr>
+								<tr>
+									<th width='100'>订单信息</th>
+									<th width='100'>收货人</th>
+									<th width='*'>收货地址</th>
+									<th width='70'>订单金额</th>
+									<th width='130'>下单时间</th>
+									<th width='100'>操作</th>
+								</tr>
+							</thead>
+							<tbody id="otbody0">
+							</tbody>
+							<tfoot>
+								<tr>
+									<td colspan='8' align='center' id="opage_0">
+										<div class="wst-page" style="float:right;padding-bottom:10px;">
+											<div class="wst-page-items pager_0">
+												
+											</div>
+										</div>
+									</td>
+								</tr>
+							 </tfoot>
+						</table>
+					</div>
+					<div style='clear:both;'></div>
+				</div>
+				
+				<div class='wst-tab-item'>
+					<div>
+						<table class='wst-list' style="font-size:13px;">
+							<thead>
+								<tr>
+									<th colspan="6" class="wst-form">
+									订单号：<input type="text" id="orderNo_1" style='width:120px;'/>
+									收货人：<input type="text" id="userName_1" style='width:120px;'/>
+									收货地址：<input type="text" id="userAddress_1" style='width:120px;'/>
+									<button class='wst-btn-query' onclick="queryOrderPager(1,0)">查询</button>
+									</th>
+								</tr>
+								<tr>
+									<th width='100'>订单信息</th>
+									<th width='100'>收货人</th>
+									<th width='*'>收货地址</th>
+									<th width='70'>订单金额</th>
+									<th width='130'>下单时间</th>
+									<th width='100'>操作</th>
+								</tr>
+							</thead>
+							<tbody id="otbody1">
+							</tbody>
+							<tfoot>
+								<tr>
+									<td colspan='8' align='center' id="opage_1">
+										<div class="wst-page" style="float:right;padding-bottom:10px;">
+											<div class="wst-page-items pager_1">
+												
+											</div>
+										</div>
+									</td>
+								</tr>
+							 </tfoot>
+						</table>
+					</div>
+					<div style='clear:both;'></div>
+				</div>
+				
+				<div class='wst-tab-item'>
+					<div>
+						<table class='wst-list' style="font-size:13px;">
+							<thead>
+								<tr>
+									<th colspan="6" class="wst-form">
+									订单号：<input type="text" id="orderNo_2" style='width:120px;'/>
+									收货人：<input type="text" id="userName_2" style='width:120px;'/>
+									收货地址：<input type="text" id="userAddress_2" style='width:120px;'/>
+									<button class='wst-btn-query' onclick="queryOrderPager(2,0)">查询</button>
+									</th>
+								</tr>
+								<tr>
+									<th width='100'>订单信息</th>
+									<th width='100'>收货人</th>
+									<th width='*'>收货地址</th>
+									<th width='70'>订单金额</th>
+									<th width='130'>下单时间</th>
+									<th width='100'>操作</th>
+								</tr>
+							</thead>
+							<tbody id="otbody2">
+							</tbody>
+							<tfoot>
+								<tr>
+									<td colspan='8' align='center' id="opage_2">
+										<div class="wst-page" style="float:right;padding-bottom:10px;">
+											<div class="wst-page-items pager_2">
+												
+											</div>
+										</div>
+									</td>
+								</tr>
+							 </tfoot>
+						</table>
+					</div>
+					<div style='clear:both;'></div>
+				</div>
+				
+				<div class='wst-tab-item'>
+					<div>
+						<table class='wst-list' style="font-size:13px;">
+							<thead>
+								<tr>
+									<th colspan="6" class="wst-form">
+									订单号：<input type="text" id="orderNo_3" style='width:120px;'/>
+									收货人：<input type="text" id="userName_3" style='width:120px;'/>
+									收货地址：<input type="text" id="userAddress_3" style='width:120px;'/>
+									<button class='wst-btn-query' onclick="queryOrderPager(3,0)">查询</button>
+									</th>
+								</tr>
+								<tr>
+									<th width='100'>订单信息</th>
+									<th width='100'>收货人</th>
+									<th width='*'>收货地址</th>
+									<th width='70'>订单金额</th>
+									<th width='130'>下单时间</th>
+									<th width='100'>操作</th>
+								</tr>
+							</thead>
+							<tbody id="otbody3">
+							</tbody>
+							<tfoot>
+								<tr>
+									<td colspan='8' align='center' id="opage_3">
+										<div class="wst-page" style="float:right;padding-bottom:10px;">
+											<div class="wst-page-items pager_3">
+												
+											</div>
+										</div>
+									</td>
+								</tr>
+							 </tfoot>
+						</table>
+					</div>
+					<div style='clear:both;'></div>
+				</div>
+				
+				<div class='wst-tab-item'>
+					<div>
+						<table class='wst-list' style="font-size:13px;">
+							<thead>
+								<tr>
+									<th colspan="6" class="wst-form">
+									订单号：<input type="text" id="orderNo_4" style='width:120px;'/>
+									收货人：<input type="text" id="userName_4" style='width:120px;'/>
+									收货地址：<input type="text" id="userAddress_4" style='width:120px;'/>
+									<button class='wst-btn-query' onclick="queryOrderPager(4,0)">查询</button>
+									</th>
+								</tr>
+								<tr>
+									<th width='100'>订单信息</th>
+									<th width='100'>收货人</th>
+									<th width='*'>收货地址</th>
+									<th width='70'>订单金额</th>
+									<th width='130'>下单时间</th>
+									<th width='100'>操作</th>
+								</tr>
+							</thead>
+							<tbody id="otbody4">
+							<tr><td>aaaaa</td></tr>
+							</tbody>
+							<tfoot>
+								<tr>
+									<td colspan='8' align='center' id="opage_4">
+										<div class="wst-page" style="float:right;padding-bottom:10px;">
+											<div class="wst-page-items pager_4">
+												
+											</div>
+										</div>
+									</td>
+								</tr>
+							 </tfoot>
+						</table>
+					</div>
+					<div style='clear:both;'></div>
+				</div>
+				
+				<div class='wst-tab-item'>
+					<div>
+						<table class='wst-list' style="font-size:13px;">
+							<thead>
+								<tr>
+									<th colspan="6" class="wst-form">
+									订单号：<input type="text" id="orderNo_5" style='width:120px;'/>
+									收货人：<input type="text" id="userName_5" style='width:120px;'/>
+									收货地址：<input type="text" id="userAddress_5" style='width:120px;'/>
+									<button class='wst-btn-query' onclick="orderPager(5,0)">查询</button>
+									</th>
+								</tr>
+								<tr>
+									<th width='100'>订单信息</th>
+									<th width='100'>收货人</th>
+									<th width='*'>收货地址</th>
+									<th width='70'>订单金额</th>
+									<th width='130'>下单时间</th>
+									<th width='100'>操作</th>
+								</tr>
+							</thead>
+							<tbody id="otbody5">
+							</tbody>
+							<tfoot>
+								<tr>
+									<td colspan='8' align='center' id="opage_5">
+										<div class="wst-page" style="float:right;padding-bottom:10px;">
+											<div class="wst-page-items pager_5">
+												
+											</div>
+										</div>
+									</td>
+								</tr>
+							 </tfoot>
+						</table>
+					</div>
+					<div style='clear:both;'></div>
+				</div>
+				
+				<div class='wst-tab-item'>
+					<div>
+						<table class='wst-list' style="font-size:13px;">
+							<thead>
+								<tr>
+									<th colspan="6" class="wst-form">
+									订单号：<input type="text" id="orderNo_4" style='width:120px;'/>
+									收货人：<input type="text" id="userName_4" style='width:120px;'/>
+									收货地址：<input type="text" id="userAddress_4" style='width:120px;'/>
+									<button class='wst-btn-query' onclick="queryOrderPager(6,0)">查询</button>
+									</th>
+								</tr>
+								<tr>
+									<th width='100'>订单信息</th>
+									<th width='100'>收货人</th>
+									<th width='*'>收货地址</th>
+									<th width='70'>订单金额</th>
+									<th width='130'>下单时间</th>
+									<th width='100'>操作</th>
+								</tr>
+							</thead>
+							<tbody id="otbody6">
+							<tr><td></td></tr>
+							</tbody>
+							<tfoot>
+								<tr>
+									<td colspan='8' align='center' id="opage_6">
+										<div class="wst-page" style="float:right;padding-bottom:10px;">
+											<div class="wst-page-items pager_6">
+												
+											</div>
+										</div>
+									</td>
+								</tr>
+							 </tfoot>
+						</table>
+					</div>
+					<div style='clear:both;'></div>
+				</div>
+			</div>
+			</div>
+		</div>
+		<div style='clear:both;'></div>
+	</div>
+</block>  

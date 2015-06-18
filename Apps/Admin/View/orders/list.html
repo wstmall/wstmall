@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>{$CONF['shopTitle']['fieldValue']}后台管理中心</title>
+      <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
+      <!--[if lt IE 9]>
+      <script src="__PUBLIC__/js/html5shiv.min.js"></script>
+      <script src="__PUBLIC__/js/respond.min.js"></script>
+      <![endif]-->
+      <script src="__PUBLIC__/js/jquery.min.js"></script>
+      <script src="__PUBLIC__/plugins/bootstrap/js/bootstrap.min.js"></script>
+      <script src="__PUBLIC__/js/common.js"></script>
+      <script src="__PUBLIC__/plugins/plugins/plugins.js"></script>
+   </head>
+   <script>
+   function getAreaList(objId,parentId,t,id){
+	   var params = {};
+	   params.parentId = parentId;
+	   $('#'+objId).empty();
+	   if(t<1){
+		   $('#areaId3').empty();
+		   $('#areaId3').html('<option value="">请选择</option>');
+	   }
+	   var html = [];
+	   $.post("__ROOT__/index.php/Admin/Areas/queryByList",params,function(data,textStatus){
+		    html.push('<option value="">请选择</option>');
+			var json = WST.toJson(data);
+			if(json.status=='1' && json.list.length>0){
+				var opts = null;
+				for(var i=0;i<json.list.length;i++){
+					opts = json.list[i];
+					html.push('<option value="'+opts.areaId+'" '+((id==opts.areaId)?'selected':'')+'>'+opts.areaName+'</option>');
+				}
+			}
+			$('#'+objId).html(html.join(''));
+	   });
+   }
+   $(function(){
+     <?php if ($areaId1!=0): ?>
+	   getAreaList("areaId2",'{$areaId1}',0,'{$areaId2}');
+     <?php elseif ($areaId2 != 0) : ?>
+	   getAreaList("areaId3",'{$areaId2}',1,'{$areaId3}');
+     <?php endif ?>
+	   $('#orderStatus').val({$orderStatus});
+   });
+   function query(){
+	   var q = [];
+	   q.push('shopName='+$('#shopName').val());
+	   q.push('orderNo='+$('#orderNo').val());
+	   q.push('orderStatus='+$('#orderStatus').val());
+	   q.push('areaId1='+$('#areaId1').val());
+	   q.push('areaId2='+$('#areaId2').val());
+	   q.push('areaId3='+$('#areaId3').val());
+	   location.href="__ROOT__/index.php/Admin/Orders/index/?"+q.join('&');
+   }
+   </script>
+   <body class='wst-page'>
+       <div class='wst-tbar' style='height:25px;'>
+          所属区域：
+          <select id='areaId1' onchange='javascript:getAreaList("areaId2",this.value,0)'>
+             <option value=''>请选择</option>
+             <volist name="areaList" id="vo">
+             <option value='{$vo['areaId']}' <if condition="$areaId1 == $vo['areaId'] ">selected</if>>{$vo['areaName']}</option>
+             </volist>
+          </select>
+          <select id='areaId2' onchange='javascript:getAreaList("areaId3",this.value,1);getCommunitys()'>
+             <option value=''>请选择</option>
+          </select>
+          <select id='areaId3'>
+             <option value=''>请选择</option>
+          </select>
+       店铺：<input type='text' id='shopName' value='{$shopName}'/>  
+       订单：<input type='text' id='orderNo' value='{$orderNo}'/>
+  订单状态：  <select id='orderStatus'>
+             <option value='-9999'>请选择</option>
+             <option value='-2'>未支付</option>
+             <option value='0'>未受理</option>
+             <option value='1'>已受理</option>
+             <option value='2'>打包中</option>
+             <option value='3'>配送中</option>
+             <option value='4'>已到货</option>
+             <option value='5'>店铺确认到货</option>
+             <option value='-1'>已取消</option>
+             <option value='-3'>会员拒收</option>
+             <option value='-4'>店铺确认拒收</option>
+          </select>
+       <button type="button" class="btn btn-primary glyphicon glyphicon-search" onclick='javascript:query()'>查询</button> 
+       </div>
+       <div class="wst-body"> 
+        <table class="table table-hover table-striped table-bordered wst-list">
+           <volist name="Page['root']" id="vo" key='key'>
+           <thead>
+             <tr>
+               <th colspan='6'>{$key}.订单：{$vo['orderNo']}<span style='margin-left:100px;'>{$vo['shopName']}</span></th>
+             </tr>
+           </thead>
+           <tbody>
+             <tr>
+               <td>
+               <div style='width:150px;'>
+               <volist name="vo['goodslist']" id="goods">
+				  <img style='margin:2px;' src="__ROOT__/{$goods['goodsThums']}" height="50" width="50" title='{$goods['goodsName']}'/>
+			   </volist>
+			   </div>
+               </td>
+               <td>{$vo['userName']}</td>
+               <td>
+                                             ￥{$vo['totalMoney']+$vo['deliverMoney']}<br/>
+               <if condition="$vo['payType'] ==1 ">在线支付<else/>货到付款</if>
+               </td>
+               <td>{$vo['createTime']}</td>
+               <td>
+               <if condition='$vo["orderStatus"] eq -3'>会员拒收
+               <elseif condition='$vo["orderStatus"] eq -4'/>店铺确认拒收
+			   <elseif condition='$vo["orderStatus"] eq -2'/>未付款
+			   <elseif condition='$vo["orderStatus"] eq -1'/>已取消
+			   <elseif condition='$vo["orderStatus"] eq 0'/>未受理
+			   <elseif condition='$vo["orderStatus"] eq 1'/>已受理
+			   <elseif condition='$vo["orderStatus"] eq 2'/>打包中
+			   <elseif condition='$vo["orderStatus"] eq 3'/>配送中
+			   <elseif condition='$vo["orderStatus"] eq 4'/>已到货
+			   <elseif condition='$vo["orderStatus"] eq 5'/>店铺确认到货
+			   </if>
+               </td>
+               <td>
+               <a class="btn btn-primary glyphicon" href="__ROOT__/index.php/Admin/Orders/toView/?id={$vo['orderId']}"">查看</a>&nbsp;
+               </td>
+             </tr>
+             </volist>
+             <tr>
+                <td colspan='6' align='center'>{$Page['pager']}</td>
+             </tr>
+           </tbody>
+        </table>
+       </div>
+   </body>
+</html>

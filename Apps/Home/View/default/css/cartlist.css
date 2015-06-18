@@ -1,0 +1,54 @@
+#succeed .success {padding: 31px 10px 16px 140px; height: 65px; overflow: hidden;}
+#succeed .success2 {height: 65px; overflow: hidden;}
+#succeed .success-b {
+  background: url("../../../View/default/images/20130425D.png") no-repeat scroll 0 -100px rgba(0, 0, 0, 0);
+  color: #999999;
+  font: 12px/150% Arial,Verdana,"宋体";
+  height: auto;
+  float:left;
+  width:450px;
+}
+#succeed .success-b h3 {
+  color: #7ABD54;
+  font: 30px/40px 宋体;
+}
+#succeed .btn-pay, #succeed .btn-continue, #succeed .btn-append {
+  background: url(../../../View/default/images/20130425D.png) no-repeat scroll 0 0 #CCCCCC;
+  display: block;
+  line-height: 100px;
+  overflow: hidden;
+}
+#succeed .btn-continue {
+  background-position: -90px -37px;
+  float: left;
+  height: 36px;
+  width: 94px;
+}
+#succeed .btn-pay {
+    background-position: 0 0;
+    float: right;
+    height: 36px;
+    
+    width: 189px;
+}
+.cart-button .btn-pay, .cart-button .btn-continue, .cart-button .btn-append {
+  background: url(../../../View/default/images/20130425D.png) no-repeat scroll 0 0 #CCCCCC;
+  display: block;
+  line-height: 100px;
+  overflow: hidden;
+}
+.cart-button .btn-continue {
+  background-position: -90px -37px;
+  float: left;
+  height: 36px;
+  width: 94px;
+  margin: 5px 0px 0px 0px;
+}
+.cart-button .btn-pay {
+    background-position: 0 0;
+    float: left;
+    height: 36px;
+    margin: 5px 25px 0 10px;
+    width: 189px;
+}
+	

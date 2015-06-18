@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+  		<meta charset="utf-8">
+      	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+      	<meta name="viewport" content="width=device-width, initial-scale=1">
+      	<title>用户注册 - {$CONF['shopTitle']['fieldValue']}</title>
+      	<meta name="keywords" content="{$CONF['shopKeywords']['fieldValue']}" />
+      	<meta name="description" content="{$CONF['shopTitle']['fieldValue']},用户注册" />
+      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css">
+      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/regist.css">
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/passport.css">
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/footer.css">	
+   	</head>
+   	<body>
+     
+    
+	<div id="shortcut-2013">
+		<include file="./Apps/Home/View/default/header_nav.html" />
+	</div>
+	<div class="w" id="registhd">
+	    <div style="margin-top:10px;"> 
+	    <a href="#">
+	    	<span style="font-size:30px;color:black;">欢迎注册</span>
+   		 </a>
+	    </div>
+	</div>
+	
+	<div class="w" id="regist">	    
+	    <div class="mc">
+	        <form id="register" method="post" >
+	            <input name="regType" id="regType" value="person" type="hidden"/>
+	            <input name="nameType" id="nameType" value="2"  type="hidden" />
+	            <div class="form">
+	                <div class="item" id="select-regName">
+	                    <span class="label"><b class="ftx04">*</b>账户名：</span>	
+	                    <div class="fl item-ifo">
+	                        <div class="o-intelligent-regName" style="position:relative;">	                       
+	                            <input id="loginName" name="loginName" class="text" tabindex="1" maxlength="30" autocomplete="off" onpaste="return false;" style="ime-mode:disabled;" onblur="onblurName(this);" onfocus="onfocusName(this);" value="邮箱/用户名/手机号"  type="text"/>
+	                           <div id="loginNameTip" style="display: inline-block; "></div>
+								<div id="namelist" style="display:none;position:absolute;width:268px;top:36px;left:0px;border:1px solid #CCCCCC;"></div>
+	                        </div>	                        
+	                    </div>
+	                </div>	                
+	                <div id="o-password">
+	                    <div class="item">
+	                        <span class="label"><b class="ftx04">*</b>请设置密码：</span>	
+	                        <div class="fl item-ifo">
+	                            <input id="loginPwd" name="loginPwd" class="text" tabindex="2" style="ime-mode:disabled;" autocomplete="off" type="password"/>
+	                            <label id="pwd_succeed" class="pwdblank"></label>	                           
+	                        </div>
+	                    </div>	
+	                    <div class="item">
+	                        <span class="label"><b class="ftx04">*</b>请确认密码：</span>	
+	                        <div class="fl item-ifo">
+	                            <input id="reUserPwd" name="reUserPwd" class="text" tabindex="3" autocomplete="off" type="password"/>	                            
+	                            <label id="pwdRepeat_succeed" class="pwdblank"></label>	                           
+	                        </div>
+	                    </div>
+						<div class="item" style="display:none;">
+	                        <span class="label">电子邮箱：</span>	
+	                        <div class="fl item-ifo">
+	                            <input id="userEmail" name="userEmail" class="text" tabindex="3" autocomplete="off" style="ime-mode:disabled;" type="text"/>	                           
+	                            <label id="pwdRepeat_succeed" ></label>	                           
+	                        </div>
+	                    </div>     
+	                    <div class="item" style="display:none;">
+	                        <span class="label"><b class="ftx04">*</b>手机号码：</span>	
+	                        <div class="fl item-ifo">
+	                            <input id="userPhone" name="userPhone" class="text" tabindex="3" autocomplete="off" type="text" maxlength="11"/>	                           
+	                            <label id="pwdRepeat_succeed" ></label>	                           
+	                        </div>
+	                    </div> 
+	                               
+	                    <div class="item" id="mobileCodeDiv" style="display:none;">
+	                        <span class="label"><b class="ftx04">*</b>短信验证码：</span>	
+	                        <div class="fl item-ifo">
+	                            <input maxlength="6" autocomplete="off" tabindex="6" class="text text-1" name="mobileCode" style="ime-mode:disabled" id="mobileCode" type="text"/>
+	                            <label class="blank invisible"></label>
+	                            <a class="btn" href="javascript:void(0);" onclick="getVerifyCode();" id="sendMobileCode">
+	                                <span id="timeTips">获取短信验证码</span>
+	                           	</a>
+	                        </div>
+	                        <span class="clr"></span>
+	                    </div>
+	                     
+	                  	<div class="item" id="authcodeDiv">
+	                            <span class="label"><b class="ftx04">*</b>验证码：</span>	
+	                            <div class="fl item-ifo">
+	                                <input id="authcode" style="ime-mode:disabled" name="authcode" class="text text-1" tabindex="6" autocomplete="off" maxlength="6" type="text"/>
+	                                <label class="img">
+	                                    <img style='vertical-align:middle;cursor:pointer;height:39px;' class='verifyImg' src='__ROOT__/Apps/Home/View/default/images/clickForVerify.png' title='刷新验证码' onclick='javascript:getVerify()'/> 
+									 </label>      	
+	                                <label class="ftx23">&nbsp;看不清？<a href="javascript:getVerify()" class="flk13">换一张</a></label>
+	                            </div>
+	                 	</div>	
+	                 	 
+	                </div>
+	                <input name="qVoCgWxtvu" value="EqaRK" type="hidden"/>	
+	                <div class="item item-new">
+	                    <span class="label">&nbsp;</span>	
+	                    <div class="fl item-ifo">
+	                        <label>
+	                        <input class="checkbox" id="protocol" name="protocol" type="checkbox"/>
+	                                                                        我已阅读并同意</label><a href="javascript:;" class="blue" id="protocolInfo" onclick="showXiey();">《WST用户注册协议》</a>                       
+	                        <label id="protocol_error" class="error hide">请接受服务条款</label>
+	                    </div>
+	                </div>
+	                <div class="item">
+	                    <span class="label">&nbsp;</span>
+	                    <input class="btn-img btn-regist" id="registsubmit" value="立即注册" tabindex="8"  type="submit"/>
+	                </div>
+	            </div>
+	            <div class="phone">
+	                
+	            </div>
+	      		<span class="clr"></span>
+	        </form>
+	    </div>
+	</div>
+	<!--footer start--> 
+	<include file="./Apps/Home/View/default/footer.html" />
+	<script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
+   	<script src="__PUBLIC__/plugins/formValidator/formValidator-4.1.3.js"></script>
+    <script src="__PUBLIC__/js/common.js"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/regist.js"></script>
+</body>
+</html>

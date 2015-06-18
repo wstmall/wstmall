@@ -1,0 +1,85 @@
+.wst-shop-address-box {
+	min-height: 500px;
+	width: 300px;
+	float: left;
+	border: 1px solid #cccccc;
+	scrollbar-arrow-color: #f4ae21; /*图6,三角箭头的颜色*/
+	scrollbar-face-color: #333; /*图5,立体滚动条的颜色*/
+	scrollbar-3dlight-color: #666; /*图1,立体滚动条亮边的颜
+
+色*/
+	scrollbar-highlight-color: #666; /*图2,滚动条空白部分的
+
+颜色*/
+	scrollbar-shadow-color: #999; /*图3,立体滚动条阴影的颜
+
+色*/
+	scrollbar-darkshadow-color: #666; /*图4,立体滚动条强阴
+
+影的颜色*/
+	scrollbar-track-color: #666; /*图7,立体滚动条背景颜色*/
+	scrollbar-base-color: #f8f8f8; /*滚动条的基本颜色*/
+	Cursor: url(mouse.cur); /*自定义个性鼠标*/
+}
+
+.wst-shop-address-box li {
+	cursor: pointer;
+}
+
+.wst-shop-address-box li:hover {
+	background-color: #c7e6f5;
+	color: #000000;
+}
+
+.wst-shop-address-box .liselected {
+	background-color: #c7e6f5;
+	color: #000000;
+}
+
+.wst-shop-box {
+	padding: 8px;
+	border-radius: 12px;
+	border: 1px solid green;
+	background-color: #ffffff;
+	margin-bottom: 10px;
+}
+
+.wst-shadow {
+	-moz-box-shadow: 3px 3px 4px #eeeeee;
+	-webkit-box-shadow: 3px 3px 4px #eeeeee;
+	box-shadow: 3px 3px 4px #eeeeee;
+	/* For IE 8 */
+	-ms-filter:
+		"progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#000000')";
+	/* For IE 5.5 - 7 */
+	filter: progid : DXImageTransform.Microsoft.Shadow ( Strength = 4,
+		Direction = 135, Color = '#000000' );
+}
+
+.wst-shop-list {
+	width: 860px;
+	margin: 0 auto;
+	
+	padding-top: 10px;
+}
+
+.wst-shop-address {
+	line-height: 25px;
+	border-bottom: 1px dotted #cccccc;
+	margin: 4px;
+}
+
+.wst-shop-address .wst-shopname {
+	line-height: 25px;
+	border-bottom: 1px dotted #cccccc;
+	margin: 4px;
+}
+
+.wst-shop-container {
+	min-height: 500px;
+	width: 895px;
+	float: right;
+	border:1px solid #cccccc;
+}
+.wst-shop-streets-items{margin-left:5px;position:relative;width:720px;height:80px;float:left;line-height:28px;}
+.wst-shop-streets-items-status{position:absolute;top:10px;right:10px;height:40px;width:80px;color:#fd871e;font-weight:bolder;line-height:40px;}

@@ -1,0 +1,45 @@
+.onShow
+{ 
+    padding-left:25px; 
+    margin-left:10px; 
+	line-height:22px; 
+	vertical-align:middle;
+}
+.onFocus
+{
+    background:url(../images/onFocus.gif) no-repeat; 
+    padding-left:25px; 
+    margin-left:10px; 
+	line-height:22px; 
+	vertical-align:middle;
+}
+.onError
+{
+    background: url(../images/onError.gif) no-repeat;
+    padding-left:25px;
+    margin-left:10px; 
+	line-height:22px; 
+	vertical-align:middle;
+}
+.onCorrect
+{
+    background:url(../images/onCorrect.gif) no-repeat;
+    padding-left:25px;
+    margin-left:10px; 
+	line-height:22px; 
+	vertical-align:middle;
+}
+.onLoad
+{
+    background:url(../images/onLoad.gif) no-repeat 3px 3px;
+    padding-left:25px;
+margin-left:10px; 
+	font-size: 12px;
+	line-height:22px; 
+	vertical-align:middle;
+} 
+
+.inputOnShow
+{
+	color: #999999
+}

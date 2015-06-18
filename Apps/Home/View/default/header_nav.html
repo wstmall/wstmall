@@ -1,0 +1,60 @@
+<script src="__PUBLIC__/js/jquery.min.js"></script>
+<script src="__PUBLIC__/plugins/lazyload/jquery.lazyload.min.js?v=1.9.1"></script>
+<script type="text/javascript">
+     var rooturl = "__ROOT__";
+     var publicurl = "__PUBLIC__";
+     var currCityId = "{$currCity['areaId']}";
+     var currCityName = "{$currCity['areaName']}";
+     var numberItem = {$cartcnt};
+     $(function() {
+     	   $("img").lazyload({effect: "fadeIn",failurelimit : 1000,threshold: 200,placeholder:'__ROOT__/Apps/Home/View/default/images/store_default_signlist.png'});
+     });
+</script>
+
+
+<div id="wst-shortcut">
+	<div class="w">
+		<ul class="fl lh">
+			<li class="fore1 ld" style='border-left:1px solid #e4e4e4;border-right:1px solid #e4e4e4;padding-left:25px;'><b></b><a href="javascript:addToFavorite()"
+				rel="nofollow">收藏WST</a></li><s></s>
+			<li class="fore3 ld menu" id="app-jd" data-widget="dropdown">
+				<span class="outline"></span> <span class="blank"></span> 
+				<a href="#" target="_blank"><img src="__ROOT__/Apps/Home/View/default/images/icon_top_02.png"/>&nbsp;WST 手机版</a>
+			</li>
+			<li class="fore4" id="biz-service" data-widget="dropdown" style='padding:0;'>&nbsp;<s></s>&nbsp;&nbsp;&nbsp;
+				送货至
+				【<span style="color:#e23c3d;font-weight:bold;">&nbsp;{$currArea["areaName"]}&nbsp;</span>】
+				<img src="__ROOT__/Apps/Home/View/default/images/icon_top_03.png"/>	
+				&nbsp;&nbsp;<a href="javascript:;" onclick="changeCity();">切换城市</a><i class="triangle"></i>
+			</li>
+		</ul>
+	
+		<ul class="fr lh" style='float:right;'>
+			<li class="fore1" id="loginbar"><a href='__ROOT__/index.php/Home/Orders/queryByPage'><span style='color:blue'>{$baseUser['loginName']}</span></a> 欢迎您来到 WST 商城！<s></s>&nbsp;
+			<span>
+				<if condition="!$baseUser['userId']">
+				<a href="__ROOT__/index.php/Home/Users/login/">[登录]</a>
+				<a href="__ROOT__/index.php/Home/Users/regist/"	class="link-regist">[免费注册]</a>
+				</if>
+				<if condition="$baseUser['userId'] gt 0">
+				<a href="javascript:logout();">[退出]</a>
+				</if>
+			</span>
+			</li>
+			<li class="fore2 ld"><s></s>
+			<if condition="$baseUser['userId'] gt 0">
+			<if condition="$baseUser['userType'] eq 0">
+			<a href="__ROOT__/index.php/Home/Shops/toOpenShopByUser" rel="nofollow">我要开店</a>
+			</if>
+			<else/>
+			<a href="__ROOT__/index.php/Home/Shops/toOpenShop" rel="nofollow">我要开店</a>
+			</if>
+			<if condition="$baseUser['userType']==1">
+			<a href="__ROOT__/index.php/Home/Shops/" rel="nofollow">卖家中心</a>
+			</if>
+			</li>
+		</ul>
+		<span class="clr"></span>
+	</div>
+</div>
+

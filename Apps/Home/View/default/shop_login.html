@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+  		<meta charset="utf-8">
+      	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+      	<meta name="viewport" content="width=device-width, initial-scale=1">
+      	<title>卖家登录 - {$CONF['shopTitle']['fieldValue']}</title>
+      	<meta name="keywords" content="{$CONF['shopKeywords']['fieldValue']}" />
+      	<meta name="description" content="{$CONF['shopTitle']['fieldValue']},卖家登录" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css">
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/login.css">
+   	</head>
+   	<body>
+   		<include file="./Apps/Home/View/default/header_nav.html" />
+   		<!--[if lt IE 9]>
+      	<script src="__PUBLIC__/js/html5shiv.min.js"></script>
+      	<script src="__PUBLIC__/js/respond.min.js"></script>
+      	<![endif]-->
+   		<div style="margin: 0 auto;width: 890px;">
+   			<div style="margin: 0 auto;width: 890px;padding-left:60px;">
+   				<a href="__ROOT__/index.php">
+   					<img src="__ROOT__/Apps/Home/View/default/images/logo.png"/>
+   				</a>
+   			</div>
+		    <div class=" w1" id="entry">       
+		        <div class="mc " id="bgDiv" style="position:relative">
+		        	<div style="font-size:65px;color:red;position:absolute;top:160px;left:60px;">卖家登录</div>
+		            <div class="form">
+		                <div class="item fore1" style="position:relative;">
+		                    <span>用户名/手机号/邮箱</span><span id="errmsg" style="color:red;position:absolute;top:0px;left:100px;"></span>
+		                    <div class="item-ifo">
+		                        <input id="loginName" name="loginName" class="text"  tabindex="1" value="{$loginName}" autocomplete="off" type="text"/>
+		                        <div class="i-name ico"></div>                       
+		                    </div>
+		                </div>               
+		                <div class="item fore2">
+		                    <span>密码</span>
+		                    <div class="item-ifo">                       
+		                        <input id="loginPwd" name="loginPwd" value="{$loginPwd}" class="text" tabindex="2" autocomplete="off" type="password"/>                      
+		                        <div class="i-pass ico"></div>
+		                                            
+		                    </div>
+		                </div>
+		               
+		                <div class="item fore3 " id="o-authcode">
+		                    <span>验证码</span>
+		                    <div class="item-ifo">
+		                        <input id="verify" style="ime-mode:disabled" name="verify" class="text text-1" tabindex="6" autocomplete="off" maxlength="6" type="text"/>
+			                    <label class="img">
+			                		<img style='vertical-align:middle;cursor:pointer;height:39px;' class='verifyImg' src='__ROOT__/Apps/Home/View/default/images/clickForVerify.png' title='刷新验证码' onclick='javascript:getVerify()'/> 
+								</label>      	
+			              		<label class="ftx23">&nbsp;看不清？<a href="javascript:getVerify()" class="flk13">换一张</a></label>
+		                    </div>
+		                </div>
+		               
+		                <div class="item fore4" id="autoentry">
+		                    <div class="item-ifo">
+		                        <input class="checkbox" id="rememberPwd" name="rememberPwd" checked="checked" type="checkbox"/>
+		                        <label class="mar">记住密码</label>       
+		                                                              
+		                        <label><a href="{:U('Users/forgetPass')}">忘记密码?</a></label>
+		                        
+		                        <div class="clr"></div>
+		                    </div>
+		            	</div>
+		                <div class="item login-btn2013">
+		                    <input class="btn-img btn-entry" id="loginsubmit" value="登录" tabindex="8" onclick="javascript:login();"/>
+		                </div>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+   	</body>
+   	<script src="__PUBLIC__/js/common.js"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
+   	<script src="__ROOT__/Apps/Home/View/default/js/shop_login.js"></script>
+   	
+</html> 

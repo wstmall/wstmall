@@ -1,0 +1,108 @@
+<extend name="./Apps/Home/View/default/users/layout.html" />
+<block name="content">
+<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/userorder.css" />
+
+    <div class="wst-body"> 
+       
+	   <div class="wst-order-userinfo-box" style="">
+	   		<div class="wst-userimg-box">
+	   			<img src="<empty name="baseUser['userPhoto']">__ROOT__/Apps/Home/View/default/images/logo.png<else/>__ROOT__/{$baseUser['userPhoto']}</empty>" height="100" width="100" />
+	   		</div>
+	   		<div class="wst-userlogin-box">
+	   			<div><span style="font-size:16px;">欢迎您：</span><span style="font-weight:bolder;color:#fff100;">{$baseUser["loginName"]}</span><if condition='$baseUser["userRank"]["rankName"] neq ""'>({$baseUser["userRank"]['rankName']})</if></div>
+	   			<div>上次登录时间：{$baseUser["lastTime"]}</div>
+	   			<div>上次登录IP：{$baseUser["lastIP"]}</div>
+	   			<div class="wst-user-adr">
+	   				<a style="color:#ffffff;" href='__ROOT__/index.php/Home/UserAddress/queryByPage'>我的收货地址</a>&nbsp;&nbsp;&nbsp;
+	   				<a href="__ROOT__/index.php/Home/Users/toEdit" style="color:#ffffff;">编辑个人资料</a>
+	   			</div>
+	   		</div>
+	   		<div class="wst-clear"></div>
+	   </div>
+	   
+       <div class="wst-order-tg">
+       		<div class="wst-oinfo-box">
+       			<div style="">
+       			<div style="float:left;width:110px;">待付款<a href="__ROOT__/index.php/Home/Orders/queryPayByPage"><span>{$statusList[-2]}</span></a></div>
+       			<div style="float:left;width:108px;border-left:1px solid #cccccc;border-right:1px solid #cccccc;">待发货<a href="__ROOT__/index.php/Home/Orders/queryDeliveryByPage"><span>{$statusList[2]}</span></a></div>
+       			<div style="float:left;width:108px;border-left:1px solid #cccccc;border-right:1px solid #cccccc;">待收货<a href="__ROOT__/index.php/Home/Orders/queryReceiveByPage"><span>{$statusList[3]}</span></a></div>
+       			<div style="float:left;width:108px;border-left:1px solid #cccccc;border-right:1px solid #cccccc;">待评价<a href="__ROOT__/index.php/Home/Orders/queryAppraiseByPage"><span>{$statusList[4]}</span></a></div>
+       			<div style="float:left;width:110px;">退款<a href="__ROOT__/index.php/Home/Orders/queryRefundByPage"><span>{$statusList[-3]}</span></a></div>
+       			<div class="wst-clear"></div>
+       			</div>
+       		</div>
+       </div>
+       <div class="wst-mywl">
+       		<img src="__ROOT__/Apps/Home/View/default/images/icon_top_03.png"  /><span style="color:#ffffff;">&nbsp;&nbsp;&nbsp;&nbsp;我的物流</span>
+       </div>
+       <div style="margin-top:10px;text-align:center;padding:5px;">
+       		<table class="wst-order-tab" cellspacing ="0" cellpadding="0">
+       			<tbody>
+       				<volist name="orderList['root']" id="order" key='key1'>
+       				<tr >
+       					<td width="150">
+       						<volist name="order['goodslist']" id="goods" key='key2'>
+								<a href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$goods['goodsId']}">
+									<img src="__ROOT__/{$goods['goodsThums']}" height="50" width="50"/>
+								</a>
+							</volist>
+       					</td>
+       					<td style="text-align:left;">
+       						{$order["userName"]} | {$order["userAddress"]}{$order["userTel"]} | {$order["userPhone"]}<br/>
+       						{$order["createTime"]}&nbsp;&nbsp;&nbsp;&nbsp;<!--a href="">查看物流明细</a-->
+       					</td>
+       					<td width="80">
+	       					<if condition='$order["payType"] eq 0'>
+	       						货到付款
+	       					<else/>
+	       						在线支付
+			               	</if>
+       					</td>
+       					<td width="80">
+	       					<if condition='($order["orderStatus"] eq -3) OR ($order["orderStatus"] eq -4)'>拒收
+			               	<elseif condition='$order["orderStatus"] eq -2'/>未付款
+			               	<elseif condition='$order["orderStatus"] eq -1'/>已取消
+			               	<elseif condition='$order["orderStatus"] eq 0'/>未受理
+			               	<elseif condition='$order["orderStatus"] eq 1'/>已受理
+			               	<elseif condition='$order["orderStatus"] eq 2'/>打包中
+			               	<elseif condition='$order["orderStatus"] eq 3'/>配送中
+			               	<elseif condition='$order["orderStatus"] eq 4'/>已到货
+			               	<elseif condition='$order["orderStatus"] eq 5'/>确认收货
+			               	</if>
+       					</td>
+       					<td width="120">
+       						<if condition='$order["orderStatus"] gt 3'>
+								<if condition="$order['isAppraises'] eq 1">
+								已评价
+								<else/>
+								<a  href="javascript:;" onclick="appraiseOrder({$order['orderId']})">评价</a>
+								</if>
+							</if>
+       						<if condition='$order["payType"] eq 0'>
+       							<if condition='$order["orderStatus"] eq -2'>
+       								<a href="javascript:;" onclick="toPay({$order['orderId']})">[ 支付 ]</a><br/>
+       							</if>
+       						</if>
+							<a href="javascript:;" onclick="showOrder({$order['orderId']})">[ 查看 ]</a>
+							<if condition='($order["orderStatus"] eq 0)AND ($order["orderStatus"] eq -2)'> 
+							<a href="javascript:;" onclick="orderCancel({$order['orderId']})">[ 取消订单 ]</a>
+       						</if>
+       					</td>
+       				</tr>
+       				</volist>
+       				<if condition="count($orderList['root']) gt 0">
+       				<tr >
+						<td colspan="5" style="height:30px;">
+							<div class="wst-page" style="float:right;padding-bottom:10px;">
+								<div class="wst-page-items">	
+								</div>
+							</div>
+						</td>
+       				</tr>
+       				</if>
+       			</tbody>
+       		</table>
+       </div>
+    </div>
+
+</block> 

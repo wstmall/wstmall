@@ -1,0 +1,81 @@
+<extend name="./Apps/Home/View/default/users/layout.html" />
+<block name="content">
+<script>
+var domainURL = '__ROOT__/';
+function checkAll(item){
+  $('input[type="checkbox"].chk').prop('checked',item.checked);
+}
+function getChks(){
+  var arr = [];
+  $('input[type="checkbox"].chk').each(function(){
+    if ($(this).prop('checked') == true && $(this).val()!='') {
+      arr.push($(this).val());
+    };
+  });
+  return arr;
+}
+function batchDel(){
+  layer.confirm("您确定要删改这些消息？",function(){
+        var ids = getChks();
+        layer.load('正在处理，请稍后...', 3);
+        var params = {};
+        params.ids = ids;
+        $.post(domainURL+"index.php/Home/Messages/batchDel",params,function(data,textStatus){
+          var json = WST.toJson(data);
+          if(json.status=='1'){
+            layer.msg('操作成功！', 1, 1,function(){
+              location.reload();
+            });
+          }else{
+            layer.msg('操作失败', 1, 8);
+          }
+       });
+  });
+}
+</script>
+    <div class="wst-body"> 
+       <div class='wst-page-header'>买家中心 > 商城消息 > 查看消息</div>
+       <div class='wst-page-content'>        
+        <div class='wst-tbar-group'>
+           <a href='javascript:batchDel()'><span class='del btn'></span>删除</a>           
+        </div>
+        <table class='wst-list'>
+           <thead>
+             <tr>
+               <th width='20'><input type='checkbox' onclick='javascript:checkAll(this)'/></th>
+               <th width='40'>状态</th>
+               <th>消息</th>
+               <th width='100'>操作</th>
+             </tr>
+           </thead>
+           <tbody>
+            <volist name="Page['root']" id="vo" key='i'>
+             <tr>
+               <td><input class='chk' type='checkbox' value='{$vo['id']}'/></td>
+               <td>
+               <if condition="$vo['msgStatus'] == 1 ">
+               <div class='readMsg'></div>
+               <else/>
+               <div class='newMsg'></div>
+               </if>
+               </td>
+               <td>{$vo['msgContent']}</td>
+               <td>
+               <a href="{:U('Home/Messages/showMessage',array('id'=>$vo['id']))}">[查看详情]</a>
+               &nbsp;
+               </td>
+             </tr>
+             </volist>
+             <tfoot>
+             <tr>
+                <td colspan='12' align='center'>{$Page['pager']}</td>
+             </tr>
+             </tfoot>
+           </tbody>
+        </table>
+        <div class='wst-tbar-group'>
+           <a href='javascript:batchDel()'><span class='del btn'></span>删除</a>
+        </div>
+        </div>
+    </div>
+</block> 

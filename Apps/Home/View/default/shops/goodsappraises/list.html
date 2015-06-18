@@ -1,0 +1,81 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+<script>
+$(document).ready(function(){
+    <notempty name='shopCatId1'>
+    getShopCatListForAppraises('{$shopCatId1}','{$shopCatId2}');
+    </notempty>
+});
+</script>
+<div class="wst-body"> 
+<div class='wst-page-header'>卖家中心 > 评价管理</div>
+<div class='wst-page-content'>
+   <div class='wst-tbar-query'>
+    门店分类：<select id='shopCatId1' onchange='javascript:getShopCatListForAppraises(this.value,"{$object['shopCatId2']}")'>
+	         <option value='0'>请选择</option>
+	         <volist name="shopCatsList" id="vo">
+	         <option value='{$vo['catId']}' <if condition="$shopCatId1 == $vo['catId'] ">selected</if>>{$vo['catName']}</option>
+	         </volist>
+	     </select>
+	     <select id='shopCatId2'>
+	         <option value='0'>请选择</option>
+	     </select>
+        商品：<input type='text' id='goodsName' value='{$goodsName}'/>
+      <button style="border:1px solid #ffffff;height:30px;width:60px;background-color:#e23e3d;color:#ffffff;cursor: pointer;" onclick='javascript:queryAppraises()'>查询</button>
+   </div>
+   <table class='wst-list' style="margin:0 auto;">
+           <thead>
+             <tr>
+               <th width='40'>序号</th>
+               <th width='140'>商品</th>
+               <th>商品评分</th>
+               <th>时效评分</th>
+               <th>服务评分</th>
+             </tr>
+           </thead>
+           <tbody>
+            <volist name="Page['root']" id="vo" key='k'>
+             <tr>
+               <td rowspan='2'>{$k}</td>
+               <td rowspan='2'>
+               <a target='_blank' href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$vo['goodsId']}">
+						<img src="__ROOT__/{$vo['goodsThums']}" height="50" width="50"/>
+			   </a>
+               {$vo['goodsName']}
+               </td>
+               <td>
+               	<div>商品评分：
+               	<for start="0" end="$vo['goodsScore']">
+					<img src="__ROOT__/Apps/Home/View/default/images/icon_score_yes.png"/>
+				</for>&nbsp;{$vo['goodsScore']} 分
+				</div>
+				</td>
+				<td>
+				<div>时效评分：
+               	<for start="0" end="$vo['timeScore']">
+					<img src="__ROOT__/Apps/Home/View/default/images/icon_score_yes.png"/>
+				</for>&nbsp;{$vo['goodsScore']} 分
+				</div>
+                </td>
+                <td>
+              	<div>服务评分：
+               	<for start="0" end="$vo['serviceScore']">
+					<img src="__ROOT__/Apps/Home/View/default/images/icon_score_yes.png"/>
+				</for>&nbsp;{$vo['goodsScore']} 分
+				</div>
+               </td>
+             </tr>
+             <tr>
+               <td colspan='3'>评价[{$vo['loginName']}]：{$vo['content']}</td>
+             </tr>
+             </volist>
+           </tbody>
+           <tfoot>
+             <tr>
+                <td colspan='8' align='center'>{$Page['pager']}</td>
+             </tr>
+             </tfoot>
+        </table>
+</div>
+</div>
+</block> 

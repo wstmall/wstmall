@@ -1,0 +1,112 @@
+<include file="./Apps/Home/View/default/header_nav.html" />
+<div style="height:132px;">
+<div id="mainsearchbox" style="text-align:center;">
+	<div id="wst-search-pbox">
+		<div style="float:left;width:240px;" class="wst-header-car">
+		  <a href='__ROOT__'>
+			<img id="wst-logo" src="__ROOT__/Apps/Home/View/default/images/logo.png" height="132" width="240"/>
+		  </a>	
+		</div>
+		<div id="wst-search-container">
+			<div id="wst-search-type">
+				<input id="wst-search-type" type="hidden" value="{$searchType}"/>
+				<div id="wst-panel-goods" class="<if condition='$searchType eq 1'>wst-panel-curr<else/>wst-panel-notcurr</if>">商品</div>
+				<div id="wst-panel-shop" class="<if condition='$searchType eq 2'>wst-panel-curr<else/>wst-panel-notcurr</if>">店铺</div>
+				<div class="wst-clear"></div>
+			</div>
+			<div id="wst-searchbox">
+				<input id="keyword" placeholder="<if condition='$searchType eq 2'>搜索 店铺<else/>搜索 商品</if>" autocomplete="off"  value="{$keyWords}">
+				<div id="btnsch" class="wst-search-button">搜&nbsp;索</div>
+			</div>
+		</div>
+		<div id="wst-search-des-container">
+			<div class="des-box">
+				<div style="position:relative;float:left;width:130px;margin-left:10px;">
+					<img src="__ROOT__/Apps/Home/View/default/images/sadn.jpg"  height="38" width="40"/>
+					<div style="float:left;position:absolute;top:0px;left:38px;"><span style="font-weight:bolder;">闪电配送</span><br/><span style="color:#e23c3d;">最快1小时送达</span></div>
+				</div>
+				<div style="position:relative;float:left;width:120px;margin-left:20px;">
+					<img src="__ROOT__/Apps/Home/View/default/images/sqzt.jpg"  height="38" width="40"/>
+					<div style="float:left;position:absolute;top:0px;left:38px;"><span style="font-weight:bolder;">社区自提</span><br/><span style="color:#e23c3d;">330家自提点</span></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+<div class="headNav">
+		  <div class="navCon w1020">
+		  	<div class="wst-slide-controls">
+		  		<volist name="indexAds" id="vo" key="k" >
+		  			<if condition="$k eq 1">
+		  		 		<span class="curr">{$k}</span>
+		  		  	<else/>
+		  		    	<span class="">{$k}</span>
+		  		 	</if>
+				</volist>
+			</div>
+		    <div class="navCon-cate fl navCon_on" >
+		      <div class="navCon-cate-title"> <a href="__ROOT__/index.php/Home/goods/getGoodsList">全部商品分类</a></div>
+		      <div class="cateMenu1" >
+		      </div>
+		      <div class="cateMenu1" >
+		        <div style="position:relative;">
+		        	<div class="wst-nvgbk" style="diplay:none;"></div>
+		        	<volist name="catList" key="k1" id="vo1">
+				    	<li style="border-top: none;">
+				    	<div>
+				            <div class="cate-tag"> 
+				            <div class="listModel">
+				             <p > 
+				            	<strong><s{$k1}></s{$k1}>&nbsp;<a style="font-weight:bold;" href="__ROOT__/index.php/Home/goods/getGoodsList/?c1Id={$vo1['catId']}">{$vo1["catName"]}</a></strong>
+				             </p> 
+				             </div>
+				              <div class="listModel">
+				                <p> 
+				                <volist name="vo1['catChildren']" key="k2" id="vo2">
+				                <a href="__ROOT__/index.php/Home/goods/getGoodsList/?c1Id={$vo1['catId']}&c2Id={$vo2['catId']}">{$vo2["catName"]}</a>
+				                </volist>
+				                </p>
+				              </div>
+				            </div>
+				            <div class="list-item hide">
+				              <ul class="itemleft">
+				              	<volist name="vo1['catChildren']" key="k2" id="vo2">
+				                 <dl>
+				                  <dt><a href="__ROOT__/index.php/Home/goods/getGoodsList/?c1Id={$vo1['catId']}&c2Id={$vo2['catId']}">{$vo2["catName"]}</a></dt>
+				                  <dd> 
+				                  <volist name="vo2['catChildren']" key="k3" id="vo3">
+				                  <a href="__ROOT__/index.php/Home/goods/getGoodsList/?c1Id={$vo1['catId']}&c2Id={$vo2['catId']}&c3Id={$vo3['catId']}">{$vo3["catName"]}</a> 
+				                  </volist>
+				                  </dd>
+				                </dl>
+				                <div class="fn-clear"></div>
+				                </volist>
+				              </ul>
+				            </div>
+				            </div>
+				  		</li> 
+		          	</volist>
+		          	<li style="display:none;"></li>
+		        </div>
+		      </div>
+		    </div>
+		    <div class="navCon-menu fl">
+		      <ul class="fl">
+		       	<li ><a class="" href="__ROOT__/index.php"><s1></s1>&nbsp;&nbsp;&nbsp;&nbsp;商城首页</a></li>
+		        <li style='display:none'><a href=""><s2></s2>&nbsp;自营超市</a></li>
+		        <li <if condition="$nvg_mk eq 'brands'">class="curMenu"</if>><a href="__ROOT__/index.php/Home/Brands/index"><s2></s2>&nbsp;品牌汇</a></li>
+		        <li <if condition="$nvg_mk eq 'shopstreet'">class="curMenu"</if>><a href="__ROOT__/index.php/Home/Shops/toShopStreet"><s3></s3>&nbsp;店铺街</a></li>
+		      	<if condition="$selfShop['shopId'] gt 0">
+		       	<li <if condition="$selfShop['shopId'] eq $shopId">class="curMenu"</if>><a href="__ROOT__/index.php/Home/Shops/toShopHome/?shopId={$selfShop['shopId']}"><s4></s4>&nbsp;自营店铺</a></li>
+		      	</if>
+		      </ul>
+		    </div>
+		    <li id="wst-nvg-cart">
+		    	<div style="line-height:36px;padding-left:56px;margin-top:8px;">
+		       		&nbsp;<span class="wst-nvg-cart-cnt">0</span>件&nbsp;|&nbsp;<span class="wst-nvg-cart-price">0.00</span>元
+		       	</div>
+			</li>
+			<div class="wst-cart-box"><div style="line-height:100px;text-align:center;font-size:18px;">购物车中暂无商品</div></div>
+		  </div>
+		</div>

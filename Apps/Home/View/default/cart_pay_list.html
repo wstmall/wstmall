@@ -1,0 +1,142 @@
+<!DOCTYPE>
+<html lang="zh-cn">
+	<head>
+  		<meta charset="utf-8">
+      	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+      	<meta name="viewport" content="width=device-width, initial-scale=1">
+      	<title>我的购物车 - {$CONF['shopTitle']['fieldValue']}</title>
+      	<meta name="keywords" content="{$CONF['shopKeywords']['fieldValue']},我的购物车" />
+      	<meta name="description" content="{$CONF['shopTitle']['fieldValue']},我的购物车" />
+      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/cartpaylist.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />
+		<script src="__PUBLIC__/js/jquery.min.js"></script>
+   	</head>
+   	<body>
+   
+		<include file="./Apps/Home/View/default/header.html" />
+	
+		
+		<!----加载商品楼层start----->
+		<div class="wst-container">
+			 <div>
+           
+                <div id="succeed" style="text-align: center; margin-top: 30px;">
+
+                    <div class="success2" style="margin: 0 auto;">
+                        <div style="float: left; width: 400px; text-align: left;">
+                            
+                        </div>
+                        <div style="float: right; width: 590px; height: 50px; text-align: right; position: relative;">
+                            <img src="__ROOT__/Apps/Home/View/default/images/step1.png" /><br />
+                            <span style="position: absolute; top: 30px; left: 150px; color: #7ABD54;">1.我的购物车</span>
+                            <span style="position: absolute; top: 30px; left: 290px;">2.填写核对订单信息</span>
+                            <span style="position: absolute; top: 30px; left: 465px;">3.成功提交订单</span>
+                        </div>
+                        <div style="clear: both;"></div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div style="margin: 0 auto; margin-top: 40px; margin-bottom: 10px;">
+                <div style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">
+               	我的购物车
+                </div>
+               
+                <div id="showwarnmsg" style="display:none;background-color: #FFE8E8;margin-top: 6px;margin-bottom: 6px;padding:6px;text-align: center;color:#CC0000;border: 1px solid #DB9A9A;">
+                	抱歉，您购物车中的部分商品缺货，或库存不足，请删除被标记的商品或修改购买数量再进行结算。
+                </div>
+                <div style="border: 1px solid #E9E9E9; border-top: 2px solid  #999999;">
+                    <div style="line-height: 35px; background-color: #E9E9E9; text-align: center;">
+                        <div style="float: left; width: 80px; position: relative;">&nbsp;序号</div>
+                        <div style="float: left; width: 240px; text-align: left;">商品</div> 
+                        <div style="float: left; width: 340px; text-align: center;">门店名称</div>                      
+                        <div style="float: left; width: 100px; text-align: center;">商品单价</div>
+                        <div style="float: left; width: 100px; text-align: center;">库存状态</div>
+                        <div style="float: left; width: 100px; text-align: center;">数量</div>
+                        <div style="float: left; width: 100px; text-align: center;">总价</div>
+                        <div style="float: left; width: 100px; text-align: center;">操作</div>
+                        <div style="clear: both;"></div>
+                    </div>
+                    <div id="catgoodsList">
+                        <volist name="cartInfo['cartgoods']" key="k" id="goods">
+                        <input type="hidden" value=<if condition="$goods['goodsStock'] lt $goods['cnt']">-1</if> class="goodsStockFlag"/>
+							<div style="padding:4px;border-bottom: 1px solid #E9E9E9;" id="selgoods_{$goods['goodsId']}" class="selgoods" <if condition="$goods['goodsStock'] lt $goods['cnt']">style="border:2px solid red;"</if>>
+		                        <div style="float: left; width: 80px; text-align: center;">
+		                            &nbsp;{$k}
+									<input type="hidden" class="cgoodsId" value="{$goods['goodsId']}" />
+		                            <input type="hidden" id="price_{$goods['goodsId']}" value="{$goods['shopPrice']}" />
+		                        </div>
+		                        <div style="float: left; width: 240px;">
+		                            <div>
+		                                <div style="float: left; width: 65px;">
+		                                 	<a target="_blank" href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$goods['goodsId']}" target="_blank">
+		                                        <img src="__ROOT__/{$goods['goodsThums']}" width="60" height="60" />
+		                                    </a>
+		                                </div>
+		                                <div style="float: left; width: 160px; line-height: 30px;">
+		                                    <a target="_blank" href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$goods['goodsId']}" target="_blank">{$goods["goodsName"]}</a>
+		                                </div>
+		                            </div>
+		                        </div>
+		                        <div style="float: left; width: 340px; text-align: center;">
+		                        	<a target="_blank" href="__ROOT__/index.php/Home/Shops/toShopHome/?shopId={$goods['shopId']}" title="{$goods['shopName']}">{$goods['shopName']}</a>
+		                        </div>
+		                        <div style="float: left; width: 100px; text-align: center;">¥{$goods["shopPrice"]}元</div>
+		                        <div style="float: left; width: 100px; text-align: center;" id="stock_{$goods['goodsId']}">			                       
+			                		<if condition="$goods['goodsStock'] egt $goods['cnt']">
+	                                                                                                有货
+	                        		<elseif condition="$goods['goodsStock'] eq 0"/>
+	                                   	<span style="color:red;">无货</span>
+	                           		<else/>
+	                                    <span style="color:red;">库存不足,仅剩{$goods["goodsStock"]}份</span>
+	                         		</if>
+		                        </div>
+		                        <div style="float: left; width: 100px; text-align: center;">
+		                            <div class="wrap-input" style="">
+		                                <button id="numl_{$goods['goodsId']}" style="width:18px;display:inline-block;border: 1px solid #666; cursor: pointer; height: 18px; line-height: 15px; padding-top: 0;" onclick="changeCatGoodsnum(1,{$goods['goodsId']},{$goods['isBook']})">-</button>
+		                                <input id="buy-num_{$goods['goodsId']}" type="text" style="width: 30px; text-align: center;" value="{$goods['cnt']}" onkeyup="changeCatGoodsnum(0,{$goods['goodsId']},{$goods['isBook']});" />
+		                                <button id="numr_{$goods['goodsId']}" style="width:18px;display:inline-block;border: 1px solid #666; cursor: pointer; height: 18px; line-height: 15px; padding-top: 0;" onclick="changeCatGoodsnum(2,{$goods['goodsId']},{$goods['isBook']})">+</button>
+		                            </div>
+		                        </div>
+		                        <div style="float: left; width: 100px; text-align: center;">¥<span id="prc_{$goods['goodsId']}">{$goods["shopPrice"] * $goods["cnt"]}</span>元</div>
+		                        <div style="float: left; width: 100px; text-align: center;"><a href="javascript:delCatGoods({$goods['goodsId']});">删除</a></div>
+		                        <div style="clear: both;"></div>
+		                    </div>
+                        </volist>
+                        
+						<if condition="count($cartInfo['cartgoods']) lt 1">
+						<div style='height: 50px; line-height: 50px; text-align: center;'>购物车中没有商品</div>
+                        </if>
+                    </div>
+                    <div style="line-height: 35px; background-color: #E9E9E9; font-weight: bold; text-align: right;">
+                        总计（不含运费）:<span style="color: red; font-size: 20px;">¥<span id="totalMoney">{$cartInfo["totalMoney"]}</span>元&nbsp;&nbsp;</span>
+                    </div>
+                </div>
+                <div>&nbsp;</div>
+                <div class="cart-button clearfix">
+
+                    <li class="wst-btn-continue" onclick="javascript:toContinue();"></li>
+                    <li class="wst-btn-checkout" onclick="javascript:goToPay();" style="<if condition="count($cartInfo['cartgoods']) lt 1">display: none;</if>"></li>
+                   	<div class="wst-clear"></div>
+
+                </div>
+            </div>
+        
+			<div class="wst-clear"></div>
+		</div>
+		<include file="./Apps/Home/View/default/footer.html" />
+   	</body>
+   	
+   	<script src="__PUBLIC__/js/common.js"></script>
+	<script src="__ROOT__/Apps/Home/View/default/js/head.js" type="text/javascript"></script>
+	<script src="__ROOT__/Apps/Home/View/default/js/common.js" type="text/javascript"></script>
+	<script src="__ROOT__/Apps/Home/View/default/js/cartpaylist.js"></script>
+   	
+</html> 
+
+
+
+

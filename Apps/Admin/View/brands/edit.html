@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>{$CONF['shopTitle']['fieldValue']}后台管理中心</title>
+      <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
+      <link rel="stylesheet" href="__PUBLIC__/plugins/uploadify/uploadify.css">
+      <!--[if lt IE 9]>
+      <script src="__PUBLIC__/js/html5shiv.min.js"></script>
+      <script src="__PUBLIC__/js/respond.min.js"></script>
+      <![endif]-->
+      <script src="__PUBLIC__/js/jquery.min.js"></script>
+      <script src="__PUBLIC__/plugins/bootstrap/js/bootstrap.min.js"></script>
+      <script src="__PUBLIC__/js/common.js"></script>
+      <script src="__PUBLIC__/plugins/plugins/plugins.js"></script>
+      <script src="__PUBLIC__/plugins/formValidator/formValidator-4.1.3.js"></script>
+      <script src="__PUBLIC__/plugins/uploadify/jquery.uploadify.min.js"></script>
+      <script src="__PUBLIC__/plugins/kindeditor/kindeditor.js"></script>
+      <script src="__PUBLIC__/plugins/kindeditor/lang/zh_CN.js"></script>
+   </head>
+   <script>
+   var editor1;
+   $(function () {
+	   $.formValidator.initConfig({
+		   theme:'Default',mode:'AutoTip',formID:"myform",debug:true,submitOnce:true,onSuccess:function(){
+				   edit();
+			       return false;
+			},onError:function(msg){
+		}});
+	   $("#brandName").formValidator({onShow:"",onFocus:"品牌名称不能为空",onCorrect:"输入正确"}).inputValidator({min:1,max:20,onError:"你输入的长度不正确,请确认"});
+	   $(":checkbox[name='catId']").formValidator({tipID:"catIdTips",onShow:"",onFocus:"",onCorrect:""}).inputValidator({min:1,max:20,onError:"请选择品牌所属的分类"});
+	   $("#brandIcoUpload").uploadify({
+		    formData      : {'dir':'brands','width':150,'height':150,'thumb_type':6},
+		    buttonText    : '选择图标',
+		    fileTypeDesc  : 'Image Files',
+	        fileTypeExts  : '*.gif; *.jpg; *.png',
+	        swf           : '__PUBLIC__/plugins/uploadify/uploadify.swf',
+	        uploader      : '__ROOT__/index.php/Admin/Friendlinks/uploadPic',
+	        onUploadSuccess : function(file, data, response) {
+	        	var json = WST.toJson(data);
+	        	$('#preview').attr('src','__ROOT__/'+json.Filedata.savepath+json.Filedata.savethumbname).show();
+	        	$('#brandIco').val(json.Filedata.savepath+json.Filedata.savethumbname);
+           }
+	    });
+	    KindEditor.ready(function(K) {
+			editor1 = K.create('textarea[name="brandDesc"]', {
+				height:'350px',
+				allowFileManager : false,
+				allowImageUpload : true,
+				items:[
+				        'source', '|', 'undo', 'redo', '|', 'preview', 'print', 'template', 'code', 'cut', 'copy', 'paste',
+				        'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+				        'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+				        'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
+				        'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+				        'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|','image','table', 'hr', 'emoticons', 'baidumap', 'pagebreak',
+				        'anchor', 'link', 'unlink', '|', 'about'
+				],
+				afterBlur: function(){ this.sync(); }
+			});
+		});
+   });
+   function edit(){
+	   var params = {};
+	   params.id = $('#id').val();
+	   var ids = [];
+	   $('input[name="catId"]:checked').each(function(){
+		   ids.push($(this).val());
+	   })
+	   params.catIds = ids.join(',');
+	   params.brandName = $('#brandName').val();
+	   params.brandIco = $('#brandIco').val();
+	   params.brandDesc = $('#brandDesc').val();
+	   if(params.brandIco==''){
+		   Plugins.Tips({title:'信息提示',icon:'error',content:'请上传品牌图标!',timeout:1000});
+		   return;
+	   }
+	   if(params.brandDesc==''){
+		   Plugins.Tips({title:'信息提示',icon:'error',content:'请输入品牌介绍!',timeout:1000});
+		   return;
+	   }
+	   Plugins.waitTips({title:'信息提示',content:'正在提交数据，请稍后...'});
+	   $.post("__ROOT__/index.php/Admin/Brands/edit",params,function(data,textStatus){
+			var json = WST.toJson(data);
+			if(json.status=='1'){
+				Plugins.setWaitTipsMsg({content:'操作成功',timeout:1000,callback:function(){
+				   location.href='__ROOT__/index.php/Admin/Brands/';
+				}});
+			}else if(json.status=='-2'){
+				Plugins.closeWindow();
+				Plugins.Tips({title:'信息提示',icon:'error',content:'所取消的分类下有该品牌的商品!',timeout:1000});
+			}else{
+				Plugins.closeWindow();
+				Plugins.Tips({title:'信息提示',icon:'error',content:'操作失败!',timeout:1000});
+			}
+		});
+   }
+   </script>
+   <body class="wst-page">
+       <form name="myform" method="post" id="myform">
+        <input type='hidden' id='id' value='{$object.brandId}'/>
+        <input type='hidden' id='brandIco' value='{$object.brandIco}'/>
+        
+        <table class="table table-hover table-striped table-bordered wst-form">
+           <tr>
+             <th width='120' align='right'>品牌名称<font color='red'>*</font>：</th>
+             <td><input type='text' id='brandName' class="form-control wst-ipt" value='{$object.brandName}' maxLength='25'/></td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>所属分类<font color='red'>*</font>：</th>
+             <td>
+             <volist name="cats" id="vo">
+             <label>
+             <input type='checkbox' id='cat{$vo["catId"]}' name='catId' value='{$vo["catId"]}' <PHP>if($object['catBrands_'.$vo["catId"]]==1)echo "checked";</PHP> >&nbsp;{$vo["catName"]}&nbsp;
+             </label>
+             </volist>
+             <span id='catIdTips'></span>
+             </td>
+           </tr>
+           <tr>
+             <th align='right'>品牌图标<font color='red'>*</font>：</th>
+             <td><input type='text' id='brandIcoUpload' class="form-control wst-ipt"/></td>
+           </tr>
+           <tr>
+             <th align='right'>预览图：</th>
+             <td height='40'>
+               <img id='preview' src='__ROOT__/{$object.brandIco}' height='80' <if condition="$object['brandIco'] =='' ">style='display:none'</if>/>
+             </td>
+           </tr>
+           <tr>
+             <th align='right'>品牌介绍<font color='red'>*</font>：</th>
+             <td>
+             <textarea id='brandDesc' name='brandDesc' class="form-control wst-ipt" style='width:80%;height:400px'>{$object.brandDesc}</textarea>
+             </td>
+           </tr>
+           <tr>
+             <td colspan='2' style='padding-left:250px;'>
+                 <button type="submit" class="btn btn-success">保&nbsp;存</button>
+                 <button type="button" class="btn btn-primary" onclick='javascript:location.href="__ROOT__/index.php/Admin/Branks/"'>返&nbsp;回</button>
+             </td>
+           </tr>
+        </table>
+       </form>
+   </body>
+</html>

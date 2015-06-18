@@ -1,0 +1,232 @@
+#service-2013 dl b {
+	background-image: url(../../../templates/default/images/20130330A_1.png);
+	background-repeat: no-repeat
+}
+
+#service-2013 {
+	padding: 10px 20px;
+	margin-bottom: 20px;
+	background: #FFF;
+	border-top: 1px solid #DDD;
+	border-bottom: 1px solid #F1F1F1
+}
+
+#service-2013 dl {
+	float: left;
+	width: 246px
+}
+
+#service-2013 dt {
+	position: relative;
+	padding: 6px 0 6px 44px;
+	font: 14px "microsoft yahei";
+	zoom: 1
+}
+
+#service-2013 dd {
+	min-height: 120px;
+	padding-left: 24px;
+	margin-left: 20px;
+	line-height: 20px
+}
+
+#service-2013 dt b {
+	position: absolute;
+	top: 5px;
+	left: 0;
+	width: 40px;
+	height: 40px
+}
+
+#service-2013 dl.fore1 b {
+	background-position: 0 -55px
+}
+
+#service-2013 dl.fore2 b {
+	background-position: -50px -55px
+}
+
+#service-2013 dl.fore3 b {
+	background-position: 0 -102px
+}
+
+#service-2013 dl.fore4 b {
+	background-position: -50px -102px
+}
+
+#service-2013 dl.fore5 b {
+	background-position: 0 -149px
+}
+
+#service-2013 dl.fore5 {
+	width: 160px
+}
+
+#service-2013 .fr {
+	display: none
+}
+
+* html #service-2013 dd {
+	height: 120px
+}
+
+.root61 #service-2013 dl {
+	width: 252px
+}
+
+.root61 #service-2013 dl.fore5 {
+	width: 160px
+}
+
+#footer-2013 {
+	padding-bottom: 30px;
+	text-align: center
+}
+
+#footer-2013 b {
+	background: url(../../../templates/default/images/20130330A_1.png)
+		no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+	cursor: pointer;
+	height: 13px;
+	left: 0;
+	top: 8px;
+	width: 13px;
+}
+
+.copy {
+	clear: both;
+	text-align: center;
+	width: 100%;
+	margin: 10px 0;
+	color: #666666;
+	font: 12px/150% Arial, Verdana, "宋体";
+}
+
+#footer-2013 .links a,#footer-2013 .links span {
+	margin: 0 10px
+}
+
+#footer-2013 .links span a {
+	margin: 0
+}
+
+#footer-2013 .copyright {
+	margin: 10px 0
+}
+
+#footer-2013 .authentication a {
+	margin: 0 5px
+}
+
+#service-2013 {
+	padding-left: 10px;
+	padding-right: 10px
+}
+
+#service-2013 dl {
+	width: 150px
+}
+
+#service-2013 dl.fore5 {
+	width: 160px
+}
+
+#service-2013 .fr {
+	display: block
+}
+
+.root61 #service-2013 {
+	padding-left: 120px;
+	padding-right: 20px
+}
+
+/**尾部**/
+#ets-foot {
+	width: 100%;
+	margin-top: 20px;
+	clear: both;
+}
+
+#ets-foot .footer {
+	width: 1200px;
+	margin: 0 auto;
+}
+
+#ets-foot .flist {
+	width: 130px;
+	float: left;
+	padding: 20px 60px
+}
+
+#ets-foot .flist h3 {
+	width: 100px;
+	height: 30px;
+	color: #9b9b9b;
+	font: bold 16px/30px "微软雅黑", Verdana, Arial, Tahoma;
+	border-bottom: #dfdfdf solid 1px;
+	margin-bottom: 5px
+}
+
+#ets-foot .flist ul li {
+	height: 21px;
+	line-height: 21px;
+	overflow: hidden;
+	padding-left: 10px;
+	clear: both;
+	background: url(phone/dot.gif) no-repeat 0px 12px;
+}
+
+#ets-foot .flist ul li a,.flist ul li a:visited {
+	display: block;
+	width: 96px;
+	height: 20px;
+	color: #666666;
+	font: normal 12px/24px "微软雅黑", Verdana, Arial, Tahoma;
+	clear: both;
+}
+
+#ets-foot .flist ul li a:hover {
+	color: #666666;
+}
+
+#ets-foot .CopyRightC {
+	clear: both;
+	text-align: center;
+	padding-bottom: 20px;
+	color: #a9a9a9;
+	border-top: medium none;
+}
+
+#ets-foot .friendlinks {
+	background-color: #eeeeee;
+	clear: both;
+	padding: 5px 10px;
+	padding-bottom: 10px;
+	margin: 10px 0px
+}
+
+#ets-foot .friendlinks h3 {
+	margin-bottom: 5px
+}
+
+#ets-foot .friendlinks a {
+	border: #cccccc solid 1px;
+	display: block;
+	margin-right: 6px;
+	float: left;
+	width: 100px;
+}
+
+#ets-foot .friendlinks .links {
+	height: 42px;
+	overflow: hidden
+}
+
+#ets-foot .friendlinks a:hover {
+	border: #ababab solid 1px
+}
+
+#linksbar {
+	width: 1180px;
+}
+

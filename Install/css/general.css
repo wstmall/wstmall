@@ -1,0 +1,63 @@
+body,p,td,th,div {
+  line-height:130%;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+body,p,td,th,div {
+  color: #192E32;
+}
+
+html {
+  overflow-y:scroll;
+}
+
+body {
+  margin: 0px;
+  padding: 0px;
+  text-align:center;
+  background: url('../images/bg.jpg') no-repeat left top;
+  font:13px 宋体, Arial, Helvetica, sans-serif;
+}
+p{margin:2px;font-size:13px;}
+.bold{font-weight: bold;}
+.comment {
+  color: #888;
+}
+.main{margin:0 auto;background:#0EAAE7;overflow:hidden;width:800px;height:500px;border-radius:10px;margin-top:10px;padding-top:10px;padding-left:10px;}
+.content{border:1px solid #ccc;text-align:left;padding:10px;width:770px;height:420px;overflow-y:auto;}
+.bottom{margin-top:10px}
+.btn{height:30px;width:60px;color:#000000;font-weight:bold;}
+input, textarea, select {
+  font:12px 宋体, Arial, Helvetica, sans-serif;
+}
+a { text-decoration:none; }
+input.p, label {
+  cursor:pointer;
+}
+.ipt {
+  color: black;
+  width: 150px;
+}
+
+a.install {
+  cursor: pointer;
+  display: inline-block;
+  background: ;
+  border-radius: 5px;
+  text-decoration: none;
+  padding: 5px 5px;
+}
+a.install:hover {
+  background: white;
+  color: #0EAAE7;
+}
+.tips {
+  display:none;
+  color: white;
+  font-size: 13px;
+}
+.check-env {width: 98%;margin: 0 auto;text-align: left;}
+.check-env .left{width: 350px;}
+.red{color:red}
+.check0{background:url('../images/fail.gif') no-repeat;width:16px;height:16px;display: inline-block;margin-right:5px;}
+.check1{background:url('../images/ok.gif') no-repeat;width:16px;height:16px;display: inline-block;margin-right:5px;}

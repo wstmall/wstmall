@@ -1,0 +1,168 @@
+<link rel="stylesheet" type="text/css" href="__ROOT__/Apps/Home/View/default/css/cart.css" />
+<script src="__ROOT__/Apps/Home/View/default/js/login.js"></script>
+<script type="text/javascript" src="__ROOT__/Apps/Home/View/default/js/cart/common.js?v=725"></script>
+<script type="text/javascript" src="__ROOT__/Apps/Home/View/default/js/cart/quick_links.js"></script>
+<!--[if lte IE 8]>
+<script src="__ROOT__/Apps/Home/View/default/js/cart/ieBetter.js"></script>
+<![endif]-->
+<script src="__ROOT__/Apps/Home/View/default/js/cart/parabola.js"></script>
+<!--右侧贴边导航quick_links.js控制-->
+	<div id="flyItem" class="fly_item" style="display:none;">
+		<p class="fly_imgbox">
+		<img src="__ROOT__/Apps/Home/View/default/images/item-pic.jpg"
+			width="30" height="30">
+		</p>
+	</div>
+	<div class="mui-mbar-tabs" style="border: 1px solid red;">
+		<div class="quick_link_mian">
+			<div class="quick_links_panel">
+				<div id="quick_links" class="quick_links">
+					<li><a href="#" class="my_qlinks"><i class="setting"></i></a>
+						<div class="ibar_login_box status_login">
+							<if condition="$baseUser['userId'] gt 0">
+							<div class="avatar_box">
+								<p class="avatar_imgbox">
+									<img
+										src="__ROOT__/Apps/Home/View/default/images/no-img_mid_.jpg" />
+								</p>
+								<if condition="$baseUser['userId'] gt 0">
+								<ul class="user_info">
+									<li>用户名：{$baseUser['loginName']}</li>
+									<li>级&nbsp;别：普通会员</li>
+								</ul>
+								</if>
+							</div>
+							
+							<div class="ibar_recharge-btn">
+								<input type="button" value="我的订单" onclick="getMyOrders();"/>
+							</div>
+							<i class="icon_arrow_white"></i>
+						</div> <else />
+							<div style="margin: 0 auto;padding: 15px 0; width: 220px;">
+							<div class="ibar_recharge-field">
+								<label>帐号</label>
+								<div class="ibar_recharge-fl">
+									<div class="ibar_recharge-iwrapper">
+										<input id="loginName" name="loginName" value="{$loginName}" type="text" name="19" placeholder="用户名/手机号/邮箱" />
+									</div>
+									<i class="ibar_username-contact"></i>
+								</div>
+							</div>
+							<div class="ibar_recharge-field">
+								<label>密码</label>
+								<div class="ibar_recharge-fl">
+									<div class="ibar_recharge-iwrapper">
+										<input id="loginPwd" name="loginPwd" type="password" name="19" placeholder="密码" />
+									</div>
+									<i class="ibar_password-contact"></i>
+								</div>
+							</div>
+							<div class="ibar_recharge-field">
+								<label>验证码</label>
+								<div class="ibar_recharge-fl" style="width:80px;">
+									<div class="ibar_recharge-iwrapper">
+										<input id="verify" style="ime-mode:disabled;width:80px;" name="verify" class="text text-1" tabindex="6" autocomplete="off" maxlength="6" type="text" placeholder="验证码"/>
+									</div>
+								</div>
+								<label class="img" onclick="javascript:getVerify()">
+				                	<img style='vertical-align:middle;cursor:pointer;height:30px;width:93px;' class='verifyImg' src='__ROOT__/Apps/Home/View/default/images/clickForVerify.png' title='刷新验证码' onclick='javascript:getVerify()'/> 
+								</label>
+							</div>
+							<div class="ibar_recharge-btn">
+								<input type="button" value="登录" onclick="checkLoginInfo();"/>
+							</div>
+							</div>
+						</if></li>
+					<li id="shopCart"><a href="#" class="message_list"><i class="message"></i>
+					<div class="span">购物车</div> <span class="cart_num">{$cartcnt}</span></a></li>
+				</div>
+				<div class="quick_toggle">
+					<li><a href="#none"><i class="mpbtn_qrcode"></i></a>
+						<div class="mp_qrcode" style="display: none;">
+							<img
+								src="__ROOT__/Apps/Home/View/default/images/wstmall_weixin.png"
+								width="148"  /><i class="icon_arrow_white"></i>
+						</div></li>
+					<li><a href="#top" class="return_top"><i class="top"></i></a></li>
+				</div>
+			</div>
+			<div id="quick_links_pop" class="quick_links_pop hide"></div>
+		</div>
+	</div>
+	<script type="text/javascript">
+	$(".quick_links_panel li").mouseenter(function() {
+		$(this).children(".mp_tooltip").animate({
+			left : -92,
+			queue : true
+		});
+		$(this).children(".mp_tooltip").css("visibility", "visible");
+		$(this).children(".ibar_login_box").css("display", "block");
+	});
+	$(".quick_links_panel li").mouseleave(function() {
+		$(this).children(".mp_tooltip").css("visibility", "hidden");
+		$(this).children(".mp_tooltip").animate({
+			left : -121,
+			queue : true
+		});
+		$(this).children(".ibar_login_box").css("display", "none");
+	});
+	$(".quick_toggle li").mouseover(function() {
+		$(this).children(".mp_qrcode").show();
+	});
+	$(".quick_toggle li").mouseleave(function() {
+		$(this).children(".mp_qrcode").hide();
+	});
+
+	// 元素以及其他一些变量
+	var eleFlyElement = document.querySelector("#flyItem"), eleShopCart = document
+			.querySelector("#shopCart");
+	eleFlyElement.style.visibility = "hidden";
+	
+	var numberItem = 0;
+	// 抛物线运动
+	var myParabola = funParabola(eleFlyElement, eleShopCart, {
+		speed : 100, //抛物线速度
+		curvature : 0.0012, //控制抛物线弧度
+		complete : function() {
+			eleFlyElement.style.visibility = "hidden";
+			jQuery.post(rooturl+"/index.php/Home/Cart/getCartInfo/" ,{"axm":1},function(data) {
+				var cart = WST.toJson(data);
+				eleShopCart.querySelector("span").innerHTML = cart.cartgoods.length;
+			});
+			
+		}
+	});
+	// 绑定点击事件
+	if (eleFlyElement && eleShopCart) {
+		[].slice
+				.call(document.getElementsByClassName("btnCart"))
+				.forEach(
+						function(button) {
+							button
+									.addEventListener(
+											"click",
+											function(event) {
+												// 滚动大小
+												var scrollLeft = document.documentElement.scrollLeft
+														|| document.body.scrollLeft
+														|| 0, scrollTop = document.documentElement.scrollTop
+														|| document.body.scrollTop
+														|| 0;
+												eleFlyElement.style.left = event.clientX
+														+ scrollLeft + "px";
+												eleFlyElement.style.top = event.clientY
+														+ scrollTop + "px";
+												eleFlyElement.style.visibility = "visible";
+$(eleFlyElement).show();
+												// 需要重定位
+												myParabola.position().move();
+											});
+						});
+	}
+	$(document).ready(function(){
+		getVerify();
+	});
+	function getMyOrders(){
+		document.location.href = "__ROOT__/index.php/Home/Orders/queryByPage";
+	}
+</script>

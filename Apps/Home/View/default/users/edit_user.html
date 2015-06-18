@@ -1,0 +1,59 @@
+<extend name="./Apps/Home/View/default/users/layout.html" />
+<block name="content">
+<link rel="stylesheet" href="__PUBLIC__/plugins/uploadify/uploadify.css">
+<script src="__PUBLIC__/plugins/uploadify/jquery.uploadify.min.js"></script>
+   <div class="wst-body"> 
+       <div class='wst-page-header'>买家中心 > 个人资料</div>
+       <div class='wst-page-content'>
+       <form name="myform" method="post" id="myform">
+        <table class="table table-hover table-striped table-bordered wst-form">
+           <tr>
+             <th align='right' width="80">昵称 <font color='red'>*</font>：</th>
+             <td>
+             <input type='text' id='userName' name='userName' value="{$user['userName']}"/>
+             </td>
+             <td width='120' align='right' rowspan='5'>
+             <img id='preview' src='<if condition="$user['userPhoto'] =='' ">__ROOT__/Apps/Home/View/default/images/logo.png<else/>__ROOT__/{$user.userPhoto}</if>' width='150' height='150' />
+             <input type='text' id='userImgUpload' class="form-control wst-ipt"/>
+             <input type='hidden' id='userPhoto' name='userPhoto'/>
+             </td>
+           </tr>
+           <tr>
+             <th align='right'>性别 <font color='red'>*</font>：</th>
+             <td>
+             	<label><input type='radio' name='userSex' value="1" <if condition="$user['userSex'] eq 1">checked</if>/>男</label>
+             	<label><input type='radio' name='userSex' value="2" <if condition="$user['userSex'] eq 2">checked</if>/>女</label>
+             	<label><input type='radio' name='userSex' value="3" <if condition="$user['userSex'] eq 0">checked</if>/>保密</label>
+             </td>
+           </tr>
+            <tr>
+             <th align='right'>用户QQ <font color='red'>*</font>：</th>
+             <td>
+             <input type='text' id='userQQ' name='userQQ' value="{$user['userQQ']}"/>
+             </td>
+           </tr>
+           <tr>
+             <th align='right'>手机 <font color='red'>*</font>：</th>
+             <td>
+             <input type='text' id='userPhone' name='userPhone' value="{$user['userPhone']}" maxlength="11"/>
+             </td>
+           </tr>
+           <tr>
+             <th align='right'>邮箱<font color='red'>*</font>：</th>
+             <td>
+             <input type='text' id='userEmail' name='userEmail' value="{$user['userEmail']}" maxlength="25" style='width:200px'/>
+             </td>
+           </tr>
+           
+           <tr>
+             <td colspan='2' style='padding-left:250px;'>
+                 <button class='wst-btn-query' type="submit">保&nbsp;存</button>
+                 <button class='wst-btn-query' type="reset">重&nbsp;置</button>
+             </td>
+           </tr>
+        </table>
+       </form>
+       </div>
+   </div>
+   <script src="__ROOT__/Apps/Home/View/default/js/users/edit_user.js" type="text/javascript"></script> 
+</block>  

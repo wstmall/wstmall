@@ -1,0 +1,68 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+
+<div class="wst-body"> 
+<div class='wst-page-header'>卖家中心 > 商品分类</div>
+<div class='wst-page-content'>
+   <div class='wst-tbar-group' style='text-align:left;'>
+     <a href='javascript:toEditGoodsCat(0,0)'style='margin-right:15px;'><span class='add btn'></span>新增</a>
+   </div>
+   <table class='wst-list'>
+   <thead>
+   <tr>
+     <th>名称</th>
+     <th width='60'>排序号</th>
+     <th width='80'>是否显示</th>
+     <th>操作</th>
+   </tr>
+   </thead>
+   <volist name="List" id="vo" key='i'>
+   <tr id='tr_0_{$i}' class="tr_0" isLoad='1'>
+     <td>
+     <span class='wst-tree-open' onclick='javascript:loadGoodsCatChildTree(this,{$vo.catId},"tr_0_{$i}")'>&nbsp;</span>
+     <input type='text' value='{$vo['catName']}' dataId="{$vo.catId}" onblur='javascript:editGoodsCatName(this)'/>
+     </td>
+     <td>{$vo['catSort']}</td>
+     <td>
+     <if condition="$vo['isShow']==0 ">
+	  <span class='wst-state_no'></span>
+     <else/>
+      <span class='wst-state_yes'></span>
+     </if>
+     </td>
+     <td>
+     <a href="javascript:toEditGoodsCat(0,{$vo['catId']})" class='add btn' title='新增'></a>
+     <a href="javascript:toEditGoodsCat({$vo['catId']},0)" class='edit btn' title='编辑'>
+     <a href="javascript:delGoodsCat({$vo['catId']},0)" class='del btn' title='删除'></a>&nbsp;
+     </td>
+   </tr>
+   <if condition="$vo['childNum'] gt 0 ">
+      <volist name="vo['child']" id="vo2" key='i2'>
+	  <tr id='tr_0_{$i}_{$i2}' class="tr_0_{$i}" isLoad='1'>
+	     <td>
+	     <span class="wst-tree-second">&nbsp;</span>
+	     <input type='text' value='{$vo2['catName']}' dataId="{$vo2.catId}" onblur='javascript:editGoodsCatName(this)'/>
+	     </td>
+	     <td>{$vo2['catSort']}</td>
+	     <td>
+	     <if condition="$vo2['isShow']==0 ">
+		  <span class='wst-state_no'></span>
+	     <else/>
+	      <span class='wst-state_yes'></span>
+	     </if>
+	     </td>
+	     <td>
+	     <a href="javascript:toEditGoodsCat({$vo2['catId']},0)" class='edit btn' title='编辑'>
+	     <a href="javascript:delGoodsCat({$vo2['catId']},0)" class='del btn' title='删除'></a>&nbsp;
+	     </td>
+	  </tr>
+      </volist>
+   </if>
+   </volist>
+</table>
+<div class='wst-tbar-group' style='text-align:left;'>
+     <a href='javascript:toEditGoodsCat(0,0)' style='margin-right:15px;'><span class='add btn'></span>新增</a>
+</div>
+</div>
+</div>
+</block>   

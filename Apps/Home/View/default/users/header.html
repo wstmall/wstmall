@@ -1,0 +1,69 @@
+<script type="text/javascript">
+     var rooturl = "__ROOT__";
+</script>
+<div id="wst-shortcut">
+	<div class="w">
+		<ul class="fl lh">
+		    <li class="fore1 ld" style='border-left:1px solid #e4e4e4;border-right:1px solid #e4e4e4;padding-left:5px;'>
+		    <a href="__ROOT__" rel="nofollow"><span class='index'></span></a></li>
+			<li class="fore1 ld" style='border-left:1px solid #e4e4e4;border-right:1px solid #e4e4e4;padding-left:25px;'><b></b><a href="javascript:addToFavorite()"
+				rel="nofollow">收藏WST</a></li><s></s>
+			<li class="fore3 ld menu" id="app-jd" data-widget="dropdown">
+			
+				<span class="outline"></span> <span class="blank"></span> 
+				<a href="#" target="_blank"><img src="__ROOT__/Apps/Home/View/default/images/icon_top_02.png"/>&nbsp;WST 手机版</a>
+			</li>
+			<li class="fore4" id="biz-service" data-widget="dropdown" style='padding:0;'>&nbsp;<s></s>&nbsp;&nbsp;&nbsp;
+						
+			</li>
+		</ul>
+	
+		<ul class="fr lh" style='float:right;'>
+			<li class="fore1" id="loginbar"><a href='__ROOT__/index.php/Home/Orders/queryByPage'><span style='color:blue'>{$baseUser['loginName']}</span></a> 
+			
+			<a href='__ROOT__'> 欢迎您来到 WST 商城！</a><s></s>&nbsp;
+			<span>
+			    <if condition="!$baseUser['userId']">
+				<a href="javascript:login();">[登录]</a>
+				<a href="__ROOT__/index.php/Home/Users/regist/"	class="link-regist">[免费注册]</a>
+				</if>
+				<a href="javascript:logout()">[退出]</a>
+			</span>
+			</li>
+			<li class="fore2 ld"><s></s>
+			<if condition="$baseUser['userType']==0">
+			<a href="__ROOT__/index.php/Home/Shops/toOpenShopByUser" rel="nofollow">我要开店</a>
+			</if>
+			<if condition="$baseUser['userType']==1">
+			<a href="__ROOT__/index.php/Home/Shops/" rel="nofollow">卖家中心</a>
+			</if>
+			</li>
+			
+		</ul>
+		<span class="clr"></span>
+	</div>
+	
+</div>
+<div style="height:132px;text-align:center;">
+	<div style="height:132px;width:1020px;margin:0 auto;text-align:left;">
+		<div style="float:left;width:240px;height:132px;" >
+			<a href="__ROOT__/index.php/Home/Orders/queryByPage">
+			<img src="__ROOT__/Apps/Home/View/default/images/logo2.png" height="38" width="240" style="margin-top:60px;"/>	
+			</a>
+		</div>
+		<div style="float:right;width:400px;height:120px;">
+			<div style="height:36px;border:2px solid #e23c3d;position:relative;margin-top:60px;margin-left:20px;">
+				
+				<input id="keyword" style="border:0;width:293px;background: 0 0;padding-left:10px;line-height: 22px;padding-top: 8px; padding-bottom: 4px;font-size:18px;" me="q" tabindex="9" title="请输入搜索文字" class="s-combobox-input" id="mq" role="combobox" aria-haspopup="true" accesskey="s" autofocus="true" aria-label="请输入搜索文字" type="text" x-webkit-grammar="builtin:translate" x-webkit-speech="" autocomplete="off">
+				<div id="btnsch" style="position:absolute;top:0px;right:0px;width:80px;height:36px;color:#ffffff;font-weight:bolder;background-color:#e23c3d;line-height:36px;text-align:center;font-size:15px;cursor:pointer;">搜&nbsp;索</div>
+			</div>
+		</div>
+		
+	</div>
+</div>
+<div class="wst-shop-nav">
+	<div class="wst-nav-box">
+		<li class="liselect">买家首页</li>
+		<div class="wst-clear"></div>
+	</div>
+</div>

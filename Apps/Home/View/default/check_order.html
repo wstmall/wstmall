@@ -1,0 +1,494 @@
+﻿<!doctype html>
+<html>
+	<head>
+  		<meta charset="utf-8">
+      	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+      	<meta http-equiv="cache-control" content="no-cache">
+      	<meta name="viewport" content="width=device-width, initial-scale=1">
+      	<title>填写核对订单信息 - {$CONF['shopTitle']['fieldValue']}</title>
+      	<meta name="keywords" content="{$CONF['shopKeywords']['fieldValue']},填写核对订单信息" />
+      	<meta name="description" content="{$CONF['shopTitle']['fieldValue']},填写核对订单信息" />
+      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/checkorderinfo.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/magnifier.css" />
+
+      	<style>
+      	.adsipt{height:28px;}
+		textarea{height:60px;}
+      	</style>
+      	<script src="__PUBLIC__/js/jquery.min.js"></script>
+   	</head>
+   	<body>
+	<include file="./Apps/Home/View/default/header.html" />
+	<div class="w">
+        <div>
+            <div>
+                <div id="succeed" style="text-align: center; margin-top: 30px;">
+                    <div class="success2" style="margin: 0 auto;">
+                        <div style="float: left; width: 400px; text-align: left;"></div>
+                        <div style="float: right; width: 590px; height: 40px; text-align: right; position: relative;">
+                            <img src="__ROOT__/Apps/Home/View/default/images/step2.png" alt="" /><br />
+                            <span style="position: absolute; top: 30px; left: 150px;">1.我的购物车</span>
+                            <span style="position: absolute; top: 30px; left: 290px; color: #7ABD54;">2.填写核对订单信息</span>
+                            <span style="position: absolute; top: 30px; left: 465px;">3.成功提交订单</span>
+                        </div>
+                        <div style="clear: both;"></div>
+                    </div>
+
+                </div>
+            </div>
+            <div id="checkorderInfo" style="margin: 0 auto; margin-top: 40px; margin-bottom: 10px;">
+                <div style="border: 1px solid #E9E9E9; border-top: 2px solid  #999999;">
+                    <div style="line-height: 35px; background-color: #E9E9E9; font-weight: bold; font-size: 18px; padding-left: 10px;">
+                        	填写并核对订单信息
+                    </div>
+                    <div>                        
+						<div id="consignee1" style="padding: 10px;line-height: 30px;">
+							<div>
+								<span style="font-size: 15px;font-weight: bold;">收货人信息 </span>
+								<span style="padding-left:50px;color: #999999;cursor:pointer;"><a href="javascript:toEditAddress();">[修改]</a></span>
+							</div>
+							<volist name="addressList" key="k" id="address">
+							
+								<if condition="$k eq 1">
+								<input type="hidden" id="consigneeId" name="consigneeId" value="{$address['addressId']}"/>
+								<div id="showaddinfo" style="padding-left:40px;">										
+									<div>
+										<span style="font-weight: bold;">{$address["userName"]}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+										<if condition="$address['userPhone'] neq ''">
+											{$address["userPhone"]}
+										<else/>
+											{$address["userTel"]}
+										</if>
+									</div>
+									<div>
+										{$address["areaName1"]}{$address["areaName2"]}{$address["areaName3"]}{$address["communityName"]}{$address["address"]}&nbsp;&nbsp;&nbsp;&nbsp;
+									</div>											
+								</div>
+								</if>
+							</volist>
+							<if condition="count($addressList) eq 0">
+								<div id="showaddinfo" style="padding-left:40px;"></div>
+								<input type="hidden" id="consigneeId" name="consigneeId" />
+							</if>
+						</div>
+						
+                        <div id="consignee2" style="padding: 10px; line-height: 30px; border: 2px solid #FF6600;<if condition="count($addressList) gt 0">display:none;</if>">
+                            <div>
+                                <span style="font-size: 15px; font-weight: bold;">收货人信息 </span>
+                            </div>
+                            <div>
+                            	<div id="userAddressDiv">
+                            	<div id="flagdiv" style="display: none;"></div>
+                               	<volist name="addressList" key="key" id="address">
+								<div id="caddress_{$address['addressId']}">												
+									<label>
+										<input id="seladdress_{$address['addressId']}" onclick="changeAddress();" name="seladdress" type="radio" <if condition="$key eq 1">checked="checked"</if> value="{$address['addressId']}"/>
+										<span style="font-weight: bold;" id="radusername_{$address['addressId']}">{$address["userName"]}&nbsp;&nbsp;&nbsp;&nbsp;</span>
+										<span id="radaddress_{$address['addressId']}">
+										{$address["areaName1"]}{$address["areaName2"]}{$address["areaName3"]}{$address["communityName"]}{$address["address"]}&nbsp;&nbsp;&nbsp;&nbsp;
+										<if condition="$address['userPhone'] neq ''">
+											{$address["userPhone"]}
+										<else/>
+											{$address["userTel"]}
+										</if>
+										</span>
+									</label>
+									<span class="optionspan" style="padding-left:50px;color: #999999;cursor:pointer;">[<a onclick="javascript:changeAddress();">修改</a>]</span>
+									<span class="optionspan" style="padding-left:10px;color: #999999;cursor:pointer;">[<a onclick="javascript:delAddress({$address['addressId']});">删除</a>]</span>									
+								</div>
+								</volist>
+								</div>
+								<div>					
+									<label>
+										<input id="seladdress_0" name="seladdress" type="radio" value="0" onclick="changeAddress();" <if condition="count($addressList) eq 0">checked="checked"</if>/>使用新地址
+									</label>
+								</div>
+                            </div>
+                            <div id="address_form" style="padding-left: 40px;">
+                                <input type='hidden' id='consignee_add_cityId' name='consignee_add_cityId' value='{$areaId2}'/>
+                                <div style="line-height: 35px;">
+                                    <div style="float: left; width: 100px; text-align: right;"><span style="color: red;">*</span>收货人：</div>
+                                    <div style="float: left; width: 700px;">
+                                        <input type="text" class="input adsipt" style="width: 200px;" maxlength="50" name="consignee_add_userName" id="consignee_add_userName" />&nbsp;
+                                    </div>
+                                    <div style="clear: both;"></div>
+                                </div>
+                                <div style="line-height: 35px;">
+                                    <div style="float: left; width: 100px; text-align: right;"><span style="color: red;">*</span>收货地址：</div>
+                                    <div style="float: left; width: 700px;">
+                                        <select name="consignee_add_countyId" id="consignee_add_countyId" class="adsipt" onchange="loadCommunitys(this);">
+                                            <option value="0" selected="selected">请选择</option>
+                                            <volist name="areaList2" key="key" id="area">
+												<option value="{$area['areaId']}">{$area["areaName"]}</option>
+                                            </volist>
+                                        </select>
+                                        <select name="consignee_add_CommunityId" id="consignee_add_CommunityId" class="adsipt" onchange="checkArea();">
+                                            <option value="0" selected="selected">请选择</option>                                            									
+                                        </select>
+                                        <input type="text" class="input adsipt" style="width: 350px;" maxlength="150" name="consignee_add_address" id="consignee_add_address" />&nbsp;
+                                    </div>
+                                    <div style="clear: both;"></div>
+                                </div>
+                                <div style="line-height: 35px;">
+                                    <div style="float: left; width: 100px; text-align: right;"><span style="color: red;">*</span>手机号码：</div>
+                                    <div style="float: left; width: 700px;">
+                                        <input type="text" class="input adsipt" style="width: 150px;" maxlength="11" name="consignee_add_userPhone" id="consignee_add_userPhone" onkeyup="javascript:WST.isChinese(this,1)" onkeypress="return WST.isNumberdoteKey(event)" />
+                                        &nbsp;或&nbsp;&nbsp;&nbsp;&nbsp;
+										 固定电话:<input type="text" class="input adsipt" style="width: 150px;" maxlength="15" name="consignee_add_userTel" id="consignee_add_userTel" />(例：020-88888888)&nbsp;
+                                    </div>
+                                    <div style="clear: both;"></div>
+                                </div>
+                                <div style="line-height: 35px;">
+                                    <div style="float: left; width: 100px; text-align: right;">邮编：</div>
+                                    <div style="float: left; width: 700px;">
+                                        <input type="text" class="input adsipt" style="width: 150px;" maxlength="6" name="consignee_add_zipCode" id="consignee_add_zipCode" onkeyup="javascript:WST.isChinese(this,1)" onkeypress="return WST.isNumberdoteKey(event)"/>
+                                    </div>
+                                    <div style="clear: both;"></div>
+                                </div>
+                            </div>
+                            
+							<div class="wst-checkout" id="checkout" style="padding-left:100px;margin:15px;cursor:pointer;">
+								<li  onclick="saveAddress()">
+									<span id="saveConsigneeTitleDiv"></span>
+								</li>
+								<div style="clear: both;"></div>
+							</div>
+                        </div>
+                    </div>
+                    <div style="padding: 10px; border-bottom: 1px solid #E9E9E9; line-height: 30px;">
+                        <div>
+                            <span style="font-size: 15px; font-weight: bold;">支付方式 </span>
+                        </div>
+                        <div id="newaddress" style="padding-left: 40px;">
+                            <div>
+                                <label>
+                                    <input id="pay_hd" name="payway" checked="checked" type="radio" value="0" />货到付款
+                                </label>
+                                <span style="padding-left: 100px; color: #999999">送货上门后再收款，支持现金</span>
+                            </div>
+                            <div>
+                                <label>
+                                    <input id="pay_ali" name="payway" type="radio" value="1" />在线支付
+                                </label>
+                                <span style="padding-left: 100px; color: #999999">支持支付宝</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="padding: 10px; border-bottom: 1px solid #E9E9E9; line-height: 30px;">
+                        <div>
+                            <span style="font-size: 15px; font-weight: bold;">发票信息 </span>
+                        </div>
+                        <div style="padding-left: 40px;">
+                            <label>
+                                <input id="receipt_1" name="needreceipt" type="radio" value="1" />需要开发票
+                            </label>
+                            <div id="invoiceClientdiv" style="display: none;">
+                                抬头：<input id="invoiceClient" name="invoiceClient" style="width: 400px;" />
+                            </div>
+                        </div>
+                        <div style="padding-left: 40px;">
+                            <label>
+                                <input id="receipt_2" name="needreceipt" checked="checked" type="radio" value="0" />不需要开发票
+                            </label>
+                        </div>
+                    </div>
+                    <div style="padding: 10px; border-bottom: 1px solid #E9E9E9; line-height: 30px;">
+                        <div>
+                            <span style="font-size: 15px; font-weight: bold;">送货方式</span>
+                        </div>
+                        <div style="padding-left: 40px;">
+                            <label>
+                                <input id="isself_0" name="isself" checked="checked" type="radio" value="0" />送货上门
+                            </label>
+                        </div>
+                        <div style="padding-left: 40px;">
+                            <label>
+                                <input id="isself_1" name="isself" type="radio" value="1" />自提 <span style="color:red;">&nbsp;&nbsp;&nbsp;&nbsp;[注：自提只支持在线支付]</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div style="padding: 10px; border-bottom: 1px solid #E9E9E9; line-height: 30px;">
+                        <div>
+                            <span style="font-size: 15px; font-weight: bold;">送达时间</span>
+                        </div>
+                        <div style="padding-left: 40px;">
+                            <label>
+                               	 期望送达时间:
+                            </label>
+                            
+                            <select id="requestdate" class="adsipt" onchange="changeRequestdate();">
+                            </select>
+                            <select id="requesttime" class="adsipt" >
+                            </select> 
+                        </div>
+                    </div>
+                    <div style="padding: 10px; border-bottom: 1px solid #E9E9E9; line-height: 30px;">
+                        <div>
+                            <span style="font-size: 15px; font-weight: bold;">订单备注<span style="font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;</span></span>
+                        </div>
+                        <div style="padding-left: 40px;">
+                            <label>
+                               	<textarea id="remarks" name="remarks" rows="2" cols="100" maxlength="50"></textarea>
+                            </label>                           
+                        </div>
+                    </div>
+                    <div style="padding: 10px; border-bottom: 1px solid #E9E9E9; line-height: 30px;">
+                        
+                        <volist name="catgoods" key="key" id="shopgoods">						
+							<div>
+                                <div style="width: 500px; float: left;">
+                                    <span style="font-size: 15px; font-weight: bold;">商品清单</span><span style="color: #E43E41; font-weight: bold;">【<span id="sp_{$shopgoods['shopgoods'][0]['shopId']}">{$shopgoods["shopgoods"][0]["shopName"]}</span><if condition='$shopgoods["shopgoods"][0]["isInvoice"] eq 1'>：本店可开具发票<else/>：不可开发票</if>】</span>
+                                </div>
+                                <div style="width: 200px; float: right;text-align: right;padding-right: 6px;">
+                                   	 包邮起步价：¥{$shopgoods["shopgoods"][0]["deliveryFreeMoney"]}元
+                                </div>
+                                <div style="clear: both;"></div>
+                            </div>
+                            <if condition='$shopgoods["shopgoods"][0]["deliveryStartMoney"] gt $shopgoods["totalMoney"]'>
+                            	<div id="showwarnmsg_{$key}" style="background-color: #FFE8E8;margin-top: 6px;margin-bottom: 6px;padding:6px;text-align: center;color:#CC0000;border: 1px solid #DB9A9A;">
+			                		抱歉，您的订单金额未达到该门店的配送订单起步价¥{$shopgoods["shopgoods"][0]["deliveryStartMoney"]}元，不能提交订单。
+			                	</div>
+			                	<input type="hidden" id="tst_{$key}"  class="tst" value="-1"/>
+                            </if>                            
+                        <div>
+                            <div style="line-height: 35px; background-color: #E9E9E9; text-align: center;">
+                                <div style="float: left; width: 500px; text-align: left;">&nbsp;&nbsp;商品</div>
+                                <div style="float: left; width: 220px; text-align: center;">商品单价</div>
+                                <div style="float: left; width: 120px; text-align: center;">数量</div>
+                                <div style="float: left; width: 140px; text-align: center;">总价</div>
+                                <div style="float: left; width: 200px; text-align: center;">库存状态</div>
+                                <div style="clear: both;"></div>
+                            </div>
+                            <volist name="shopgoods['shopgoods']" key="key2" id="goods">
+								<div class="selgoods" style="padding-top:6px;padding-bottom:6px;border-bottom: 1px solid #E9E9E9;">
+                                    <div style="float: left; width: 496px; padding-left: 4px;">
+                                        <div>
+                                            <div style="float: left; width: 65px;">
+                                                <a href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$goods['goodsId']}" target="_blank">
+                                                    <img src="__ROOT__/{$goods['goodsThums']}" width="60" height="60" /></a>
+                                            </div>
+                                            <div style="float: left; width: 390px; line-height: 30px;">
+                                                <a target="_blank" href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$goods['goodsId']}" target="_blank">{$goods["goodsName"]}</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="float: left; width: 220px; text-align: center;">¥{$goods["shopPrice"]}元</div>
+                                    <div style="float: left; width: 120px; text-align: center;">{$goods['cnt']}</div>
+                                    <div style="float: left; width: 140px; text-align: center;">¥{$goods["shopPrice"]*$goods['cnt']}元</div>
+                                    <div style="float: left; width: 200px; text-align: center;">
+	                                    <if condition="$goods['goodsStock'] egt $goods['cnt']">
+	                                    	有货
+	                                    <elseif condition="$goods['goodsStock'] eq 0"/>
+	                                    	<span style="color:red;">无货</span>
+	                                    <else>
+	                                    	<span style="color:red;">库存不足,仅剩{$goods["goodsStock"]}份</span>
+	                                    </if>
+                                    </div>
+                                    <div style="clear: both;"></div>
+                                </div>
+                            </volist>													
+                        </div>
+                        <div style="padding-left: 40px; background-color: #F7F7F7; border-bottom: 2px solid #C0C0C4;">
+                            <div style="width: 310px; float: right;">
+                                <div>
+                                    <div style="width: 200px; float: left; text-align: right;"><span style="color: red;">{$shopgoods["totalCnt"]}</span> 件商品，总商品金额：</div>
+                                    <div style="width: 100px; float: right; text-align: right;color:red;">¥{$shopgoods["totalMoney"]}&nbsp;&nbsp;</div>
+                                    <div style="clear: both;"></div>
+                                </div>
+                                <div>
+                                    <div style="width: 200px; float: left; text-align: right;">运费：</div>
+                                    <div style="width: 100px; float: right; text-align: right;">
+                                    	<input type="hidden" id="deliveryMoney_{$key}" value='<if condition='$shopgoods["totalMoney"] lt $shopgoods["shopgoods"][0]["deliveryFreeMoney"]'>¥{$shopgoods["shopgoods"][0]["deliveryMoney"]}<else/>免运费</if>'/>
+
+                                    	<span id="deliveryMoney_span_{$key}">
+                                    	<if condition='$shopgoods["totalMoney"] lt $shopgoods["shopgoods"][0]["deliveryFreeMoney"]'>¥{$shopgoods["shopgoods"][0]["deliveryMoney"]}<else/>免运费</if>
+                                   	 	</span>
+                                   	&nbsp;&nbsp;</div>
+                                    <div style="clear: both;"></div>
+                                </div>
+                            </div>
+                            <div style="clear: both;"></div>
+                        </div>
+                        </volist>	
+                    </div>
+                    <div class="checkout-buttons group" id="checkout-floatbar">
+                        <div class="sticky-placeholder hide" style="display: none;"></div>
+                        <div style="padding-right:10px;border:1px solid #eeeeee;padding:15px;text-align:right;">
+                        	<span class="total">应付总额：<span style="color: red;">
+	                                <strong id="payPriceId">￥
+	                                	<input type="hidden" id="gtotalMoney" value="{$gtotalMoney}"/>
+	                                	<input type="hidden" id="totalMoney" value="{$totalMoney}"/>
+		                                <span id="totalMoney_span">{$totalMoney}</span>
+	                                </strong>元</span>
+                                </span>
+                        </div>
+                        <div class="sticky-wrap">
+                            <div class="wst-inner" style="padding:15px;">
+                            <button onclick="javascript:backCart();" class="btn"  style="height:30px;width:85px;cursor:pointer;">
+                                    	返回上一步                                   
+                                    <b></b>
+                                </button>
+                                <button style="margin-left:500px;height:30px;width:85px;float:right;cursor:pointer;" onclick="javascript:submitOrder();" id="order-submit" class="checkout-submit" type="submit" >
+                                    	提交订单                                       
+                                    <b></b>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+	    </div>
+	    <div style="clear: both;"></div>
+	    <div style="height: 20px;"></div>
+		<include file="./Apps/Home/View/default/footer.html" />
+	</body>
+	<script type="text/javascript">
+	
+	function subCheckArea(){
+	    var communityId = $("#consignee_add_CommunityId").val();
+	    <volist name="shopColleges" key="key" id="shopCollege">
+			var shopCollege = ',{$shopCollege},';
+			var idx = shopCollege.indexOf(","+communityId+",");
+			
+			if(idx==-1){
+				$("#areaOk").val("0");	
+				alert("门店“"+$("#sp_{$key-1}").html()+"”中的商品不在配送区域内！");
+				return false;
+			}else{
+				$("#areaOk").val("1");
+			}
+		</volist>
+	 	return true;
+	}
+	function checkArea(obj){
+		var communityId = $("#consignee_add_CommunityId").val();
+		<volist name="shopColleges" key="key" id="shopCollege">
+			var shopCollege = ',{$shopCollege},';					
+			var idx = shopCollege.indexOf(","+communityId+",");
+			if(idx==-1){
+				$("#areaOk").val("0");
+				alert("门店“"+$("#sp_{$key-1}").html()+"”中的商品不在配送区域内！");
+				return false;
+			}else{
+				$("#areaOk").val("1");
+			}
+		</volist>
+	
+		return true;
+	}
+	
+	
+	$(function(){
+		var myDate = new Date();
+	    var currHour = myDate.getHours();
+	    var currMinutes = myDate.getMinutes();
+	    var currdayFlag = true;           
+	
+	    var html = new Array();
+	    $("#requesttime").empty();		
+		var startNum = currHour*4+(Math.ceil(currMinutes/15))+4;
+		
+		if(startNum<{$startTime}){
+			startNum = {$startTime};
+		}
+		
+		if(startNum<96){
+			for(var i=startNum;i<={$endTime};i++){
+				if(times[i]){
+	                html.push('<option id="'+times[i]+'">'+times[i]+'</option>');   
+				}
+	        }
+		}
+		var daymark = 0;
+		if(html.length==0){
+			 daymark = 1;
+					 
+		}
+		
+	    $("#requesttime").html(html.join(""));
+	    var html2 = new Array();
+	    for(var i=daymark;i<3+daymark;i++){
+	        var cdate = addDate(i);  
+	       
+	        html2.push('<option id="'+cdate+'">'+cdate+'</option>');
+	    }
+	    $("#requestdate").html(html2.join(""));    
+	    
+	    if(html.length==0){			
+			 changeRequestdate();			 
+		}else{
+			$("#requesttime").html(html.join(""));
+		}
+	});
+		 
+	function changeRequestdate(){
+		var html = new Array();
+	 	$("#requesttime").empty();
+	 	var requestdate = $("#requestdate").val();
+	 	
+	 	var d=new Date();   
+	 	var currHour = d.getHours();
+		var currMinutes = d.getMinutes();
+	   	var m=d.getMonth()+1;
+	   	var currDate = d.getFullYear()+'-'+(m>=10?m:'0'+m)+'-'+(d.getDate()>=10?d.getDate():"0"+d.getDate());
+	   	var startNum = {$startTime};
+	   	if(currDate == requestdate){
+	   		var startNum = currHour*4+(Math.ceil(currMinutes/15))+4;
+			if(startNum<{$startTime}){
+				startNum = {$startTime};
+			}
+	 	}		
+		for(var i=startNum;i<={$endTime};i++){ 	
+			if(times[i]){	
+	      		html.push('<option id="'+times[i]+'">'+times[i]+'</option>');
+	   		}       
+	   	}
+		$("#requesttime").html(html.join(""));
+	}
+		
+		 function backCart(){
+		location.href=rooturl+'/index.php/Home/Cart/getCartInfo/?rnd='+Math.random();
+	}
+	
+	var times = ["00:00","00:15","00:30","00:45",
+	             "01:00","01:15","01:30","01:45",
+	             "02:00","02:15","02:30","02:45",
+	             "03:00","03:15","03:30","03:45",
+	             "04:00","04:15","04:30","04:45",
+	             "05:00","05:15","05:30","05:45",
+	             "06:00","06:15","06:30","06:45",
+	             "07:00","07:15","07:30","07:45",
+	             "08:00","08:15","08:30","08:45",
+	             "09:00","09:15","09:30","09:45",
+	             "10:00","10:15","10:30","10:45",
+	             "11:00","11:15","11:30","11:45",
+	             "12:00","12:15","12:30","12:45",
+	             "13:00","13:15","13:30","13:45",
+	             "14:00","14:15","14:30","14:45",
+	             "15:00","15:15","15:30","15:45",
+	             "16:00","16:15","16:30","16:45",
+	             "17:00","17:15","17:30","17:45",
+	             "18:00","18:15","18:30","18:45",
+	             "19:00","19:15","19:30","19:45",
+	             "20:00","20:15","20:30","20:45",
+	             "21:00","21:15","21:30","21:45",
+	             "22:00","22:15","22:30","22:45",
+	             "23:00","23:15","23:30","23:45"];
+function addDate(days){
+    var d=new Date();
+    d.setDate(d.getDate()+days);
+    var m=d.getMonth()+1;
+    return d.getFullYear()+'-'+(m>=10?m:'0'+m)+'-'+(d.getDate()>=10?d.getDate():"0"+d.getDate());
+} 
+
+</script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__ROOT__/Apps/Home/View/default/js/index.js"></script>
+<script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
+<script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
+<script src="__ROOT__/Apps/Home/View/default/js/orders.js"></script>
+</html>

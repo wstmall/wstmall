@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>{$CONF['shopTitle']['fieldValue']}后台管理中心</title>
+      <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
+      <link rel="stylesheet" href="__ROOT__/Apps/Admin/View/css/daterangepicker/daterangepicker-bs3.css">
+      <!--[if lt IE 9]>
+      <script src="__PUBLIC__/js/html5shiv.min.js"></script>
+      <script src="__PUBLIC__/js/respond.min.js"></script>
+      <![endif]-->
+      <script src="__PUBLIC__/js/jquery.min.js"></script>
+      <script src="__PUBLIC__/plugins/bootstrap/js/bootstrap.min.js"></script>
+      <script src="__ROOT__/Apps/Admin/View/js/daterangepicker.js"></script>
+      <script src="__PUBLIC__/js/common.js"></script>
+      <script src="__PUBLIC__/plugins/plugins/plugins.js"></script>
+   </head>
+   <script>
+   function query(id){
+	   var date = $('#logDate').val().split(' -> ');
+       location.href='__ROOT__/index.php/Admin/LogLogins/?startDate='+date[0]+"&endDate="+date[1];     
+   }
+   $(function(){
+	   $('#logDate').daterangepicker({format:'YYYY-MM-DD',separator:' -> '});
+   })
+   </script>
+   <body class='wst-page'>
+       <div class='wst-tbar' style='height:25px;'>
+       登录日期：<input type='text' id='logDate' class="form-control" readonly='true' style='width:200px' value='{$startDate} -> {$endDate}'/>
+       <button type="button" class="btn btn-primary glyphicon glyphicon-search" onclick='javascript:query()'>查询</button> 
+       </div>
+       <div class="wst-body"> 
+        <table class="table table-hover table-striped table-bordered wst-list">
+           <thead>
+             <tr>
+               <th width='40'>序号</th>
+               <th width='80'>账号</th>
+               <th width='80'>姓名</th>
+               <th width='150'>登录时间</th>
+               <th width='150'>登录IP</th>
+             </tr>
+           </thead>
+           <tbody>
+            <volist name="Page['root']" id="vo" key='i'>
+             <tr>
+               <td>{$i}</td>
+               <td>{$vo['loginName']}</td>
+               <td>{$vo['staffName']}</td>
+               <td>{$vo['loginTime']}</td>
+               <td>{$vo['loginIp']}</td>   
+             </tr>
+             </volist>
+             <tr>
+                <td colspan='5' align='center'>{$Page['pager']}</td>
+             </tr>
+           </tbody>
+        </table>
+       </div>
+   </body>
+</html>

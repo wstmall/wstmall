@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>{$CONF['shopTitle']['fieldValue']}后台管理中心</title>
+      <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
+      <link rel="stylesheet" href="__PUBLIC__/plugins/uploadify/uploadify.css">
+      <!--[if lt IE 9]>
+      <script src="__PUBLIC__/js/html5shiv.min.js"></script>
+      <script src="__PUBLIC__/js/respond.min.js"></script>
+      <![endif]-->
+      <script src="__PUBLIC__/js/jquery.min.js"></script>
+      <script src="__PUBLIC__/plugins/bootstrap/js/bootstrap.min.js"></script>
+      <script src="__PUBLIC__/js/common.js"></script>
+      <script src="__PUBLIC__/plugins/plugins/plugins.js"></script>
+      <script src="__PUBLIC__/plugins/formValidator/formValidator-4.1.3.js"></script>
+      <script src="__PUBLIC__/plugins/uploadify/jquery.uploadify.min.js"></script>
+      <script src="__PUBLIC__/plugins/kindeditor/kindeditor.js"></script>
+      <script src="__PUBLIC__/plugins/kindeditor/lang/zh_CN.js"></script>
+   </head>
+   <style>
+.ATRoot{height:22px;line-height:22px;margin-left:5px;clear:both;cursor:pointer;}
+.ATNode{margin-left:5px;line-height:22px;margin-left:17px;clear:both;cursor:pointer;}
+.Hide{display:none;}
+</style>
+   <script>
+   $(function () {
+	   $.formValidator.initConfig({
+		   theme:'Default',mode:'AutoTip',formID:"myform",debug:true,submitOnce:true,onSuccess:function(){
+				   edit();
+			       return false;
+			},onError:function(msg){
+		}});
+	   $("#loginName").formValidator({onShow:"",onFocus:"会员账号应该为5-16字母、数字或下划线",onCorrect:"输入正确"}).inputValidator({min:5,max:16,onError:"会员账号应该为5-16字母、数字或下划线"}).regexValidator({
+	       regExp:"username",dataType:"enum",onError:"会员账号格式错误"
+		}).ajaxValidator({
+			dataType : "json",
+			async : true,
+			url : "__ROOT__/index.php/Admin/Users/checkLoginKey/",
+			success : function(data){
+				var json = WST.toJson(data);
+	            if( json.status == "1" ) {
+	                return true;
+				} else {
+	                return false;
+				}
+				return "该账号已被使用";
+			},
+			buttons: $("#dosubmit"),
+			onError : "该账号已存在。",
+			onWait : "请稍候..."
+		}).defaultPassed();
+	   $("#loginPwd").formValidator({
+			onShow:"",onFocus:"登录密码长度应该为5-20位之间"
+			}).inputValidator({
+				min:5,max:50,onError:"登录密码长度应该为5-20位之间"
+			});
+		$("#userPhone").inputValidator({min:0,max:11,onError:"你输入的手机号码非法,请确认"}).regexValidator({
+			regExp:"mobile",dataType:"enum",onError:"手机号码格式错误"
+		}).ajaxValidator({
+			dataType : "json",
+			async : true,
+			url : "__ROOT__/index.php/Admin/Users/checkLoginKey/",
+			success : function(data){
+				var json = WST.toJson(data);
+	            if( json.status == "1" ) {
+	                return true;
+				} else {
+	                return false;
+				}
+				return "该手机号码已被使用";
+			},
+			buttons: $("#dosubmit"),
+			onError : "该手机号码已存在。",
+			onWait : "请稍候..."
+		}).defaultPassed().unFormValidator(true);
+		$("#shopSn").formValidator({onShow:"",onFocus:"店铺编号不能超过20个字符",onCorrect:"输入正确"}).inputValidator({min:1,max:20,onError:"店铺编号不符合要求,请确认"});
+		$("#shopName").formValidator({onShow:"",onFocus:"店铺名称不能超过20个字符",onCorrect:"输入正确"}).inputValidator({min:1,max:20,onError:"店铺名称不符合要求,请确认"});
+		$("#userName").formValidator({onShow:"",onFocus:"请输入店主姓名",onCorrect:"输入正确"}).inputValidator({min:1,max:20,onError:"店主姓名不能为空,请确认"});
+		$("#shopCompany").formValidator({onShow:"",onFocus:"请输入公司名称",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"公司名称不能为空,请确认"});
+		$("#shopAddress").formValidator({onShow:"",onFocus:"请输入店铺地址",onCorrect:"输入正确"}).inputValidator({min:1,max:120,onError:"店铺地址不能为空,请确认"});
+		$("#areaId3").formValidator({onFocus:"请选择所属地区"}).inputValidator({min:1,onError: "请选择所属地区"});
+		$("#goodsCatId3").formValidator({onFocus:"请选择所属行业"}).inputValidator({min:1,onError: "请选择所属行业"});
+		$("#brandId").formValidator({onFocus:"请选择所属品牌"}).inputValidator({min:1,onError: "请选择所属品牌"});
+		$("#bankId").formValidator({onFocus:"请选择所属银行"}).inputValidator({min:1,onError: "请选择所属银行"});
+	
+		$("#serviceStartTime").formValidator({onShow:"",onFocus:"请选择营业时间"}).inputValidator({min:1,max:50,onError:"请选择营业时间"});
+		$("#serviceEndTime").formValidator({onShow:"",onFocus:"请选择营业时间"}).inputValidator({min:1,max:50,onError:"请选择营业时间"});
+		$("#bankNo").formValidator({onShow:"",onFocus:"请输入银行卡号",onCorrect:"输入正确"}).inputValidator({min:16,max:19,onError:"银行卡号格式错误,请确认"}) .functionValidator({fun:luhmCheck,onError:"请输入正确的银行卡号！"});;
+		$("#shopImgUpload").uploadify({
+		    formData      : {'dir':'shops','width':500,'height':500},
+		    buttonText    : '选择图标',
+		    fileTypeDesc  : 'Image Files',
+	        fileTypeExts  : '*.gif; *.jpg; *.png',
+	        swf           : '__PUBLIC__/plugins/uploadify/uploadify.swf',
+	        uploader      : '__ROOT__/index.php/Admin/shops/uploadPic',
+	        onUploadSuccess : function(file, data, response) {
+	        	var json = WST.toJson(data);
+	        	var url = '__ROOT__/'+json.Filedata.savepath+json.Filedata.savethumbname;
+	        	$('#preview').attr('ref',url).show();
+	        	$('#shopImg').val(json.Filedata.savepath+json.Filedata.savename);
+	        	$('#preview').adjustImgage({width:300,height:200});
+            }
+	    });
+		$('#preview').adjustImgage({width:300,height:200});
+		$("#userPhone").blur(function(){
+			  if($("#userPhone").val()==''){
+				  $("#userPhone").unFormValidator(true);
+			  }else{
+				  $("#userPhone").unFormValidator(false);
+			  }
+		});
+		<if condition="$object['shopId'] !=0 ">
+		   getAreaList("areaId2",{$object.areaId1},0,{$object.areaId2});
+		   getAreaList("areaId3",{$object.areaId2},1,{$object.areaId3});
+		   getCatList("goodsCatId2",{$object.goodsCatId1},0,{$object.goodsCatId2});
+		   getCatList("goodsCatId3",{$object.goodsCatId2},1,{$object.goodsCatId3});
+		</if>
+		initTime('serviceStartTime','{$object['serviceStartTime']}');
+		initTime('serviceEndTime','{$object['serviceEndTime']}');
+		getCommunitys();
+   });
+   function getAreaList(objId,parentId,t,id){
+	   var params = {};
+	   params.parentId = parentId;
+	   $('#'+objId).empty();
+	   if(t<1){
+		   $('#areaId3').empty();
+		   $('#areaId3').html('<option value="">请选择</option>');
+	   }
+	   var html = [];
+	   $.post("__ROOT__/index.php/Admin/Areas/queryByList",params,function(data,textStatus){
+		    html.push('<option value="">请选择</option>');
+			var json = WST.toJson(data);
+			if(json.status=='1' && json.list.length>0){
+				var opts = null;
+				for(var i=0;i<json.list.length;i++){
+					opts = json.list[i];
+					html.push('<option value="'+opts.areaId+'" '+((id==opts.areaId)?'selected':'')+'>'+opts.areaName+'</option>');
+				}
+			}
+			$('#'+objId).html(html.join(''));
+			if(t==0)getCommunitys();
+	   });
+   }
+   function getCatList(objId,parentId,t,id){
+	   var params = {};
+	   params.id = parentId;
+	   $('#'+objId).empty();
+	   if(t<1){
+		   $('#goodsCatId3').empty();
+		   $('#goodsCatId3').html('<option value="">请选择</option>');
+	   }
+	   var html = [];
+	   $.post("__ROOT__/index.php/Admin/goodsCats/queryByList",params,function(data,textStatus){
+		    html.push('<option value="">请选择</option>');
+			var json = WST.toJson(data);
+			if(json.status=='1' && json.list){
+				var opts = null;
+				for(var i=0;i<json.list.length;i++){
+					opts = json.list[i];
+					html.push('<option value="'+opts.catId+'" '+((id==opts.catId)?'selected':'')+'>'+opts.catName+'</option>');
+				}
+			}
+			$('#'+objId).html(html.join(''));
+	   });
+   }
+   var relateCommunity = "{$object['relateCommunity']}".split(',');
+   var relateArea = "{$object['relateArea']}".split(',');
+   function getCommunitys(){
+		$('#areaTree').empty();
+		var v = $('#areaId2').val();
+		if(v!==-1){
+			$.post("__ROOT__/index.php/Admin/Areas/queryAreaAndCommunitysByList",{areaId:v},function(data,textStatus){
+				var json = data;
+				if(json.list){
+					var html = [];
+					json = json.list;
+					for(var i=0;i<json.length;i++){
+						var isAreaSelected = ($.inArray(json[i]['areaId'],relateArea)>-1)?" checked ":"";
+						html.push("<div id='"+json[i]['areaId']+"'>");
+						html.push("<span class='ATRoot' isshow='0' id='node_"+json[i]['areaId']+"' onclick='javascript:showOrHideAreaTree(this)'><img src='__ROOT__/Apps/Admin/View/img/nolines_plus.gif'/>"+json[i]['areaName']+"&nbsp;</span><span><input type='checkbox' all='1' class='AreaNode' onclick='javascript:selectArea(this)' id='ck_"+json[i]['areaId']+"' "+isAreaSelected+" value='"+json[i]['areaId']+"'>全区配送</span>");
+						if(json[i].communitys && json[i].communitys.length){
+							for(var j=0;j<json[i].communitys.length;j++){
+								var isCommunitySelected = ($.inArray(json[i].communitys[j]['communityId'],relateCommunity)>-1)?" checked ":"";
+								isCommunitySelected += (isAreaSelected!='')?" disabled ":"";
+							    html.push("<div class='ATNode Hide' id='node_"+json[i]['areaId']+"_"+json[i].communitys[j]['communityId']+"'><img src='__ROOT__/Apps/Admin/View/img/nolines_minus.gif'/><input type='checkbox' id='ck_"+json[i]['areaId']+"_"+json[i].communitys[j]['communityId']+"' all='0' class='AreaNode' "+isCommunitySelected+" value='"+json[i].communitys[j]['communityId']+"'>"+json[i].communitys[j]['communityName']+"</div>");
+							}
+						}
+						html.push("</div>");
+					}
+					$('#areaTree').html(html.join(''));
+				}
+			});
+		}
+	}
+   function showOrHideAreaTree(v){
+		if($(v).attr('isshow')=='1'){
+			$(v).attr('isshow','0');
+			$(v).find('img').attr('src','__ROOT__/Apps/Admin/View/img/nolines_plus.gif');
+			$('div[id^="'+$(v).attr('id')+'_"]').hide(200);
+		}else{
+			$(v).attr('isshow','1');
+			$(v).find('img').attr('src','__ROOT__/Apps/Admin/View/img/nolines_minus.gif');
+			$('div[id^="'+$(v).attr('id')+'_"]').show(200);
+		}
+	}
+   function selectArea(v){
+		if($(v).attr('all')=='1'){
+			$('input[id^="'+$(v).attr('id')+'_"]').each(function(){
+				$(this)[0].checked = $(v)[0].checked;
+				$(this)[0].disabled = $(v)[0].checked;
+			});
+		}
+	}
+   function edit(){
+	   var params = {};
+	   params.id = $('#id').val();
+	   <if condition="$object['shopId'] ==0 ">
+	   params.loginName = $('#loginName').val();
+	   params.loginPwd = $('#loginPwd').val();
+	   </if>
+	   params.userName = $('#userName').val();
+	   params.userPhone = $('#userPhone').val();
+	   params.shopSn = $('#shopSn').val();
+	   params.areaId1 = $('#areaId1').val();
+	   params.areaId2 = $('#areaId2').val();
+	   params.areaId3 = $('#areaId3').val();//地区
+	   params.goodsCatId1 = $('#goodsCatId1').val();
+	   params.goodsCatId2 = $('#goodsCatId2').val();
+	   params.goodsCatId3 = $('#goodsCatId3').val();//品牌
+	   params.isSelf = $("input[name='isSelf']:checked").val();
+	   params.shopName = $('#shopName').val();
+	   params.shopCompany = $('#shopCompany').val();
+	   params.shopImg = $('#shopImg').val();
+	   if(params.shopImg==''){
+		   Plugins.Tips({title:'信息提示',icon:'error',content:'请上传店铺图片!',timeout:1000});
+		   return;
+	   }
+	   params.shopTel = $('#shopTel').val();
+	   params.shopAddress = $('#shopAddress').val();
+	   params.brandId = $('#brandId').val();
+	   params.deliveryFreeMoney = $('#deliveryFreeMoney').val();
+	   params.deliveryMoney = $('#deliveryMoney').val();
+	   params.avgeCostMoney = $('#avgeCostMoney').val();
+	   params.bankId = $('#bankId').val();
+	   params.bankNo = $('#bankNo').val();
+	   params.isInvoice = $("input[name='isInvoice']:checked").val();
+	   params.invoiceRemarks = $('#invoiceRemarks').val();
+	   params.serviceStartTime = $('#serviceStartTime').val();
+	   params.serviceEndTime = $('#serviceEndTime').val();
+	   if(parseInt(params.serviceStartTime,10)>parseInt(params.serviceEndTime,10)){
+		   Plugins.Tips({title:'信息提示',icon:'error',content:'开始营业时间不能大于结束营业时间!',timeout:1000});
+		   return;
+	   }
+	   params.shopStatus = $("input[name='shopStatus']:checked").val();
+	   params.shopAtive = $("input[name='shopAtive']:checked").val();
+	   var relateArea = [0];
+	   var relateCommunity = [0];
+	   $('.AreaNode').each(function(){
+			if($(this)[0].checked){
+				if($(this).attr('all')==1){
+					relateArea.push($(this).val());
+				}else{
+					relateCommunity.push($(this).val());
+				}
+			}
+	   });
+	   params.relateAreaId=relateArea.join(',');
+	   params.relateCommunityId=relateCommunity.join(',');
+	   if(params.relateAreaId=='0' && params.relateCommunityId=='0'){
+		   Plugins.Tips({title:'信息提示',icon:'error',content:'请选择配送区域!',timeout:1000});
+		   return;
+	   }
+	   var src = '{$src}';
+	   Plugins.waitTips({title:'信息提示',content:'正在提交数据，请稍后...'});
+	   $.post("__ROOT__/index.php/Admin/Shops/edit",params,function(data,textStatus){
+			var json = WST.toJson(data);
+			if(json.status=='1'){
+				Plugins.setWaitTipsMsg({content:'操作成功',timeout:1000,callback:function(){
+				   location.href='__ROOT__/index.php/Admin/Shops/'+src;
+				}});
+			}else if(json.status=='-2'){
+				Plugins.closeWindow();
+				Plugins.Tips({title:'信息提示',icon:'error',content:'登录账号或店主联系手机已存在!',timeout:1000});
+			}else{
+				Plugins.closeWindow();
+				Plugins.Tips({title:'信息提示',icon:'error',content:'操作失败!',timeout:1000});
+			}
+		});
+   }
+   function initTime(objId,val){
+	   for(var i=0;i<24;i++){
+		   $('<option value="'+i+'" '+((val==i)?"selected":'')+'>'+i+':00</option>').appendTo($('#'+objId));
+		   $('<option value="'+(i+0.5)+'" '+((val==(i+0.5))?"selected":'')+'>'+i+':30</option>').appendTo($('#'+objId));
+	   }
+   }
+   function isInvoce(v){
+		  if(v){
+			  $('#invoiceRemarkstr').show();
+		  }else{
+			  $('#invoiceRemarkstr').hide();
+		  }
+   }
+   </script>
+   <body class="wst-page">
+       <form name="myform" method="post" id="myform">
+        <input type='hidden' id='id' value='{$object.shopId}'/>
+        <input type='hidden' id='shopImg' value='{$object.shopImg}'/>
+        <table class="table table-hover table-striped table-bordered wst-form">
+           <if condition="$object['shopId'] ==0 ">
+           <tr>
+             <th width='120' align='right'>登录账号<font color='red'>*</font>：</th>
+             <td><input type='text' id='loginName' name='loginName' class="form-control wst-ipt" value='{$object.loginName}' maxLength='25'/></td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>登录密码<font color='red'>*</font>：</th>
+             <td><input type='password' id='loginPwd' class="form-control wst-ipt" value='{$object.loginPwd}' maxLength='25'/></td>
+           </tr>
+           </if>
+           <tr>
+             <th width='120' align='right'>店铺编号<font color='red'>*</font>：</th>
+             <td><input type='text' id='shopSn' class="form-control wst-ipt" value='{$object.shopSn}' maxLength='25'/></td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>店铺名称<font color='red'>*</font>：</th>
+             <td><input type='text' id='shopName' class="form-control wst-ipt" value='{$object.shopName}' maxLength='25'/></td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>店主姓名<font color='red'>*</font>：</th>
+             <td><input type='text' id='userName' class="form-control wst-ipt" value='{$object.userName}' maxLength='25'/></td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>店主联系手机<font color='red'>*</font>：</th>
+             <td><input type='text' id='userPhone' name='userPhone' class="form-control wst-ipt" value='{$object.userPhone}' maxLength='25'/></td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>公司名称<font color='red'>*</font>：</th>
+             <td><input type='text' id='shopCompany' class="form-control wst-ipt" value='{$object.shopCompany}' maxLength='25'/></td>
+           </tr>
+           <tr>
+             <th align='right'>是否自营店<font color='red'>*</font>：</th>
+             <td>
+             <label>
+             <input type='radio' id='isSelf1' name='isSelf' value='1' <if condition="$object['isSelf'] ==1 ">checked</if> />是&nbsp;&nbsp;
+             </label>
+             <label>
+             <input type='radio' id='isSelf0' name='isSelf' value='0' <if condition="$object['isSelf'] ==0 ">checked</if> />否
+             </label>
+             </td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>店铺图标<font color='red'>*</font>：</th>
+             <td>
+             <input type='text' id='shopImgUpload' class="form-control wst-ipt"/>
+             <img id='preview' src='__ROOT__/{$object.shopImg}' ref='__ROOT__/{$object.shopImg}' <if condition="$object['shopImg'] =='' ">style='display:none'</if>/>
+             </td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>店铺电话：</th>
+             <td><input type='text' id='shopTel' class="form-control wst-ipt" value='{$object.shopTel}' maxLength='25'/></td>
+           </tr>
+            <tr>
+             <th width='120' align='right'>所属地区<font color='red'>*</font>：</th>
+             <td>
+             <select id='areaId1' onchange='javascript:getAreaList("areaId2",this.value,0)'>
+               <option value=''>请选择</option>
+               <volist name="areaList" id="vo">
+               <option value='{$vo['areaId']}' <if condition="$object['areaId1'] == $vo['areaId'] ">selected</if>>{$vo['areaName']}</option>
+               </volist>
+             </select>
+             <select id='areaId2' onchange='javascript:getAreaList("areaId3",this.value,1);getCommunitys()'>
+               <option value=''>请选择</option>
+             </select>
+             <select id='areaId3'>
+               <option value=''>请选择</option>
+             </select>
+             </td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>店铺地址<font color='red'>*</font>：</th>
+             <td><input type='text' id='shopAddress' class="form-control wst-ipt" value='{$object.shopAddress}' maxLength='120'/></td>
+           </tr>
+            <tr>
+             <th width='120' align='right'>品牌<font color='red'>*</font>：</th>
+             <td>
+             <select id='brandId'>
+                <option value=''>请选择</option>
+                <volist name="brandList" id="vo">
+                <option value='{$vo['brandId']}' <if condition="$object['brandId'] == $vo['brandId'] ">selected</if>>{$vo['brandName']}</option>
+                </volist>
+             </select>
+             </td>
+           </tr>
+           <tr>
+             <th align='right'>所属行业<font color='red'>*</font>：</th>
+             <td>
+             <select id='goodsCatId1' onchange='javascript:getCatList("goodsCatId2",this.value,0)'>
+                <option value=''>请选择</option>
+                <volist name="goodsCatsList" id="vo">
+                <option value='{$vo['catId']}' <if condition="$object['goodsCatId1'] == $vo['catId'] ">selected</if>>{$vo['catName']}</option>
+                </volist>
+             </select>
+             <select id='goodsCatId2' onchange='javascript:getCatList("goodsCatId3",this.value,1);'>
+                <option value=''>请选择</option>
+             </select>
+             <select id='goodsCatId3'>
+                <option value=''>请选择</option>
+             </select>
+             </td>
+           </tr>
+           <tr>
+             <th align='right'>营业状态<font color='red'>*</font>：</th>
+             <td>
+             <label>
+             <input type='radio' id='shopAtive1' name='shopAtive' value='1' <if condition="$object['shopAtive'] ==1 ">checked</if> />营业中&nbsp;&nbsp;
+             </label>
+             <label>
+             <input type='radio' id='shopAtive0' name='shopAtive' value='0' <if condition="$object['shopAtive'] ==0 ">checked</if> />休息中
+             </label>
+             </td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>配送区域<font color='red'>*</font>：</th>
+             <td>
+             <div id='areaTree'></div>
+             </td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>包邮起步价<font color='red'>*</font>：</th>
+             <td><input type='text' id='deliveryFreeMoney' class="form-control wst-ipt" value='{$object.deliveryFreeMoney}' onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='25'/></td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>邮费<font color='red'>*</font>：</th>
+             <td><input type='text' id='deliveryMoney' class="form-control wst-ipt" value='{$object.deliveryMoney}' onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='25'/></td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>平均消费金额<font color='red'>*</font>：</th>
+             <td><input type='text' id='avgeCostMoney' class="form-control wst-ipt" value='{$object.avgeCostMoney}' onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='25'/></td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>所属银行<font color='red'>*</font>：</th>
+             <td>
+             <select id='bankId'>
+                <option value=''>请选择</option>
+                <volist name="bankList" id="vo">
+                <option value='{$vo['bankId']}' <if condition="$object['bankId'] == $vo['bankId'] ">selected</if>>{$vo['bankName']}</option>
+                </volist>
+             </select>
+             </td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>银行卡卡号<font color='red'>*</font>：</th>
+             <td><input type='text' id='bankNo' class="form-control wst-ipt" value='{$object.bankNo}' maxLength='25'/></td>
+           </tr>
+           <tr>
+             <th align='right'>能否开发票<font color='red'>*</font>：</th>
+             <td>
+             <label>
+             <input type='radio' id='isInvoice1' name='isInvoice' value='1' onclick='javascript:isInvoce(true)' <if condition="$object['isInvoice'] ==1 ">checked</if> />能&nbsp;&nbsp;
+             </label>
+             <label>
+             <input type='radio' id='isInvoice0' name='isInvoice' value='0' onclick='javascript:isInvoce(false)' <if condition="$object['isInvoice'] ==0 ">checked</if> />否
+             </label>
+             </td>
+           </tr>
+           <tr id='invoiceRemarkstr' <if condition="$object['isInvoice'] eq 0 ">style='display:none'</if>>
+             <th width='120' align='right'>发票说明<font color='red'>*</font>：</th>
+             <td><input type='text' id='invoiceRemarks' class="form-control wst-ipt" value='{$object.invoiceRemarks}' maxLength='25'/></td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>营业时间<font color='red'>*</font>：</th>
+             <td>
+             <select id='serviceStartTime'>
+                <option>请选择</option>
+             </select>
+             至
+             <select id='serviceEndTime'>
+                <option>请选择</option>
+             </select>
+             </td>
+           </tr>
+            <tr>
+             <th align='right'>店铺状态<font color='red'>*</font>：</th>
+             <td>
+             <label>
+             <input type='radio' id='shopStatus1' name='shopStatus' value='-2' <if condition="$object['shopStatus'] ==-2 ">checked</if> />已停止&nbsp;&nbsp;
+             </label>
+             <label>
+             <input type='radio' id='shopStatus0' name='shopStatus' value='-1' <if condition="$object['shopStatus'] ==-1 ">checked</if> />拒绝
+             </label>
+             <label>
+             <input type='radio' id='shopStatus0' name='shopStatus' value='0' <if condition="$object['shopStatus'] ==0 ">checked</if> />待审核
+             </label>
+             <label>
+             <input type='radio' id='shopStatus0' name='shopStatus' value='1' <if condition="$object['shopStatus'] ==1 ">checked</if> />已审核
+             </label>
+             </td>
+           </tr>
+           <tr>
+             <td colspan='2' style='padding-left:250px;'>
+                 <button type="submit" class="btn btn-success">保&nbsp;存</button>
+                 <button type="button" class="btn btn-primary" onclick='javascript:location.href="__ROOT__/index.php/Admin/Shops/"'>返&nbsp;回</button>
+             </td>
+           </tr>
+        </table>
+       </form>
+   </body>
+</html>

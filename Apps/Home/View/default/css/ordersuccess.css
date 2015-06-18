@@ -1,0 +1,10 @@
+
+.wst-btn-continue {
+	background: url(../../../View/default/images/20130425D.png) no-repeat scroll 0 0 #CCCCCC;
+  background-position: -90px -37px;
+  float: right;
+  height: 36px;
+  width: 94px;
+}
+
+.wst-checkout{padding-left:100px;margin:15px;float: right;}
