@@ -91,8 +91,8 @@ function initConfig($db_host,$db_user,$db_pass,$db_prefix,$db_name){
 	$code = "<?php\n ".$code.";\n?>";
     file_put_contents(INSTALL_ROOT."/Apps/Common/Conf/config.php", $code);
     $code = "return array(
-	    'WST_VERSION' => '1.0',
-	    'WST_MD5' => 'c4902c8d0b0c0515e84eb2a8fc15ead6'
+	    'WST_VERSION' => '1.0.1.150618',
+	    'WST_MD5' => '3cb00c16948ccf582f438d783672df7c'
 	)";
 	$code = "<?php\n ".$code.";\n?>";
     file_put_contents(INSTALL_ROOT."/Apps/Common/Conf/wst_config.php", $code);
