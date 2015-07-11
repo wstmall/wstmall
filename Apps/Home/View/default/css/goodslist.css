@@ -24,6 +24,8 @@
 	padding-right: 30px;
 }
 
+.search-items{position:relative;}
+
 .wst-goods-search .search-box .search-items .items-title {
 	width: 80px;
 	float: left;
@@ -310,4 +312,12 @@
 	background-color:#ffffff;
 	transform:scale3d(1.2,1.2,1);
 }
+
+#wst-brand{height:28px;overflow:hidden;}
+#wst-brand-tp{position:absolute;top:0px;right:-20px;border:1px solid green;cursor: pointer}
+
+.wst-glist-price{width:85px;height:25px;padding-left:20px;}
+.wst-glist-cofm{width:50px;height:25px;}
+
+
 

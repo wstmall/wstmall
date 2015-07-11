@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$CONFIG['shopTitle']}-系统提示</title>
+	<meta name="description" content="{$CONFIG['shopDesc']}" />
+	<meta name="Keywords" content="{$CONFIG['shopKeywords']}" />
+
+	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
+    <link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/ordersuccess.css" />
+    <link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
+	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />
+    <script src="__PUBLIC__/js/jquery.min.js"></script>
+    <script src="__PUBLIC__/js/common.js"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/index.js"></script>      	
+    <script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
+</head>
+
+<body class="root61">
+	<include file="./Apps/Home/View/default/header.html" />
+	<div class="w">
+		<div>
+			<div class="wst-sys-msg-pb">
+					<div class="wst-sys-msg-cb">
+						<div class="wst-sys-msg-vb">
+							<if condition="count($orderInfos) gt 0">
+							<img src="__ROOT__/Apps/Home/View/default/images/icon-succ.png" alt="" />
+							</if>
+						</div>
+						<div class="wst-sys-msg-cb">
+							<div class="wst-sys-msg-l25">				
+	   							<div class="wst-sys-msg-ub">{$msg}</div>
+	   						</div>							
+						</div>
+						<div style="clear: both;"></div>
+					</div>					
+					
+					<div style="clear: both;"></div>
+					<div style="margin-top:15px; ">			
+						<div id="checkout" class="wst-checkout" >							
+							<a class="btn-submit" href="__ROOT__/index.php">
+								<span id="saveConsigneeTitleDiv" class="wst_btn-continue"></span>
+							</a>
+							<div style="clear: both;"></div>
+						</div>
+					</div>				
+				</div>							
+			</div>			
+		</div>
+	<div style="clear: both;"></div>
+    <div style="height: 20px;"></div>
+	<include file="./Apps/Home/View/default/footer.html" />
+</body>
+</html>

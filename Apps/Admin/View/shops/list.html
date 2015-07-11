@@ -89,7 +89,7 @@
        店铺名称：<input type='text' id='shopName' name='shopName' class='form-control wst-ipt-10' value='{$shopName}'/> 
        店铺编号：<input type='text' id='shopSn' name='shopSn' class='form-control wst-ipt-10' value='{$shopSn}'/> 
   <button type="button" class="btn btn-primary glyphicon glyphicon-search" onclick='javascript:query()'>查询</button> 
-  <php>if(in_array('dplb_01',$_SESSION['STAFF']['grant'])){</php>
+  <php>if(in_array('dplb_01',$WST_STAFF['grant'])){</php>
   <button type="button" class="btn btn-success glyphicon glyphicon-plus" onclick='javascript:edit(0)' style='float:right'>新增</button>
   <php>}</php>     
        </div>
@@ -119,10 +119,10 @@
                <if condition="$vo['shopAtive'] == 0 "><span class='label label-warning'>休息中</span></if>&nbsp;
                </td>
                <td>
-               <php>if(in_array('dplb_02',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('dplb_02',$WST_STAFF['grant'])){</php>
                <button type="button" class="btn btn-default glyphicon glyphicon-pencil" onclick="javascript:edit({$vo['shopId']})">修改</button>&nbsp;
                <php>}</php>
-               <php>if(in_array('dplb_03',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('dplb_03',$WST_STAFF['grant'])){</php>
                <button type="button" class="btn btn-default glyphicon glyphicon-trash" onclick="javascript:del({$vo['shopId']})">刪除</buttona>
                <php>}</php>
                </td>

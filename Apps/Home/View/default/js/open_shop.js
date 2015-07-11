@@ -11,7 +11,7 @@ $(function () {
   		}).ajaxValidator({
   			dataType : "json",
   			async : true,
-  			url : rooturl+"/index.php/Home/Users/checkLoginKey/",
+  			url : domainURL +"/index.php/Home/Users/checkLoginKey/",
   			success : function(data){
   				var json = WST.toJson(data);
   	            if( json.status == "1" ) {
@@ -36,7 +36,7 @@ $(function () {
   		}).ajaxValidator({
   			dataType : "json",
   			async : true,
-  			url : rooturl+"/index.php/Home/Users/checkLoginKey/",
+  			url : domainURL +"/index.php/Home/Users/checkLoginKey/",
   			success : function(data){
   				var json = WST.toJson(data);
   	            if( json.status == "1" ) {
@@ -49,12 +49,12 @@ $(function () {
   			buttons: $("#dosubmit"),
   			onError : "该手机号码已存在。",
   			onWait : "请稍候..."
-  		}).defaultPassed().unFormValidator(true);
+  		});
   		$("#shopCompany").formValidator({onShow:"",onFocus:"请输入公司名称",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"公司名称不能为空,请确认"});
   		$("#shopName").formValidator({onShow:"",onFocus:"店铺名称不能超过20个字符",onCorrect:"输入正确"}).inputValidator({min:1,max:20,onError:"店铺名称不符合要求,请确认"});
   		$("#userName").formValidator({onShow:"",onFocus:"请输入店主姓名",onCorrect:"输入正确"}).inputValidator({min:1,max:20,onError:"店主姓名不能为空,请确认"});
   		$("#shopAddress").formValidator({onShow:"",onFocus:"请输入店铺地址",onCorrect:"输入正确"}).inputValidator({min:1,max:120,onError:"店铺地址不能为空,请确认"});
-  		$("#areaId1").formValidator({onFocus:"请选择所属地区"}).inputValidator({min:1,onError: "请选择所属地区"});
+  		$("#areaId3").formValidator({onFocus:"请选择所属地区"}).inputValidator({min:1,onError: "请选择所属地区"});
   		$("#goodsCatId3").formValidator({onFocus:"请选择所属行业"}).inputValidator({min:1,onError: "请选择所属行业"});
 		$("#shopImgUpload").uploadify({
   		    formData      : {'dir':'shops','width':500,'height':500},
@@ -62,10 +62,10 @@ $(function () {
   		    fileTypeDesc  : 'Image Files',
   	        fileTypeExts  : '*.gif; *.jpg; *.png',
   	        swf           : publicurl+'/plugins/uploadify/uploadify.swf',
-  	        uploader      : rooturl+'/index.php/Admin/shops/uploadPic',
+  	        uploader      : domainURL +'/index.php/Admin/shops/uploadPic',
   	        onUploadSuccess : function(file, data, response) {
   	        	var json = WST.toJson(data);
-  	        	var url = rooturl+'/'+json.Filedata.savepath+json.Filedata.savethumbname;
+  	        	var url = domainURL +'/'+json.Filedata.savepath+json.Filedata.savethumbname;
   	        	$('#preview').attr('src',url).show();
   	        	$('#shopImg').val(json.Filedata.savepath+json.Filedata.savename);
   	        	$('#preview').adjustImgage({width:150,height:150});
@@ -77,32 +77,25 @@ $(function () {
   		    fileTypeDesc  : 'Image Files',
   	        fileTypeExts  : '*.gif; *.jpg; *.png',
   	        swf           : publicurl+'/plugins/uploadify/uploadify.swf',
-  	        uploader      : rooturl+'/index.php/Admin/shops/uploadPic',
+  	        uploader      : domainURL +'/index.php/Admin/shops/uploadPic',
   	        onUploadSuccess : function(file, data, response) {
   	        	var json = WST.toJson(data);
-  	        	var url = rooturl+'/'+json.Filedata.savepath+json.Filedata.savethumbname;
+  	        	var url = domainURL +'/'+json.Filedata.savepath+json.Filedata.savethumbname;
   	        	$('#preview2').attr('src',url).show();
   	        	$('#shopImg2').val(json.Filedata.savepath+json.Filedata.savename);
   	        	$('#preview2').adjustImgage({width:150,height:150});
               }
   	    });
-  		$("#userPhone").blur(function(){
-  			  if($("#userPhone").val()==''){
-  				  $("#userPhone").unFormValidator(true);
-  			  }else{
-  				  $("#userPhone").unFormValidator(false);
-  			  }
-  		});
 	    $("#shopImgUpload").uploadify({
 		    formData      : {'dir':'shops','width':150,'height':150},
 		    buttonText    : '选择图标',
 		    fileTypeDesc  : 'Image Files',
 	        fileTypeExts  : '*.gif; *.jpg; *.png',
 	        swf           : publicurl+'/plugins/uploadify/uploadify.swf',
-	        uploader      : rooturl+'/index.php/Home/shops/uploadPic',
+	        uploader      : domainURL +'/index.php/Home/shops/uploadPic',
 	        onUploadSuccess : function(file, data, response) {
 	        	var json = WST.toJson(data);
-	        	var url = rooturl+'/'+json.Filedata.savepath+json.Filedata.savethumbname;
+	        	var url = domainURL +'/'+json.Filedata.savepath+json.Filedata.savethumbname;
 	        	$('#preview').attr('src',url).show();
 	        	$('#shopImg').val(json.Filedata.savepath+json.Filedata.savename);
 	        }
@@ -111,13 +104,14 @@ $(function () {
     function getAreaList(objId,parentId,t,id){
 	   var params = {};
 	   params.parentId = parentId;
+	   params.type = t;
 	   $('#'+objId).empty();
 	   if(t<1){
 		   $('#areaId3').empty();
 		   $('#areaId3').html('<option value="">请选择</option>');
 	   }
 	   var html = [];
-	   $.post(rooturl+"/index.php/Home/Areas/queryByList",params,function(data,textStatus){
+	   $.post(domainURL +"/index.php/Home/Areas/queryByList",params,function(data,textStatus){
 		    html.push('<option value="">请选择</option>');
 			var json = WST.toJson(data);
 			if(json.status=='1' && json.list && json.list.length>0){
@@ -139,7 +133,7 @@ $(function () {
  		   $('#goodsCatId3').html('<option value="">请选择</option>');
  	   }
  	   var html = [];
- 	   $.post(rooturl+"/index.php/Home/goodsCats/queryByList",params,function(data,textStatus){
+ 	   $.post(domainURL +"/index.php/Home/goodsCats/queryByList",params,function(data,textStatus){
  		    html.push('<option value="">请选择</option>');
  			var json = WST.toJson(data);
  			if(json.status=='1' && json.list){
@@ -153,18 +147,19 @@ $(function () {
  	   });
    }
    function showXiey(id){
-	    $.layer({
-	    	type: 2,
-	    	shadeClose: true,
-	    	title: false,
-	        closeBtn: [0, false],
-	    	shade: [0.8, '#000'],
-	    	border: [0],
-	    	offset: ['20px',''],
-	    	area: ['1000px', ($(window).height() - 50) +'px'],
-	    	iframe: {src: rooturl+''}
-	    });
-   }	 
+		layer.open({
+		    type: 2,
+		    title: 'WST用户注册协议',
+		    shadeClose: true,
+		    shade: 0.8,
+		    area: ['1000px', ($(window).height() - 50) +'px'],
+		    content: [userProtocolUrl],
+		    btn: ['同意并注册'],
+		    yes: function(index, layero){
+		    	layer.close(index);
+		    }
+		});
+	}	 
    
    
    var time = 0;
@@ -179,7 +174,7 @@ $(function () {
    		isSend = true;
    		var params = {};
    		params.userPhone = $.trim($("#userPhone").val());
-   		$.post(rooturl+"/index.php/Home/Users/getPhoneVerifyCode/",params,function(data,textStatus){
+   		$.post(domainURL +"/index.php/Home/Users/getPhoneVerifyCode/",params,function(data,textStatus){
    			var json = WST.toJson(data);
    			if(json.status==-1){
    				alert('手机号码格式错误!');
@@ -242,7 +237,7 @@ $(function () {
 	   	params.shopCompany = $('#shopCompany').val();
 	   	params.shopImg = $('#shopImg').val();
 	   	if(params.shopImg==''){
-	   		layer.msg('请上传店铺图片!', 1, 8);
+	   		WST.msg('请上传店铺图片!', {icon: 5});
 	   		return;
 	   	}
 	   	params.shopTel = $('#shopTel').val();
@@ -250,26 +245,26 @@ $(function () {
 	   	params.mobileCode = $.trim($('#mobileCode').val());
 	   	params.verify = $.trim($('#authcode').val());
 	   	params.protocol = document.getElementById("protocol").checked?1:0;	
-	   	$.post(rooturl+"/index.php/Home/Shops/openShop/",params,function(data,textStatus){
+	   	$.post(domainURL +"/index.php/Home/Shops/openShop/",params,function(data,textStatus){
 	   		var json = WST.toJson(data);
 	   		if(json.status>0){
-	   			layer.msg('您的开店申请已提交，请等候商城管理员审核!', 1,1, function(){
-	   			    location.href=rooturl+'/index.php';
+	   			WST.msg('您的开店申请已提交，请等候商城管理员审核!', {icon: 1}, function(){
+	   			    location.href=domainURL +'/index.php';
 	   			});
-	   		}else if(json.status==-1){
-	   			layer.msg('登录账号已存在，请勿重复注册!', 1, 8);
 	   		}else if(json.status==-2){
-	   			layer.msg('请填写完整信息!', 1, 8);
+	   			WST.msg('登录账号已存在!', {icon: 5});
 	   		}else if(json.status==-3){
-	   			layer.msg('两次输入密码不一致!');
+	   			WST.msg('两次输入密码不一致!');
 	   		}else if(json.status==-4){
-	   			layer.msg('验证码错误!', 1, 8);
-	   		}else if(json.status==-6){
-	   			layer.msg('必须同意使用协议才允许注册!');
+	   			WST.msg('验证码错误!', {icon: 5});
 	   		}else if(json.status==-5){
-	   			layer.msg('验证码已超过有效期!', 1, 8);
+	   			WST.msg('验证码已超过有效期!', {icon: 5});
+	   		}else if(json.status==-6){
+	   			WST.msg('必须同意使用协议才允许注册!');
+	   		}else if(json.status==-7){
+	   			WST.msg('手机号码已存在!', {icon: 5});
 	   		}else{
-	   			layer.msg('注册失败!', 1, 8);
+	   			WST.msg('注册失败!', {icon: 5});
 	   		}
 	   		getVerify();
 	   	});

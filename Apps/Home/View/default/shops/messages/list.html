@@ -4,7 +4,6 @@
 #preview{border:1px solid #cccccc; background:#CCC;color:#fff; padding:5px; display:none; position:absolute;}
 </style>
 <script>
-var domainURL = '__ROOT__/';
 $(document).ready(function(){
     $('.imgPreview').imagePreview();
     <notempty name='shopCatId1'>
@@ -32,11 +31,11 @@ function batchDel(){
         $.post(domainURL+"index.php/Home/Messages/batchDel",params,function(data,textStatus){
           var json = WST.toJson(data);
           if(json.status=='1'){
-            layer.msg('操作成功！', 1, 1,function(){
+        	  WST.msg('操作成功！', {icon: 1},function(){
               location.reload();
             });
           }else{
-            layer.msg('操作失败', 1, 8);
+        	  WST.msg('操作失败', {icon: 5});
           }
        });
   });

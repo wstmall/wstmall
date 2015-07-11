@@ -13,9 +13,10 @@ class ShopsModel extends BaseModel {
      /**
 	  * 查询登录关键字
 	  */
-	 public function checkLoginKey($val){
+	 public function checkLoginKey($val,$id = 0){
 	 	$sql = " (loginName ='%s' or userPhone ='%s' or userEmail='%s') ";
 	 	$keyArr = array($val,$val,$val);
+	 	if($id>0)$sql.=" and userId!=".$id;
 	 	$m = M('users');
 	 	$rs = $m->where($sql,$keyArr)->count();
 	    if($rs==0)return 1;
@@ -63,6 +64,8 @@ class ShopsModel extends BaseModel {
 				$data["shopCompany"] = I("shopCompany");
 				$data["shopImg"] = I("shopImg");
 				$data["shopAddress"] = I("shopAddress");
+				$data["deliveryStartMoney"] = I("deliveryStartMoney",0);
+		        $data["deliveryCostTime"] = I("deliveryCostTime",0);
 				$data["deliveryFreeMoney"] = I("deliveryFreeMoney",0);
 		        $data["deliveryMoney"] = I("deliveryMoney",0);
 				$data["avgeCostMoney"] = I("avgeCostMoney",0);
@@ -135,6 +138,14 @@ class ShopsModel extends BaseModel {
 	 	$m = M('shops');
 	 	//获取店铺资料
 	 	$shops = $m->where("shopId=".$shopId)->find();
+	    //检测手机号码是否存在
+	 	if(I("userPhone")!=''){
+	 		$hasUserPhone = self::checkLoginKey(I("userPhone"),$shops['userId']);
+	 		if($hasUserPhone==0){
+	 			$rd = array('status'=>-2);
+	 		    return $rd;
+	 		}
+	 	}
 	    $data = array();
 		$data["shopSn"] = I("shopSn");
 		$data["areaId1"] = I("areaId1");
@@ -146,6 +157,8 @@ class ShopsModel extends BaseModel {
 		$data["shopCompany"] = I("shopCompany");
 		$data["shopImg"] = I("shopImg");
 		$data["shopAddress"] = I("shopAddress");
+		$data["deliveryStartMoney"] = I("deliveryStartMoney",0);
+		$data["deliveryCostTime"] = I("deliveryCostTime",0);
 		$data["deliveryFreeMoney"] = I("deliveryFreeMoney",0);
 		$data["deliveryMoney"] = I("deliveryMoney",0);
 		$data["avgeCostMoney"] = I("avgeCostMoney",0);
@@ -260,7 +273,7 @@ class ShopsModel extends BaseModel {
 			if(false !== $rs){
 				$yj_data = array(
 					'msgType' => 0,
-					'sendUserId' => session('STAFF.staffId'),
+					'sendUserId' => session('WST_STAFF.staffId'),
 					'receiveUserId' => $shops['userId'],
 					'msgContent' => I('statusRemarks'),
 					'createTime' => date('Y-m-d H:i:s'),

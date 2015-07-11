@@ -40,15 +40,16 @@
 	    	  $('#pageContent').height(WST.pageHeight()-98);
 	      });
 	      function logout(){
+	    	  var url = "{:U('Admin/Index/logout')}";
 	    	  Plugins.confirm({title:'信息提示',content:'您确定要退出系统吗?',okText:'确定',cancelText:'取消',okFun:function(){
 	   		     Plugins.closeWindow();
-	   		     $.post("Index/logout",{},function(data,textStatus){
+	   		     $.post(url,{},function(data,textStatus){
 	   		    	  location.reload();
 	   		     });
 	          }});
 	      }
 	      function getTask(){
-	    	  $.post("__ROOT__/index.php/Admin/Index/getTask",{},function(data,textStatus){
+	    	  $.post("{:U('Admin/Index/getTask')}",{},function(data,textStatus){
 	  			    var json = WST.toJson(data);
 	  			    if(json.status==1){
 	  			    	if(json.goodsNum>0){
@@ -63,6 +64,12 @@
 	  			    	}
 	  			    	setTimeout("getTask();",10000);
 	  			    }
+	    	  });
+	      }
+	      function cleanCache(){
+	    	  $.post("{:U('Admin/Index/cleanAllCache')}",{},function(data,textStatus){
+	    		  var json = WST.toJson(data);
+	  			    if(json.status==1)Plugins.Tips({title:'信息提示',content:'缓存清除成功!',timeout:1000});
 	    	  });
 	      }
 	    </script>
@@ -83,17 +90,29 @@
                 <div class="navbar-right">
                     <ul class="nav navbar-nav">
                         <li class="dropdown user user-menu">
+                            <a href="{:WSTDomain()}" target='_blank'>
+                                <i class="glyphicon glyphicon-home"></i>
+                                <span>前台&nbsp;</span>
+                            </a>
+                        </li>
+                        <li class="dropdown user user-menu">
+                            <a href="javascript:cleanCache()">
+                                <i class="glyphicon glyphicon glyphicon-refresh"></i>
+                                <span>清除缓存</span>
+                            </a>
+                        </li>
+                        <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="glyphicon glyphicon-user"></i>
-                                <span>{$Think.session.STAFF.staffName}&nbsp;<i class="caret"></i></span>
+                                <span>{:session('WST_STAFF.staffName')}&nbsp;<i class="caret"></i></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <!-- User image -->
                                 <li class="user-header bg-light-blue">
-                                    <img src="__ROOT__/{$Think.session.STAFF.staffPhoto}" class="img-circle" alt="User Image" />
+                                    <img src="__ROOT__/{:session('WST_STAFF.staffPhoto')}" class="img-circle" alt="{:session('WST_STAFF.roleName')}" />
                                     <p>
-                                        {$Think.session.STAFF.staffName} - {$Think.session.STAFF.roleName}
-                                        <small>职员编号：{$Think.session.STAFF.staffNo}</small>
+                                        {:session('WST_STAFF.staffName')} - {:session('WST_STAFF.roleName')}
+                                        <small>职员编号：{$WST_STAFF.staffNo}</small>
                                     </p>
                                 </li>
                                 <!-- Menu Body -->
@@ -111,7 +130,7 @@
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
                                     <div class="pull-left">
-                                        <a href='__ROOT__/index.php/Admin/Staffs/toEditPass' target='pageContent' class="btn btn-default btn-flat">修改密码</a>
+                                        <a href="{:U('Admin/Staffs/toEditPass')}" target='pageContent' class="btn btn-default btn-flat">修改密码</a>
                                     </div>
                                     <div class="pull-right">
                                         <a href="javascript:logout()" class="btn btn-default btn-flat">退出系统</a>
@@ -131,165 +150,165 @@
                     <!-- Sidebar user panel -->
                     <div class="user-panel">
                         <div class="pull-left image">
-                            <img src="__ROOT__/{$Think.session.STAFF.staffPhoto}" class="img-circle" alt="User Image" />
+                            <img src="__ROOT__/{:session('WST_STAFF.staffPhoto')}" class="img-circle" alt="{:session('WST_STAFF.staffName')}" />
                         </div>
                         <div class="pull-left info">
-                            <p>Hello, {$Think.session.STAFF.staffName}</p>
+                            <p>Hello, {:session('WST_STAFF.staffName')}</p>
                         </div>
                     </div>
                     <!-- sidebar menu: : style can be found in sidebar.less -->
                     <ul class="sidebar-menu">
-                        <php>if(in_array('spgl_00',$_SESSION['STAFF']['grant'])){</php>
+                        <php>if(in_array('spgl_00',$WST_STAFF['grant'])){</php>
                         <li class="treeview">
                             <a href="#">
                                 <span>商品管理</span>
                                 <small id='goodsTips' style='display:none' class="badge pull-right bg-green">0</small>
                             </a>
                             <ul class="treeview-menu">
-                                <php>if(in_array('spfl_00',$_SESSION['STAFF']['grant'])){</php>
-                                <li><a href='__ROOT__/index.php/Admin/GoodsCats/index' target='pageContent'>商品分类</a></li>
+                                <php>if(in_array('spfl_00',$WST_STAFF['grant'])){</php>
+                                <li><a href="{:U('Admin/GoodsCats/index')}" target='pageContent'>商品分类</a></li>
                                 <php>}</php>
-                                <php>if(in_array('ppgl_00',$_SESSION['STAFF']['grant'])){</php>
-					            <li><a href='__ROOT__/index.php/Admin/Brands/index' target='pageContent'>品牌管理</a></li>
+                                <php>if(in_array('ppgl_00',$WST_STAFF['grant'])){</php>
+					            <li><a href="{:U('Admin/Brands/index')}" target='pageContent'>品牌管理</a></li>
 					            <php>}</php>
-                                <php>if(in_array('splb_00',$_SESSION['STAFF']['grant'])){</php>
-					            <li><a href='__ROOT__/index.php/Admin/Goods/index' target='pageContent'>商品列表</a></li>
+                                <php>if(in_array('splb_00',$WST_STAFF['grant'])){</php>
+					            <li><a href="{:U('Admin/Goods/index')}" target='pageContent'>商品列表</a></li>
 					            <php>}</php>
-                                <php>if(in_array('spsh_00',$_SESSION['STAFF']['grant'])){</php>
-					            <li><a href='__ROOT__/index.php/Admin/Goods/queryPenddingByPage' target='pageContent'>商品审核</a></li>
+                                <php>if(in_array('spsh_00',$WST_STAFF['grant'])){</php>
+					            <li><a href="{:U('Admin/Goods/queryPenddingByPage')}" target='pageContent'>商品审核</a></li>
 					            <php>}</php>
-                                <php>if(in_array('sppl_00',$_SESSION['STAFF']['grant'])){</php>
-					            <li><a href='__ROOT__/index.php/Admin/GoodsAppraises/index' target='pageContent'>商品评价</a></li>
+                                <php>if(in_array('sppl_00',$WST_STAFF['grant'])){</php>
+					            <li><a href="{:U('Admin/GoodsAppraises/index')}" target='pageContent'>商品评价</a></li>
 					            <php>}</php>
                             </ul>
                         </li>
                         <php>}</php>
-                        <php>if(in_array('ddgl_00',$_SESSION['STAFF']['grant'])){</php>
+                        <php>if(in_array('ddgl_00',$WST_STAFF['grant'])){</php>
                         <li class="treeview">
                             <a href="#">
                                 <span>订单管理</span>
                             </a>
                             <ul class="treeview-menu">
-                                <php>if(in_array('ddlb_00',$_SESSION['STAFF']['grant'])){</php>
-                                <li><a href='__ROOT__/index.php/Admin/Orders/index' target='pageContent' >订单列表</a></li>
+                                <php>if(in_array('ddlb_00',$WST_STAFF['grant'])){</php>
+                                <li><a href="{:U('Admin/Orders/index')}" target='pageContent' >订单列表</a></li>
                                 <php>}</php>
-                                <php>if(in_array('tk_00',$_SESSION['STAFF']['grant'])){</php>
-                                <li><a href='__ROOT__/index.php/Admin/Orders/queryRefundByPage' target='pageContent' >退款列表</a></li>
+                                <php>if(in_array('tk_00',$WST_STAFF['grant'])){</php>
+                                <li><a href="{:U('Admin/Orders/queryRefundByPage')}" target='pageContent' >退款列表</a></li>
                                 <php>}</php>
                             </ul>
                         </li>
                         <php>}</php>
-                        <php>if(in_array('dpgl_00',$_SESSION['STAFF']['grant'])){</php>
+                        <php>if(in_array('dpgl_00',$WST_STAFF['grant'])){</php>
                         <li class="treeview">
                             <a href="#">
                                 <span>店铺管理</span>
                                 <small id='shopsTips' style='display:none' class="badge pull-right bg-green">3</small>
                             </a>
                             <ul class="treeview-menu">
-                                <php>if(in_array('dplb_01',$_SESSION['STAFF']['grant'])){</php>
-                                <li><a href='__ROOT__/index.php/Admin/Shops/toEdit' target='pageContent' >添加店铺</a></li>
+                                <php>if(in_array('dplb_01',$WST_STAFF['grant'])){</php>
+                                <li><a href="{:U('Admin/Shops/toEdit')}" target='pageContent' >添加店铺</a></li>
                                 <php>}</php>
-                                <php>if(in_array('dplb_00',$_SESSION['STAFF']['grant'])){</php>
-					            <li><a href='__ROOT__/index.php/Admin/Shops/index' target='pageContent' >店铺列表</a></li>
+                                <php>if(in_array('dplb_00',$WST_STAFF['grant'])){</php>
+					            <li><a href="{:U('Admin/Shops/index')}" target='pageContent' >店铺列表</a></li>
 					            <php>}</php>
-                                <php>if(in_array('dpsh_00',$_SESSION['STAFF']['grant'])){</php>
-					            <li><a href='__ROOT__/index.php/Admin/Shops/queryPeddingByPage' target='pageContent' >店铺审核</a></li>
+                                <php>if(in_array('dpsh_00',$WST_STAFF['grant'])){</php>
+					            <li><a href="{:U('Admin/Shops/queryPeddingByPage')}" target='pageContent' >店铺审核</a></li>
 					            <php>}</php>
                             </ul>
                         </li>
                         <php>}</php>
-                        <php>if(in_array('dqgl_00',$_SESSION['STAFF']['grant'])){</php>
+                        <php>if(in_array('dqgl_00',$WST_STAFF['grant'])){</php>
                         <li class="treeview">
                             <a href="pages/calendar.html">
                                 <span>地区管理</span>
                             </a>
                             <ul class="treeview-menu">
-                               <php>if(in_array('dqlb_00',$_SESSION['STAFF']['grant'])){</php>
-                               <li><a href='__ROOT__/index.php/Admin/Areas/index' target='pageContent' >地区管理</a></li>
+                               <php>if(in_array('dqlb_00',$WST_STAFF['grant'])){</php>
+                               <li><a href="{:U('Admin/Areas/index')}" target='pageContent' >地区管理</a></li>
                                <php>}</php>
-                               <php>if(in_array('sqlb_00',$_SESSION['STAFF']['grant'])){</php>
-					           <li><a href='__ROOT__/index.php/Admin/Communitys/index' target='pageContent' >社区列表</a></li>
+                               <php>if(in_array('sqlb_00',$WST_STAFF['grant'])){</php>
+					           <li><a href="{:U('Admin/Communitys/index')}" target='pageContent' >社区列表</a></li>
 					           <php>}</php>
-                               <php>if(in_array('sqlb_01',$_SESSION['STAFF']['grant'])){</php>
-					           <li><a href='__ROOT__/index.php/Admin/Communitys/toEdit' target='pageContent' >添加社区</a></li>
+                               <php>if(in_array('sqlb_01',$WST_STAFF['grant'])){</php>
+					           <li><a href="{:U('Admin/Communitys/toEdit')}" target='pageContent' >添加社区</a></li>
 					           <php>}</php>
                             </ul>
                         </li>
                         <php>}</php>
-                        <php>if(in_array('wzgl_00',$_SESSION['STAFF']['grant'])){</php>
+                        <php>if(in_array('wzgl_00',$WST_STAFF['grant'])){</php>
                         <li class="treeview">
                             <a href="pages/mailbox.html">
                                 <span> 文章管理</span>
                             </a>
                             <ul class="treeview-menu">
-                               <php>if(in_array('wzlb_00',$_SESSION['STAFF']['grant'])){</php>
-                               <li><a href='__ROOT__/index.php/Admin/Articles/index' target='pageContent' >文章列表</a></li>
+                               <php>if(in_array('wzlb_00',$WST_STAFF['grant'])){</php>
+                               <li><a href="{:U('Admin/Articles/index')}" target='pageContent' >文章列表</a></li>
                                <php>}</php>
-                               <php>if(in_array('wzfl_00',$_SESSION['STAFF']['grant'])){</php>
-					           <li><a href='__ROOT__/index.php/Admin/ArticleCats/index' target='pageContent' >文章分类</a></li>
+                               <php>if(in_array('wzfl_00',$WST_STAFF['grant'])){</php>
+					           <li><a href="{:U('Admin/ArticleCats/index')}" target='pageContent' >文章分类</a></li>
 					           <php>}</php>
-                               <php>if(in_array('wzlb_01',$_SESSION['STAFF']['grant'])){</php>
-					           <li><a href='__ROOT__/index.php/Admin/Articles/toEdit' target='pageContent' >添加文章</a></li>
+                               <php>if(in_array('wzlb_01',$WST_STAFF['grant'])){</php>
+					           <li><a href="{:U('Admin/Articles/toEdit')}" target='pageContent' >添加文章</a></li>
 					           <php>}</php>
                             </ul>
                         </li>
                         <php>}</php>
-                        <php>if(in_array('hygl_00',$_SESSION['STAFF']['grant'])){</php>
+                        <php>if(in_array('hygl_00',$WST_STAFF['grant'])){</php>
                         <li class="treeview">
                             <a href="#">
                                 <span>会员管理</span>
                             </a>
                             <ul class="treeview-menu">
-                                <php>if(in_array('hydj_00',$_SESSION['STAFF']['grant'])){</php>
-                                <li><a href='__ROOT__/index.php/Admin/UserRanks/index' target='pageContent' >会员等级</a></li>
+                                <php>if(in_array('hydj_00',$WST_STAFF['grant'])){</php>
+                                <li><a href="{:U('Admin/UserRanks/index')}" target='pageContent' >会员等级</a></li>
                                 <php>}</php>
-                                <php>if(in_array('hylb_00',$_SESSION['STAFF']['grant'])){</php>
-					            <li><a href='__ROOT__/index.php/Admin/Users/index' target='pageContent' >会员列表</a></li>
+                                <php>if(in_array('hylb_00',$WST_STAFF['grant'])){</php>
+					            <li><a href="{:U('Admin/Users/index')}" target='pageContent' >会员列表</a></li>
 					            <php>}</php>
-                                <php>if(in_array('hylb_01',$_SESSION['STAFF']['grant'])){</php>
-					            <li><a href='__ROOT__/index.php/Admin/Users/toEdit/' target='pageContent'>添加会员</a></li>
+                                <php>if(in_array('hylb_01',$WST_STAFF['grant'])){</php>
+					            <li><a href="{:U('Admin/Users/toEdit/')}" target='pageContent'>添加会员</a></li>
 					            <php>}</php>
-                                <php>if(in_array('hyzh_00',$_SESSION['STAFF']['grant'])){</php>
-					            <li><a href='__ROOT__/index.php/Admin/Users/queryAccountByPage' target='pageContent' >账号管理</a></li>
+                                <php>if(in_array('hyzh_00',$WST_STAFF['grant'])){</php>
+					            <li><a href="{:U('Admin/Users/queryAccountByPage')}" target='pageContent' >账号管理</a></li>
 					            <php>}</php>
                             </ul>
                         </li>
                         <php>}</php>
-                        <php>if(in_array('xtgl_00',$_SESSION['STAFF']['grant'])){</php>
+                        <php>if(in_array('xtgl_00',$WST_STAFF['grant'])){</php>
                         <li class="treeview">
                             <a href="#">
                                 <span>系统管理</span>
                             </a>
                             <ul class="treeview-menu">
-                                <php>if(in_array('jsgl_00',$_SESSION['STAFF']['grant'])){</php>
-                                <li><a href='__ROOT__/index.php/Admin/Roles/index' target='pageContent' >角色管理</a></li>
+                                <php>if(in_array('jsgl_00',$WST_STAFF['grant'])){</php>
+                                <li><a href="{:U('Admin/Roles/index')}" target='pageContent' >角色管理</a></li>
                                 <php>}</php>
-                                <php>if(in_array('zylb_00',$_SESSION['STAFF']['grant'])){</php>
-					            <li><a href='__ROOT__/index.php/Admin/Staffs/index' target='pageContent' >职员管理</a></li>
+                                <php>if(in_array('zylb_00',$WST_STAFF['grant'])){</php>
+					            <li><a href="{:U('Admin/Staffs/index')}" target='pageContent' >职员管理</a></li>
 					            <php>}</php>
-                                <php>if(in_array('dlrz_00',$_SESSION['STAFF']['grant'])){</php>
-					            <li><a href='__ROOT__/index.php/Admin/LogLogins/index' target='pageContent' >登录日志</a></li>
+                                <php>if(in_array('dlrz_00',$WST_STAFF['grant'])){</php>
+					            <li><a href="{:U('Admin/LogLogins/index')}" target='pageContent' >登录日志</a></li>
 					            <php>}</php>
                             </ul>
                         </li>
                         <php>}</php>
-                        <php>if(in_array('scsz_00',$_SESSION['STAFF']['grant'])){</php>
+                        <php>if(in_array('scsz_00',$WST_STAFF['grant'])){</php>
                         <li class="treeview">
                             <a href="#">
                                 <span>商城设置</span>
                             </a>
                             <ul class="treeview-menu">
-                                <php>if(in_array('scxx_00',$_SESSION['STAFF']['grant'])){</php>
-                                <li><a href='__ROOT__/index.php/Admin/Index/toMallConfig' target='pageContent' >商城信息</a></li>
+                                <php>if(in_array('scxx_00',$WST_STAFF['grant'])){</php>
+                                <li><a href="{:U('Admin/Index/toMallConfig')}" target='pageContent' >商城信息</a></li>
                                 <php>}</php>
-                                <php>if(in_array('yqlj_00',$_SESSION['STAFF']['grant'])){</php>
-					            <li><a href='__ROOT__/index.php/Admin/Friendlinks/' target='pageContent'>友情链接</a></li>
+                                <php>if(in_array('yqlj_00',$WST_STAFF['grant'])){</php>
+					            <li><a href="{:U('Admin/Friendlinks/index')}" target='pageContent'>友情链接</a></li>
 					            <php>}</php>
-                                <php>if(in_array('gggl_00',$_SESSION['STAFF']['grant'])){</php>
-					            <li><a href='__ROOT__/index.php/Admin/Ads/index' target='pageContent'>广告管理</a></li>
+                                <php>if(in_array('gggl_00',$WST_STAFF['grant'])){</php>
+					            <li><a href="{:U('Admin/Ads/index')}" target='pageContent'>广告管理</a></li>
 					            <php>}</php>
-                                <php>if(in_array('yhgl_00',$_SESSION['STAFF']['grant'])){</php>
-					            <li><a href='__ROOT__/index.php/Admin/Banks/' target='pageContent'>银行管理</a></li>
+                                <php>if(in_array('yhgl_00',$WST_STAFF['grant'])){</php>
+					            <li><a href="{:U('Admin/Banks/index')}" target='pageContent'>银行管理</a></li>
 					            <php>}</php>
                             </ul>
                         </li>

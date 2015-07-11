@@ -4,13 +4,13 @@ Navicat MySQL Data Transfer
 Source Server         : 127.0.0.1
 Source Server Version : 50520
 Source Host           : localhost:3306
-Source Database       : wstmall
+Source Database       : temp
 
 Target Server Type    : MYSQL
 Target Server Version : 50520
 File Encoding         : 65001
 
-Date: 2015-06-08 22:46:18
+Date: 2015-06-27 10:21:06
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -74,7 +74,7 @@ CREATE TABLE `wst_areas` (
 -- Records of wst_areas
 -- ----------------------------
 INSERT INTO `wst_areas` VALUES ('110000', '0', '北京市', '1', '0', '', '0', '1');
-INSERT INTO `wst_areas` VALUES ('110100', '110000', '北京市', '1', '0', 'S', '1', '1');
+INSERT INTO `wst_areas` VALUES ('110100', '110000', '北京市', '1', '0', 'B', '1', '1');
 INSERT INTO `wst_areas` VALUES ('110101', '110100', '东城区', '1', '0', '', '2', '1');
 INSERT INTO `wst_areas` VALUES ('110102', '110100', '西城区', '1', '0', '', '2', '1');
 INSERT INTO `wst_areas` VALUES ('110105', '110100', '朝阳区', '1', '0', '', '2', '1');

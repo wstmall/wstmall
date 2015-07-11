@@ -14,17 +14,26 @@ class BrandsAction extends BaseAction{
 	 * 列表查询
 	 */
     public function index(){
+    	self::getBaseInfo();
     	$areas= D('Home/Areas');
     	$areaId2 = $this->getDefaultCity();
    		$areaList = $areas->getDistricts($areaId2);
    		$this->assign('areaList',$areaList);
+   		
+   		if(cookie("bstreesAreaId3")){
+   			$obj["areaId3"] = cookie("bstreesAreaId3");
+   		}else{
+   			$obj["areaId3"] = ((int)I('areaId3')>0)?(int)I('areaId3'):$areaList[0]['areaId'];
+   			cookie("bstreesAreaId3",$obj["areaId3"]);
+   		}
+   		$this->assign('areaId3',$obj["areaId3"]);
    		//广告
    		$ads = D('Home/Ads');
    		$ads = $ads->getAds($areaId2,-2);
    		$this->assign('ads',$ads);
 		$m = D('Home/Brands');
 		$this->assign('nvg_mk',"brands");
-		$brandslist = $m->queryBrandsByCity();
+		$brandslist = $m->queryBrandsByDistrict();
 		$this->assign('brandslist',$brandslist);
 		$this->display("default/brands_list");
 	}
@@ -34,7 +43,8 @@ class BrandsAction extends BaseAction{
 	 */
     public function getBrands(){
 		$m = D('Home/Brands');
-		$brandslist = $m->queryBrandsByCity();
+		$brandslist = $m->queryBrandsByDistrict();
+		cookie("bstreesAreaId3",I("areaId3"));
 		$this->ajaxReturn($brandslist);
 	}
 	

@@ -8,34 +8,38 @@ namespace Home\Model;
  * ============================================================================
  * 品牌服务类
  */
-use Think\Model;
 class BrandsModel extends BaseModel {
-     /**
-	  * 获取列表
-	  */
-	  public function queryByList(){
-	     $m = M('brands');
-	     return $m->where('brandFlag=1')->select();
-	  }
-	
     /**
-	  * 根据城市获取品牌列表
+	  * 根据县区获取品牌列表
 	  */
-	public function queryBrandsByCity(){
-		$areaId3 = I("areaId3",0);
+	public function queryBrandsByDistrict(){
+		$areaId3 = (int)I("areaId3");
 		$brandName = I("brandName");
-		
-		$sql = "SELECT bs.* FROM __PREFIX__brands bs,__PREFIX__shops sp,__PREFIX__goods g
-				WHERE bs.brandId=g.brandId AND g.shopId=sp.shopId AND bs.brandFlag = 1";
-		if($areaId3>0){
-			$sql .= " AND sp.areaId3 = $areaId3";
+		if($brandName==''){
+			$brands = S("WST_BRANDS_001_".$areaId3);
+			if(!$brands){
+				$sql = "SELECT bs.brandId,bs.brandName,bs.brandIco FROM __PREFIX__brands bs,__PREFIX__shops sp,__PREFIX__goods g,__PREFIX__goods_cat_brands gcb
+						WHERE bs.brandId=g.brandId AND g.shopId=sp.shopId AND gcb.brandId=bs.brandId AND bs.brandFlag = 1";
+				if($areaId3>0){
+					$sql .= " AND sp.areaId3 = $areaId3";
+				}
+				$sql.=" group by bs.brandId ";
+				$brands = $this->query($sql);
+				S("WST_BRANDS_001_".$areaId3,$brands,2592000);
+			}
+		}else{
+			$sql = "SELECT bs.brandId,bs.brandName,bs.brandIco FROM __PREFIX__brands bs,__PREFIX__shops sp,__PREFIX__goods g,__PREFIX__goods_cat_brands gcb
+						WHERE bs.brandId=g.brandId AND g.shopId=sp.shopId AND gcb.brandId=bs.brandId AND bs.brandFlag = 1";
+			if($areaId3>0){
+				$sql .= " AND sp.areaId3 = $areaId3";
+			}
+			if($brandName!=""){
+				$sql .= " AND bs.brandName like '%$brandName%'";
+			}
+			$sql.=" group by bs.brandId ";
+			$brands = $this->query($sql);
 		}
-		if($brandName!=""){
-			$sql .= " AND bs.brandName like '%$brandName%'";
-		}
-		$sql.=" group by bs.brandId ";
-		$rs = $this->query($sql);
-		return $rs;
+		return $brands;
 	}
 	
      /**
@@ -43,9 +47,12 @@ class BrandsModel extends BaseModel {
 	  */
 	  public function queryBrandsByCat($catId){
 	  	 $rs = array('status'=>1);
-	     $sql = "select b.brandId,b.brandName from __PREFIX__goods_cat_brands cb,__PREFIX__brands b where cb.brandId=b.brandId and catId=".$catId;
-	     $rs['list'] = $this->query($sql);
+	  	 $list = S("WST_BRANDS_002_".$catId);
+	  	 if(!$list){
+		     $sql = "select b.brandId,b.brandName from __PREFIX__goods_cat_brands cb,__PREFIX__brands b where cb.brandId=b.brandId and catId=".$catId;
+		     $rs['list'] = $this->query($sql);
+		     S("WST_BRANDS_002_".$catId,$list,2592000);
+	  	 }
 		 return $rs;
 	  }
-	
 }

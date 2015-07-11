@@ -8,8 +8,8 @@ namespace Home\Model;
  * ============================================================================
  * 购物车服务类
  */
-use Think\Model;
 class CartModel extends BaseModel {
+	protected $tableName = 'goods'; 
 	
 	/**
 	 * 添加[正常]商品到购物车
@@ -21,19 +21,20 @@ class CartModel extends BaseModel {
 		$goodsInfo["cnt"] = ((int)I("gcount")>0)?(int)I("gcount"):1;
 		$cartgoods = array();
 		$totalMoney = 0;
+		$WST_CART = session("WST_CART");
 		//如果 购物车为空则放入购物车中
-		if(empty($_SESSION["mycart"])){
+		if(empty($WST_CART)){
 			$shopcat = array();
 			$shopcat[$goodsInfo["goodsId"]] = $goodsInfo;
 			$totalMoney += $goodsInfo["cnt"]*$goodsInfo["shopPrice"];
 			$cartgoods[] = $goodsInfo;		
-			$_SESSION["mycart"] = $shopcat;
+			session("WST_CART",$shopcat);
 		}else{
 			//如果购物车不为空则要看下该商品是否原来就存在了。
-			$shopcat = $_SESSION["mycart"];
+			$shopcat = $WST_CART;
 			//如果已经存在则要把数量相加
 			if(!empty($shopcat[$goodsInfo['goodsId']])){
-				$goodsInfo["cnt"]=$_SESSION["mycart"][$goodsInfo["goodsId"]]["cnt"]+$goodsInfo["cnt"];
+				$goodsInfo["cnt"]=$WST_CART[$goodsInfo["goodsId"]]["cnt"]+$goodsInfo["cnt"];
 			}			
 			$shopcat[$goodsInfo["goodsId"]] = $goodsInfo;				
             //重新把购物车内的数据拿到外边
@@ -43,7 +44,7 @@ class CartModel extends BaseModel {
 				$totalMoney += $goods["cnt"]*$goods["shopPrice"];
 				$cartgoods[] = $goods;
 			}		
-			$_SESSION["mycart"] = $shopcat;
+			session("WST_CART",$shopcat);
 		}
 		$cartInfo = array();
 		$cartInfo["cartgoods"] = $cartgoods;
@@ -56,7 +57,7 @@ class CartModel extends BaseModel {
 	 */
 	public function getGoodsInfo($goodsId){
 		$sql = "SELECT g.goodsId,g.goodsSn,g.goodsName,g.goodsThums,g.shopId,g.marketPrice,g.shopPrice,g.goodsStock,g.bookQuantity,g.isBook,sp.shopName
-				FROM ".$this->tablePrefix."goods g,".$this->tablePrefix."shops sp 
+				FROM __PREFIX__goods g,__PREFIX__shops sp 
 				WHERE g.shopId=sp.shopId AND goodsFlag=1 and isSale=1 and goodsStatus=1 and g.goodsId = $goodsId";
 		$goodslist = $this->query($sql);
 		return $goodslist[0];
@@ -68,7 +69,7 @@ class CartModel extends BaseModel {
 	public function getCartInfo(){
 		$mgoods = D('Home/Goods');
 		$totalMoney = 0;
-		$shopcart = $_SESSION["mycart"]?$_SESSION["mycart"]:array();	
+		$shopcart = session("WST_CART")?session("WST_CART"):array();	
 		$cartgoods = array();		
 		foreach($shopcart as $key=>$cgoods){				
 			$obj["goodsId"] = $key;		
@@ -90,7 +91,7 @@ class CartModel extends BaseModel {
 	public function checkCatGoodsStock($goodsId){
 		
 		//$totalMoney = 0;
-		$shopcart = $_SESSION["mycart"]?$_SESSION["mycart"]:array();	
+		$shopcart = session("WST_CART")?session("WST_CART"):array();	
 		$mgoods = D('Home/Goods');
 		$cartgoods = array();		
 		foreach($shopcart as $key=>$cgoods){
@@ -115,16 +116,15 @@ class CartModel extends BaseModel {
 	public function delCartGoods(){
 		
 		$goodsId = I("goodsId");
-		$shopcart = $_SESSION["mycart"]?$_SESSION["mycart"]:array();
-		unset($_SESSION["mycat"]);
+		$shopcart = session("WST_CART")?session("WST_CART"):array();
+		session("WST_CART");
 		$newShopcat = array();
 		foreach($shopcart as $key=>$cgoods){	
 			if($goodsId != $key){
-				$newShopcat[$key] = $shopcat[$key];
+				$newShopcat[$key] = $cgoods;
 			}			
 		}
-		$_SESSION["mycart"] = $newShopcat;
-		
+		session("WST_CART",$newShopcat);
 		return 1;
 		
 	}
@@ -134,11 +134,10 @@ class CartModel extends BaseModel {
 	 * 
 	 */
 	public function changeCartGoodsnum(){
-		
 		$goodsId = I("goodsId");
-		$num = I("num");
-		$shopcart = $_SESSION["mycart"]?$_SESSION["mycart"]:array();
-		unset($_SESSION["mycart"]);
+		$num = abs((int)I("num"));
+		$shopcart = session("WST_CART")?session("WST_CART"):array();
+		session("WST_CART",null);
 		$newShopcart = array();
 		foreach($shopcart as $key=>$cgoods){	
 			$cartgoods = $shopcart[$key];
@@ -147,10 +146,8 @@ class CartModel extends BaseModel {
 			}
 			$newShopcart[$key] = $cartgoods;	
 		}
-		$_SESSION["mycart"] = $newShopcart;
-		
+		session("WST_CART",$newShopcart);
 		return 1;
-		
 	}
 	
 }

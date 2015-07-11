@@ -15,14 +15,16 @@
 	   params.oldPass = $('#oldPass').val();
 	   params.newPass = $('#newPass').val();
 	   params.reNewPass = $('#reNewPass').val();
-	   $.post(rooturl+"/index.php/Home/Users/editPass",params,function(data,textStatus){
+	   var ll = layer.load('数据处理中，请稍候...');
+	   $.post(domainURL+"/index.php/Home/Users/editPass",params,function(data,textStatus){
+		   layer.close(ll);
 			var json = WST.toJson(data);
 			if(json.status=='1'){
-				layer.msg('密码修改成功!', 1,1, function(){
+				WST.msg('密码修改成功!', {icon: 1}, function(){
 					location.reload();
 				});
 			}else{
-				layer.msg('密码修改失败!', 1, 8);
+				WST.msg('密码修改失败!', {icon: 5});
 			}
 	   });
    }

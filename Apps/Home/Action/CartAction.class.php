@@ -8,12 +8,12 @@ namespace Home\Action;
  * ============================================================================
  * 购物车控制器
  */
-use Think\Controller;
 class CartAction extends BaseAction {
 	/**
 	 * 跳到购物车列表
 	 */
     public function toCart(){
+    	self::getBaseInfo();
    		$m = D('Home/Cart');
 		$cartInfo = $m->getCartInfo();
    		$pnow = I("pnow",0);
@@ -54,6 +54,7 @@ class CartAction extends BaseAction {
 		if($axm ==1){
 			echo json_encode($cartInfo);
 		}else{
+			self::getBaseInfo();
 			$this->assign('cartInfo',$cartInfo);
 			$this->display('default/cart_pay_list');
 		}
@@ -102,7 +103,7 @@ class CartAction extends BaseAction {
 	 * 
 	 */
 	public function toCatpaylist(){	
-		
+		self::getBaseInfo();
 		$m = D('Home/Cart');
 		$cartInfo = $goodsmodel->getCartInfo();
 		$this->assign("cartInfo",$cartInfo);

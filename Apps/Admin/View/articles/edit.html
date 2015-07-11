@@ -46,7 +46,7 @@
 		}});
 	   $("#articleTitle").formValidator({onFocus:"请输入文章标题"}).inputValidator({min:1,max:20,onError:"请输入文章标题"});
 	   $("#catId").formValidator({onFocus:"请选择文章分类"}).inputValidator({min:1,onError: "请选择文章分类"});
-	   $("#articleKey").formValidator({onFocus:"请输入关键字"}).inputValidator({min:1,max:20,onError:"请输入关键字"});
+	   $("#articleKey").formValidator({onFocus:"请输入关键字"}).inputValidator({min:1,max:80,onError:"请输入关键字"});
 	   
    });
    function edit(){
@@ -108,7 +108,7 @@
            <tr>
              <th align='right'>关键字<font color='red'>*</font>：</th>
              <td>
-             <input type='text' id='articleKey' class="form-control wst-ipt" value='{$object.articleKey}' maxLength='100'/>
+             <input type='text' id='articleKey' class="form-control wst-ipt" value='{$object.articleKey}' maxLength='80'/>
              </td>
            </tr>
            <tr>

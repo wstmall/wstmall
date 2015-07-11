@@ -13,8 +13,8 @@
 		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />
 		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/pslocation.css" />
 		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/magnifier.css" />
-		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/pageCode.css" />
      	<script src="__PUBLIC__/js/jquery.min.js"></script>
+     	<script src="__PUBLIC__/js/common.js"></script>
      	<script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
    	</head>
    	<body>
@@ -23,7 +23,11 @@
 		<input id="goodsId" type="hidden" value="{$goodsDetails['goodsId']}"/>
 		<!----加载商品楼层start----->
 		<div class="wst-container">
-			<div class="wst-nvg-title" style='display:none;'></div>
+			<div class="wst-nvg-title">
+				<a href="__ROOT__/index.php/Home/goods/getGoodsList/?c1Id={$goodsNav[0]['catId']}">{$goodsNav[0]["catName"]}</a>&nbsp;>&nbsp;
+				<a href="__ROOT__/index.php/Home/goods/getGoodsList/?c1Id={$goodsNav[0]['catId']}&c2Id={$goodsNav[1]['catId']}"><a href="">{$goodsNav[1]["catName"]}</a>&nbsp;>&nbsp;
+				<a href="__ROOT__/index.php/Home/goods/getGoodsList/?c1Id={$goodsNav[0]['catId']}&c2Id={$goodsNav[1]['catId']}&c3Id={$goodsNav[2]['catId']}"><a href="">{$goodsNav[2]["catName"]}</a>
+			</div>
 			<div class="wst-goods-details">
 				<div class="details-left" style="">
 					<div class="goods-img-box" style= " ">
@@ -42,7 +46,6 @@
 						        	<volist name="goodsImgs" key="k" id="vo">
 						          		<li><img alt="" bimg="__ROOT__/{$vo['goodsImg']}" src="__ROOT__/{$vo['goodsImg']}" onmousemove="preview(this);"></li>
 						          	</volist>
-						        
 						        </ul>
 						      </div>
 						    </div>
@@ -79,10 +82,14 @@
 										<li id="summary-stock">
 											<div class="dd">
 												<div id="store-selector">
-													<div class="text"><div></div><b></b></div>                   
-													
+													<div class="text">
+														<div></div>
+														<b></b>
+													</div>
 												</div><!--store-selector end-->
-												<div id="store-prompt"><strong></strong></div><!--store-prompt end--->
+												<div id="store-prompt">
+													<strong></strong>
+												</div><!--store-prompt end--->
 											</div>
 										</li>有货
 										<div class="wst-clear"></div>
@@ -102,10 +109,10 @@
 									<td width="70"><span style="display:inline-block;width:70px;">购买数量：</span></td>
 									<td>
 										<div id="haveGoodsToBuy" <if condition="$goodsDetails['goodsStock'] elt 0">style="display:none;"</if>>
-											<div class="goods-buy-cnt" style="text-align:center;padding-top:2px;">
-												<div class="buy-cnt-plus" style="cursor:pointer;position:absolute;width:28px;height:36px;top:0px;left:0px;" onclick="changebuynum({$goodsDetails['goodsId']},1)"></div>
-												<input id="buy-num" type="text" style="border:0px;height:15px;width:56px;text-align:center;padding-top:8px;padding-bottom:6px;" value="1" onkeyup="changebuynum({$goodsDetails['goodsId']},0);"/>
-												<div class="buy-cnt-add" style="cursor:pointer;position:absolute;width:28px;height:36px;top:0px;right:0px;" onclick="changebuynum({$goodsDetails['goodsId']},2)"></div>
+											<div class="goods-buy-cnt">
+												<div class="buy-cnt-plus" onclick="changebuynum({$goodsDetails['goodsId']},1)"></div>
+												<input id="buy-num" type="text" class="buy-cnt-txt" value="1" maxlength="3" onkeypress="return WST.isNumberKey(event);" onkeyup="changebuynum({$goodsDetails['goodsId']},0);"/>
+												<div class="buy-cnt-add" onclick="changebuynum({$goodsDetails['goodsId']},2)"></div>
 											</div>
 										</div>
 										<div id="noGoodsToBuy" <if condition="$goodsDetails['goodsStock'] gt 0">style="display:none;"</if>>
@@ -125,7 +132,7 @@
 								<else/>
 								<tr>
 									<td colspan="2">
-										<div style="font-weight: bold;color:red;">休息中,暂停营业</div>
+										<div class="wst-gdetail-wait">休息中,暂停营业</div>
 									</td>
 								</tr>
 								</if>
@@ -148,7 +155,7 @@
 												</a>
 											</if>
 											<if condition="$goodsDetails['shopServiceStatus'] eq 0">
-												bb<img src="__ROOT__/Apps/Home/View/default/images/hcat.jpg" />
+												<img src="__ROOT__/Apps/Home/View/default/images/hcat.jpg" />
 											</if>
 										</if>
 									</td>
@@ -174,7 +181,7 @@
 								<td>{$goodsDetails["deliveryStartMoney"]}元起，配送费{$goodsDetails["deliveryMoney"]}元<br/>{$goodsDetails["deliveryFreeMoney"]}元起免配送费<br/><br/></td>
 							</tr>
 							<tr>
-								<td class="title">门店地址：</td>
+								<td class="title">店铺地址：</td>
 								<td>{$goodsDetails['shopAddress']}</td>
 							</tr>
 							<tr>
@@ -287,7 +294,7 @@ $(function(){
 	params.goodsId = goodsId;	
 	
 	//加载商品评价
-	jQuery.post(rooturl+"/index.php/Home/Goods/getGoodsappraises/" ,params,function(data) {
+	jQuery.post(domainURL +"/index.php/Home/Goods/getGoodsappraises/" ,params,function(data) {
 		var json = WST.toJson(data);
 			
 		var html = new Array();		    	
@@ -295,22 +302,22 @@ $(function(){
 		    var appraises = json.root[j];
 		    	
 		    html.push('<tr height="75" style="border:1px dotted #eeeeee;">');
-			    html.push('<td width="150" style="padding-left:6px;"><div>'+appraises.userName+'</div></td>');
+			    html.push('<td width="150" style="padding-left:6px;"><div>'+(appraises.userName?appraises.userName:"匿名")+'</div></td>');
 			    html.push('<td width="*"><div>'+appraises.content+'</div></td>');
 			    html.push('<td width="180">');
 			    html.push('<div>商品评分：');
 				for(var i=0;i<appraises.goodsScore;i++){
-					html.push('<img src="'+rooturl+'/Apps/Home/View/default/images/icon_score_yes.png"/>');
+					html.push('<img src="'+domainURL +'/Apps/Home/View/default/images/icon_score_yes.png"/>');
 				}
 				html.push('</div>');
 				html.push('<div>时效评分：');
 				for(var i=0;i<appraises.timeScore;i++){
-					html.push('<img src="'+rooturl+'/Apps/Home/View/default/images/icon_score_yes.png"/>');
+					html.push('<img src="'+domainURL +'/Apps/Home/View/default/images/icon_score_yes.png"/>');
 				}
 				html.push('</div>');
 				html.push('<div>服务评分：');
 				for(var i=0;i<appraises.serviceScore;i++){
-					html.push('<img src="'+rooturl+'/Apps/Home/View/default/images/icon_score_yes.png"/>');
+					html.push('<img src="'+domainURL +'/Apps/Home/View/default/images/icon_score_yes.png"/>');
 				}
 				html.push('</div>');
 				html.push('</td>');

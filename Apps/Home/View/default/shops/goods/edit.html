@@ -27,11 +27,11 @@ $(function () {
 		    fileTypeDesc  : 'Image Files',
 	        fileTypeExts  : '*.gif; *.jpg; *.png',
 	        swf           : publicurl+'/plugins/uploadify/uploadify.swf',
-	        uploader      : rooturl+'/index.php/Home/shops/uploadPic',
+	        uploader      : domainURL +'/index.php/Home/shops/uploadPic',
 	        onUploadSuccess : function(file, data, response) {
 	        	var json = WST.toJson(data);
 	        	if(json.status && json.status==1){
-		        	$('#goodsImgPreview').attr('src',rooturl+'/'+json.Filedata.savepath+json.Filedata.savethumbname).show();
+		        	$('#goodsImgPreview').attr('src',domainURL +'/'+json.Filedata.savepath+json.Filedata.savethumbname).show();
 		        	$('#goodsImg').val(json.Filedata.savepath+json.Filedata.savename);
 		        	$('#goodsThumbs').val(json.Filedata.savepath+json.Filedata.savename);
 	        	}
@@ -43,17 +43,18 @@ $(function () {
 		    fileTypeDesc  : 'Image Files',
 	        fileTypeExts  : '*.gif; *.jpg; *.png',
 	        swf           : publicurl+'/plugins/uploadify/uploadify.swf',
-	        uploader      : rooturl+'/index.php/Home/shops/uploadPic',
+	        uploader      : domainURL +'/index.php/Home/shops/uploadPic',
 	        onUploadSuccess : function(file, data, response) {
 	        	var json = WST.toJson(data);
 	        	if(json.status && json.status==1){
-	        		$('<div class="wst-gallery-img" onmouseover="imgmouseover(this);" onmouseout="imgmouseout(this);"><span class="wst-gallery-goods-del" onclick="javascript:delImg(this)"></span><img class="gallery-img" iv="'+json.Filedata.savepath+json.Filedata.savethumbname+'" v="'+json.Filedata.savepath+json.Filedata.savename+'" src="'+rooturl+'/'+json.Filedata.savepath+json.Filedata.savethumbname+'"/></div>').appendTo('#galleryImgs');
+	        		$('<div class="wst-gallery-img" onmouseover="imgmouseover(this);" onmouseout="imgmouseout(this);"><span class="wst-gallery-goods-del" onclick="javascript:delImg(this)"></span><img class="gallery-img" iv="'+json.Filedata.savepath+json.Filedata.savethumbname+'" v="'+json.Filedata.savepath+json.Filedata.savename+'" src="'+domainURL +'/'+json.Filedata.savepath+json.Filedata.savethumbname+'"/></div>').appendTo('#galleryImgs');
 	        	}
        }
 	   });
 	   KindEditor.ready(function(K) {
 			editor1 = K.create('textarea[name="goodsDesc"]', {
 				height:'250px',
+				width:"800px",
 				allowFileManager : false,
 				allowImageUpload : true,
 				items:[
@@ -94,7 +95,7 @@ function delImg(obj){
 	    	<li>商品信息</li>
 	        <li>商品相册</li>
 	    </ul>
-    	<div class="wst-tab-content" style='width:98%;'>
+    	<div class="wst-tab-content" style='width:99%;margin-bottom: 10px;'>
     	<div class='wst-tab-item'>
 	        <form name="myform" method="post" id="myform">
 	        <input type='hidden' id='id' value='{$object.goodsId}'/>
@@ -134,7 +135,7 @@ function delImg(obj){
 	           <tr>
 	             <th width='120'>规格：</th>
 	             <td colspan='3'>
-	             <textarea rows="2" cols="50" id='goodsSpec' name='goodsSpec'>{$object.goodsSpec}</textarea>
+	             <textarea rows="2" style="width:788px" id='goodsSpec' name='goodsSpec'>{$object.goodsSpec}</textarea>
 	             </td>
 	           </tr>
 	           <tr>
@@ -207,13 +208,15 @@ function delImg(obj){
 	           <tr>
 	             <th width='120'>商品描述<font color='red'>*</font>：</th>
 	             <td colspan='3'>
-	             <textarea rows="2" cols="50" id='goodsDesc' name='goodsDesc'>{$object.goodsDesc}</textarea>
+	             <textarea rows="2" cols="60" id='goodsDesc' name='goodsDesc'>{$object.goodsDesc}</textarea>
 	             </td>
 	           </tr>
 	           <tr>
 	             <td colspan='3' style='padding-left:320px;'>
 	                 <button class='wst-btn-query' type="submit">保&nbsp;存</button>
+	                 <if condition="$umark !='toEdit' ">
 	                 <button class='wst-btn-query' type="button" onclick='javascript:location.href="__ROOT__/index.php/Home/Goods/{$umark}"'>返&nbsp;回</button>
+	                 </if>
 	             </td>
 	           </tr>
 	        </table>

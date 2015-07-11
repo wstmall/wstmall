@@ -40,7 +40,7 @@
    </script>
    <body class='wst-page'>
        <div class='wst-tbar' style='text-align:right;height:25px;'>
-       <php>if(in_array('jsgl_01',$_SESSION['STAFF']['grant'])){</php>
+       <php>if(in_array('jsgl_01',$WST_STAFF['grant'])){</php>
        <button type="button" class="btn btn-success glyphicon glyphicon-plus" onclick='javascript:edit(0)' style='float:right'>新增</button>
        <php>}</php>
        </div>
@@ -59,10 +59,10 @@
                <td>{$i}</td>
                <td>{$vo['roleName']}</td>
                <td>
-               <php>if(in_array('jsgl_02',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('jsgl_02',$WST_STAFF['grant'])){</php>
                <button type="button" class="btn btn-default glyphicon glyphicon-pencil" onclick="javascript:edit({$vo['roleId']})"">修改</button>&nbsp;
                <php>}</php>
-               <php>if(in_array('jsgl_03',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('jsgl_03',$WST_STAFF['grant'])){</php>
                <button type="button" class="btn btn-default glyphicon glyphicon-trash" onclick="javascript:del({$vo['roleId']})"">刪除</button>
                <php>}</php>
                </td>

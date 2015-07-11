@@ -211,7 +211,7 @@
                </td>
                <td>
                <button type="button" class="btn btn-primary glyphicon" onclick='javascript:toView({$vo['goodsId']})'>查看</button> 
-               <php>if(in_array('splb_04',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('splb_04',$WST_STAFF['grant'])){</php>
                <button type="button" class="btn btn-danger glyphicon glyphicon-pencil" onclick="javascript:changeStatus({$vo['goodsId']},0)">禁售</button>&nbsp;
                <php>}</php>
                </td>

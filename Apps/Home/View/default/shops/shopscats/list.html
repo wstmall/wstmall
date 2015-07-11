@@ -7,20 +7,20 @@
    <div class='wst-tbar-group' style='text-align:left;'>
      <a href='javascript:toEditGoodsCat(0,0)'style='margin-right:15px;'><span class='add btn'></span>新增</a>
    </div>
-   <table class='wst-list'>
+   <table class='wst-list wst-form'>
    <thead>
    <tr>
      <th>名称</th>
      <th width='60'>排序号</th>
      <th width='80'>是否显示</th>
-     <th>操作</th>
+     <th width="150">操作</th>
    </tr>
    </thead>
    <volist name="List" id="vo" key='i'>
    <tr id='tr_0_{$i}' class="tr_0" isLoad='1'>
      <td>
      <span class='wst-tree-open' onclick='javascript:loadGoodsCatChildTree(this,{$vo.catId},"tr_0_{$i}")'>&nbsp;</span>
-     <input type='text' value='{$vo['catName']}' dataId="{$vo.catId}" onblur='javascript:editGoodsCatName(this)'/>
+     <input type='text' style='width:400px;height:22px;' value='{$vo['catName']}' dataId="{$vo.catId}" onblur='javascript:editGoodsCatName(this)'/>
      </td>
      <td>{$vo['catSort']}</td>
      <td>
@@ -41,7 +41,7 @@
 	  <tr id='tr_0_{$i}_{$i2}' class="tr_0_{$i}" isLoad='1'>
 	     <td>
 	     <span class="wst-tree-second">&nbsp;</span>
-	     <input type='text' value='{$vo2['catName']}' dataId="{$vo2.catId}" onblur='javascript:editGoodsCatName(this)'/>
+	     <input type='text' style='width:400px;height:22px;' value='{$vo2['catName']}' dataId="{$vo2.catId}" onblur='javascript:editGoodsCatName(this)'/>
 	     </td>
 	     <td>{$vo2['catSort']}</td>
 	     <td>

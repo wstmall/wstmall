@@ -35,24 +35,29 @@ $(function () {
 		$("#shopCompany").formValidator({onShow:"",onFocus:"请输入公司名称",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"门店关键字不能为空,请确认"});
 		$("#shopAddress").formValidator({onShow:"",onFocus:"请输入公司地址",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"公司地址不能为空,请确认"});
 		$("#bankNo").formValidator({onShow:"",onFocus:"请输入银行卡号",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"银行卡号不能为空,请确认"});
-		$("#deliveryFreeMoney").formValidator({onShow:"",onFocus:"请输入包邮起步价",onCorrect:"输入正确"}).inputValidator({min:1,max:4,onError:"包邮起步价不能为空,请确认"});
-		$("#deliveryMoney").formValidator({onShow:"",onFocus:"请输入邮费",onCorrect:"输入正确"}).inputValidator({min:1,max:4,onError:"邮费不能为空,请确认"});
-		$("#avgeCostMoney").formValidator({onShow:"",onFocus:"请输入平均消费金额",onCorrect:"输入正确"}).inputValidator({min:1,max:4,onError:"平均消费金额不能为空,请确认"});
+		$("#deliveryStartMoney").formValidator({onShow:"",onFocus:"请输入订单配送起步价",onCorrect:"输入正确"});
+		$("#deliveryFreeMoney").formValidator({onShow:"",onFocus:"请输入包邮起步价",onCorrect:"输入正确"});
+		$("#deliveryMoney").formValidator({onShow:"",onFocus:"请输入邮费",onCorrect:"输入正确"});
+		$("#deliveryCostTime").formValidator({onShow:"",onFocus:"请输入平均配送时间",onCorrect:"输入正确"});
+		$("#avgeCostMoney").formValidator({onShow:"",onFocus:"请输入平均消费金额",onCorrect:"输入正确"});
 		$("#shopImgUpload").uploadify({
 		    formData      : {'dir':'shops','width':0,'height':120},
 		    buttonText    : '选择图标',
 		    fileTypeDesc  : 'Image Files',
 	        fileTypeExts  : '*.gif; *.jpg; *.png',
 	        swf           : publicurl+'/plugins/uploadify/uploadify.swf',
-	        uploader      : rooturl+'/index.php/Home/shops/uploadPic',
+	        uploader      : domainURL +'/index.php/Home/shops/uploadPic',
 	        onUploadSuccess : function(file, data, response) {
 	        	var json = WST.toJson(data);
-	        	$('#preview').attr('src',rooturl+'/'+json.Filedata.savepath+json.Filedata.savethumbname).show();
+	        	$('#preview').attr('src',domainURL +'/'+json.Filedata.savepath+json.Filedata.savethumbname).show();
 	        	$('#shopImg').val(json.Filedata.savepath+json.Filedata.savename);
         }
 	    });
 		getCommunitysForShopEdit();
+		initTime('serviceStartTime','{$object['serviceStartTime']}');
+		initTime('serviceEndTime','{$object['serviceEndTime']}');
 });
+
 </script>
    <div class="wst-body"> 
        <div class='wst-page-header'>卖家中心 > 店铺资料</div>
@@ -62,24 +67,19 @@ $(function () {
         <input type='hidden' id='shopImg' value='{$object.shopImg}'/>
         <table class="table table-hover table-striped table-bordered wst-form">
            <tr>
-             <th width='130' align='right'>店铺名称<font color='red'>*</font>：</th>
+             <th width='150' align='right'>店铺名称<font color='red'>*</font>：</th>
              <td><input type='text' id='shopName' class="form-control wst-ipt" value='{$object.shopName}' style='width:250px;' maxLength='25'/></td>
            </tr>
            <tr>
-             <th width='120' align='right'>店主姓名<font color='red'>*</font>：</th>
+             <th align='right'>店主姓名<font color='red'>*</font>：</th>
              <td><input type='text' id='userName' class="form-control wst-ipt" value='{$object.userName}' style='width:250px;' maxLength='25'/></td>
            </tr>
            <tr>
-             <th width='120' align='right'>公司名称<font color='red'>*</font>：</th>
+             <th align='right'>公司名称<font color='red'>*</font>：</th>
              <td><input type='text' id='shopCompany' class="form-control wst-ipt" value='{$object.shopCompany}' style='width:250px;' maxLength='25'/></td>
            </tr>
-            <tr>
-             <th width='120' align='right'>公司名称<font color='red'>*</font>：</th>
-             <td><input type='text' id='shopCompany' class="form-control wst-ipt" value='{$object.shopCompany}' style='width:250px;' maxLength='25'/></td>
-           </tr>
-          
            <tr>
-             <th width='120' align='right'>店铺图标<font color='red'>*</font>：</th>
+             <th align='right'>店铺图标<font color='red'>*</font>：</th>
              <td>
              <div style="position:relative;">
              <input type='text' id='shopImgUpload' class="form-control wst-ipt"/>
@@ -91,11 +91,11 @@ $(function () {
            </tr>
            
            <tr>
-             <th width='120' align='right'>店铺电话：</th>
+             <th align='right'>店铺电话：</th>
              <td><input type='text' id='shopTel' class="form-control wst-ipt" value='{$object.shopTel}' maxLength='25'/></td>
            </tr>
            <tr>
-             <th width='120' align='right'>店铺地址<font color='red'>*</font>：</th>
+             <th align='right'>店铺地址<font color='red'>*</font>：</th>
              <td><input type='text' id='shopAddress' class="form-control wst-ipt" value='{$object.shopAddress}' style='width:350px;' maxLength='100'/></td>
            </tr>
            <tr>
@@ -110,23 +110,31 @@ $(function () {
              </td>
            </tr>
            <tr>
-             <th width='120' align='right'>配送区域<font color='red'>*</font>：</th>
+             <th align='right'>配送区域<font color='red'>*</font>：</th>
              <td>
              <div class="text-gray Hide">展开全部：<input type="checkbox" id="expendAll" checked></div>
              <div id='areaTree'></div>
              </td>
            </tr>
            <tr>
-             <th width='120' align='right'>包邮起步价<font color='red'>*</font>：</th>
-             <td><input type='text' id='deliveryFreeMoney' class="form-control wst-ipt" value='{$object.deliveryFreeMoney}' maxLength='25'/></td>
+             <th align='right'>订单配送起步价(元)<font color='red'>*</font>：</th>
+             <td><input type='text' id='deliveryStartMoney' class="form-control wst-ipt" value='{$object.deliveryStartMoney}' onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='6'/></td>
            </tr>
            <tr>
-             <th width='120' align='right'>邮费<font color='red'>*</font>：</th>
-             <td><input type='text' id='deliveryMoney' class="form-control wst-ipt" value='{$object.deliveryMoney}' maxLength='25'/></td>
+             <th align='right'>包邮起步价(元)<font color='red'>*</font>：</th>
+             <td><input type='text' id='deliveryFreeMoney' class="form-control wst-ipt" value='{$object.deliveryFreeMoney}' onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='6'/></td>
            </tr>
            <tr>
-             <th width='120' align='right'>平均消费金额<font color='red'>*</font>：</th>
-             <td><input type='text' id='avgeCostMoney' class="form-control wst-ipt" value='{$object.avgeCostMoney}' maxLength='25'/></td>
+             <th align='right'>邮费(元)<font color='red'>*</font>：</th>
+             <td><input type='text' id='deliveryMoney' class="form-control wst-ipt" value='{$object.deliveryMoney}' onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='25'/></td>
+           </tr>
+           <tr>
+             <th align='right'>平均配送时间(分钟)<font color='red'>*</font>：</th>
+             <td><input type='text' id='deliveryCostTime' class="form-control wst-ipt" value='{$object.deliveryCostTime}' onkeypress="return WST.isNumberKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='6'/></td>
+           </tr>
+           <tr>
+             <th align='right'>平均消费金额(元)<font color='red'>*</font>：</th>
+             <td><input type='text' id='avgeCostMoney' class="form-control wst-ipt" value='{$object.avgeCostMoney}' onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='25'/></td>
            </tr>
            <tr>
              <th align='right'>能否开发票<font color='red'>*</font>：</th>
@@ -140,14 +148,19 @@ $(function () {
              </td>
            </tr>
            <tr>
-             <th width='120' align='right'>发票说明<font color='red'>*</font>：</th>
+             <th align='right'>发票说明<font color='red'>*</font>：</th>
              <td><input type='text' id='invoiceRemarks' class="form-control wst-ipt" value='{$object.invoiceRemarks}' style='width:350px;' maxLength='100'/></td>
            </tr>
            <tr>
-             <th width='120' align='right'>营业时间<font color='red'>*</font>：</th>
+             <th align='right'>营业时间<font color='red'>*</font>：</th>
              <td>
-             <input type='text' id='serviceStartTime' class="form-control wst-ipt" value='{$object.serviceStartTime}' maxLength='25'/>
-             <input type='text' id='serviceEndTime' class="form-control wst-ipt" value='{$object.serviceEndTime}' maxLength='25'/>
+             <select id='serviceStartTime'>
+                <option>请选择</option>
+             </select>
+             至
+             <select id='serviceEndTime'>
+                <option>请选择</option>
+             </select>
              </td>
            </tr>
            <tr>

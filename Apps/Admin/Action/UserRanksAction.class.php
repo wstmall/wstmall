@@ -63,7 +63,7 @@ class UserRanksAction extends BaseAction{
     	$pager = new \Think\Page($page['total'],$page['pageSize']);
     	$page['pager'] = $pager->show();
     	$this->assign('Page',$page);
-        $this->display("userranks/list");
+        $this->display("/userranks/list");
 	}
 	/**
 	 * 列表查询

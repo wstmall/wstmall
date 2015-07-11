@@ -977,7 +977,7 @@ body {
     height: 15px;
     width: 15px;
 }
-.navCon-menu li:hover s1{
+.navCon-menu li:hover s1, #curs1{
     background-image: url("../../../View/default/images/icon_menu_01_hover.png");
     display: inline-block;
     height: 15px;
@@ -992,7 +992,7 @@ body {
     width: 15px;
     background-size:100% 100%;
 }
-.navCon-menu li:hover s2{
+.navCon-menu li:hover s2, #curs2{
     background-image: url("../../../View/default/images/icon_menu_02_hover.png");
     display: inline-block;
     height: 15px;
@@ -1007,7 +1007,7 @@ body {
     width: 13px;
     background-size:100% 100%;
 }
-.navCon-menu li:hover s3{
+.navCon-menu li:hover s3, #curs3{
     background-image: url("../../../View/default/images/icon_menu_03_hover.png");
     display: inline-block;
     height: 15px;
@@ -1022,7 +1022,7 @@ body {
     width: 11px;
     background-size:100% 100%;
 }
-.navCon-menu li:hover s4{
+.navCon-menu li:hover s4, #curs4{
     background-image: url("../../../View/default/images/icon_menu_04_hover.png");
     display: inline-block;
     height: 15px;

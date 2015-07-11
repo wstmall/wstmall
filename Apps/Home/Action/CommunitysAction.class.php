@@ -19,7 +19,7 @@ class CommunitysAction extends BaseAction{
    		$areaId2 = $common->getCity();
 		$obj["areaId2"] =$areaId2; 
 		$obj["areaId3"] =I('areaId'); 
-		$list = $m->queryByList($obj);
+		$list = $m->getByDistrict($obj);
 		$rs = array();
 		$rs['status'] = 1;
 		$rs['list'] = $list;
@@ -29,10 +29,10 @@ class CommunitysAction extends BaseAction{
 	/**
 	 * 通过县区获取社区列表
 	 */
-	public function queryByListByArea(){
+	public function getByDistrict(){
 		$this->isLogin();
 		$m = D('Home/Communitys');
-		$list = $m->queryByListByArea(I('areaId'));
+		$list = $m->getByDistrict((int)I('areaId3'));
 		$rs = array();
 		$rs['status'] = 1;
 		$rs['list'] = $list;

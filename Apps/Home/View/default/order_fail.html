@@ -27,13 +27,11 @@
                         <div style="float: left; width: 400px; text-align: left;">
                             
                         </div>
-                        <div style="float: right; width: 590px; height: 40px; text-align: right; position: relative;">
-                            
+                        <div class="wst-ods-step">
                             <img src="__ROOT__/Apps/Home/View/default/images/step2.png" alt="" /><br />
-                           
-                            <span style="position: absolute; top: 30px; left: 150px;">1.我的购物车</span>
-                            <span style="position: absolute; top: 30px; left: 290px;color: #7ABD54;">2.填写核对订单信息</span>
-                            <span style="position: absolute; top: 30px; left: 465px;">3.成功提交订单</span>
+                            <span class="wst-ods-step1">1.我的购物车</span>
+                            <span class="wst-ods-step2">2.填写核对订单信息</span>
+                            <span class="wst-ods-step3">3.成功提交订单</span>
                         </div>
                         <div style="clear: both;"></div>
                     </div>
@@ -41,16 +39,16 @@
                 </div>
             </div>
 
-			<div style="margin: 0 auto; margin-top:10px;margin-bottom :10px;">
-					<div style="border: 1px solid #E9E9E9;border-top:2px solid  #7ABD54;background-color:#F3FDED;padding:15px;">
-						<div style="width: 30px;float: left;text-align: right;padding-top: 5px;">
+			<div class="wst-ods-cntbox">
+					<div class="wst-ods-sub-box">
+						<div class="wst-ods-tp-box">
 							<if condition="count($orderInfos) gt 0">
 							<img src="__ROOT__/Apps/Home/View/default/images/icon-succ.png" alt="" />
 							</if>
 						</div>
-						<div style="width: 1200px;float: left;padding-left: 10px;">
+						<div class="wst-ods-ep-box">
 							<div style="line-height: 25px;">				
-	   							<div style="font-weight:bold;font-size: 16px;color:red;text-align:center;">{$fail_msg}</div>
+	   							<div class="wst-ods-sub-msg">{$fail_msg}</div>
 	   						</div>							
 						</div>
 						<div style="clear: both;"></div>

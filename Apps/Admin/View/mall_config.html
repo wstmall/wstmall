@@ -16,16 +16,23 @@
       <script src="__PUBLIC__/js/common.js"></script>
       <script src="__PUBLIC__/plugins/plugins/plugins.js"></script>
       <script>
+      $(function(){
+    	  $('#myTab a').click(function (e) {
+    		  e.preventDefault();
+    		  $(this).tab('show');
+    	  })
+      })
       function save(){
     		var params = {};
     		<php>
-    		foreach($configs[0] as $key =>$vo){
+    		foreach($configs as $key =>$cf){
+    		foreach($cf as $key =>$vo){
     			if($vo['fieldType']=='radio'){
     	    </php>
     			params.{$vo['fieldCode']} = $("input:radio[name='{$vo['fieldCode']}']:checked").val();
     		<php>}else{</php>
     			params.{$vo['fieldCode']} = $('#{$vo['fieldCode']}').val();
-    		<php>}}</php>
+    		<php>}}}</php>
     		Plugins.waitTips({title:'信息提示',content:'正在提交数据，请稍后...'});
     		$.post("__ROOT__/index.php/Admin/index/saveMallConfig",params,function(data,textStatus){
     			var json = WST.toJson(data);
@@ -42,10 +49,12 @@
    <body>
       <ul id="myTab" class="nav nav-tabs wst-tab" role="tablist">
 	      <li class="active"><a href="#tabc0" role="tab" data-toggle="tab">商城设置</a></li>
+	      <li><a href="#tabc1" role="tab" data-toggle="tab">邮件设置</a></li>
+	      <li><a href="#tabc2" role="tab" data-toggle="tab">短信设置</a></li>
 	  </ul>
-      <div class='wst-tab-content'>
+      <div class='tab-content wst-tab-content'>
           <foreach name="configs"  item="vo" key="k">
-          <div class='tab-pane <if condition="$k eq 0">active</if> wst-tab-pane' id='tabc{$k}'>
+          <div class='tab-pane <if condition="$k eq 0">active in</if> fade wst-tab-pane' id='tabc{$k}'>
             <form class="form-horizontal" role="form">
                <table class='table table-hover table-striped table-bordered wst-form'>
                <foreach name="vo"  item="v" key="key">

@@ -8,6 +8,7 @@ dl.areaSelect{display: inline-block; width:100%; margin-bottom: 0;/*border:1px s
 dl.areaSelect:hover{border:1px solid #E5CD29;}
 dl.areaSelect:hover dd{display: block;}
 dl.areaSelect dd{float: left;cursor: pointer;}
+.layui-layer-btn a{background:#e23c3d;}
 </style>
 <link rel="stylesheet" href="__PUBLIC__/plugins/uploadify/uploadify.css">
 <script src="__PUBLIC__/plugins/uploadify/jquery.uploadify.min.js"></script>
@@ -16,6 +17,7 @@ dl.areaSelect dd{float: left;cursor: pointer;}
    <script>
    var relateCommunity = "{$object['relateCommunity']}".split(',');
    var relateArea = "{$object['relateArea']}".split(',');
+   var userProtocolUrl = "{:U('Home/Index/toUserProtocol')}";
    </script>
    <div class="wst-body"> 
        <div class='wst-page-header'>买家中心 > 我要开店</div>
@@ -30,7 +32,7 @@ dl.areaSelect dd{float: left;cursor: pointer;}
            </tr>
            <tr>
              <th width='120' align='right'>店主姓名<font color='red'>*</font>：</th>
-             <td><input type='text' id='userName' class="form-control wst-ipt" style='width:250px;' maxLength='25' value='{$Think.session.USER.userName}'/></td>
+             <td><input type='text' id='userName' class="form-control wst-ipt" style='width:250px;' maxLength='25' value='{$WST_USER.userName}'/></td>
            </tr>
            <tr>
              <th width='120' align='right'>公司名称<font color='red'>*</font>：</th>
@@ -154,7 +156,7 @@ dl.areaSelect dd{float: left;cursor: pointer;}
              <td>
              <label>
 	           <input class="checkbox" id="protocol" name="protocol" type="checkbox"/>
-	                                 我已阅读并同意</label><a href="javascript:;" class="blue" id="protocolInfo" onclick="showXiey();">《WST店铺注册协议》</a>                       
+	                                 我已阅读并同意</label><a href="javascript:;" class="blue" id="protocolInfo" onclick="showXiey();">《店铺注册协议》</a>                       
 	         <label id="protocol_error" class="error hide">请接受服务条款</label>
              </td>
            </tr>

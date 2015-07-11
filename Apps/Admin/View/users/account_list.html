@@ -96,7 +96,7 @@
 					  <span class="caret"></span>
 				   </button>
                </if>
-               <php>if(in_array('hyzh_04',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('hyzh_04',$WST_STAFF['grant'])){</php>
                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
 					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:toggleStatus(1,{$vo['userId']})">启用</a></li>
 					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:toggleStatus(0,{$vo['userId']})">停用</a></li>
@@ -105,7 +105,7 @@
                </div>
                </td>
                <td>
-               <php>if(in_array('hyzh_04',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('hyzh_04',$WST_STAFF['grant'])){</php>
                <button type="button" class="btn btn-default glyphicon glyphicon-pencil" onclick="javascript:toEdit({$vo['userId']})"">修改</button>&nbsp;
                <php>}</php>
                </td>

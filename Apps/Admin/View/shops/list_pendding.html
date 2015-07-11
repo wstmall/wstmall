@@ -129,10 +129,10 @@
                <if condition="$vo['shopStatus'] eq 1"><span class='label label-success wst-label'>已审核</span>  </if>
                </td>
                <td>
-               <php>if(in_array('dplb_02',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('dplb_02',$WST_STAFF['grant'])){</php>
                <button type="button" class="btn btn-default glyphicon glyphicon-pencil" onclick="javascript:edit({$vo['shopId']})">修改</button>&nbsp;
                <php>}</php>
-               <php>if(in_array('dplb_03',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('dplb_03',$WST_STAFF['grant'])){</php>
                <button type="button" class="btn btn-default glyphicon glyphicon-trash" onclick="javascript:del({$vo['shopId']})">刪除</buttona>
                <php>}</php>
                </td>

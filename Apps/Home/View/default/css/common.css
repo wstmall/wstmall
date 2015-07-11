@@ -176,8 +176,9 @@ a:hover {
 #wst-shortcut .fl .fore1  {
 	padding-left: 16px;
 	z-index: 1;
+	padding-left:25px;
+	border-left:1px solid #e4e4e4;border-right:1px solid #e4e4e4;
 }
-
 #wst-shortcut .fl b {
 	top: 8px;
 	left: 6px;
@@ -227,7 +228,7 @@ a:hover {
 #wst-shortcut .dd {
 	display: none
 }
-
+#wst-shortcut .wst-city{color:#e23c3d;font-weight:bold;}
 #wst-shortcut .hover .outline,#wst-shortcut .hover .dd {
 	position: absolute;
 	border: 1px solid #DDD;
@@ -485,8 +486,8 @@ a:hover {
 }
 
 .wst-nvg-title {
-	height: 36px;
-	line-height: 36px;
+	line-height: 30px;
+    margin: 0 0 5px;
 	font-weight: bolder;
 }
 
@@ -535,6 +536,18 @@ a:hover {
 	height: 36px;
 	float: right;
 	cursor: pointer
+}
+
+
+
+#wst-topay li:hover {
+	float: right;
+	height: 36px;
+	width: 135px;
+	background: url(../../../View/default/images/btn-check.jpg) 0px -36px;
+	background-repeat: no-repeat;
+	top:-36px;
+	cursor: pointer;
 }
 
 #wst-topay li:hover {
@@ -957,16 +970,57 @@ b, strong {
 #wst-searchbox{
 	height:36px;border:2px solid #e23c3d;position:relative;margin-top:60px;margin-left:20px;
 }
+#wst-search-type-box{position:absolute;top:30px;left:20px;}
 #wst-search-type{position:absolute;top:30px;left:20px;}
-#wst-search-container{float:left;width:670px;height:120px;position:relative;}
+#wst-search-container{float:left;width:670px;position:relative;}
 .wst-search-button{position:absolute;top:0px;right:0px;width:80px;height:36px;color:#ffffff;font-weight:bolder;background-color:#e23c3d;line-height:36px;text-align:center;font-size:15px;cursor:pointer;}
 #wst-search-des-container{float:left;width:280px;height:60px;}
 #wst-search-des-container .des-box{width:280px;height:36px;position:relative;margin-top:50px;padding-left:25px;}
-#wst-search-pbox{height:132px;width:1210px;margin:0 auto;text-align:left;}
-
+#wst-search-pbox{width:1210px;margin:0 auto;text-align:left;}
+.wst-reach{position:relative;float:left;width:130px;margin-left:10px;}
+.wst-since{position:relative;float:left;width:120px;margin-left:20px;}
 .wst-align-center{text-align: center;}
 .wst-align-left{text-align: left;}
 .wst-align-right{text-align: right;}
+.wst-nvg-cart-cost{line-height:36px;padding-left:56px;margin-top:8px;}
+.wst-nvg-cart-goods{line-height:100px;text-align:center;font-size:18px;}
+.wst-article-menu{width: 210px;float: left;border: 1px solid #40CCF5;}
+.wst-article-menu .item{background-color: #F7F7F7;height: 30px;line-height: 30px;padding-left: 14px;}
+.wst-article-menu .sub-item{border-bottom : 1px dotted #B9E8F9;height: 28px;line-height: 28px;padding-left: 14px;}
+.wst-article-main{width: 975px;float: right;border: 1px solid #40CCF5;padding: 4px;}
+.wst-article-main .title{padding-left:4px;font-size: 15px;font-weight: bold;line-height: 30px;background-color:#F7F7F7}
+.wst-article-main .content{padding-left:4}
 
 
-/************************************************************************************/
+/*************************************footer***********************************************/
+.wst-footer-fl-box{text-align:center;margin-top:20px;}
+.wst-footer-cld-box{border:2px solid #D5D5D5;height:auto;line-height:30px;text-align:left;}
+.wst-footer-fl{font-weight:bolder;padding-left:30px;}
+.wst-footer-hp-box{background-color:#F7F7F7;text-align:center;margin-top:20px;}
+.wst-footer-hp-ck1{line-height:30px;text-align:left;}
+.wst-footer-hp-ck2{border:2px solid #D5D5D5;height:50px;line-height:50px;margin-top:20px;background-color:#ffffff;}
+.wst-footer-hp-ck3{margin-top:20px;height:80px;}
+
+.wst-footer-frd{color:#e23e3d;font-weight:bolder;font-size:18px;}
+.wst-footer-pno{color:red;font-weight:bolder;font-size:18px;}
+.wst-footer-wz-ca{float:left;width:200px;height:180px;}
+.wst-footer-wz-pt{padding-top:5px;line-height:25px;}
+.wst-footer-wz-pn{font-weight:bolder;margin-left:10px;}
+.wst-footer-wz-clt{float:left;width:160px;height:180px;margin-left:6px;}
+.wst-footer-wz-kf{font-weight:bolder;margin-left:10px;}
+.wst-footer-wz-ent{color:green;font-size:16px;}
+.wst-user-top{height:132px;text-align:center;}
+.wst-user-top-main{height:132px;width:1210px;margin:0 auto;text-align:left;}
+.wst-user-top-logo{float:left;width:240px;height:132px;}
+.wst-user-top-search{float:right;width:600px;height:120px;}
+.wst-user-top-search .search-box{height:36px;border:2px solid #e23c3d;position:relative;margin-top:60px;margin-left:20px;}
+.wst-search-ipt{border:0;width:493px;background: 0 0;padding-left:10px;line-height: 22px;padding-top: 8px; padding-bottom: 4px;font-size:15px;}
+.wst-search-btn{position:absolute;top:0px;right:0px;width:80px;height:36px;color:#ffffff;font-weight:bolder;background-color:#e23c3d;line-height:36px;text-align:center;font-size:15px;cursor:pointer;}
+
+
+
+
+
+
+
+

@@ -8,51 +8,37 @@ namespace Home\Action;
  * ============================================================================
  * 商品控制器
  */
-use Think\Controller;
 class GoodsAction extends BaseAction {
 	/**
 	 * 商品列表
-	 * 
 	 */
     public function getGoodsList(){
+    	self::getBaseInfo();
    		$mgoods = D('Home/Goods');
    		$mareas = D('Home/Areas');
    		$mcommunitys = D('Home/Communitys');
    		$mcommon = D('Home/Common');
-   		
+   		//获取默认城市及县区
    		$areaId2 = $this->getDefaultCity();
    		$districts = $mareas->getDistricts($areaId2);
+   		//获取社区
+   		$areaId3 = (int)I("areaId3");
+   		$communitys = array();
+   		if($areaId3>0){
+   		    $communitys = $mcommunitys->getByDistrict($areaId3);
+   		}
+        $this->assign('communitys',$communitys);
+   		
+   		//获取商品列表
    		$obj["areaId2"] = $areaId2;
-        $obj["areaId3"] = I("areaId3",0);
-   		$communitys = $mcommunitys->queryByList($obj);
-
-   		$this->assign('c1Id',I("c1Id"));
-   		$this->assign('c2Id',I("c2Id"));
-   		$this->assign('c3Id',I("c3Id"));
-   		
-   		$this->assign('msort',I("msort",0));
-		$this->assign('sj',I("sj",0));
-		$this->assign('stime',I("stime"));//上架开始时间
-		$this->assign('etime',I("etime"));//上架结束时间
-   		
-   		$this->assign('areaId3',I("areaId3",0));
-   		$this->assign('communityId',I("communityId",0));
-   		
-   		$pricelist = explode("_",I("prices"));
-   		$this->assign('sprice',$pricelist[0]);
-   		$this->assign('eprice',$pricelist[1]);
-   		
-   		$this->assign('brandId',I("brandId",0));
-   		$this->assign('keyWords',I("keyWords"));
-   		
-   		
+        $obj["areaId3"] = $areaId3;
    		$rslist = $mgoods->getGoodsList($obj);
 		$brands = $rslist["brands"];
 		$pages = $rslist["pages"];
-		
+		$goodsNav = $rslist["goodsNav"];
+		$this->assign('goodsList',$rslist);
 		//动态划分价格区间
 		$maxPrice = $mgoods->getMaxPrice($obj);
-		
 		$minPrice = 0;
 		$pavg5 = ($maxPrice/5);
 		$prices = array();
@@ -77,17 +63,31 @@ class GoodsAction extends BaseAction {
 			$prices["300_400"] = "300-400";
 			$prices["400_500"] = "400-500";
 		}
-
+        $this->assign('c1Id',I("c1Id"));
+   		$this->assign('c2Id',I("c2Id"));
+   		$this->assign('c3Id',I("c3Id"));
+   		$this->assign('bs',I("bs",0));
+   		$this->assign('msort',I("msort",0));
+		$this->assign('sj',I("sj",0));
+		$this->assign('stime',I("stime"));//上架开始时间
+		$this->assign('etime',I("etime"));//上架结束时间
+   		
+   		$this->assign('areaId3',I("areaId3",0));
+   		$this->assign('communityId',I("communityId",0));
+   		
+   		$pricelist = explode("_",I("prices"));
+   		$this->assign('sprice',$pricelist[0]);
+   		$this->assign('eprice',$pricelist[1]);
+   		
+   		$this->assign('brandId',I("brandId",0));
+   		$this->assign('keyWords',I("keyWords"));
 		$this->assign('brands',$brands);
+		$this->assign('goodsNav',$goodsNav);
 		$this->assign('pages',$pages);
 		$this->assign('prices',$prices);
 		$priceId = $prices[I("prices")];
 		$this->assign('priceId',(strlen($priceId)>1)?I("prices"):'');
-		
    		$this->assign('districts',$districts);
-   		$this->assign('communitys',$communitys);
-   		
-   		$this->assign('goodsList',$rslist);
    		$this->display('default/goods_list');
     }
     
@@ -97,6 +97,7 @@ class GoodsAction extends BaseAction {
 	 * 
 	 */
 	public function getGoodsDetails(){
+		self::getBaseInfo();
 		$goods = D('Home/Goods');
 		$kcode = I("kcode");
 		$scrictCode = base64_encode(md5("wstmall".date("Y-m-d")));
@@ -115,6 +116,10 @@ class GoodsAction extends BaseAction {
 			if($goodsDetails["shopAtive"]==0){
 				$shopServiceStatus = 0;
 			}
+			$goodsDetails["serviceEndTime"] = str_replace('.5',':30',$goodsDetails["serviceEndTime"]);
+			$goodsDetails["serviceEndTime"] = str_replace('.0',':00',$goodsDetails["serviceEndTime"]);
+			$goodsDetails["serviceStartTime"] = str_replace('.5',':30',$goodsDetails["serviceStartTime"]);
+			$goodsDetails["serviceStartTime"] = str_replace('.0',':00',$goodsDetails["serviceStartTime"]);
 			$goodsDetails["shopServiceStatus"] = $shopServiceStatus;
 			$goodsDetails['goodsDesc'] = htmlspecialchars_decode($goodsDetails['goodsDesc']);
 			$this->assign("goodsDetails",$goodsDetails);
@@ -128,7 +133,7 @@ class GoodsAction extends BaseAction {
 			$shopScores = $shops->getShopScores($obj);
 			$this->assign("shopScores",$shopScores);
 			
-			$shopCity = $areas->getShopCity($obj);
+			$shopCity = $areas->getDistrictsByShop($obj);
 			$this->assign("shopCity",$shopCity[0]);
 			
 			$shopCommunitys = $areas->getShopCommunitys($obj);
@@ -142,6 +147,8 @@ class GoodsAction extends BaseAction {
 			
 			$relatedGoods = $goods->getRelatedGoods($goodsId);
 			$this->assign("relatedGoods",$relatedGoods);
+			$goodsNav = $goods->getGoodsNav();
+			$this->assign("goodsNav",$goodsNav);
 			
 			$this->display('default/goods_details');
 		}else{
@@ -178,11 +185,12 @@ class GoodsAction extends BaseAction {
 	*/
 	public function queryOnSaleByPage(){
 		$this->isShopLogin();
+		$USER = session('WST_USER');
 		//获取商家商品分类
 		$m = D('Home/ShopsCats');
-		$this->assign('shopCatsList',$m->queryByList($_SESSION['USER']['shopId'],0));
+		$this->assign('shopCatsList',$m->queryByList($USER['shopId'],0));
 		$m = D('Home/Goods');
-    	$page = $m->queryOnSaleByPage($_SESSION['USER']['shopId']);
+    	$page = $m->queryOnSaleByPage($USER['shopId']);
     	$pager = new \Think\Page($page['total'],$page['pageSize']);
     	$page['pager'] = $pager->show();
     	$this->assign('Page',$page);
@@ -199,9 +207,9 @@ class GoodsAction extends BaseAction {
 		$this->isShopLogin();
 		//获取商家商品分类
 		$m = D('Home/ShopsCats');
-		$this->assign('shopCatsList',$m->queryByList($_SESSION['USER']['shopId'],0));
+		$this->assign('shopCatsList',$m->queryByList($USER['shopId'],0));
 		$m = D('Home/Goods');
-    	$page = $m->queryUnSaleByPage($_SESSION['USER']['shopId']);
+    	$page = $m->queryUnSaleByPage($USER['shopId']);
     	$pager = new \Think\Page($page['total'],$page['pageSize']);
     	$page['pager'] = $pager->show();
     	$this->assign('Page',$page);
@@ -218,10 +226,10 @@ class GoodsAction extends BaseAction {
 		$this->isShopLogin();
 		//获取商家商品分类
 		$m = D('Home/ShopsCats');
-		$this->assign('shopCatsList',$m->queryByList($_SESSION['USER']['shopId'],0));
+		$this->assign('shopCatsList',$m->queryByList($USER['shopId'],0));
 		$m = D('Home/Goods');
 		$m = D('Home/Goods');
-    	$page = $m->queryPenddingByPage($_SESSION['USER']['shopId']);
+    	$page = $m->queryPenddingByPage($USER['shopId']);
     	$pager = new \Think\Page($page['total'],$page['pageSize']);
     	$page['pager'] = $pager->show();
     	$this->assign('Page',$page);
@@ -236,15 +244,13 @@ class GoodsAction extends BaseAction {
 	 */
     public function toEdit(){
 		$this->isShopLogin();
-		//获取品牌信息
-		$m = D('Home/Brands');
-		$this->assign('brandList',$m->queryByList());
+		$USER = session('WST_USER');
 		//获取商品分类信息
 		$m = D('Home/GoodsCats');
 		$this->assign('goodsCatsList',$m->queryByList());
 		//获取商家商品分类
 		$m = D('Home/ShopsCats');
-		$this->assign('shopCatsList',$m->queryByList($_SESSION['USER']['shopId'],0));
+		$this->assign('shopCatsList',$m->queryByList($USER['shopId'],0));
 		$m = D('Home/Goods');
 		$object = array();
 		
@@ -314,7 +320,7 @@ class GoodsAction extends BaseAction {
 		
 		$m = D('Home/Goods');
 		$totalMoney = 0;
-		$shopcart = $_SESSION["mycart"]?$_SESSION["mycart"]:array();	
+		$shopcart = session("WST_CART")?session("WST_CART"):array();	
 		
 		$catgoods = array();		
 		foreach($shopcart as $key=>$cgoods){				
@@ -349,6 +355,7 @@ class GoodsAction extends BaseAction {
 		$data["verifyCode"] = $verifyCode;
 		$this->ajaxReturn($data);
 	}
+	
 	
 
 	

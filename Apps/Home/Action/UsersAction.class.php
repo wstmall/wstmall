@@ -8,7 +8,6 @@ namespace Home\Action;
  * ============================================================================
  * 会员控制器
  */
-use Think\Controller;
 class UsersAction extends BaseAction {
     /**
      * 跳去登录界面
@@ -16,7 +15,8 @@ class UsersAction extends BaseAction {
      */
 	public function login(){
 		//如果已经登录了则直接跳去后台
-		if(!empty($_SESSION['USER'])){
+		$USER = session('WST_USER');
+		if(!empty($USER)){
 			$this->redirect("Users/index");
 		}
 		if(isset($_COOKIE["loginName"])){
@@ -36,10 +36,8 @@ class UsersAction extends BaseAction {
 	 * 用户退出
 	 */
 	public function logout(){
-		unset($_SESSION['userName']);
-		unset($_SESSION['USER']);
-		unset($_SESSION['userId']);
-		unset($_SESSION['mycart']);
+		session('WST_USER',null);
+		session("WST_CART",null);
 		echo "1";
 	}
 	
@@ -70,8 +68,7 @@ class UsersAction extends BaseAction {
 			$res = $m->checkLogin();
 			if (!empty($res)){
 				if($res['userFlag'] == 1){
-					$_SESSION['USER'] = $res;
-					$_SESSION['USER']['loginType'] = 0;//会员身份登录
+					session('WST_USER',$res);
 					unset($_SESSION['toref']);
 					if(strripos($_SESSION['refer'],"regist")>0 || strripos($_SESSION['refer'],"logout")>0 || strripos($_SESSION['refer'],"login")>0){
 						$rs["refer"]= __ROOT__;
@@ -103,7 +100,7 @@ class UsersAction extends BaseAction {
 			if($res['userId']>0){//注册成功			
 				//加载用户信息				
 				$user = $m->get($res['userId']);
-				$_SESSION['USER'] = $user;
+				if(!empty($user))session('WST_USER',$user);
 				
 			}
 		}
@@ -125,8 +122,8 @@ class UsersAction extends BaseAction {
 	public function getPhoneVerifyCode(){
 		$userPhone = I("userPhone");
 		$rs = array();
-		if(!preg_match("/^1[345678][0-9]{9}$/",$userPhone)){
-			$rs["status"] = -1;
+		if(!preg_match("#^13[\d]{9}$|^14[5,7]{1}\d{8}$|^15[^4]{1}\d{8}$|^17[0,6,7,8]{1}\d{8}$|^18[\d]{9}$#",$userPhone)){
+			$rs["status"] = -4;
 			echo json_encode($rs);
 			exit();
 		}
@@ -137,11 +134,14 @@ class UsersAction extends BaseAction {
 			exit();
 		}
 		$code = rand(100000,999999);
-	
-
-		$_SESSION['VerifyCode_userPhone'] = $code;
-		$_SESSION['VerifyCode_userPhone_Time'] = time();
-		$rs["phoneVerifyCode"] = $code;
+		$msg = "欢迎您注册成为".$GLOBALS['CONFIG']['shopTitle']['fieldValue']."会员，您的注册验证码为:".$phoneVerify."，请在30分钟内输入。【".$GLOBALS['CONFIG']['shopTitle']['fieldValue']."】";
+		$rv = D('Home/LogSms')->sendSMS(0,$userPhone,$msg,'getPhoneVerifyByRegister',$code);
+		$rs['status']=$rv['status'];
+		if($rs['status']==1){
+			session('VerifyCode_userPhone',$code);
+			session('VerifyCode_userPhone_Time',time());
+			$rs["phoneVerifyCode"] = $code;
+		}
 		echo json_encode($rs);
 	}
    /**
@@ -149,7 +149,7 @@ class UsersAction extends BaseAction {
     */
 	public function index(){
 		$this->isUserLogin();
-		$this->display("default/users/index");
+		$this->redirect("Orders/queryByPage");
 	}
 	
    /**
@@ -166,8 +166,9 @@ class UsersAction extends BaseAction {
 	 */
 	public function editPass(){
 		$this->isAjaxLogin();
+		$USER = session('WST_USER');
 		$m = D('Home/Users');
-   		$rs = $m->editPass($_SESSION['USER']['userId']);
+   		$rs = $m->editPass($USER['userId']);
     	$this->ajaxReturn($rs);
 	}
 	/**
@@ -176,7 +177,7 @@ class UsersAction extends BaseAction {
 	public function toEdit(){
 		$this->isLogin();
 		$m = D('Home/Users');
-		$obj["userId"] = $_SESSION['USER']['userId'];
+		$obj["userId"] = session('WST_USER.userId');
 		$user = $m->getUserById($obj);
 	
 		$this->assign("user",$user);
@@ -190,7 +191,7 @@ class UsersAction extends BaseAction {
 	public function editUser(){
 		$this->isLogin();
 		$m = D('Home/Users');
-		$obj["userId"] = $_SESSION['USER']['userId'];
+		$obj["userId"] = session('WST_USER.userId');
 		$data = $m->editUser($obj);
 		
 		$this->ajaxReturn($data);
@@ -201,7 +202,9 @@ class UsersAction extends BaseAction {
 	 */
 	public function checkLoginKey(){
 		$m = D('Home/Users');
-		$rs = $m->checkLoginKey2();
+		$key = I('clientid');
+		$userId = (int)session('WST_USER.userId');
+		$rs = $m->checkLoginKey(I($key),$userId);
 		$this->ajaxReturn($rs);
 	}
 	/**
@@ -209,7 +212,7 @@ class UsersAction extends BaseAction {
 	 */
     public function forgetPass(){
     	session('step',1);
-    	$this->display('default/forgetPass');
+    	$this->display('default/forget_pass');
     }
     
     /**
@@ -229,38 +232,36 @@ class UsersAction extends BaseAction {
     			$m = D('Home/Users');
     			$info = $m->checkAndGetLoginInfo($loginName);
     			if ($info != false) {
+    				session('findPass',array('userId'=>$info['userId'],'loginName'=>$loginName,'userPhone'=>$info['userPhone'],'userEmail'=>$info['userEmail'],'loginSecret'=>$info['loginSecret']) );
+    				if($info['userPhone']!='')$info['userPhone'] = WSTStrReplace($info['userPhone'],'*',3);
+    				if($info['userEmail']!='')$info['userEmail'] = WSTStrReplace($info['userEmail'],'*',2,'@');
     				$this->assign('forgetInfo',$info);
-    				session('findPass',array('loginName'=>$loginName,'userPhone'=>$info['userPhone'],'userEmail'=>$info['userEmail'],'loginSecret'=>$info['loginSecret']) );
-    				$this->display('default/forgetPass2');
+    				$this->display('default/forget_pass2');
     			}else $this->error('该用户不存在！');
     			break;
     		case 2:#第三步,设置新密码
     			if (session('findPass.loginName') != null ){
-                    if (session('findPass.userPhone')==null) {
-                        $this->error('你没有预留手机号码，请通过邮箱方式找回密码！');
+                    if (session('findPass.userEmail')==null) {
+                        $this->error('你没有预留邮箱，请通过手机号码找回密码！');
                     }
-                    if ( session('findPass.phoneVerify') == I('phoneVerify') || I('phoneVerify') =='666666' ) {
-    				    $this->display('default/forgetPass3');
-                    }else $this->error('手机验证码错误');
+                    if ( session('findPass.userPhone') == null) {
+    				    $this->error('你没有预留手机号码，请通过邮箱方式找回密码！');
+                    }
     			}else $this->error('页面过期！');
     			break;
     		case 3:#设置成功
+    			$resetPass = session('REST_success');
+    			if($resetPass!='1')$this->error("非法的操作!");
                 $loginPwd = I('loginPwd');
                 $repassword = I('repassword');
                 if ($loginPwd == $repassword) {
-                    $map = array();
-                    $map['loginName'] = session('findPass.loginName');
-                    $map['userPhone'] = session('findPass.userPhone');
-                    $map['userEmail'] = session('findPass.userEmail');
-                    $loginSecret = session('findPass.loginSecret');
-                    $map['_logic'] = 'or';
-                    $data = array();
-                    $data['loginPwd'] = md5($loginPwd.$loginSecret);
-                    M('Users')->where($map)->save($data);
-                    session('findPass',null);
-                    $this->display('default/forgetPass4');
+	                $rs = D('Home/Users')->resetPass();
+			    	if($rs['status']==1){
+			    	    $this->display('default/forget_pass4');
+			    	}else{
+			    		$this->error($rs['msg']);
+			    	}
                 }else $this->error('两次密码不同！');
-    			
     			break;
     		default:
     			$this->error('页面过期！'); 
@@ -270,13 +271,21 @@ class UsersAction extends BaseAction {
 
 
 	/**
-	 * 手机验证码获取,未完成
+	 * 手机验证码获取
 	 */
 	public function getPhoneVerify(){
-		$arr = array(1,2,3,4,5,6,7,8,9,0);
-		$phoneVerify = array_rand($arr,5);
-		session('findPass.phoneVerify',$phoneVerify);
-		$rs = array('status'=>1);
+		$rs = array('status'=>-1);
+		if(session('findPass.userPhone')==''){
+			$this->ajaxReturn($rs);
+		}
+		$phoneVerify = mt_rand(100000,999999);
+		$USER = session('findPass');
+		$USER['phoneVerify'] = $phoneVerify;
+        session('findPass',$USER);
+		$msg = "您正在重置登录密码，验证码为:".$phoneVerify."，请在30分钟内输入。【".$GLOBALS['CONFIG']['shopTitle']['fieldValue']."】";
+		$rv = D('Home/LogSms')->sendSMS(0,session('findPass.userPhone'),$msg,'getPhoneVerify',$phoneVerify);
+		$rs['status']=$rv['status'];
+		$rs['time']=30*60;
 		$this->ajaxReturn($rs);
 	}
 
@@ -285,11 +294,18 @@ class UsersAction extends BaseAction {
 	 * -1 错误，1正确
 	 */
 	public function checkPhoneVerify(){
-		session('findPass.phoneVerify','12345');//测试用
 		$phoneVerify = I('phoneVerify');
 		$rs = array('status'=>-1);
 		if (session('findPass.phoneVerify') == $phoneVerify ) {
-			$rs['status'] = 1;
+			//获取用户信息
+			$user = D('Home/Users')->checkAndGetLoginInfo(session('findPass.userPhone'));
+			$rs['u'] = $user;
+			if(!empty($user)){
+				$rs['status'] = 1;
+				$keyFactory = new \Think\Crypt();
+			    $key = $keyFactory->encrypt("0_".$user['userId']."_".time(),C('SESSION_PREFIX'),30*60);
+				$rs['url'] = "http://".$_SERVER['HTTP_HOST'].U('Home/Users/toResetPass',array('key'=>$key));
+			}
 		}
 		$this->ajaxReturn($rs);
 	}
@@ -298,7 +314,38 @@ class UsersAction extends BaseAction {
 	 * 发送验证邮件
 	 */
 	public function getEmailVerify(){
-		$rs = array('status'=>1);
+		$rs = array('status'=>-1);
+		$keyFactory = new \Think\Crypt();
+		$key = $keyFactory->encrypt("0_".session('findPass.userId')."_".time(),C('SESSION_PREFIX'),30*60);
+		$url = "http://".$_SERVER['HTTP_HOST'].U('Home/Users/toResetPass',array('key'=>$key));
+		$html="您好，会员 ".session('findPass.loginName')."：<br>
+		您在".date('Y-m-d H:i:s')."发出了重置密码的请求,请点击以下链接进行密码重置:<br>
+		<a href='".$url."'>".$url."</a><br>
+		<br>如果您的邮箱不支持链接点击，请将以上链接地址拷贝到你的浏览器地址栏中。<br>
+		该验证邮件有效期为30分钟，超时请重新发送邮件。<br>
+		<br><br>*此邮件为系统自动发出的，请勿直接回复。";
+		$sendRs = WSTSendMail(session('findPass.userEmail'),'密码重置',$html);
+		if($sendRs['status']==1){
+			$rs['status'] = 1;
+		}else{
+			$rs['msg'] = $sendRs['msg'];
+		}
 		$this->ajaxReturn($rs);
 	}
+	
+    /**
+     * 跳到重置密码
+     */
+    public function toResetPass(){
+    	$key = I('key');
+	    $keyFactory = new \Think\Crypt();
+		$key = $keyFactory->decrypt($key,C('SESSION_PREFIX'));
+		$key = explode('_',$key);
+		if(time()>floatval($key[2])+30*60)$this->error('连接已失效！');
+		if(intval($key[1])==0)$this->error('无效的用户！');
+		session('REST_userId',$key[1]);
+		session('REST_Time',$key[2]);
+		session('REST_success','1');
+		$this->display('default/forget_pass3');
+    }
 }

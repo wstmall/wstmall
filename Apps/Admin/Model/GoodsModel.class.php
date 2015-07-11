@@ -90,7 +90,7 @@ class GoodsModel extends Model {
 			}
 			$yj_data = array(
 				'msgType' => 0,
-				'sendUserId' => session('STAFF.staffId'),
+				'sendUserId' => session('WST_STAFF.staffId'),
 				'receiveUserId' => $goods[0]['userId'],
 				'msgContent' => $msg,
 				'createTime' => date('Y-m-d H:i:s'),

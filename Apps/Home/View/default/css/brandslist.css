@@ -26,7 +26,9 @@
 	background-color: #c7e6f5;
 	color: #000000;
 }
-
+.wst-brands-search{border:2px solid #e23c3d;position:relative;width:240px;margin-top:8px;}
+.wst-brands-search .brands-ipt{border:0;width:150px;background: 0 0;padding-left:6px;line-height: 22px;padding-top: 2px; padding-bottom: 2px;font-size:14px;}
+.wst-brands-search .search{position:absolute;top:0px;right:0px;width:50px;height:28px;color:#ffffff;font-weight:bolder;background-color:#e23c3d;line-height:28px;text-align:center;font-size:13px;cursor:pointer;}
 .wst-shop-box {
 	padding: 8px;
 	border-radius: 12px;

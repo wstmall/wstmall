@@ -50,8 +50,8 @@
 						</li>
 					</volist>
 				</ul>
-				<a href="javascript:;" class="ctrl-slide ck-prev" ></a> 
-				<a href="javascript:;" class="ctrl-slide ck-next" ></a>
+				<!-- <a href="javascript:;" class="ctrl-slide ck-prev" ></a> 
+				<a href="javascript:;" class="ctrl-slide ck-next" ></a> -->
 				<div class="ck-slidebox">
 					<div class="slideWrap">
 						<ul class="dot-wrap">
@@ -88,7 +88,7 @@
 									<td style="line-height:30px;padding-bottom:10px;">{$shops['deliveryStartMoney']}元起，配送费{$shops['deliveryMoney']}元，<br/>{$shops['deliveryFreeMoney']}元起免配送费<br/></td>
 								</tr>
 								<tr>
-									<td class="title">配送地址：</td>
+									<td class="title">店铺地址：</td>
 									<td>{$shops['shopAddress']}</td>
 								</tr>
 								<tr>
@@ -147,7 +147,7 @@
 				
 				<div class="shop-right">
 					<div class="wst-goods-search">
-						<input id="goodsName" value="{$goodsName}" type="text" style="width:300px;height:28px;padding-left:6px;" placeholder="商品名称"/>
+						<input id="goodsName" value="{$goodsName}" type="text" class='wst-goods-ipt' placeholder="商品名称"/>
 						<button class="searchwst" onclick="searchwst();">&nbsp;</button>
 						<button class="searchshop"  onclick="searchShopsGoods(1);">&nbsp;</button>
 					</div>
@@ -163,8 +163,8 @@
 								&nbsp;&nbsp;&nbsp;&nbsp;
 								<s class="rmb1"></s>
 								<s class="rmb2"></s>
-								<input type="text" style="width:85px;height:25px;padding-left:20px;" id="sprice" value="{$sprice}"/>-
-								<input type="text" style="width:85px;height:25px;padding-left:20px;" id="eprice" value="{$eprice}"/>
+								<input type="text" class='wst-price-ipt' id="sprice" value="{$sprice}"/>-
+								<input type="text" class='wst-price-ipt' id="eprice" value="{$eprice}"/>
 								<button style="width:50px;height:25px;" onclick="searchShopsGoods(6);">确定</button>
 							</div>
 							<div class="wst-clear"></div>
@@ -183,7 +183,7 @@
 									<div class="goods-price"><span class="span1">￥{$vo['shopPrice']}</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="span2">￥{$vo['marketPrice']}</span></div>
 									<div class="goods-buy">
 										<div class="goods-left">
-											<span style="color:green;font-weight:bolder;margin-left:2px;">{$vo["totalnum"]?$vo["totalnum"]:0}</span>人已购买
+											<span class='total-buy'>{$vo["totalnum"]?$vo["totalnum"]:0}</span>人已购买
 										</div>
 										<div class="goods-right">
 										   <if condition="$vo['goodsStock'] gt 0">

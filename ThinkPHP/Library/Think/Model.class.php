@@ -1729,15 +1729,15 @@ class Model {
 		$result = array();
 		//查询总数
 		$totalSql = '';
-		if(stripos(strtolower($sql),'distinct')!==false){
+		//if(stripos(strtolower($sql),'distinct')!==false || stripos(strtolower($sql),'group')!==false || stripos(strtolower($sql),'union')!==false){
 		    $totalSql = "select count(*) counts from (".$sql.") as a";
-		}else{
-			$totalSql = "select count(*) counts from (".$sql.") as a";
-		}
+		//}else{
+			//$findNum = stripos($sql,' from ');
+			//$totalSql = "select count(*) counts from (".substr($sql,$findNum,strlen($sql)).") as a";
+		//}
 		$total = $this->query($totalSql);
 		//查询数据		
 		$result = $this->query($sql." limit ".$start.",".$pageSize);
-		//echo $sql." limit ".$start.",".$pageSize;
 		//计算页码信息
 		$pager['total'] = $total[0]['counts'];
 		$pager['pageSize'] = $pageSize;

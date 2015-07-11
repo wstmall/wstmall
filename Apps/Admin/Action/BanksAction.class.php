@@ -64,7 +64,7 @@ class BanksAction extends BaseAction{
     	$pager = new \Think\Page($page['total'],$page['pageSize']);
     	$page['pager'] = $pager->show();
     	$this->assign('Page',$page);
-        $this->display("/banks/list");
+        $this->display("list");
 	}
 	/**
 	 * 列表查询

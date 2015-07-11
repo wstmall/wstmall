@@ -92,7 +92,7 @@ var orgva = "";
 					jQuery("#loginNameTip").html("<span>输入的邮箱格式不正确</span>");
 					return;
 				}			
-			}else if(new RegExp(regexEnum.mobile).test(uname)){
+			}else if(new RegExp(regexEnum.mobile).test(uname) && uname.length==11){
 				jQuery("#userEmail").val("");
 				jQuery("#userPhone").val(uname);
 				jQuery("#loginNameTip").removeClass();
@@ -137,7 +137,7 @@ function changeName(){
 			params.loginName = $.trim($('#loginName').val());
 			
 			if(params.loginName!="" && params.loginName!="邮箱/用户名/手机号"){
-				jQuery.post(rooturl+"/index.php/Home/Users/checkLoginName/" ,params,function(rsp) {
+				jQuery.post(domainURL +"/index.php/Home/Users/checkLoginName/" ,params,function(rsp) {
 					var json = WST.toJson(rsp);
 					if( json.status == "1" ) {
 						jQuery("#loginNameTip").removeClass();
@@ -174,12 +174,12 @@ $(function(){
 	
 	
 	$("#loginPwd").formValidator({
-		onShow:"必填项",onFocus:"6-20位之间"
+		onShow:"",onFocus:"6-20位之间"
 		}).inputValidator({
 			min:6,max:20,onError:"6-20位之间"
 		});
 	$("#reUserPwd").formValidator({
-		onShow:"必填项",onFocus:"密码不一致。",onCorrect:"密码一致"
+		onShow:"",onFocus:"密码不一致。",onCorrect:"密码一致"
 		}).inputValidator({
 			min:6,max:20,onError:"6-20位之间"
 		}).compareValidator({
@@ -203,7 +203,7 @@ var isUse = false;
 function getVerifyCode(){
 		
 		if($.trim($("#userPhone").val())==''){
-			layer.msg('请输入手机号码!', 1, 8);
+			WST.msg('请输入手机号码!', {icon: 5});
 			return;
 		}
 		if(isSend )return;
@@ -211,14 +211,22 @@ function getVerifyCode(){
 		
 		var params = {};
 		params.userPhone = $.trim($("#userPhone").val());
-		$.post(rooturl+"/index.php/Home/Users/getPhoneVerifyCode/",params,function(data,textStatus){
+		$.post(domainURL +"/index.php/Home/Users/getPhoneVerifyCode/",params,function(data,textStatus){
 			var json = WST.toJson(data);
-			if(json.status==-1){
-				layer.msg('手机号码格式错误!', 1, 8);
+			if(json.status==-4){
+				WST.msg('手机号码格式错误!', {icon: 5});
+				time = 0;
+				isSend = false;
+			}else if(json.status==-3){
+				WST.msg('该手机号码已注册!', {icon: 5});
 				time = 0;
 				isSend = false;
 			}else if(json.status==-2){
-				layer.msg('该手机号码已注册!', 1, 8);
+				WST.msg('您的手机已超过每日最大短信验证数!', {icon: 5});
+				time = 0;
+				isSend = false;
+			}else if(json.status==-1){
+				WST.msg('短信發送失敗!', {icon: 5});
 				time = 0;
 				isSend = false;
 			}else if(json.status==1){
@@ -243,21 +251,21 @@ function regist(){
 	
 	if($("#nameType").val()==3){
 		if($.trim($("#mobileCode").val())==""){		
-			layer.msg('请输入验证码!', 1, 8);
+			WST.msg('请输入验证码!', {icon: 5});
 			$("#mobileCode").focus();
 			return;
 		}
 	}else{
 	
 		if($.trim($("#authcode").val())==""){		
-			layer.msg('请输入验证码!', 1, 8);
+			WST.msg('请输入验证码!', {icon: 5});
 			$("#mobileCode").focus();
 			return;
 		}
 	}
 
 	if(!document.getElementById("protocol").checked){		
-		layer.msg('必须同意使用协议才允许注册!', 1, 8);
+		WST.msg('必须同意使用协议才允许注册!', {icon: 5});
 		return;
 	}
   	var params = {};
@@ -275,27 +283,26 @@ function regist(){
 	params.nameType = $("#nameType").val();
 	params.protocol = document.getElementById("protocol").checked?1:0;	
 	
-	$.post(rooturl+"/index.php/Home/Users/toRegist/",params,function(data,textStatus){
-		
+	$.post(domainURL +"/index.php/Home/Users/toRegist/",params,function(data,textStatus){
 		var json = WST.toJson(data);
 		if(json.status>0){
-			layer.msg('注册成功，正在跳转登录!', 1,1, function(){
-				location.href=rooturl+'/index.php';
+			WST.msg('注册成功，正在跳转登录!', {icon: 6}, function(){
+				location.href=domainURL +'/index.php';
    			});
-		}else if(json.status==-1){
-			layer.msg('用户名已存在，请勿重复注册!', 1, 8);
 		}else if(json.status==-2){
-			layer.msg('请填写完整信息!', 1, 8);
+			WST.msg('用户名已存在!', {icon: 5});
 		}else if(json.status==-3){
-			layer.msg('两次输入密码不一致!', 1, 8);
+			WST.msg('两次输入密码不一致!', {icon: 5});
 		}else if(json.status==-4){
-			layer.msg('验证码错误!', 1, 8);
+			WST.msg('验证码错误!', {icon: 5});
 		}else if(json.status==-6){
-			layer.msg('必须同意使用协议才允许注册!', 1, 8);
+			WST.msg('必须同意使用协议才允许注册!', {icon: 5});
 		}else if(json.status==-5){
-			layer.msg('验证码已超过有效期!', 1, 8);
+			WST.msg('验证码已超过有效期!', {icon: 5});
+		}else if(json.status==-7){
+			WST.msg('注册信息不完整!', {icon: 5});
 		}else{
-			layer.msg('注册失败!', 1, 8);
+			WST.msg('注册失败!', {icon: 5});
 		}
 		getVerify();
 	});
@@ -303,15 +310,16 @@ function regist(){
 
 
 function showXiey(id){
-	$.layer({
+	layer.open({
 	    type: 2,
+	    title: 'WST用户注册协议',
 	    shadeClose: true,
-	    title: false,
-	    closeBtn: [0, false],
-	    shade: [0.8, '#000'],
-	    border: [0],
-	    offset: ['20px',''],
+	    shade: 0.8,
 	    area: ['1000px', ($(window).height() - 50) +'px'],
-	    iframe: {src: rooturl}
+	    content: [userProtocolUrl],
+	    btn: ['同意并注册'],
+	    yes: function(index, layero){
+	    	layer.close(index);
+	    }
 	});
 }	    

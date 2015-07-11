@@ -101,13 +101,13 @@
 							html.push("<td>"+json[i].catSort+"</td>");
 							html.push("<td>"+((json[i].isShow==1)?showhtml:hidehtml)+dropdownhtml+"</td>");
 							html.push("<td>");
-							<php>if(in_array('wzfl_01',$_SESSION['STAFF']['grant'])){</php>
+							<php>if(in_array('wzfl_01',$WST_STAFF['grant'])){</php>
 							html.push((level>1)?"":"<button type='button' class='btn btn-default glyphicon glyphicon-plus' onclick='javascript:toEdit(0,"+json[i].catId+")'>新增子分类</button>&nbsp;&nbsp;");
 							<php>}</php>
-							<php>if(in_array('wzfl_02',$_SESSION['STAFF']['grant'])){</php>
+							<php>if(in_array('wzfl_02',$WST_STAFF['grant'])){</php>
 							html.push("<button type='button' class='btn btn-default glyphicon glyphicon-pencil' onclick='javascript:toEdit("+json[i].catId+",0)'>修改</button>&nbsp;&nbsp;");
 							<php>}</php>
-							<php>if(in_array('wzfl_03',$_SESSION['STAFF']['grant'])){</php>
+							<php>if(in_array('wzfl_03',$WST_STAFF['grant'])){</php>
 							if(json[i].catType==0){
 							    html.push("<button type='button' class='btn btn-default glyphicon glyphicon-trash' onclick='javascript:del("+json[i].catId+",\""+objId+"_"+json[i].catId+"\")'>删除</button>");
 							}
@@ -125,7 +125,7 @@
    </script>
    <body class='wst-page'>
        <div class='wst-tbar' style='text-align:right;height:25px;'>
-       <php>if(in_array('wzfl_01',$_SESSION['STAFF']['grant'])){</php>
+       <php>if(in_array('wzfl_01',$WST_STAFF['grant'])){</php>
        <button type="button" class="btn btn-success glyphicon glyphicon-plus" onclick='javascript:toEdit(0)' style='float:right'>新增</button>
        <php>}</php>
        </div>
@@ -162,7 +162,7 @@
 					  <span class="caret"></span>
 				   </button>
                </if>
-               <php>if(in_array('wzfl_02',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('wzfl_02',$WST_STAFF['grant'])){</php>
                    <ul class="dropdown-menu" role="menu" aria-labelledby="btn_{$vo['catId']}">
 					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:toggleIsShow(1,{$vo['catId']})">显示</a></li>
 					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:toggleIsShow(0,{$vo['catId']})">隐藏</a></li>
@@ -171,13 +171,13 @@
                </div>
                </td>
                <td>
-               <php>if(in_array('wzfl_01',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('wzfl_01',$WST_STAFF['grant'])){</php>
                <button type="button" class="btn btn-default glyphicon glyphicon-plus" onclick="javascript:toEdit(0,{$vo['catId']})"">新增子分类</button>&nbsp;
                <php>}</php>
-               <php>if(in_array('wzfl_02',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('wzfl_02',$WST_STAFF['grant'])){</php>
                <button type="button" class="btn btn-default glyphicon glyphicon-pencil" onclick="javascript:toEdit({$vo['catId']},0)"">修改</button>&nbsp;
                <php>}</php>
-               <php>if(in_array('wzfl_03',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('wzfl_03',$WST_STAFF['grant'])){</php>
                <if condition="$vo['catType']==0 ">
                <button type="button" class="btn btn-default glyphicon glyphicon-trash" onclick="javascript:del({$vo['catId']},0)"">刪除</button>
                </if>

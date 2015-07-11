@@ -19,10 +19,10 @@ $(function () {
 		    fileTypeDesc  : 'Image Files',
 	        fileTypeExts  : '*.gif; *.jpg; *.png',
 	        swf           : publicurl+'/plugins/uploadify/uploadify.swf',
-	        uploader      : rooturl+'/index.php/Home/shops/uploadPic',
+	        uploader      : domainURL +'/index.php/Home/shops/uploadPic',
 	        onUploadSuccess : function(file, data, response) {
 	        	var json = WST.toJson(data);
-	        	$('#preview').attr('src',domainURL+json.Filedata.savepath+json.Filedata.savethumbname).show();
+	        	$('#preview').attr('src',domainURL+"/"+json.Filedata.savepath+json.Filedata.savethumbname).show();
 	        	$('#shopBanner').val(json.Filedata.savepath+json.Filedata.savename);
         }
 	    });
@@ -33,11 +33,11 @@ $(function () {
 		    fileTypeDesc  : 'Image Files',
 	        fileTypeExts  : '*.gif; *.jpg; *.png',
 	        swf           : publicurl+'/plugins/uploadify/uploadify.swf',
-	        uploader      : rooturl+'/index.php/Home/shops/uploadPic',
+	        uploader      : domainURL +'/index.php/Home/shops/uploadPic',
 	        onUploadSuccess : function(file, data, response) {
 	        	var json = WST.toJson(data);
 	        	if(json.status && json.status==1){
-	        		$('<div class="wst-gallery-img" onmouseover="imgmouseover(this);" onmouseout="imgmouseout(this);" style="height:132px;"><span class="wst-gallery-del" onclick="javascript:delImg(this)"></span><img width="140" height="100" class="gallery-img" iv="'+json.Filedata.savepath+json.Filedata.savethumbname+'" v="'+json.Filedata.savepath+json.Filedata.savename+'" src="'+domainURL+json.Filedata.savepath+json.Filedata.savethumbname+'"/><input class="gallery-img-url" placeholder="广告路径" type="text" style="width:118px;"/></div>').appendTo('#galleryImgs');
+	        		$('<div class="wst-gallery-img" onmouseover="imgmouseover(this);" onmouseout="imgmouseout(this);" style="height:132px;"><span class="wst-gallery-del" onclick="javascript:delImg(this)"></span><img width="140" height="100" class="gallery-img" iv="'+json.Filedata.savepath+json.Filedata.savethumbname+'" v="'+json.Filedata.savepath+json.Filedata.savename+'" src="'+domainURL+"/"+json.Filedata.savepath+json.Filedata.savethumbname+'"/><input class="gallery-img-url" placeholder="广告路径" type="text" style="width:118px;"/></div>').appendTo('#galleryImgs');
 	        	}
        }
 	   });

@@ -33,6 +33,7 @@ class ShopsAction extends BaseAction{
     		$this->checkPrivelege('ppgl_01');
     		$object = $m->getModel();
     	}
+    	
     	$this->assign('object',$object);
     	$this->assign('src',I('src'));
 		$this->view->display('/shops/edit');

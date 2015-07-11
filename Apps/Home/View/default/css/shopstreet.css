@@ -83,3 +83,15 @@
 }
 .wst-shop-streets-items{margin-left:5px;position:relative;width:720px;height:80px;float:left;line-height:28px;}
 .wst-shop-streets-items-status{position:absolute;top:10px;right:10px;height:40px;width:80px;color:#fd871e;font-weight:bolder;line-height:40px;}
+
+.wst-street-spcnt{font-weight:bold;color:red;}
+.wst-street-ad-box{width:1210;margin:0 auto;padding-top:4px;}
+.wst-street-schbox{width:1210;margin:0 auto;height:50px;line-height:50px;}
+.wst-street-schbox{width:1210;margin:0 auto;height:50px;line-height:50px;}
+
+.wst-street-sch-bx1{width:450px;float:left;}
+.wst-street-sch-bx2{width:250px;float:left;}
+.wst-street-scp-dp{border:2px solid #e23c3d;position:relative;width:240px;margin-top:8px;}
+.wst-street-scp-sn{border:0;width:150px;background: 0 0;padding-left:10px;line-height: 22px;padding-top: 2px; padding-bottom: 2px;font-size:14px;}
+.wst-street-scp-sk{position:absolute;top:0px;right:0px;width:50px;height:28px;color:#ffffff;font-weight:bolder;background-color:#e23c3d;line-height:28px;text-align:center;font-size:13px;cursor:pointer;}
+.wst-street-scp-nsk{line-height:300px;text-align:center;font-size:18px;}

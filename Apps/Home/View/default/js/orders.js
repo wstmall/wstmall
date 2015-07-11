@@ -33,13 +33,15 @@ function loadCommunitys(obj){
 		return;
 	}
 	
-	jQuery.post(rooturl+"/index.php/Home/UserAddress/getCommunitys" ,{districtId:districtId},function(rsp){
-		var vd = WST.toJson(rsp);
+	jQuery.post(domainURL +"/index.php/Home/Communitys/getByDistrict" ,{areaId3:districtId},function(rsp){
+		var json = WST.toJson(rsp);
 		var html = new Array();
 		$("#consignee_add_CommunityId").empty();
 		html.push("<option value='0'>请选择</option>");
-		for(var i in vd){	    	
-			html.push("<option value='"+vd[i].communityId+"'>"+vd[i].communityName+"</option>");    	
+		if(json.list && json.list.length>0){
+			for(var i=0;i<json.list.length;i++){	    	
+				html.push("<option value='"+json.list[i].communityId+"'>"+json.list[i].communityName+"</option>");    	
+			}
 		}
 		$("#consignee_add_CommunityId").html(html.join(""));
 	});
@@ -47,7 +49,7 @@ function loadCommunitys(obj){
 
 function loadAddress(addressId){
 	$("#address_form").show();	
-	jQuery.post(rooturl+"/index.php/Home/UserAddress/getUserAddress" ,{addressId:addressId},function(rsp) {
+	jQuery.post(domainURL +"/index.php/Home/UserAddress/getUserAddress" ,{addressId:addressId},function(rsp) {
 		var rs = WST.toJson(rsp);
 		if(rs.status>0){
 			var addressInfo = rs.address;
@@ -109,50 +111,50 @@ function saveAddress(){
 	params.postCode = jQuery.trim(zipCode);
 	
 	if(addressId<1 && $("#seladdress_0").attr("checked")==false){
-		layer.msg("请选择收货地址", 1, 8);
+		WST.msg("请选择收货地址", {icon: 5});
 		return ;
 	}
 	if(params.userName==""){
-		layer.msg("请输入收货人", 1, 8);
+		WST.msg("请输入收货人", {icon: 5});
 		return ;		
 	}
 	if(!WST.checkMinLength(params.userName,2)){
-		layer.msg("收货人姓名长度必须大于1个汉字", 1, 8);
+		WST.msg("收货人姓名长度必须大于1个汉字", {icon: 5});
 		return ;	
 	}
 	if(params.areaId2<1){
-		layer.msg("请选择市", 1, 8);
+		WST.msg("请选择市", {icon: 5});
 		return ;		
 	}
 	if(params.areaId3<1){
-		layer.msg("请选择区县", 1, 8);
+		WST.msg("请选择区县", {icon: 5});
 		return ;		
 	}
 	if(params.communityId<1){
-		layer.msg("请选择社区", 1, 8);
+		WST.msg("请选择社区", {icon: 5});
 		return ;		
 	}
 	if(params.address==""){
-		layer.msg("请输入详细地址", 1, 8);
+		WST.msg("请输入详细地址", {icon: 5});
 		return ;		
 	}
 	if(userPhone=="" && userTel==""){
-		layer.msg("请输入手机号码或固定电话", 1, 8);
+		WST.msg("请输入手机号码或固定电话", {icon: 5});
 		return ;		
 	}
 	if(userPhone!="" && !WST.isPhone(params.userPhone)){
-		layer.msg("手机号码格式错误", 1, 8);
+		WST.msg("手机号码格式错误", {icon: 5});
 		return ;		
 	}
 	if(userTel!="" && !WST.isTel(params.userTel)){
-		layer.msg("固定电话格式错误", 1, 8);
+		WST.msg("固定电话格式错误", {icon: 5});
 		return ;		
 	}	
 	if(zipCode!="" && $('#consignee_add_zipCode').val().length!=6){
-		layer.msg("邮编格式不正确", 1, 8);
+		WST.msg("邮编格式不正确", {icon: 5});
 		return;
 	}
-	jQuery.post(rooturl+"/index.php/Home/UserAddress/edit" ,params,function(data,textStatus){	
+	jQuery.post(domainURL +"/index.php/Home/UserAddress/edit" ,params,function(data,textStatus){	
 		var json = WST.toJson(data);
 		
 		if(json.status>0){
@@ -209,7 +211,7 @@ function saveAddress(){
 				$("#radaddress_"+addressId).html(addressInfo.join(""));
 			}
 		}else{
-			layer.msg("收货人信息添加失败", 1, 8);
+			WST.msg("收货人信息添加失败", {icon: 5});
 		}
 	});	
 }
@@ -227,17 +229,20 @@ function addHour(hour){
   }
 
 function delAddress(addressId){
-	if(confirm('你确认要删除该地址？')){	
-		jQuery.post(rooturl+"/index.php/Home/UserAddress/del" ,{id:addressId},function(rsp) {		
+	layer.confirm('您确定删除该地址吗？',{icon: 3, title:'系统提示'}, function(tips){
+		var ll = layer.msg('数据处理中，请稍候...', {icon: 16,shade: [0.5, '#B3B3B3']});
+		jQuery.post(domainURL +"/index.php/Home/UserAddress/del" ,{id:addressId},function(rsp) {
+			layer.close(ll);
+	    	layer.close(tips);
 			if(rsp){
 				$("#caddress_"+addressId).remove();
 				$("#consigneeId").val(0);
 				changeAddress();
 			}else{
-				layer.msg("删除失败", 1, 8);
+				WST.msg("删除失败", {icon: 5});
 			}    
 		});
-	}
+	});
 	
 }
 function submitOrder(){
@@ -248,11 +253,13 @@ function submitOrder(){
 		}
 	});
 	if(!flag){
-		layer.msg("抱歉，您的订单金额未达到该门店的配送订单起步价，不能提交订单。", 1, 8);
+		WST.msg("抱歉，您的订单金额未达到该门店的配送订单起步价，不能提交订单。", {icon: 5});
 		return;
 	}
-	jQuery.post(rooturl+"/index.php/Home/Goods/checkGoodsStock" ,{},function(data) {
+	var ll = layer.msg('正在保存数据，请稍候...', {icon: 16,shade: [0.5, '#B3B3B3']});
+	jQuery.post(domainURL +"/index.php/Home/Goods/checkGoodsStock" ,{},function(data) {
 		var goodsInfo = WST.toJson(data);	
+		layer.close(ll);
 		var flag = true;
 		for(var i=0;i<goodsInfo.length;i++){
 			var goods = goodsInfo[i];			
@@ -263,7 +270,7 @@ function submitOrder(){
 		if(flag){
 			var consigneeId = $("#consigneeId").val();	
 			if(!$("#consignee2").is(":hidden")){
-				layer.msg("请先保存收货人信息",1,8);
+				WST.msg("请先保存收货人信息",{icon: 5});
 				return;
 			}	
 			var invoiceClient = $.trim($("#invoiceClient").val());	
@@ -282,31 +289,31 @@ function submitOrder(){
 			var date2 = new Date(d2);
 			
 			if(consigneeId<1){
-				layer.msg("请填写收货人地址", 1, 8);
+				WST.msg("请填写收货人地址", {icon: 5});
 				return ;
 			}
 			if(needreceipt==1 && invoiceClient==""){
-				layer.msg("请输入抬头", 1, 8);
+				WST.msg("请输入抬头", {icon: 5});
 				return ;		
 			}
 			if(date1<date2){
-				layer.msg("期望送达时间必须设定为下单时间1小时后", 1, 8);
+				WST.msg("亲，期望送达时间必须设定为下单时间1小时后哦！", {icon: 5});
 				return ;
 			}
 			if(!subCheckArea()){
-				//layer.msg("商品不在配送区域内！");
+				WST.msg("您选的商品不在配送区域内！", {icon: 5});
 				return ;
 			}
-			var url=rooturl+"/index.php/Home/Orders/submitOrder/?consigneeId="+consigneeId+"&payway="+payway+"&isself="+isself+"&invoiceClient="+invoiceClient+"&needreceipt="+needreceipt+"&remarks="+remarks;
+			var url=domainURL +"/index.php/Home/Orders/submitOrder/?consigneeId="+consigneeId+"&payway="+payway+"&isself="+isself+"&invoiceClient="+invoiceClient+"&needreceipt="+needreceipt+"&remarks="+remarks;
 			url += "&requireTime="+requireTime;
 			url += "&invoiceClient="+invoiceClient;
 			url += "&orderunique="+new Date().getTime();
 			location.href= url;
 		}else{
 			if(goods.isSale<1){
-				layer.msg('商品'+goods.goodsName+'已下架，请返回重新选购!', 1, 8);
+				WST.msg('商品'+goods.goodsName+'已下架，请返回重新选购!', {icon: 5});
 			}else if(goods.goodsStock<=0){
-				layer.msg('商品'+goods.goodsName+'库存不足，请返回重新选购!', 1, 8);
+				WST.msg('商品'+goods.goodsName+'库存不足，请返回重新选购!', {icon: 5});
 			}
 		}
 		
@@ -326,7 +333,7 @@ function confrimOrder(){
 }
 
 function getOrderInfo(orderId){
-	window.location = rooturl + '/index.php/Home/orders/getOrderInfo/?orderId=' + orderId;
+	window.location = domainURL  + '/index.php/Home/orders/getOrderInfo/?orderId=' + orderId;
 }
 
 $(function() {
@@ -341,7 +348,7 @@ $(function() {
 	$('input:radio[name="isself"]').click(function(){
 		if($(this).val()==0){//送货上门
 			$("#totalMoney_span").html($("#totalMoney").val());
-			$("#pay_hd").attr("disabled",false);
+			//$("#pay_hd").attr("disabled",false);
 			$("[id^=tst_]").val("-1");
 			$("[id^=showwarnmsg_]").show();
 			$("[id^=deliveryMoney_span_]").each(function(){
@@ -350,8 +357,8 @@ $(function() {
 			});
 		}else{//自提
 			$("#totalMoney_span").html($("#gtotalMoney").val());
-			$("#pay_ali").attr("checked",true);
-			$("#pay_hd").attr("disabled",true);
+			//$("#pay_ali").attr("checked",true);
+			//$("#pay_hd").attr("disabled",true);
 			$("[id^=tst_]").val("1");
 			$("[id^=showwarnmsg_]").hide();
 			$("[id^=deliveryMoney_span_]").each(function(){

@@ -8,7 +8,6 @@
  * ============================================================================
  * 会员地址服务类
  */
-use Think\Model;
 class UserAddressModel extends BaseModel {
     /**
 	  * 新增
@@ -17,7 +16,7 @@ class UserAddressModel extends BaseModel {
 	 	$rd = array('status'=>-1);
 	 	$id = I("id",0);
 		$data = array();
-		$data["userId"] = (int)$_SESSION['USER']['userId'];
+		$data["userId"] = (int)session('WST_USER.userId');
 		$data["userName"] = I("userName");
 		$data["areaId2"] = I("areaId2");
 		if(I("areaId1")){
@@ -51,7 +50,7 @@ class UserAddressModel extends BaseModel {
 				if(I("isDefault")==1){
 					//修改所有的地址为非默认
 					$m->isDefault = 0;
-					$m->where('userId='.(int)$_SESSION['USER']['userId']." and addressId!=".$rs)->save();
+					$m->where('userId='.(int)session('WST_USER.userId')." and addressId!=".$rs)->save();
 				}
 			}
 		}
@@ -82,13 +81,13 @@ class UserAddressModel extends BaseModel {
 			$data["userTel"] = I("userTel");
 			$data["postCode"] = I("postCode");
 			$data["isDefault"] = I("isDefault");
-			$rs = $m->where("userId=".(int)$_SESSION['USER']['userId']." and addressId=".$id)->save($data);
+			$rs = $m->where("userId=".(int)session('WST_USER.userId')." and addressId=".$id)->save($data);
 			if(false !== $rs){
 				$rd['status']= 1;
 				if(I("isDefault")==1){
 					//修改所有的地址为非默认
 					$m->isDefault = 0;
-					$m->where('userId='.(int)$_SESSION['USER']['userId']." and addressId!=".$id)->save();
+					$m->where('userId='.(int)session('WST_USER.userId')." and addressId!=".$id)->save();
 				}
 			}
 		}
@@ -99,7 +98,7 @@ class UserAddressModel extends BaseModel {
 	  */
      public function get(){
 	 	$m = M('user_address');
-		return $m->where("addressId=".I('id')." and userId=".(int)$_SESSION['USER']['userId'])->find();
+		return $m->where("addressId=".I('id')." and userId=".(int)session('WST_USER.userId'))->find();
 	 }
 	 /**
 	  * 获取列表
@@ -137,8 +136,7 @@ class UserAddressModel extends BaseModel {
 	 public function del(){
 	 	$rd = array('status'=>-1);
 	    $m = M('user_address');
-
-	    $rs = $m->where("userId=".(int)$_SESSION['USER']['userId']." and addressId=".I('id'))->delete();
+	    $rs = $m->where("userId=".(int)session('WST_USER.userId')." and addressId=".I('id'))->delete();
 		if(false !== $rs){
 		   $rd['status']= 1;
 		}
@@ -150,7 +148,7 @@ class UserAddressModel extends BaseModel {
 	public function getUserAddressInfo(){
 		$m = M('user_address'); 
 		$addressId = I("addressId");
-		$sql ="SELECT * FROM __PREFIX__user_address WHERE addressId=$addressId AND addressFlag=1 and userId=".(int)$_SESSION['USER']['userId'];
+		$sql ="SELECT * FROM __PREFIX__user_address WHERE addressId=$addressId AND addressFlag=1 and userId=".(int)session('WST_USER.userId');
 		$rs = $this->queryRow($sql);
 		if(empty($rs))return array();
 		$area3List = self::getDistricts($rs["areaId2"]);
@@ -188,7 +186,7 @@ class UserAddressModel extends BaseModel {
 	
 	/**
 	 * 获取门店服务社区
-	 * Enter description here ...
+	 * 
 	 * @param unknown_type $countryId
 	 * @param unknown_type $shopId
 	 */
@@ -205,7 +203,7 @@ class UserAddressModel extends BaseModel {
 	
 	/**
 	 * 获取门店配送区
-	 * Enter description here ...
+	 * 
 	 * @param unknown_type $shopId
 	 */
 	public function getShopCommunitysId($shopId){
@@ -235,7 +233,37 @@ class UserAddressModel extends BaseModel {
 		$rs = $m->query($sql);		
 		return $rs;
 		
-	}	
+	}
+	
+	/**
+	 * 获取地址详情
+	 */
+	public function getAddressDetails($addressId){
+		$m = M('user_address');
+		$addressId = $addressId?$addressId:I("addressId");
+		$sql ="SELECT * FROM __PREFIX__user_address WHERE addressId=$addressId AND addressFlag=1 and userId=".(int)session('WST_USER.userId');
+		$address = $this->queryRow($sql);
+		if(empty($address))return array();
+		
+		$areaId2 = $address["areaId2"];
+		$areaId3 = $address["areaId3"];
+		$communityId = $address["communityId"];
+		
+		$sql = "SELECT areaId ,areaName FROM __PREFIX__areas WHERE areaId=$areaId2  AND areaFlag = 1 AND isShow =1";		
+		$rs = $this->queryRow($sql);
+		$cityName = $rs["areaName"];//市
+		
+		$sql = "SELECT areaId ,areaName FROM __PREFIX__areas WHERE areaId=$areaId3  AND areaFlag = 1 AND isShow =1";
+		$rs = $this->queryRow($sql);
+		$districtsName = $rs["areaName"];//区
+		
+		$sql = "SELECT communityId ,communityName FROM __PREFIX__communitys WHERE communityId=$communityId  AND isService = 1 AND isShow =1";		
+		$rs = $this->queryRow($sql);
+		$communityName = $rs["communityName"];//社区
+		
+		$address["paddress"] = $cityName ." ". $districtsName ." ". $communityName;
+		return $address ;
+	}
 	
 };
 ?>

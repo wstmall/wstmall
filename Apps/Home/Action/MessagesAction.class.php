@@ -14,13 +14,15 @@ class MessagesAction extends BaseAction{
 	 */
 	public function queryByPage(){
 		$this->isLogin();
+		self::getBaseInfo();
+		$USER = session('WST_USER');
 		$m = D('Home/Messages');
     	$page = $m->queryByPage();
     	$pager = new \Think\Page($page['total'],$page['pageSize']);// 实例化分页类 传入总记录数和每页显示的记录数
     	$page['pager'] = $pager->show();
     	$this->assign('Page',$page);
     	$this->assign("umark","queryMessageByPage");
-    	if($_SESSION['USER']['loginTarget']=='User'){
+    	if($USER['loginTarget']=='User'){
             $this->display("default/users/messages/list");
     	}else{
     		$this->display("default/shops/messages/list");
@@ -31,9 +33,11 @@ class MessagesAction extends BaseAction{
      * 显示详情页面
      */
     public function showMessage(){
+    	self::getBaseInfo();
         $info = D('Home/Messages')->get();
+        $USER = session('WST_USER');
         $this->assign('info',$info);
-        if($_SESSION['USER']['loginTarget']=='User'){
+        if($USER['loginTarget']=='User'){
             $this->display("default/users/messages/show");
         }else{
             $this->display("default/shops/messages/show");

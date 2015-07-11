@@ -14,8 +14,7 @@ class ArticlesAction extends BaseAction{
 	 * 帮助中心
 	 */
 	public function index(){
-		
-		//$this->isLogin();
+		self::getBaseInfo();
 		$m = D('Home/Articles');
     	$articleList = $m->getArticleList();
     	$obj["articleId"] = I("articleId",0);

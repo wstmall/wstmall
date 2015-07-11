@@ -61,7 +61,7 @@ class IndexAction extends BaseAction {
     	$m = D('Admin/Staffs');
     	$rs = $m->login();
     	if($rs['status']==1){
-    		$_SESSION['STAFF'] = $rs['staff'];
+    		session('WST_STAFF',$rs['staff']);
     		unset($rs['staff']);
     	}
     	$this->ajaxReturn($rs);
@@ -70,7 +70,7 @@ class IndexAction extends BaseAction {
      * 离开系统
      */
     public function logout(){
-    	unset($_SESSION['STAFF']);
+    	session('WST_STAFF',null);
     	$this->redirect("Index/toLogin");
     }
     /**
@@ -94,21 +94,26 @@ class IndexAction extends BaseAction {
      * 获取当前版本
      */
     public function getWSTMallVersion(){
-    	$config = load_config(CONF_PATH."wst_config.php");
-    	$version = $config['WST_VERSION'];
-    	$key = $config['WST_MD5'];
-    	$content = file_get_contents('http://www.niuyw.com/index.php?m=Api&c=Download&a=getLastVersion&version='.$version.'&version_md5='.$key);
+    	$version = C('WST_VERSION');
+    	$key = C('WST_MD5');
+    	$content = file_get_contents('http://www.wstmall.com/index.php?m=Api&c=Download&a=getLastVersion&version='.$version.'&version_md5='.$key);
     	$json = json_decode($content,true);
         if($json['version'] ==  $version){
     		$json['version'] = "same";
         }
 		$this->ajaxReturn($json);
     }
+    
     /**
-     * 获取注册协议
+     * 清除缓存
      */
-    public function toConditionsForRegister(){
-    	echo "注册协议";
-    	$this->display("/conditions");
-    } 
+    public function cleanAllCache(){
+    	error_reporting(E_ALL); 
+        ini_set('display_errors', 1);
+        $rv = array('status'=>-1);
+        $BasePath = dirname(dirname(dirname(__File__)));
+        $BasePath = $BasePath."/Runtime/Temp";
+		$rv['status'] = WSTDelDir($BasePath);
+    	$this->ajaxReturn($rv);
+    }
 }

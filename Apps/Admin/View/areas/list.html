@@ -65,7 +65,7 @@
        <if condition="$pArea['areaId'] !=0 ">
        <button type="button" class="btn glyphicon" onclick='javascript:location.href="__ROOT__/index.php/Admin/Areas/index/?parentId={$pArea['parentId']}"' style='float:right;margin-left:5px;'>返回</button>
        </if>
-       <php>if(in_array('dqlb_01',$_SESSION['STAFF']['grant'])){</php>
+       <php>if(in_array('dqlb_01',$WST_STAFF['grant'])){</php>
        <button type="button" class="btn btn-success glyphicon glyphicon-plus" onclick='javascript:edit(0)' style='float:right'>新增</button>
        <php>}</php>
        </div>
@@ -98,7 +98,7 @@
 					  <span class="caret"></span>
 				   </button>
                </if>
-               <php>if(in_array('dqlb_02',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('dqlb_02',$WST_STAFF['grant'])){</php>
                    <ul class="dropdown-menu" role="menu">
 					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:toggleIsShow(1,{$vo['areaId']})">显示</a></li>
 					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:toggleIsShow(0,{$vo['areaId']})">隐藏</a></li>
@@ -111,10 +111,10 @@
                <if condition="$pArea['areaType'] lt 1 ">
                <button type="button" class="btn btn-default glyphicon glyphicon-pencil" onclick="javascript:view({$vo['areaId']})"">查看</button>&nbsp;
                </if>
-               <php>if(in_array('dqlb_02',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('dqlb_02',$WST_STAFF['grant'])){</php>
                <button type="button" class="btn btn-default glyphicon glyphicon-pencil" onclick="javascript:edit({$vo['areaId']})"">修改</button>&nbsp;
                <php>}</php>
-               <php>if(in_array('dqlb_02',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('dqlb_02',$WST_STAFF['grant'])){</php>
                <button type="button" class="btn btn-default glyphicon glyphicon-trash" onclick="javascript:del({$vo['areaId']})"">刪除</button>
                <php>}</php>
                </td>

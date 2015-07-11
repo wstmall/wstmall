@@ -39,7 +39,8 @@
 	color: #e23e3d;
 	padding-left: 10px;
 }
-
+.wst-price-ipt{width:85px;height:25px;padding-left:20px;}
+.wst-goods-ipt{width:300px;height:28px;padding-left:6px;}
 .wst-shop-eval {
 	text-align: center;
 }
@@ -224,6 +225,8 @@
 .wst-goods-page .wst-goods-item .goods-des {
 	margin-top: 5px;
 }
+
+.wst-goods-page .wst-goods-item .total-buy{color:green;font-weight:bolder;margin-left:2px;}
 
 .wst-goods-page .wst-goods-item .goods-title {
 	text-align: left;padding-left:2px;

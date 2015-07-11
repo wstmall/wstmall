@@ -15,6 +15,27 @@ class UsersModel extends BaseModel {
 	  */
 	 public function add(){
 	 	$rd = array('status'=>-1);
+	 	//检测账号
+	 	$hasLoginName = self::checkLoginKey(I("loginName"));
+	    if($hasLoginName['status']<=0){
+	 		$rd = array('status'=>-2);
+	 		return $rd;
+	 	}
+	 	if(I("userPhone")!=''){
+	 		$hasUserPhone = self::checkLoginKey(I("userPhone"));
+		 	if($hasUserPhone['status']<=0){
+		 		$rd = array('status'=>-2);
+		 		return $rd;
+		 	}
+	 	}
+	 	if(I("userEmail")!=''){
+		 	$hasUserEmail = self::checkLoginKey(I("userEmail"));
+		 	if($hasUserEmail['status']<=0){
+		 		$rd = array('status'=>-2);
+		 		return $rd;
+		 	}
+	 	}
+	 	//创建数据
 	 	$id = I("id",0);
 		$data = array();
 		$data["loginName"] = I("loginName");
@@ -47,6 +68,24 @@ class UsersModel extends BaseModel {
 	  */
 	 public function edit(){
 	 	$rd = array('status'=>-1);
+	 	$id = I('id',0);
+	 	//检测账号
+	 	if(I("userPhone")!=''){
+	        $hasUserPhone = self::checkLoginKey(I("userPhone"),$id);
+	        if($hasUserPhone['status']<=0){
+		        $rd = array('status'=>-2);
+		 		return $rd;
+	        }
+	 	}
+	 	if(I("userEmail")!=''){
+		 	$hasUserEmail = self::checkLoginKey(I("userEmail"),$id);
+		 	if($hasUserEmail['status']<=0){
+		 		$rd = array('status'=>-2);
+		 		return $rd;
+		 	}
+		 	
+	 	}
+	 	//修改数据
 		$m = M('users');
 		$data = array();
 		$data["userScore"] = I("userScore",0);
@@ -58,7 +97,7 @@ class UsersModel extends BaseModel {
 		    $data["userQQ"] = I("userQQ");
 		    $data["userPhone"] = I("userPhone");
 		    $data["userEmail"] = I("userEmail");
-			$rs = $m->where("userId=".I('id',0))->save($data);
+			$rs = $m->where("userId=".$id)->save($data);
 			if(false !== $rs){
 				$rd['status']= 1;
 				
@@ -126,16 +165,13 @@ class UsersModel extends BaseModel {
 	 /**
 	  * 查询登录关键字
 	  */
-	 public function checkLoginKey(){
+	 public function checkLoginKey($val,$id = 0){
 	 	$rd = array('status'=>-1);
-	 	$key = I('clientid');
-	 	$id = I('id',0);
-	 	if($key!=''  && I($key)=='')return $rd;
+	 	if($val=='')return $rd;
 	 	$sql = " (loginName ='%s' or userPhone ='%s' or userEmail='%s') ";
-	 	$keyArr = array(I($key),I($key),I($key));
+	 	$keyArr = array($val,$val,$val);
 	 	if($id>0){
 	 		$sql.=" and userId!=".$id;
-	 		$keyArr[] = $id;
 	 	}
 	 	$m = M('users');
 	 	$rs = $m->where($sql,$keyArr)->count();

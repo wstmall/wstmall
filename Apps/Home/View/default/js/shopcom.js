@@ -1,4 +1,4 @@
-var domainURL = '';
+
 function checkAll(obj){
 	$('.chk').each(function(){
 		$(this)[0].checked = obj.checked;
@@ -30,61 +30,62 @@ function queryUnSaleByPage(){
 	var shopCatId1 = $('#shopCatId1').val();
 	var shopCatId2 = $('#shopCatId2').val();
 	var goodsName = $('#goodsName').val();
-	location.href=domainURL+'index.php/Home/Goods/queryUnSaleByPage/?umark=queryUnSaleByPage&goodsName='+goodsName+"&shopCatId1="+shopCatId1+"&shopCatId2="+shopCatId2; 
+	location.href=domainURL +'/index.php/Home/Goods/queryUnSaleByPage/?umark=queryUnSaleByPage&goodsName='+goodsName+"&shopCatId1="+shopCatId1+"&shopCatId2="+shopCatId2; 
 }
 function queryOnSale(){
 	var shopCatId1 = $('#shopCatId1').val();
 	var shopCatId2 = $('#shopCatId2').val();
 	var goodsName = $('#goodsName').val();
-	location.href=domainURL+'index.php/Home/Goods/queryOnSaleByPage/?umark=queryOnSaleByPage&goodsName='+goodsName+"&shopCatId1="+shopCatId1+"&shopCatId2="+shopCatId2; 
+	location.href=domainURL +'/index.php/Home/Goods/queryOnSaleByPage/?umark=queryOnSaleByPage&goodsName='+goodsName+"&shopCatId1="+shopCatId1+"&shopCatId2="+shopCatId2; 
 }
 function queryPendding(){
 	var shopCatId1 = $('#shopCatId1').val();
 	var shopCatId2 = $('#shopCatId2').val();
 	var goodsName = $('#goodsName').val();
-	location.href=domainURL+'index.php/Home/Goods/queryPenddingByPage/?umark=queryPenddingByPage&goodsName='+goodsName+"&shopCatId1="+shopCatId1+"&shopCatId2="+shopCatId2; 
+	location.href=domainURL +'/index.php/Home/Goods/queryPenddingByPage/?umark=queryPenddingByPage&goodsName='+goodsName+"&shopCatId1="+shopCatId1+"&shopCatId2="+shopCatId2; 
 }
 function toEditGoods(id,menuId){
-    location.href=domainURL+'index.php/Home/Goods/toEdit/?umark='+menuId+'&id='+id; 
+    location.href=domainURL +'/index.php/Home/Goods/toEdit/?umark='+menuId+'&id='+id; 
 }
 function toViewGoods(id){
-	$.post(domainURL+'index.php/Home/Goods/getGoodsVerify',{id:id},function(data,textStatus){
+	$.post(domainURL +'/index.php/Home/Goods/getGoodsVerify',{id:id},function(data,textStatus){
 		var json = WST.toJson(data);
 		if(json.status=='1'){
 			var verifyCode = json.verifyCode;
-			window.open(domainURL+'index.php/Home/Goods/getGoodsDetails/?goodsId='+id+"&kcode="+verifyCode);
+			window.open(domainURL +'/index.php/Home/Goods/getGoodsDetails/?goodsId='+id+"&kcode="+verifyCode);
 		}
 	});
 	
 }
 function delGoods(id){
-	layer.confirm("您确定要删改该商品？",function(){
-		$.post(domainURL+'index.php/Home/Goods/del',{id:id},function(data,textStatus){
+	layer.confirm("您确定要删改该商品？",{icon: 3, title:'系统提示'},function(tips){
+		$.post(domainURL +'/index.php/Home/Goods/del',{id:id},function(data,textStatus){
+			layer.close(tips);
     		var json = WST.toJson(data);
     		if(json.status=='1'){
-    			layer.msg('操作成功！', 1, 1,function(){
+    			WST.msg('操作成功！', {icon: 1},function(){
     				location.reload();
     			});
     		}else{
-    			layer.msg('操作失败', 1, 8);
+    			WST.msg('操作失败', {icon: 5});
     		}
 		});
 	});
 }
 function batchDel(){
-	layer.confirm("您确定要删改这些商品？",function(){
+	layer.confirm("您确定要删改这些商品？",{icon: 3, title:'系统提示'},function(){
 	      var ids = getChks();
 	      layer.load('正在处理，请稍后...', 3);
 	      var params = {};
 	      params.ids = ids;
-	      $.post(domainURL+"index.php/Home/Goods/batchDel",params,function(data,textStatus){
+	      $.post(domainURL +"/index.php/Home/Goods/batchDel",params,function(data,textStatus){
 	    		var json = WST.toJson(data);
 	    		if(json.status=='1'){
-	    			layer.msg('操作成功！', 1, 1,function(){
+	    			WST.msg('操作成功！', {icon: 1},function(){
 	    				location.reload();
 	    			});
 	    		}else{
-	    			layer.msg('操作失败', 1, 8);
+	    			WST.msg('操作失败', {icon: 5});
 	    		}
 	     });
 	});
@@ -92,22 +93,22 @@ function batchDel(){
 function sale(v){
 	var ids = getChks();
 	if(ids==''){
-		layer.msg('请先选择商品!', 1, 8);
+		WST.msg('请先选择商品!', {icon: 5});
 		return;
 	}
-	layer.confirm((v==1)?"您确定要上架这些商品？":"您确定要下架这些商品？",function(){
+	layer.confirm((v==1)?"您确定要上架这些商品？":"您确定要下架这些商品？",{icon: 3, title:'系统提示'},function(){
 	    layer.load('正在处理，请稍后...', 3);
 	    var params = {};
 	    params.ids = ids;
 	    params.isSale= v;
-	    $.post(domainURL+"index.php/Home/Goods/sale",params,function(data,textStatus){
+	    $.post(domainURL +"/index.php/Home/Goods/sale",params,function(data,textStatus){
 	    	var json = WST.toJson(data);
 	    	if(json.status=='1'){
-	    		layer.msg('操作成功！', 1, 1,function(){
+	    		WST.msg('操作成功！', {icon: 1},function(){
 	    			location.reload();
 	    		});
 	    	}else{
-	    		layer.msg('操作失败!', 1, 8);
+	    		WST.msg('操作失败!', {icon: 5});
 	    	}
 	    });
 	});
@@ -115,7 +116,7 @@ function sale(v){
 function goodsSet(type,umark){
 	var ids = getChks();
 	if(ids==''){
-		layer.msg('请先选择商品!', 1, 8);
+		WST.msg('请先选择商品!', {icon: 5});
 		return;
 	}
 
@@ -123,14 +124,14 @@ function goodsSet(type,umark){
 	var params = {};
 	params.ids = ids;
 	params.code= type;
-	$.post(domainURL+"index.php/Home/Goods/goodsSet",params,function(data,textStatus){
+	$.post(domainURL +"/index.php/Home/Goods/goodsSet",params,function(data,textStatus){
 	    var json = WST.toJson(data);
 	    if(json.status=='1'){
-	    	layer.msg('操作成功！', 1, 1,function(){
+	    	WST.msg('操作成功！', {icon: 1},function(){
 	    		location.reload();
 	    	});
 	    }else{
-	    	layer.msg('操作失败!', 1, 8);
+	    	WST.msg('操作失败!', {icon: 5});
 	    }
 	});
 }
@@ -140,7 +141,7 @@ function getShopCatListForGoods(v,id){
 	   params.id = v;
 	   $('#shopCatId2').empty();
 	   var html = [];
-	   $.post(domainURL+"index.php/Home/ShopsCats/queryByList",params,function(data,textStatus){
+	   $.post(domainURL +"/index.php/Home/ShopsCats/queryByList",params,function(data,textStatus){
 		    html.push('<option value="">请选择</option>');
 			var json = WST.toJson(data);
 			if(json.status=='1' && json.list){
@@ -161,7 +162,7 @@ $.fn.imagePreview = function(options){
 	yOffset = 20;
 	if(!$('#preview')[0])$("body").append("<div id='preview'><img width='200' src=''/></div>");
 	$(this).hover(function(e){
-		   $('#preview img').attr('src',domainURL+$(this).attr('img'));      
+		   $('#preview img').attr('src',domainURL+ "/" +$(this).attr('img'));      
 		   $("#preview").css("top",(e.pageY - xOffset) + "px").css("left",(e.pageX + yOffset) + "px").show();      
 	  },
 	  function(){
@@ -176,7 +177,7 @@ function getShopCatListForEdit(v,id){
 	   params.id = v;
 	   $('#shopCatId2').empty();
 	   var html = [];
-	   $.post(domainURL+"index.php/Home/ShopsCats/queryByList",params,function(data,textStatus){
+	   $.post(domainURL +"/index.php/Home/ShopsCats/queryByList",params,function(data,textStatus){
 		    html.push('<option value="">请选择</option>');
 			var json = WST.toJson(data);
 			if(json.status=='1' && json.list){
@@ -196,7 +197,7 @@ function getBrands(catId){
 	$('#brandId').empty();
 	var html = [];
 	$('#brandId').append('<option value="0">请选择</option>');
-	$.post(domainURL+"index.php/Home/Brands/queryBrandsByCat",params,function(data,textStatus){
+	$.post(domainURL +"/index.php/Home/Brands/queryBrandsByCat",params,function(data,textStatus){
 		var json = WST.toJson(data);
 		if(json.status=='1' && json.list){
 			for(var i=0;i<json.list.length;i++){
@@ -216,7 +217,7 @@ function getCatListForEdit(objId,parentId,t,id){
 		   getBrands(parentId);
 	   }
 	   var html = [];
-	   $.post(domainURL+"index.php/Home/GoodsCats/queryByList",params,function(data,textStatus){
+	   $.post(domainURL +"/index.php/Home/GoodsCats/queryByList",params,function(data,textStatus){
 		    html.push('<option value="">请选择</option>');
 			var json = WST.toJson(data);
 			if(json.status=='1' && json.list){
@@ -258,21 +259,25 @@ function editGoods(menuId){
 		   gallery.push($(this).attr('v')+'@'+$(this).attr('iv'));
 	   });
 	   if(params.goodsDesc==''){
-		   layer.msg('请输入商品描述!', 1, 8);
+		   WST.msg('请输入商品描述!', {icon: 5});
 		   return;
 	   }
 	   if(params.goodsImg==''){
-		   layer.msg('请上传商品图片!', 1, 8);
+		   WST.msg('请上传商品图片!', {icon: 5});
 		   return;
 	   }
 	   params.gallery = gallery.join(',');
-	   
-	   $.post(domainURL+"index.php/Home/Goods/edit",params,function(data,textStatus){
+	   var loading = layer.load('正在提交商品信息，请稍后...', 3);
+	   $.post(domainURL +"/index.php/Home/Goods/edit",params,function(data,textStatus){
+		   layer.close(loading);
 			var json = WST.toJson(data);
 			if(json.status=='1'){
-				   location.href=domainURL+'index.php/Home/Goods/'+menuId;
+				WST.msg('操作成功!', {icon: 1}, function(){
+					menuId = (menuId=='toEditGoods')?'toEdit/?umark=toEditGoods':menuId;
+					location.href=domainURL +'/index.php/Home/Goods/'+menuId;
+				});
 			}else{
-				alert('操作失败!');
+				WST.msg('操作失败!', {icon: 5});
 			}
 	   });
 }
@@ -284,41 +289,46 @@ function editGoodsCat(){
 	   params.catName = $('#catName').val();
 	   params.isShow = $('input[name="isShow"]:checked').val();;
 	   params.catSort = $('#catSort').val();
-	   $.post(domainURL+"index.php/Home/ShopsCats/edit",params,function(data,textStatus){
+	   var loading = layer.load('正在提交商品分类信息，请稍后...', 3);
+	   $.post(domainURL +"/index.php/Home/ShopsCats/edit",params,function(data,textStatus){
+		   layer.close(loading);
 			var json = WST.toJson(data);
 			if(json.status=='1'){
-				   location.href=domainURL+'index.php/Home/ShopsCats/';
+				WST.msg('操作成功!', {icon: 1}, function(){
+				   location.href=domainURL +'/index.php/Home/ShopsCats/';
+				});
 			}else{
-				alert('操作失败!');
+				layer.msg('操作失败!', {icon: 5});
 			}
 	   });
 }
 function toEditGoodsCat(id,pid){
-    location.href=domainURL+'index.php/Home/ShopsCats/toEdit/?id='+id+"&parentId="+pid; 
+    location.href=domainURL +'/index.php/Home/ShopsCats/toEdit/?id='+id+"&parentId="+pid; 
 }
 function delGoodsCat(id){
-	layer.confirm("您确定要删除该商品分类吗？",function(){
+	layer.confirm("您确定要删除该商品分类吗？",{icon: 3, title:'系统提示'},function(tips){
 		layer.load('正在处理，请稍后...', 3);
-		$.post(domainURL+"index.php/Home/ShopsCats/del",{id:id},function(data,textStatus){
+		layer.close(tips);
+		$.post(domainURL +"/index.php/Home/ShopsCats/del",{id:id},function(data,textStatus){
 			var json = WST.toJson(data);
 			if(json.status=='1'){
-				layer.msg('操作成功!', 1,1, function(){
+				WST.msg('操作成功!', {icon: 1}, function(){
 					location.reload();
 				});
 			}else{
-				layer.msg('操作失败!', 1, 8);
+				WST.msg('操作失败!', {icon: 5});
 			}
 		});
 	})
 }
 function editGoodsCatName(obj){
 	var name = $('#');
-	$.post(domainURL+"index.php/Home/ShopsCats/editName",{id:$(obj).attr('dataId'),catName:obj.value},function(data,textStatus){
+	$.post(domainURL +"/index.php/Home/ShopsCats/editName",{id:$(obj).attr('dataId'),catName:obj.value},function(data,textStatus){
 		var json = WST.toJson(data);
 		if(json.status=='1'){
-			layer.msg('操作成功!', 1, 1);
+			WST.msg('操作成功!',{icon: 1});
 		}else{
-			layer.msg('操作失败!', 1, 8);
+			WST.msg('操作失败!', {icon: 5});
 		}
 	});
 }
@@ -340,14 +350,14 @@ function queryAppraises(){
 	var shopCatId1 = $('#shopCatId1').val();
 	var shopCatId2 = $('#shopCatId2').val();
 	var goodsName = $('#goodsName').val();
-	location.href=domainURL+'index.php/Home/GoodsAppraises/index/?umark=GoodsAppraises&goodsName='+goodsName+"&shopCatId1="+shopCatId1+"&shopCatId2="+shopCatId2; 
+	location.href=domainURL +'/index.php/Home/GoodsAppraises/index/?umark=GoodsAppraises&goodsName='+goodsName+"&shopCatId1="+shopCatId1+"&shopCatId2="+shopCatId2; 
 }
 function getShopCatListForAppraises(v,id){
 	   var params = {};
 	   params.id = v;
 	   $('#shopCatId2').empty();
 	   var html = [];
-	   $.post(domainURL+"index.php/Home/ShopsCats/queryByList",params,function(data,textStatus){
+	   $.post(domainURL +"/index.php/Home/ShopsCats/queryByList",params,function(data,textStatus){
 		    html.push('<option value="">请选择</option>');
 			var json = WST.toJson(data);
 			if(json.status=='1' && json.list){
@@ -363,28 +373,29 @@ function getShopCatListForAppraises(v,id){
 /******************订单列表**********************/
 //查看订单
 function showOrder(id){
-    $.layer({
+	layer.open({
 	    type: 2,
 	    title:"订单详情",
 	    shade: [0.6, '#000'],
 	    border: [0],
-	    iframe: {src : domainURL+'index.php/Home/Orders/getOrderDetails?orderId='+id},
+	    content: [domainURL +'/index.php/Home/Orders/getOrderDetails?orderId='+id],
 	    area: ['1020px', ($(window).height() - 50) +'px']
 	});
 }
 //受理
 function shopOrderAccept(id){
-	layer.confirm('确定受理吗？', function(){
+	layer.confirm('您确定受理该订单吗？', {icon: 3, title:'系统提示'}, function(tips){
 	    var ll = layer.load('数据处理中，请稍候...');
-	    $.post(domainURL+"index.php/Home/Orders/shopOrderAccept/",{orderId:id},function(data){
+	    $.post(domainURL +"/index.php/Home/Orders/shopOrderAccept/",{orderId:id},function(data){
 	    	layer.close(ll);
+	    	layer.close(tips);
 	    	var json = WST.toJson(data);
 			if(json.status>0){
 				$(".wst-tab-nav").find("li").eq(statusMark).click();
 			}else if(json.status==-1){
-				layer.msg('操作失，订单状态已发生改变，请刷新后再重试 !', 1, 8);
+				WST.msg('操作失，订单状态已发生改变，请刷新后再重试 !', {icon: 5});
 			}else{
-				layer.msg('操作失，请与商城管理员联系 !', 1, 8);
+				WST.msg('操作失，请与商城管理员联系 !', {icon: 5});
 			}
 	   });
 	});
@@ -392,17 +403,18 @@ function shopOrderAccept(id){
 }
 //包装
 function shopOrderProduce(id){
-	layer.confirm('确定打包中吗？', function(){
+	layer.confirm('确定打包中吗？',{icon: 3, title:'系统提示'}, function(tips){
 	    var ll = layer.load('数据处理中，请稍候...');
-	    $.post(domainURL+"index.php/Home/Orders/shopOrderProduce/",{orderId:id},function(data){
+	    $.post(domainURL +"/index.php/Home/Orders/shopOrderProduce/",{orderId:id},function(data){
 	    	layer.close(ll);
+	    	layer.close(tips);
 	    	var json = WST.toJson(data);
 			if(json.status>0){
 				$(".wst-tab-nav").find("li").eq(statusMark).click();
 			}else if(json.status==-1){
-				layer.msg('操作失，订单状态已发生改变，请刷新后再重试 !', 1, 8);
+				WST.msg('操作失，订单状态已发生改变，请刷新后再重试 !', {icon: 5});
 			}else{
-				layer.msg('操作失，请与商城管理员联系 !', 1, 8);
+				WST.msg('操作失，请与商城管理员联系 !', {icon: 5});
 			}
 	   });
 	});
@@ -410,17 +422,18 @@ function shopOrderProduce(id){
 }
 //发货配送
 function shopOrderDelivery(id){
-	layer.confirm('确定正在发货吗？', function(){
+	layer.confirm('确定正在发货吗？',{icon: 3, title:'系统提示'}, function(tips){
 	    var ll = layer.load('数据处理中，请稍候...');
-	    $.post(domainURL+"index.php/Home/Orders/shopOrderDelivery/",{orderId:id},function(data){
+	    $.post(domainURL +"/index.php/Home/Orders/shopOrderDelivery/",{orderId:id},function(data){
 	    	layer.close(ll);
+	    	layer.close(tips);
 	    	var json = WST.toJson(data);
 			if(json.status>0){
 				$(".wst-tab-nav").find("li").eq(statusMark).click();
 			}else if(json.status==-1){
-				layer.msg('操作失，订单状态已发生改变，请刷新后再重试 !', 1, 8);
+				WST.msg('操作失，订单状态已发生改变，请刷新后再重试 !', {icon: 5});
 			}else{
-				layer.msg('操作失，请与商城管理员联系 !', 1, 8);
+				WST.msg('操作失，请与商城管理员联系 !', {icon: 5});
 			}
 	   });
 	});
@@ -428,17 +441,18 @@ function shopOrderDelivery(id){
 }
 //确认收货
 function shopOrderReceipt(id){
-	layer.confirm('确定已收货吗？', function(){
+	layer.confirm('确定已收货吗？',{icon: 3, title:'系统提示'}, function(tips){
 	    var ll = layer.load('数据处理中，请稍候...');
-	    $.post(domainURL+"index.php/Home/Orders/shopOrderReceipt/",{orderId:id},function(data){
+	    $.post(domainURL +"/index.php/Home/Orders/shopOrderReceipt/",{orderId:id},function(data){
 	    	layer.close(ll);
+	    	layer.close(tips);
 	    	var json = WST.toJson(data);
 			if(json.status>0){
 				$(".wst-tab-nav").find("li").eq(statusMark).click();
 			}else if(json.status==-1){
-				layer.msg('操作失，订单状态已发生改变，请刷新后再重试 !', 1, 8);
+				WST.msg('操作失，订单状态已发生改变，请刷新后再重试 !', {icon: 5});
 			}else{
-				layer.msg('操作失，请与商城管理员联系 !', 1, 8);
+				WST.msg('操作失，请与商城管理员联系 !', {icon: 5});
 			}
 	   });
 	});
@@ -446,17 +460,18 @@ function shopOrderReceipt(id){
 }
 //同意拒收
 function shopOrderRefund(id){
-	layer.confirm('确定拒收吗？', function(){
+	layer.confirm('确定拒收吗？',{icon: 3, title:'系统提示'}, function(tips){
 	    var ll = layer.load('数据处理中，请稍候...');
-	    $.post(domainURL+"index.php/Home/Orders/shopOrderRefund/",{orderId:id},function(data){
+	    $.post(domainURL +"/index.php/Home/Orders/shopOrderRefund/",{orderId:id},function(data){
 	    	layer.close(ll);
+	    	layer.close(tips);
 	    	var json = WST.toJson(data);
 			if(json.status>0){
 				$(".wst-tab-nav").find("li").eq(statusMark).click();
 			}else if(json.status==-1){
-				layer.msg('操作失，订单状态已发生改变，请刷新后再重试 !', 1, 8);
+				WST.msg('操作失，订单状态已发生改变，请刷新后再重试 !', {icon: 5});
 			}else{
-				layer.msg('操作失，请与商城管理员联系 !', 1, 8);
+				WST.msg('操作失，请与商城管理员联系 !', {icon: 5});
 			}
 	   });
 	});
@@ -468,8 +483,7 @@ function orderPager(statusMark,pcurr){
 	var orderNo = $.trim($("#orderNo_"+statusMark).val());
 	var userName = $.trim($("#userName_"+statusMark).val());
 	var userAddress = $.trim($("#userAddress_"+statusMark).val());
-	
-	$.post(domainURL+"index.php/Home/Orders/queryShopOrders",{orderNo:orderNo,userName:userName,userAddress:userAddress,statusMark:statusMark,pcurr:pcurr},function(data,textStatus){
+	$.post(domainURL +"/index.php/Home/Orders/queryShopOrders",{orderNo:orderNo,userName:userName,userAddress:userAddress,statusMark:statusMark,pcurr:pcurr},function(data,textStatus){
 		var json = WST.toJson(data);
 		var html = new Array();
 		if(json.root.length>0){
@@ -518,9 +532,8 @@ function queryOrderPager(statusMark,pcurr){
 	var orderNo = $.trim($("#orderNo_"+statusMark).val());
 	var userName = $.trim($("#userName_"+statusMark).val());
 	var userAddress = $.trim($("#userAddress_"+statusMark).val());
-	
 	var ll = layer.load('数据加载中，请稍候...');
-		$.post(domainURL+"index.php/Home/Orders/queryShopOrders",{orderNo:orderNo,userName:userName,userAddress:userAddress,statusMark:statusMark,pcurr:pcurr},function(data,textStatus){
+		$.post(domainURL +"/index.php/Home/Orders/queryShopOrders",{orderNo:orderNo,userName:userName,userAddress:userAddress,statusMark:statusMark,pcurr:pcurr},function(data,textStatus){
 			var json = WST.toJson(data);
 			var html = new Array();
 			if(json.root.length>0){
@@ -577,21 +590,21 @@ function editPass(){
 	   params.oldPass = $('#oldPass').val();
 	   params.newPass = $('#newPass').val();
 	   params.reNewPass = $('#reNewPass').val();
-	   $.post(domainURL+"index.php/Home/Users/editPass",params,function(data,textStatus){
+	   $.post(domainURL +"/index.php/Home/Users/editPass",params,function(data,textStatus){
 			var json = WST.toJson(data);
 			if(json.status=='1'){
-				layer.msg('密码修改成功!', 1,1, function(){
+				WST.msg('密码修改成功!', {icon: 1}, function(){
 					location.reload();
 				});
 			}else{
-				layer.msg('密码修改失败!', 1, 8);
+				WST.msg('密码修改失败!', {icon: 5});
 			}
 	   });
 }
 /***************编辑店铺资料******************/
 function getCommunitysForShopEdit(){
 	  
-	  $.post(rooturl+"/index.php/Home/Areas/queryAreaAndCommunitysByList",{areaId:areaId},function(data,textStatus){
+	  $.post(domainURL +"/index.php/Home/Areas/getAreaAndCommunitysByList",{areaId:areaId},function(data,textStatus){
 			var json = data;
 			if(json.list){
 				var html = [];
@@ -636,7 +649,12 @@ function selectArea(v){
 	}
 	$(v).closest('dl').find('.count:first').html(count);
 }
-
+function initTime(objId,val){
+	for(var i=0;i<24;i++){
+		$('<option value="'+i+'" '+((val==i)?"selected":'')+'>'+i+':00</option>').appendTo($('#'+objId));
+		$('<option value="'+(i+".5")+'" '+((val==(i+".5"))?"selected":'')+'>'+i+':30</option>').appendTo($('#'+objId));
+	}
+}
 function editShop(){
 	   var params = {};
 	   params.userName = $('#userName').val();
@@ -647,6 +665,8 @@ function editShop(){
 	   params.shopImg = $('#shopImg').val();
 	   params.shopTel = $('#shopTel').val();
 	   params.shopAddress = $('#shopAddress').val();
+	   params.deliveryCostTime = $('#deliveryCostTime').val();
+	   params.deliveryStartMoney = $('#deliveryStartMoney').val();
 	   params.deliveryMoney = $('#deliveryMoney').val();
 	   params.deliveryFreeMoney = $('#deliveryFreeMoney').val();
 	   params.avgeCostMoney = $('#avgeCostMoney').val();
@@ -680,14 +700,14 @@ function editShop(){
 	   params.relateAreaId=relateArea.join(',');
 	   params.relateCommunityId=relateCommunity.join(',');
 	   layer.load('正在处理，请稍后...', 3);
-	   $.post(rooturl+"/index.php/Home/Shops/edit",params,function(data,textStatus){
+	   $.post(domainURL +"/index.php/Home/Shops/edit",params,function(data,textStatus){
 			var json = WST.toJson(data);
 			if(json.status=='1'){
-				layer.msg('操作成功!', 1,1, function(){
+				WST.msg('操作成功!', {icon: 1}, function(){
 					location.reload();
 				});
 			}else{
-				layer.msg('操作失败!', 1, 8);
+				WST.msg('操作失败!', {icon: 5});
 			}
 		});
 }
@@ -710,24 +730,24 @@ function setShop(){
 	   params.shopDesc = $('#shopDesc').val();
 	   layer.load('正在处理，请稍后...', 3);
 	   
-	   $.post(domainURL+"index.php/Home/Shops/editShopCfg",params,function(data,textStatus){
+	   $.post(domainURL +"/index.php/Home/Shops/editShopCfg",params,function(data,textStatus){
 			var json = WST.toJson(data);
 			if(json.status=='1'){
-				layer.msg('操作成功!', 1,1, function(){
+				WST.msg('操作成功!', {icon: 1}, function(){
 					location.reload();
 				});
 			}else{
-				layer.msg('操作失败!', 1, 8);
+				WST.msg('操作失败!', {icon: 5});
 			}
 		});
 }
 function logout(){
-	jQuery.post(rooturl+"/index.php/Home/Shops/logout/",{},function(rsp) {
+	jQuery.post(domainURL +"/index.php/Home/Shops/logout/",{},function(rsp) {
 		location.reload();
 	});
 }
 function checkLogin(){
-	jQuery.post(domainURL+"/index.php/Home/Shops/checkLoginStatus/",{},function(rsp) {
+	jQuery.post(domainURL +"/index.php/Home/Shops/checkLoginStatus/",{},function(rsp) {
 		var json = WST.toJson(rsp);
 		if(json.status && json.status==-999)location.reload();
 	});

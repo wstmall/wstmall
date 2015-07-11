@@ -16,9 +16,9 @@ $(function () {
     $("#btnsch").click(function () {
     	var searchType = $("#wst-search-type").val();
     	if(searchType==2){
-    		window.location = rooturl + '/index.php/Home/Shops/toShopStreet/?searchType='+searchType+'&keyWords=' + encodeURIComponent($.trim($("#keyword").val()));
+    		window.location = domainURL  + '/index.php/Home/Shops/toShopStreet/?searchType='+searchType+'&keyWords=' + encodeURIComponent($.trim($("#keyword").val()));
     	}else{
-    		window.location = rooturl + '/index.php/Home/goods/getGoodsList/?searchType='+searchType+'&keyWords=' + encodeURIComponent($.trim($("#keyword").val()));
+    		window.location = domainURL  + '/index.php/Home/goods/getGoodsList/?searchType='+searchType+'&keyWords=' + encodeURIComponent($.trim($("#keyword").val()));
     	}
         
     });

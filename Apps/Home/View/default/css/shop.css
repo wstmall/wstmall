@@ -15,7 +15,7 @@ body {
 
 .wst-main {
 	margin: auto;
-	width: 1020px;
+	width: 1210px;
 	min-height: 600px;
 	height: auto;
 	padding-top: 15px;
@@ -38,7 +38,7 @@ body {
 	background: #FFFFFF;
 	min-height: 600px;
 	height: auto;
-	width: 805px;
+	width: 990px;
 	float: right;
 	filter: progid : DXImageTransform.Microsoft.Shadow ( color = #909090,
 		direction = 120, strength = 4 );
@@ -66,7 +66,7 @@ body {
 	width: 198px;
 	margin: 0px;
 	padding: 0px;
-	min-height: 600px;
+	min-height: 620px;
 }
 
 .wst-menu li {
@@ -112,7 +112,6 @@ body {
 }
 
 .wst-tbar-group {
-	width: 785px;
 	height: 76px;
 	height: 36px;
 	background: #F5F5F5
@@ -126,7 +125,7 @@ body {
 
 .wst-list thead tr th {
 	height: 40px;
-	line-height: 40px;
+	/*line-height: 40px;*/
 	border-bottom: 1px solid #eeeeee;
 	text-align: left;
 	padding-left:5px;
@@ -142,24 +141,7 @@ body {
 .wst-list tbody tr:nth-child(even) {
 	background: #FCFAE1;
 }
-input,textarea {
-	background-color: white;
-	border: 1px solid #ccc;
-	border-radius: 4px;
-	box-shadow: 2px 2px 2px #f0f0f0 inset;
-	font-family: inherit;
-	font-size: 100%;
-	margin: 3px;
-	padding: 5px;
-	vertical-align: middle;
-}
-select{
-	box-shadow: 2px 2px 2px #f0f0f0 inset;
-	font-family: inherit;
-	font-size: 100%;
-	padding: 2px;
-	vertical-align: middle;
-}
+
 .wst-page-content .btn {
 	padding-left: 23px;
 	height: 40px;
@@ -246,6 +228,7 @@ text-decoration
 }
 .wst-form {
 	border-collapse: collapse;
+	width: 970px;
 }
 
 .wst-form tr {
@@ -368,7 +351,7 @@ text-decoration
 }
 
 .wst-nav-box {
-	width: 1020px;
+	width: 1210px;
 	margin: 0 auto;
 	height: 36px;
 	line-height: 36px;
@@ -376,11 +359,12 @@ text-decoration
 }
 
 .wst-nav-box li {
-	width: 110px;
-	text-align: center;
-	float: left;
+	text-align:left;
+	width: 198px;
+}
+.wst-nav-box li  a{
+	padding-left:50px;
 	color: #ffffff;
-	cursor: pointer
 }
 
 .wst-nav-box li:hover {
@@ -492,8 +476,8 @@ text-decoration
 	vertical-align: middle;
 }
 .wst-shophome-img{height:120px;height:120px;text-align:center;}
-.wst-shophome-area{min-height:478px;border-top:1px solid #cccccc;}
-.wst-shophome-nav{width:610px;float:left;min-height:400px;}
+.wst-shophome-area{min-height:400px;border-top:1px solid #cccccc;}
+.wst-shophome-nav{width:780px;float:left;min-height:400px;}
 .wst-shophome-nav .header{height:36px;background-color:#f5f5f5;line-height:36px;padding-left:10px;font-weight:bolder;}
 .wst-shophome-nav .main{height:66px;background-color:#feffd4;line-height:30px;padding-left:10px;margin:10px;}
 .wst-shophome-nav .current{padding-left:20px;padding-bottom:10px;color:#000000;}

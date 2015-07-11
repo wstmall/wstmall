@@ -17,7 +17,7 @@
    
 		<include file="./Apps/Home/View/default/header.html" />
 	    <div>
-			<div  style="width:1210;margin:0 auto;padding-top:4px;">
+			<div class="wst-street-ad-box">
 				<volist name="ads" id="vo" key='i'>
 					<if condition="$i eq 1">
 				   <a href="__ROOT__/index.php/Home/Index/access/?id={$vo['adId']}&url={$vo['adURL']}" target="_blank">
@@ -28,15 +28,15 @@
 			</div>
 		</div>
 		<div class="wst-shadow">
-			<div  style="width:1210;margin:0 auto;height:50px;line-height:50px;">
-				&nbsp;&nbsp;&nbsp;&nbsp;您附近有<span id="spcnt" style="font-weight:bold;color:red;"><?php echo count($dsplist[0]['ctlist']) ?></span>个相关地址：您的位置
+			<div class="wst-street-schbox">
+				&nbsp;&nbsp;&nbsp;&nbsp;您附近有<span id="spcnt" class="wst-street-spcnt"><?php echo count($dsplist[0]['ctlist']) ?></span>个相关地址：您的位置
 				<select id="cityId" onchange="getDistrictsShops();">
 				<volist name="areaList" id="vo" key='i' >
 				<option <if condition="$areaId3 eq $vo['areaId']">selected="selected"</if> value="{$vo['areaId']}">{$vo['areaName']}</option>
 				</volist>
 				</select>
 				<div style="float:right;">
-					<div style="width:450px;float:left;">
+					<div class="wst-street-sch-bx1">
 						&nbsp;&nbsp;&nbsp;&nbsp;筛选店铺&nbsp;&nbsp;&nbsp;&nbsp;
 						<select id="deliveryStartMoney" onchange="getDistrictsShops();">
 							<option value="-1">起送金额(全部)</option>
@@ -63,10 +63,10 @@
 						</select>
 						
 					</div>
-					<div style="width:250px;float:left;">
-						<div style="border:2px solid #e23c3d;position:relative;width:240px;margin-top:8px;">
-							<input id="shopName" style="border:0;width:150px;background: 0 0;padding-left:10px;line-height: 22px;padding-top: 2px; padding-bottom: 2px;font-size:14px;" title="请输入搜索文字" autocomplete="off">
-							<div style="position:absolute;top:0px;right:0px;width:50px;height:28px;color:#ffffff;font-weight:bolder;background-color:#e23c3d;line-height:28px;text-align:center;font-size:13px;cursor:pointer;" onclick="getDistrictsShops();">搜&nbsp;索</div>
+					<div class="wst-street-sch-bx2">
+						<div class="wst-street-scp-dp">
+							<input id="shopName" class="wst-street-scp-sn" placeholder="搜索 店铺" autocomplete="off">
+							<div class="wst-street-scp-sk" onclick="getDistrictsShops();">搜&nbsp;索</div>
 						</div>				
 					</div>
 					<div style="wst-clear"></div>
@@ -90,7 +90,7 @@
 						</volist>
 					</volist>
 					<else/>
-					<div style="line-height:300px;text-align:center;font-size:18px;">没有查找到相关店铺</div>
+					<div class="wst-street-scp-nsk">没有查找到相关店铺</div>
 					</if>
 				</div>
 				<div class="wst-shop-container">

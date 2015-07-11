@@ -80,7 +80,7 @@
    </script>
    <body class='wst-page'>
        <div class='wst-tbar' style='text-align:right;height:25px;'>
-       <php>if(in_array('spfl_01',$_SESSION['STAFF']['grant'])){</php>
+       <php>if(in_array('spfl_01',$WST_STAFF['grant'])){</php>
        <button type="button" class="btn btn-success glyphicon glyphicon-plus" onclick='javascript:toEdit(0)' style='float:right'>新增</button>
        <php>}</php>
        </div>
@@ -122,13 +122,13 @@
                </div>
                </td>
                <td>
-               <php>if(in_array('spfl_01',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('spfl_01',$WST_STAFF['grant'])){</php>
                <button type="button" class="btn btn-default glyphicon glyphicon-plus" onclick="javascript:toEdit(0,{$vo['catId']})"">新增子分类</button>&nbsp;
                <php>}</php>
-               <php>if(in_array('spfl_02',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('spfl_02',$WST_STAFF['grant'])){</php>
                <button type="button" class="btn btn-default glyphicon glyphicon-pencil" onclick="javascript:toEdit({$vo['catId']},0)"">修改</button>&nbsp;
                <php>}</php>
-               <php>if(in_array('spfl_03',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('spfl_03',$WST_STAFF['grant'])){</php>
                <button type="button" class="btn btn-default glyphicon glyphicon-trash" onclick="javascript:del({$vo['catId']},0)"">刪除</button>
                <php>}</php>
                </td>
@@ -161,13 +161,13 @@
 	               </div>
 	               </td>
 	               <td>
-	               <php>if(in_array('spfl_01',$_SESSION['STAFF']['grant'])){</php>
+	               <php>if(in_array('spfl_01',$WST_STAFF['grant'])){</php>
 	               <button type="button" class="btn btn-default glyphicon glyphicon-plus" onclick="javascript:toEdit(0,{$vo2['catId']})"">新增子分类</button>&nbsp;
 	               <php>}</php>
-	               <php>if(in_array('spfl_02',$_SESSION['STAFF']['grant'])){</php>
+	               <php>if(in_array('spfl_02',$WST_STAFF['grant'])){</php>
 	               <button type="button" class="btn btn-default glyphicon glyphicon-pencil" onclick="javascript:toEdit({$vo2['catId']},0)"">修改</button>&nbsp;
 	               <php>}</php>
-	               <php>if(in_array('spfl_03',$_SESSION['STAFF']['grant'])){</php>
+	               <php>if(in_array('spfl_03',$WST_STAFF['grant'])){</php>
 	               <button type="button" class="btn btn-default glyphicon glyphicon-trash" onclick="javascript:del({$vo2['catId']},0)"">刪除</button>
 	               <php>}</php>
 	               </td>
@@ -200,10 +200,10 @@
 		               </div>
 		               </td>
 		               <td>
-		               <php>if(in_array('spfl_02',$_SESSION['STAFF']['grant'])){</php>
+		               <php>if(in_array('spfl_02',$WST_STAFF['grant'])){</php>
 		               <button type="button" class="btn btn-default glyphicon glyphicon-pencil" onclick="javascript:toEdit({$vo3['catId']},0)"">修改</button>&nbsp;
 		               <php>}</php>
-		               <php>if(in_array('spfl_03',$_SESSION['STAFF']['grant'])){</php>
+		               <php>if(in_array('spfl_03',$WST_STAFF['grant'])){</php>
 		               <button type="button" class="btn btn-default glyphicon glyphicon-trash" onclick="javascript:del({$vo3['catId']},0)"">刪除</button>
 		               <php>}</php>
 		               </td>

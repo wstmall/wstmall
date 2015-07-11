@@ -8,7 +8,6 @@
  * ============================================================================
  * 店铺分类服务类
  */
-use Think\Model;
 class ShopsCatsModel extends BaseModel {
     /**
 	  * 新增
@@ -17,7 +16,7 @@ class ShopsCatsModel extends BaseModel {
 	 	$rd = array('status'=>-1);
 	 	$id = I("id",0);
 		$data = array();
-		$data["shopId"] = $_SESSION['USER']['shopId'];
+		$data["shopId"] = session('WST_USER.shopId');
 		$data["isShow"] = I("isShow",0);
 		$data["catName"] = I("catName");
 		$data["catSort"] = I("catSort",0);
@@ -28,6 +27,7 @@ class ShopsCatsModel extends BaseModel {
 			$rs = $m->add($data);
 			if(false !== $rs){
 				$rd['status']= 1;
+				S("WST_CACHE_SHOP_CAT_".session('WST_USER.shopId'),null);
 			}
 		}
 		return $rd;
@@ -42,12 +42,13 @@ class ShopsCatsModel extends BaseModel {
 		$data["isShow"] = I("isShow",0);
 		$data["catName"] = I("catName");
 		$data["catSort"] = I("catSort",0);
-		$shopId = (int)$_SESSION['USER']['shopId'];
+		$shopId = (int)session('WST_USER.shopId');
 		if($this->checkEmpty($data,true)){	
 			$m = M('shops_cats');
 			$rs = $m->where("catId=".I('id')." and shopId=".$shopId)->save($data);
 			if(false !== $rs){
 				$rd['status']= 1;
+				S("WST_CACHE_SHOP_CAT_".session('WST_USER.shopId'),null);
 			}
 		}
 		return $rd;
@@ -60,12 +61,13 @@ class ShopsCatsModel extends BaseModel {
 	 	$id = I("id",0);
 		$data = array();
 		$data["catName"] = I("catName");
-		$shopId = (int)$_SESSION['USER']['shopId'];
+		$shopId = (int)session('WST_USER.shopId');
 		if($this->checkEmpty($data,true)){	
 			$m = M('shops_cats');
 			$rs = $m->where("catId=".I('id')." and shopId=".$shopId)->save($data);
 			if(false !== $rs){
 				$rd['status']= 1;
+				S("WST_CACHE_SHOP_CAT_".session('WST_USER.shopId'),null);
 			}
 		}
 		return $rd;
@@ -127,10 +129,11 @@ class ShopsCatsModel extends BaseModel {
 	 	$m = M('shops_cats');
 	 	$data = array();
 		$data["catFlag"] = -1;
-		$shopId = (int)$_SESSION['USER']['shopId'];
+		$shopId = (int)session('WST_USER.shopId');
 	 	$rs = $m->where("catId=".I('id')." and shopId=".$shopId)->save($data);
 	    if(false !== $rs){
 			$rd['status']= 1;
+			S("WST_CACHE_SHOP_CAT_".session('WST_USER.shopId'),null);
 		}
 		return $rd;
 	 }
@@ -139,21 +142,31 @@ class ShopsCatsModel extends BaseModel {
 	/**
 	  * 获取门店商品分类列表
 	*/
-	public function getShopCateList(){
+    public function getShopCateList(){
 		$shopId = I("shopId",0);
-		$m = M('shops_cats');
-		$sql = "select * from __PREFIX__shops_cats where shopId=".$shopId." and parentId =0 and catFlag=1 order by catSort asc";
-		$rs = $this->query($sql);
-		$cats = array();
-		for ($i = 0; $i < count($rs); $i++) {
-			$catId = $rs[$i]["catId"];
-			$sql2 = "select * from __PREFIX__shops_cats where shopId=".$shopId." and parentId =$catId and catFlag=1 order by catSort asc";
-			$rs2 = $this->query($sql2);
-			$rs[$i]["children"] = $rs2;
-			
-		}
-		
-		return $rs;
+		$data = S("WST_CACHE_SHOP_CAT_".$shopId);
+		if(!$data){
+			$m = M('shops_cats');
+			$sql = "select catId,parentId,catName,shopId from __PREFIX__shops_cats where shopId=".$shopId." and parentId =0 and isShow=1 and catFlag=1 order by catSort asc";
+			$data = $this->query($sql);
+			if(count($data)>0){
+				$ids = array();
+				foreach ($data as $v){
+					$ids[] = $v['catId'];
+				}
+				$sql = "select catId,parentId,catName,shopId from __PREFIX__shops_cats where shopId=".$shopId." and parentId in(".implode(',',$ids).") and isShow=1 and catFlag=1 order by catSort asc";
+				$crs = $this->query($sql);
+				$ids = array();
+			    foreach ($crs as $v){
+					$ids[$v['parentId']][] = $v;
+				}
+				foreach ($data as $key =>$v){
+					if($ids[$v['catId']])$data[$key]['children'] = $ids[$v['catId']];
+				}
+			}
+			S("WST_CACHE_SHOP_CAT_".$shopId,$data,86400);
+	    }
+		return $data;
 	}
 	 
 };

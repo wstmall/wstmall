@@ -56,15 +56,15 @@ class StaffsModel extends BaseModel {
 			$rs = $m->where("staffId=".I('id'))->save($data);
 			if(false !== $rs){
 				$rd['status']= 1;
-				$staffId = (int)$_SESSION['STAFF']['staffId'];
+				$staffId = (int)session('WST_STAFF.staffId');
 		        if($staffId==$id){
-		        	 $_SESSION['STAFF']['loginName'] = $data["loginName"];
-		        	 $_SESSION['STAFF']['staffName'] = $data["staffName"];
-		        	 $_SESSION['STAFF']['staffRoleId'] = $data["staffRoleId"];
-		        	 $_SESSION['STAFF']['workStatus'] = $data["workStatus"];
-		        	 $_SESSION['STAFF']['staffStatus'] = $data["staffStatus"];
-		        	 $_SESSION['STAFF']['staffNo'] = $data["staffNo"];
-		        	 $_SESSION['STAFF']['staffPhoto'] = $data["staffPhoto"];
+		        	 session('WST_STAFF.loginName',$data["loginName"]);
+		        	 session('WST_STAFF.staffName',$data["staffName"]);
+		        	 session('WST_STAFF.staffRoleId',$data["staffRoleId"]);
+		        	 session('WST_STAFF.workStatus',$data["workStatus"]);
+		        	 session('WST_STAFF.staffStatus',$data["staffStatus"]);
+		        	 session('WST_STAFF.staffNo',$data["staffNo"]);
+		        	 session('WST_STAFF.staffPhoto',$data["staffPhoto"]);
 		        }
 				
 			}
@@ -103,7 +103,7 @@ class StaffsModel extends BaseModel {
 	  */
 	 public function del(){
 	 	$rd = array('status'=>-1);
-	 	if(I('id')==$_SESSION['STAFF']['staffId'])return $rd;
+	 	if(I('id')==session('WST_STAFF.staffId'))return $rd;
 	 	$m = M('staffs');
 	 	$data = array();
 		$data["staffFlag"] = -1;
@@ -147,11 +147,10 @@ class StaffsModel extends BaseModel {
 	 		$m->where(' staffId='.$staff['staffId'])->save();
 	 		//记录登录日志
 		 	$data = array();
-			$data["loginId"] = I("loginId");
 			$data["staffId"] = $staff['staffId'];
 			$data["loginTime"] = date('Y-m-d H:i:s');
-			$data["loginIp"] = get_client_ip();;
-			$m = M('log_logins');
+			$data["loginIp"] = get_client_ip();
+			$m = M('log_staff_logins');
 			$m->add($data);
 	 	}
 	 	return $rd;

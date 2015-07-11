@@ -16,7 +16,7 @@
       <script src="__PUBLIC__/js/common.js"></script>
       <script>
       $(function () {
-	      WST.getWSTMAllVersion('__ROOT__/index.php/Admin/Index/getWSTMallVersion');
+	      WST.getWSTMAllVersion("{:U('Admin/Index/getWSTMallVersion')}");
       });
       </script>
    </head>
@@ -24,7 +24,7 @@
       <div class='panel wst-panel-full'>
          <div class='wstmall-version-tips'>您有新的版本(<span id='wstmall_version'>0.0.0</span>)可以下载啦~，<a id='wstmall_down' href='' target='_blank'>点击</a>下载</div>     
          <div class="box box-info col-xs-12">
-             <p style='font-size:18px;'>您好，{:session('STAFF.staffName')}，欢迎使用 WSTMall。 您上次登录的时间是 {:session('STAFF.lastTime')} ，IP 是 {:session('STAFF.lastIP')}</p>
+             <p style='font-size:18px;'>您好，{:session('WST_STAFF.staffName')}，欢迎使用 WSTMall。 您上次登录的时间是 {:session('WST_STAFF.lastTime')} ，IP 是 {:session('WST_STAFF.lastIP')}</p>
          </div>
          <div class="box box-info col-xs-12">
            <div class="box-header">

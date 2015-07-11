@@ -19,9 +19,9 @@ $(function() {
  * 加入购物车
  */
 /*function addCart(goodsId,type){
-	jQuery.post(rooturl+"/index.php/Home/Cart/addToCartAjax/?goodsId="+goodsId+'&gcount=1&rnd='+Math.random() ,{goodsId:goodsId},function(data) {
+	jQuery.post(domainURL +"/index.php/Home/Cart/addToCartAjax/?goodsId="+goodsId+'&gcount=1&rnd='+Math.random() ,{goodsId:goodsId},function(data) {
 		if(type==1){
-			location.href=rooturl+'/index.php/Home/Cart/toCart';
+			location.href=domainURL +'/index.php/Home/Cart/toCart';
 		}else{
 			layer.msg("添加成功!",3000,30);
 		}
@@ -52,12 +52,12 @@ function searchShopsGoods(obj){
 	params.push("ct1=" + $("#ct1").val());
 	params.push("ct2=" + $("#ct2").val());
 	params.push("goodsName=" + $("#goodsName").val());
-	document.location.href = rooturl+"/index.php/Home/Shops/toShopHome/?"+params.join("&");
+	document.location.href = domainURL +"/index.php/Home/Shops/toShopHome/?"+params.join("&");
 
 }
 
 function searchwst(){
 	var goodsName = $.trim($("#goodsName").val());
-	window.location = rooturl + '/index.php/Home/goods/getGoodsList/?searchType=2&keyWords=' + encodeURIComponent(goodsName);
+	window.location = domainURL  + '/index.php/Home/goods/getGoodsList/?searchType=2&keyWords=' + encodeURIComponent(goodsName);
 	
 }

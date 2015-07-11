@@ -15,38 +15,56 @@ class BaseAction extends Controller {
 		//初始化系统信息
 		$m = D('Home/System');
 		$GLOBALS['CONFIG'] = $m->loadConfigs();
-		$this->assign("baseUser",$_SESSION['USER']);
+		$this->assign("WST_USER",session('WST_USER'));
 		$areas= D('Home/Areas');
-   		$areaList = $areas->getCitys();
-   		$areaId2 = $this->getDefaultCity();
-   		$currArea = $areas->getArea($areaId2);
-   		
-        $this->assign('template_path',$template_path);
-   		//获取分类
-        $gcm = D('Home/GoodsCats');
-   		$catList = $gcm->getGoodsCats($areaId2);
-   		$spm = D('Home/Shops');
-   		$selfShop = $spm->getSelfShop($areaId2);
-   		$this->assign('selfShop',$selfShop);
-   		$m = D('Home/Cart');
-   		$cartInfo = $m->getCartInfo();
-   		$this->assign('cartcnt',count($cartInfo["cartgoods"]));
+   		$areaList = $areas->getCityListByProvince();
+		$areaId2 = $this->getDefaultCity();
+		$currArea = $areas->getArea($areaId2);
+		$this->assign('currArea',$currArea);
    		$this->assign('searchType',I("searchType",1));
-   		$this->assign('catList',$catList);
+   		
    		$this->assign('currCity',$areaList[$areaId2]);
-   		$this->assign('cityList',$areaList);
    		$this->assign('areaId2',$areaId2);
-   		$this->assign('currArea',$currArea);
+   		$this->assign('template_path',$template_path);
    		$this->assign('CONF',$GLOBALS['CONFIG']);
-		$this->header(); //加入头部
 		$this->footer(); //加入底部
 	}
+	
+	/**
+	 * 
+	 */
+	public function getBaseInfo(){
+		$areaId2 = $this->getDefaultCity();
+		//获取分类
+		$gcm = D('Home/GoodsCats');
+		$catList = $gcm->getGoodsCats($areaId2);
+		$this->assign('catList',$catList);
+		
+		//获取自营商店
+		$spm = D('Home/Shops');
+		$selfShop = $spm->getSelfShop($areaId2);
+		$this->assign('selfShop',$selfShop);
+		
+		//获取购物车
+		$m = D('Home/Cart');
+		$cartInfo = $m->getCartInfo();
+		$this->assign('cartcnt',count($cartInfo["cartgoods"]));
+	}
+	
+	/**
+	 * 空操作处理
+	 */
+    public function _empty($name){
+        $this->assign('msg',"你的思想太飘忽，系统完全跟不上....");
+        $this->display('default/sys_msg');
+    }
 	
     /**
      * 只要不是会员都跳到登录页面让他登录
      */
 	public function isUserLogin($ref="") {
-		if (empty($_SESSION['USER']) || ($_SESSION['USER']['userType']!=0 && $_SESSION['USER']['userType']<1)){
+		$USER = session('WST_USER');
+		if (empty($USER) || ($USER['userType']!=0 && $USER['userType']<1)){
 			$this->redirect("Users/login");
 		}
 	}
@@ -54,13 +72,13 @@ class BaseAction extends Controller {
      * ajax程序验证,只要不是会员都返回-999
      */
     public function isUserAjaxLogin() {
-		if (empty($_SESSION['USER']) || ($_SESSION['USER']['userType']!=0 || $_SESSION['USER']['userType']<1)){
+    	$USER = session('WST_USER');
+		if (empty($USER) || ($USER['userType']!=0 || $USER['userType']<1)){
 			if(!empty($_COOKIE['loginName']) && !empty($_COOKIE['loginPwd'])){ //自动登录(已保存loginName，loginPwd)
 				$m = D('Home/User');
 				$user = $m->getUserInfo($_COOKIE['loginName'],$_COOKIE['loginPwd']);
 				if(empty($user)){
-					$_SESSION['USER'] = $user;
-					
+					session('WST_USER',$user);
 				}else{
 					die("{status:-999}");
 				}
@@ -71,13 +89,15 @@ class BaseAction extends Controller {
 	 * 商家登录验证
 	 */
 	public function isShopLogin(){
-	    if (empty($_SESSION['USER']) || $_SESSION['USER']['userType']<1)$this->redirect("Shops/login");
+		$USER = session('WST_USER');
+	    if (empty($USER) || $USER['userType']<1)$this->redirect("Shops/login");
 	}
 	/**
 	 * 商家ajax登录验证
 	 */
 	public function isShopAjaxLogin(){
-		if (empty($_SESSION['USER']) || $_SESSION['USER']['userType']<1){
+		$USER = session('WST_USER');
+		if (empty($USER) || $USER['userType']<1){
 			die("{status:-999,url:'Shops/login'}");
 		}
 	}
@@ -85,7 +105,8 @@ class BaseAction extends Controller {
 	 * 用户登录验证-主要用来判断会员和商家共同功能的部分
 	 */
 	public function isLogin($userType = 'User'){
-		if (empty($_SESSION['USER'])){
+		$USER = session('WST_USER');
+		if (empty($USER)){
 		    if($userType=='Shop'){
 		    	$this->redirect("Shops/login");
 		    }else{
@@ -97,23 +118,25 @@ class BaseAction extends Controller {
 	* 用户ajax登录验证
 	*/
    public function isAjaxLogin($userType = 'User'){
-		if (empty($_SESSION['USER'])){
+   	   $USER = session('WST_USER');
+	   if (empty($USER)){
 			if($userType=='Shop'){
 				die("{status:-999,url:'Shops/login'}");
 			}else{
 				die("{status:-999,url:'Users/login'}");
 			}
-		}
+	   }
    }
    /**
     * 检查登录状态
     */
    public function checkLoginStatus(){
-	   	if (empty($_SESSION['USER'])){
-	   	     die("{status:-999}");
-	   	}else{
+   	   $USER = session('WST_USER');
+	   if (empty($USER)){
+	   	    die("{status:-999}");
+	   }else{
 	   		die("{status:1}");
-	   	}
+	   }
    }
    /**
 	 * 验证模块的码校验
@@ -147,7 +170,7 @@ class BaseAction extends Controller {
     public function uploadPic(){
 	   $config = array(
 		        'maxSize'       =>  0, //上传的文件大小限制 (0-不做限制)
-		        'exts'          =>  array('jpg','png','gif','jpge'), //允许上传的文件后缀
+		        'exts'          =>  array('jpg','png','gif','jpeg'), //允许上传的文件后缀
 		        'rootPath'      =>  './Upload/', //保存根路径
 		        'driver'        =>  'LOCAL', // 文件上传驱动
 		        'subName'       =>  array('date', 'Y-m'),
@@ -168,12 +191,6 @@ class BaseAction extends Controller {
 			echo json_encode($rs);
 		}	
     }
-	/**
-	 * 页头参数初始化
-	 */
-	public function header(){
-		
-	}
 	
 	/**
 	 * 产生验证码图片
@@ -183,7 +200,7 @@ class BaseAction extends Controller {
 		// 导入Image类库
     	$Verify = new \Think\Verify();
     	$Verify->entry();
-   }
+    }
    /**
 	 * 页尾参数初始化
 	 */
@@ -191,7 +208,7 @@ class BaseAction extends Controller {
 		$m = D('Home/Friendlinks');
 		$friendLikds = $m->getFriendLinks();
 		$this->assign('friendLikds',$friendLikds);
-		
+		$m = D('Home/Articles');
 		$helps = $m->getHelps();
 		$this->view->assign("helps",$helps);
 	}
@@ -205,36 +222,7 @@ class BaseAction extends Controller {
 	 * 定位所在城市
 	 */
 	public function getDefaultCity(){
-		$areaId2 = (int)$_SESSION['areaId2'];
-		//检验城市有效性
-		if($areaId2>0){
-			$m = D('Home/Areas');
-			$sql ="SELECT areaId FROM __PREFIX__areas WHERE isShow=1 AND areaFlag = 1 AND areaType=1 AND areaId=".$areaId2;
-		    $rs = $m->query($sql);
-		    if($rs[0]['areaId']=='')$areaId2 = 0;
-		}else{
-			$areaId2 = (int)$_COOKIE['areaId2'];
-		}
-		//定位城市
-		if($areaId2==0){
-			//IP定位
-			$Ip = new \Org\Net\IpLocation('UTFWry.dat'); // 实例化类 参数表示IP地址库文件
-			$area = $Ip->getlocation(get_client_ip()); 
-			if($area['area']!=""){
-				$m = D('Home/Areas');
-			    $sql ="SELECT areaId FROM __PREFIX__areas WHERE isShow=1 AND areaFlag = 1 AND areaType=1 AND areaName like '$cityName'";
-			    $rs = $m->query($sql);
-			    if($rs[0]["areaId"]>0){
-					$areaId2 = $rs[0]["areaId"];
-			    }else{
-					$areaId2 = C(DEFAULT_CITY);
-			    }
-			}else{
-			    $areaId2 = C(DEFAULT_CITY);
-			}
-		}
-		setcookie("areaId2", $areaId2, time()+3600*24*90);
-		return $areaId2;
-		
+		$areas= D('Home/Areas');
+		return $areas->getDefaultCity();
 	}
 }

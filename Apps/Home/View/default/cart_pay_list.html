@@ -11,81 +11,71 @@
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/cartpaylist.css" />
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
 		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />
-		<script src="__PUBLIC__/js/jquery.min.js"></script>
    	</head>
    	<body>
-   
 		<include file="./Apps/Home/View/default/header.html" />
-	
-		
 		<!----加载商品楼层start----->
 		<div class="wst-container">
 			 <div>
-           
-                <div id="succeed" style="text-align: center; margin-top: 30px;">
-
-                    <div class="success2" style="margin: 0 auto;">
-                        <div style="float: left; width: 400px; text-align: left;">
-                            
-                        </div>
-                        <div style="float: right; width: 590px; height: 50px; text-align: right; position: relative;">
+                <div id="succeed">
+                    <div class="success2">
+                        <div class="wst-cart-left-blank"></div>
+                        <div class="wst-cart-step">
                             <img src="__ROOT__/Apps/Home/View/default/images/step1.png" /><br />
-                            <span style="position: absolute; top: 30px; left: 150px; color: #7ABD54;">1.我的购物车</span>
-                            <span style="position: absolute; top: 30px; left: 290px;">2.填写核对订单信息</span>
-                            <span style="position: absolute; top: 30px; left: 465px;">3.成功提交订单</span>
+                            <span class="wst-cart-step1">1.我的购物车</span>
+                            <span class="wst-cart-step2">2.填写核对订单信息</span>
+                            <span class="wst-cart-step3">3.成功提交订单</span>
                         </div>
-                        <div style="clear: both;"></div>
+                        <div class="wst-clear"></div>
                     </div>
-
                 </div>
             </div>
 
-            <div style="margin: 0 auto; margin-top: 40px; margin-bottom: 10px;">
-                <div style="font-size: 20px; font-weight: bold; margin-bottom: 10px;">
-               	我的购物车
+            <div class="wst-cart-container">
+                <div class="wst-cart-title">
+               		我的购物车
                 </div>
-               
-                <div id="showwarnmsg" style="display:none;background-color: #FFE8E8;margin-top: 6px;margin-bottom: 6px;padding:6px;text-align: center;color:#CC0000;border: 1px solid #DB9A9A;">
+                <div id="showwarnmsg">
                 	抱歉，您购物车中的部分商品缺货，或库存不足，请删除被标记的商品或修改购买数量再进行结算。
                 </div>
-                <div style="border: 1px solid #E9E9E9; border-top: 2px solid  #999999;">
-                    <div style="line-height: 35px; background-color: #E9E9E9; text-align: center;">
-                        <div style="float: left; width: 80px; position: relative;">&nbsp;序号</div>
-                        <div style="float: left; width: 240px; text-align: left;">商品</div> 
-                        <div style="float: left; width: 340px; text-align: center;">门店名称</div>                      
-                        <div style="float: left; width: 100px; text-align: center;">商品单价</div>
-                        <div style="float: left; width: 100px; text-align: center;">库存状态</div>
-                        <div style="float: left; width: 100px; text-align: center;">数量</div>
-                        <div style="float: left; width: 100px; text-align: center;">总价</div>
-                        <div style="float: left; width: 100px; text-align: center;">操作</div>
-                        <div style="clear: both;"></div>
+                <div class="wst-cartlist-box">
+                    <div class="wst-cartlist-head">
+                        <div class="wst-head-title1">&nbsp;序号</div>
+                        <div class="wst-head-title2">商品</div> 
+                        <div class="wst-head-title3">门店名称</div>                      
+                        <div class="wst-head-title4">商品单价</div>
+                        <div class="wst-head-title5">库存状态</div>
+                        <div class="wst-head-title6">数量</div>
+                        <div class="wst-head-title7">总价</div>
+                        <div class="wst-head-title8">操作</div>
+                        <div class="wst-clear"></div>
                     </div>
                     <div id="catgoodsList">
                         <volist name="cartInfo['cartgoods']" key="k" id="goods">
                         <input type="hidden" value=<if condition="$goods['goodsStock'] lt $goods['cnt']">-1</if> class="goodsStockFlag"/>
-							<div style="padding:4px;border-bottom: 1px solid #E9E9E9;" id="selgoods_{$goods['goodsId']}" class="selgoods" <if condition="$goods['goodsStock'] lt $goods['cnt']">style="border:2px solid red;"</if>>
-		                        <div style="float: left; width: 80px; text-align: center;">
+							<div class="wst-cartlist-item" id="selgoods_{$goods['goodsId']}" class="selgoods" <if condition="$goods['goodsStock'] lt $goods['cnt']">style="border:2px solid red;"</if>>
+		                        <div class="wst-cartlist-vb">
 		                            &nbsp;{$k}
 									<input type="hidden" class="cgoodsId" value="{$goods['goodsId']}" />
 		                            <input type="hidden" id="price_{$goods['goodsId']}" value="{$goods['shopPrice']}" />
 		                        </div>
-		                        <div style="float: left; width: 240px;">
+		                        <div class="wst-cartlist-item-col1">
 		                            <div>
-		                                <div style="float: left; width: 65px;">
+		                                <div class="wst-cartlist-bximg">
 		                                 	<a target="_blank" href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$goods['goodsId']}" target="_blank">
 		                                        <img src="__ROOT__/{$goods['goodsThums']}" width="60" height="60" />
 		                                    </a>
 		                                </div>
-		                                <div style="float: left; width: 160px; line-height: 30px;">
+		                                <div class="wst-cartlist-gsname">
 		                                    <a target="_blank" href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$goods['goodsId']}" target="_blank">{$goods["goodsName"]}</a>
 		                                </div>
 		                            </div>
 		                        </div>
-		                        <div style="float: left; width: 340px; text-align: center;">
+		                        <div class="wst-cartlist-item-col2">
 		                        	<a target="_blank" href="__ROOT__/index.php/Home/Shops/toShopHome/?shopId={$goods['shopId']}" title="{$goods['shopName']}">{$goods['shopName']}</a>
 		                        </div>
-		                        <div style="float: left; width: 100px; text-align: center;">¥{$goods["shopPrice"]}元</div>
-		                        <div style="float: left; width: 100px; text-align: center;" id="stock_{$goods['goodsId']}">			                       
+		                        <div class="wst-cartlist-item-col3">¥{$goods["shopPrice"]}元</div>
+		                        <div class="wst-cartlist-item-col4" id="stock_{$goods['goodsId']}">			                       
 			                		<if condition="$goods['goodsStock'] egt $goods['cnt']">
 	                                                                                                有货
 	                        		<elseif condition="$goods['goodsStock'] eq 0"/>
@@ -94,25 +84,25 @@
 	                                    <span style="color:red;">库存不足,仅剩{$goods["goodsStock"]}份</span>
 	                         		</if>
 		                        </div>
-		                        <div style="float: left; width: 100px; text-align: center;">
+		                        <div class="wst-cartlist-item-col5">
 		                            <div class="wrap-input" style="">
-		                                <button id="numl_{$goods['goodsId']}" style="width:18px;display:inline-block;border: 1px solid #666; cursor: pointer; height: 18px; line-height: 15px; padding-top: 0;" onclick="changeCatGoodsnum(1,{$goods['goodsId']},{$goods['isBook']})">-</button>
-		                                <input id="buy-num_{$goods['goodsId']}" type="text" style="width: 30px; text-align: center;" value="{$goods['cnt']}" onkeyup="changeCatGoodsnum(0,{$goods['goodsId']},{$goods['isBook']});" />
-		                                <button id="numr_{$goods['goodsId']}" style="width:18px;display:inline-block;border: 1px solid #666; cursor: pointer; height: 18px; line-height: 15px; padding-top: 0;" onclick="changeCatGoodsnum(2,{$goods['goodsId']},{$goods['isBook']})">+</button>
+		                                <button id="numl_{$goods['goodsId']}" class="wst-cartlist-plus" onclick="changeCatGoodsnum(1,{$goods['goodsId']},{$goods['isBook']})">-</button>
+		                                <input id="buy-num_{$goods['goodsId']}" class="text" style="width: 30px; text-align: center;" maxlength="3" value="{$goods['cnt']}" onkeypress="return WST.isNumberKey(event);" onkeyup="changeCatGoodsnum(0,{$goods['goodsId']},{$goods['isBook']});" />
+		                                <button id="numr_{$goods['goodsId']}" class="wst-cartlist-add" onclick="changeCatGoodsnum(2,{$goods['goodsId']},{$goods['isBook']})">+</button>
 		                            </div>
 		                        </div>
-		                        <div style="float: left; width: 100px; text-align: center;">¥<span id="prc_{$goods['goodsId']}">{$goods["shopPrice"] * $goods["cnt"]}</span>元</div>
-		                        <div style="float: left; width: 100px; text-align: center;"><a href="javascript:delCatGoods({$goods['goodsId']});">删除</a></div>
-		                        <div style="clear: both;"></div>
+		                        <div class="wst-cartlist-item-col7">¥<span id="prc_{$goods['goodsId']}">{$goods["shopPrice"] * $goods["cnt"]}</span>元</div>
+		                        <div class="wst-cartlist-item-col8""><a href="javascript:delCatGoods({$goods['goodsId']});">删除</a></div>
+		                        <div class="wst-clear"></div>
 		                    </div>
                         </volist>
                         
 						<if condition="count($cartInfo['cartgoods']) lt 1">
-						<div style='height: 50px; line-height: 50px; text-align: center;'>购物车中没有商品</div>
+						<div class='wst-cart-empty'>购物车中没有商品</div>
                         </if>
                     </div>
-                    <div style="line-height: 35px; background-color: #E9E9E9; font-weight: bold; text-align: right;">
-                        总计（不含运费）:<span style="color: red; font-size: 20px;">¥<span id="totalMoney">{$cartInfo["totalMoney"]}</span>元&nbsp;&nbsp;</span>
+                    <div class="wst-cart-total-money">
+                       	 总计（不含运费）:<span class="wst-cart-unin">¥<span id="totalMoney">{$cartInfo["totalMoney"]}</span>元&nbsp;&nbsp;</span>
                     </div>
                 </div>
                 <div>&nbsp;</div>
@@ -121,7 +111,6 @@
                     <li class="wst-btn-continue" onclick="javascript:toContinue();"></li>
                     <li class="wst-btn-checkout" onclick="javascript:goToPay();" style="<if condition="count($cartInfo['cartgoods']) lt 1">display: none;</if>"></li>
                    	<div class="wst-clear"></div>
-
                 </div>
             </div>
         
@@ -129,10 +118,11 @@
 		</div>
 		<include file="./Apps/Home/View/default/footer.html" />
    	</body>
-   	
+   
    	<script src="__PUBLIC__/js/common.js"></script>
 	<script src="__ROOT__/Apps/Home/View/default/js/head.js" type="text/javascript"></script>
 	<script src="__ROOT__/Apps/Home/View/default/js/common.js" type="text/javascript"></script>
+	<script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
 	<script src="__ROOT__/Apps/Home/View/default/js/cartpaylist.js"></script>
    	
 </html> 

@@ -8,7 +8,6 @@
  * ============================================================================
  * 商品评价服务类
  */
-use Think\Model;
 class GoodsAppraisesModel extends BaseModel {
 	 /**
 	  * 商品评价分页列表
@@ -82,16 +81,17 @@ class GoodsAppraisesModel extends BaseModel {
 		$userId = $obj["userId"];
 		$orderId = $obj["orderId"];
 		//检查订单是否已评论
-		$sql="select isAppraises,orderFlag from ".$this->tablePrefix."orders where orderId=".$orderId;
+		$sql="select isAppraises,orderFlag,shopId from __PREFIX__orders where orderId=".$orderId." and userId=".$userId;
 		$rs = $this->query($sql);
 		if($rs[0]['isAppraises']==1 || $rs[0]['orderFlag']==-1){
 			return -1;
 		}
+		$shopId = $rs[0]['shopId'];
 		//新增评价记录
 		$data = array();
 		$goodsId = I("goodsId");
 		$data["goodsId"] = $goodsId;
-		$data["shopId"] = I("shopId");
+		$data["shopId"] = $shopId;
 		$data["userId"] = $userId;
 		$data["goodsScore"] = (int)I("goodsScore");
 		$data["timeScore"] = (int)I("timeScore");
@@ -108,7 +108,7 @@ class GoodsAppraisesModel extends BaseModel {
 		$goodsScores = $this->queryRow($sql);
 		
 		if($goodsScores["goodsId"]>0){
-			$sql = "UPDATE ".$this->tablePrefix."goods_scores set 
+			$sql = "UPDATE __PREFIX__goods_scores set 
 					totalUsers = totalUsers +1 , totalScore = totalScore +".$data["totalScore"]."
 					,goodsUsers = goodsUsers +1 , goodsScore = goodsScore +".$data["goodsScore"]."
 					,timeUsers = timeUsers +1 , timeScore = timeScore +".$data["timeScore"]."
@@ -138,8 +138,8 @@ class GoodsAppraisesModel extends BaseModel {
 		}
 		//检查下是不是订单的所有商品都评论完了
 		$sql = "SELECT g.goodsId,og.goodsNums as ogoodsNums,og.goodsPrice as ogoodsPrice ,ga.id as gaId
-				FROM ".$this->tablePrefix."order_goods og, ".$this->tablePrefix."goods g 
-				LEFT JOIN ".$this->tablePrefix."goods_appraises ga ON g.goodsId = ga.goodsId AND ga.orderId = $orderId
+				FROM __PREFIX__order_goods og, __PREFIX__goods g 
+				LEFT JOIN __PREFIX__goods_appraises ga ON g.goodsId = ga.goodsId AND ga.orderId = $orderId
 				WHERE og.orderId = $orderId AND og.goodsId = g.goodsId";
 		$goodslist = $this->query($sql);
 		$gmark = 1;
@@ -148,7 +148,7 @@ class GoodsAppraisesModel extends BaseModel {
 			if(!$goods["gaId"]) $gmark =0;
 		}
 		if($gmark==1){
-			$sql="update ".$this->tablePrefix."orders set isAppraises=1 where orderId=".$orderId;
+			$sql="update __PREFIX__orders set isAppraises=1 where orderId=".$orderId;
 			$this->query($sql);
 		}
 		
@@ -162,18 +162,18 @@ class GoodsAppraisesModel extends BaseModel {
 		$orderId = $obj["orderId"];
 		$data = array();
 		
-		$sql = "SELECT o.*,sp.shopId,sp.shopName FROM ".$this->tablePrefix."orders o,".$this->tablePrefix."shops sp WHERE o.shopId=sp.shopId AND o.orderId = $orderId ";		
+		$sql = "SELECT o.*,sp.shopId,sp.shopName FROM __PREFIX__orders o,__PREFIX__shops sp WHERE o.shopId=sp.shopId AND o.orderId = $orderId ";		
 		$order = $this->queryRow($sql);
 		$data["order"] = $order;
 		
 		$sql = "SELECT g.*,og.goodsNums as ogoodsNums,og.goodsPrice as ogoodsPrice ,ga.id as gaId
-				FROM ".$this->tablePrefix."order_goods og, ".$this->tablePrefix."goods g 
-				LEFT JOIN ".$this->tablePrefix."goods_appraises ga ON g.goodsId = ga.goodsId AND ga.orderId = $orderId
+				FROM __PREFIX__order_goods og, __PREFIX__goods g 
+				LEFT JOIN __PREFIX__goods_appraises ga ON g.goodsId = ga.goodsId AND ga.orderId = $orderId
 				WHERE og.orderId = $orderId AND og.goodsId = g.goodsId";
 		$goods = $this->query($sql);
 		$data["goodsList"] = $goods;
 		
-		$sql = "SELECT * FROM ".$this->tablePrefix."shop_appraises WHERE orderId = $orderId ";	
+		$sql = "SELECT * FROM __PREFIX__shop_appraises WHERE orderId = $orderId ";	
 		$appraises = $this->query($sql);
 		$data["shopAppraises"] = $appraises;
 		
@@ -189,7 +189,7 @@ class GoodsAppraisesModel extends BaseModel {
 		$data = array();
 
 		$sql = "SELECT ga.*,o.orderNo,g.goodsName,g.goodsThums
-				FROM ".$this->tablePrefix."goods_appraises ga, ".$this->tablePrefix."goods g, ".$this->tablePrefix."orders o 
+				FROM __PREFIX__goods_appraises ga, __PREFIX__goods g, __PREFIX__orders o 
 				WHERE ga.userId=$userId AND ga.goodsId = g.goodsId AND ga.orderId = o.orderId
 				ORDER BY ga.createTime DESC";
 		$pages = $this->pageQuery($sql,$pcurr,$pageSize);	

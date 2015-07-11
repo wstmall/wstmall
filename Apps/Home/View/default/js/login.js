@@ -23,7 +23,7 @@ function checkLoginInfo(){
 		return false;
 	}
 	
-	$.post(rooturl+"/index.php/Home/Users/checkLogin/",{loginName:loginName,loginPwd:loginPwd,verify:verify,rememberPwd:rememberPwd},function(data,textStatus){
+	$.post(domainURL +"/index.php/Home/Users/checkLogin/",{loginName:loginName,loginPwd:loginPwd,verify:verify,rememberPwd:rememberPwd},function(data,textStatus){
 		var json = WST.toJson(data);
 		if(json.status=='1'){
 			location.href=json.refer;

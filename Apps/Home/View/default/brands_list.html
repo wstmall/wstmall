@@ -32,13 +32,13 @@
 					&nbsp;&nbsp;&nbsp;&nbsp;请选择品牌所在区域
 					<select id="areaId" onchange="getBrands();">
 					<volist name="areaList" id="vo" key='i' >
-					<option <if condition="$areaId2 eq $vo['areaId']">selected="selected"</if> value="{$vo['areaId']}">{$vo['areaName']}</option>
+					<option <if condition="$areaId3 eq $vo['areaId']">selected="selected"</if> value="{$vo['areaId']}">{$vo['areaName']}</option>
 					</volist>
 					</select>
 					<div style="float:right;">
-						<div style="border:2px solid #e23c3d;position:relative;width:240px;margin-top:8px;">
-							<input id="brandName" style="border:0;width:150px;background: 0 0;padding-left:6px;line-height: 22px;padding-top: 2px; padding-bottom: 2px;font-size:14px;" placeholder="品牌名称" autocomplete="off">
-							<div style="position:absolute;top:0px;right:0px;width:50px;height:28px;color:#ffffff;font-weight:bolder;background-color:#e23c3d;line-height:28px;text-align:center;font-size:13px;cursor:pointer;" onclick="getBrands();">搜&nbsp;索</div>
+						<div class='wst-brands-search'>
+							<input id="brandName" class='brands-ipt' placeholder="品牌名称" autocomplete="off">
+							<div class='search' onclick="getBrands();">搜&nbsp;索</div>
 						</div>
 					</div>
 				</div>

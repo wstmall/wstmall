@@ -24,10 +24,10 @@
 		    fileTypeDesc  : 'Image Files',
 	        fileTypeExts  : '*.gif; *.jpg; *.png',
 	        swf           : publicurl+'/plugins/uploadify/uploadify.swf',
-	        uploader      : rooturl+'/index.php/Home/shops/uploadPic',
+	        uploader      : domainURL +'/index.php/Home/shops/uploadPic',
 	        onUploadSuccess : function(file, data, response) {
 	        	var json = WST.toJson(data);
-	        	$('#preview').attr('src',rooturl+'/'+json.Filedata.savepath+json.Filedata.savethumbname).show();
+	        	$('#preview').attr('src',domainURL +'/'+json.Filedata.savepath+json.Filedata.savethumbname).show();
 	        	$('#shopImg').val(json.Filedata.savepath+json.Filedata.savethumbname);
            }
 	    });
@@ -38,16 +38,17 @@
   function getAreaList(objId,parentId,t,id){
 	   var params = {};
 	   params.parentId = parentId;
+	   params.type = t;
 	   $('#'+objId).empty();
 	   if(t<1){
 		   $('#areaId3').empty();
 		   $('#areaId3').html('<option value="">请选择</option>');
 	   }
 	   var html = [];
-	   $.post(rooturl+"/index.php/Home/Areas/queryByList",params,function(data,textStatus){
+	   $.post(domainURL +"/index.php/Home/Areas/queryByList",params,function(data,textStatus){
 		    html.push('<option value="">请选择</option>');
 			var json = WST.toJson(data);
-			if(json.status=='1' && json.list.length>0){
+			if(json.status=='1' && json.list){
 				var opts = null;
 				for(var i=0;i<json.list.length;i++){
 					opts = json.list[i];
@@ -63,7 +64,7 @@
   function getCommunitys(){
 	  $('#areaTree').empty();
 	  var areaId = $('#areaId2').val();
-	  $.post(rooturl+"/index.php/Home/Areas/queryAreaAndCommunitysByList",{areaId:areaId},function(data,textStatus){
+	  $.post(domainURL +"/index.php/Home/Areas/getAreaAndCommunitysByList",{areaId:areaId},function(data,textStatus){
 			var json = data;
 			if(json.list){
 					var html = [];
@@ -133,7 +134,7 @@
 	   params.shopAtive = $("input[name='shopAtive']:checked").val();
 	   params.verify = $('#authcode').val();
 	   if(params.shopImg==''){
-		   layer.msg('请上传店铺图片!', 1, 8);
+		   WST.msg('请上传店铺图片!', {icon: 5});
 		   return;
 	   }
 	   var relateArea = [0];
@@ -150,40 +151,40 @@
 	   params.relateAreaId=relateArea.join(',');
 	   params.relateCommunityId=relateCommunity.join(',');
 	   if(params.relateAreaId=='0' && params.relateCommunityId=='0'){
-		   layer.msg('请选择配送区域!', 1, 8);
+		   WST.msg('请选择配送区域!', {icon: 5});
 		   return;
 	   }
 	   if(params.isInvoice==1 && params.invoiceRemarks==''){
-		   layer.msg('请输入发票说明!', 1, 8);
+		   WST.msg('请输入发票说明!', {icon: 5});
 		   return;
 	   }
 	   if(parseInt(params.serviceStartTime,10)>parseInt(params.serviceEndTime,10)){
-		   layer.msg('开始营业时间不能大于结束营业时间!', 1, 8);
+		   WST.msg('开始营业时间不能大于结束营业时间!', {icon: 5});
 		   return;
 	   }
 	   if(!document.getElementById('protocol').checked){
-		   layer.msg('必须同意使用协议才允许注册!');
+		   WST.msg('必须同意使用协议才允许注册!',{icon: 5});
 		   return;
 	   }
 	   if(params.verify==''){
-		   layer.msg('请输入验证码!');
+		   WST.msg('请输入验证码!',{icon: 5});
 		   return;
 	   }
 	   layer.load('正在处理，请稍后...', 3);
-	   $.post(rooturl+"/index.php/Home/Shops/openShopByUser",params,function(data,textStatus){
+	   $.post(domainURL +"/index.php/Home/Shops/openShopByUser",params,function(data,textStatus){
 			var json = WST.toJson(data);
 			if(json.status=='1'){
-				layer.msg('您的开店申请已提交，请等候商城管理员审核!', 1,1, function(){
-					location.href=rooturl+'/index.php/Home/Orders/queryByPage';
+				WST.msg('您的开店申请已提交，请等候商城管理员审核!', {icon: 1}, function(){
+					location.href=domainURL +'/index.php/Home/Orders/queryByPage';
 				});
 			}else if(json.status==-4){
-				layer.msg('验证码错误!', 1, 8);
+				WST.msg('验证码错误!', {icon: 5});
 				getVerify();
 			}else if(json.status==-5){
-				layer.msg('验证码已超过有效期!', 1, 8);
+				WST.msg('验证码已超过有效期!', {icon: 5});
 				getVerify();
 			}else{
-				layer.msg('操作您的开店申请失败，请联系商城管理员!', 1, 8);
+				WST.msg('操作您的开店申请失败，请联系商城管理员!', {icon: 5});
 				getVerify();
 			}
 		});
@@ -203,15 +204,16 @@
 	  }
   }
   function showXiey(id){
-  	$.layer({
-  	    type: 2,
-  	    shadeClose: true,
-  	    title: false,
-  	    closeBtn: [0, false],
-  	    shade: [0.8, '#000'],
-  	    border: [0],
-  	    offset: ['20px',''],
-  	    area: ['1000px', ($(window).height() - 50) +'px'],
-  	    iframe: {src: rooturl+'/'}
-  	});
-  }
+		layer.open({
+		    type: 2,
+		    title: 'WST用户注册协议',
+		    shadeClose: true,
+		    shade: 0.8,
+		    area: ['1000px', ($(window).height() - 50) +'px'],
+		    content: [userProtocolUrl],
+		    btn: ['同意并注册'],
+		    yes: function(index, layero){
+		    	layer.close(index);
+		    }
+		});
+	}	

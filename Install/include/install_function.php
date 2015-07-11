@@ -17,7 +17,7 @@ function env_check(&$env_items) {
 			if(@ini_get('file_uploads')){
 				$env_items[$key]['current'] =  ini_get('upload_max_filesize');
 			}else{
-				$env_items[$key]['status'] = 0;
+				$env_items[$key]['status'] = -1;
 				$env_items[$key]['current'] = '没有开启文件上传';
 			}
 		} elseif($key == 'gdversion') {
@@ -27,7 +27,7 @@ function env_check(&$env_items) {
 			    unset($tmp);
 			}else{
 				$env_items[$key]['current'] = "没有开启GD扩展";
-				$env_items[$key]['status'] = 0;
+				$env_items[$key]['status'] = -1;
 			}
 		} elseif($key == 'diskspace') {
 			if(function_exists('disk_free_space')) {
@@ -45,8 +45,8 @@ function dir_check(&$dir_items) {
 	foreach($dir_items as $key => $item) {
 		$item_path = $item['path'];
 		if(!dir_writeable(INSTALL_ROOT.$item_path)) {
-			if(is_dir(INSTALL_ROOT.$item_path)) {
-				$dir_items[$key]['status'] = 0;
+			if(!is_dir(INSTALL_ROOT.$item_path)) {
+				$dir_items[$key]['status'] = 1;
 			} else {
 				$dir_items[$key]['status'] = -1;
 			}
@@ -68,7 +68,7 @@ function dir_writeable($dir) {
 			@unlink("$dir/test.txt");
 			$writeable = 1;
 		} else {
-			$writeable = 0;
+			$writeable = -1;
 		}
 	}
 	return $writeable;
@@ -85,14 +85,17 @@ function initConfig($db_host,$db_user,$db_pass,$db_prefix,$db_name){
 	    'DB_PREFIX'=>'".$db_prefix."',
 	    'DEFAULT_C_LAYER' =>  'Action',
 	    'DEFAULT_CITY' => '440100',
+	    'DATA_CACHE_SUBDIR'=>true,
+        'DATA_PATH_LEVEL'=>2, 
 	    'SESSION_PREFIX' => 'WSTMALL',
-        'COOKIE_PREFIX'  => 'WSTMALL'
+        'COOKIE_PREFIX'  => 'WSTMALL',
+		'LOAD_EXT_CONFIG' => 'wst_config'
 	)";
 	$code = "<?php\n ".$code.";\n?>";
     file_put_contents(INSTALL_ROOT."/Apps/Common/Conf/config.php", $code);
     $code = "return array(
-	    'WST_VERSION' => '1.0.1.150618',
-	    'WST_MD5' => '3cb00c16948ccf582f438d783672df7c'
+	    'WST_VERSION' => '1.1.0_150707',
+	    'WST_MD5' => 'b0fbe9922c0b79ef17a9767f57329d0d'
 	)";
 	$code = "<?php\n ".$code.";\n?>";
     file_put_contents(INSTALL_ROOT."/Apps/Common/Conf/wst_config.php", $code);
@@ -105,7 +108,7 @@ function check_func($func_items){
 			$func_items[$key]['status'] = 1;
 		}else{
 			$func_items[$key]['current'] = '不支持';
-			$func_items[$key]['status'] = 0;
+			$func_items[$key]['status'] = -1;
 		}
 	}
 	return $func_items;

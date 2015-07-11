@@ -520,14 +520,6 @@ h6 {
 body {
 	margin: 0 auto;
 }
-
-.w {
-	width: 990px;
-	padding: 0;
-	margin: 0 auto;
-	zoom: 1;
-}
-
 body .fl {
 	float: left;
 }
@@ -844,10 +836,6 @@ body {
 	margin: 0 auto;
 }
 
-#loginpwd_error,#loginpwd_error {
-	
-}
-
 /*entry*/
 #entry {
 	background: #e8e8e8;
@@ -961,7 +949,12 @@ body {
 	width: 320px;
 	z-index: 1;
 }
-
+.wst-login{
+	width: 990px;
+	padding: 0;
+	margin: 0 auto;
+	zoom: 1;
+}
 #entry .login-btn2013 {
 	height: 52px;
 }
@@ -1067,14 +1060,6 @@ body {
 #entry #autoentry {
 	height: 37px;
 	margin-top: 35px;
-}
-
-#entry #autoentry .item-ifo {
-	
-}
-
-#entry .item a:link,#entry .item a:visited {
-	
 }
 
 #entry .label {

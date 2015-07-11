@@ -3,12 +3,12 @@
 <div id="mainsearchbox" style="text-align:center;">
 	<div id="wst-search-pbox">
 		<div style="float:left;width:240px;" class="wst-header-car">
-		  <a href='__ROOT__'>
+		  <a href='{:WSTDomain()}'>
 			<img id="wst-logo" src="__ROOT__/Apps/Home/View/default/images/logo.png" height="132" width="240"/>
 		  </a>	
 		</div>
 		<div id="wst-search-container">
-			<div id="wst-search-type">
+			<div id="wst-search-type-box">
 				<input id="wst-search-type" type="hidden" value="{$searchType}"/>
 				<div id="wst-panel-goods" class="<if condition='$searchType eq 1'>wst-panel-curr<else/>wst-panel-notcurr</if>">商品</div>
 				<div id="wst-panel-shop" class="<if condition='$searchType eq 2'>wst-panel-curr<else/>wst-panel-notcurr</if>">店铺</div>
@@ -38,7 +38,7 @@
 <div class="headNav">
 		  <div class="navCon w1020">
 		    <div class="navCon-cate fl navCon_on" >
-		      <div class="navCon-cate-title"> <a href="">全部商品分类</a></div>
+		      <div class="navCon-cate-title"> <a href="__ROOT__/index.php/Home/goods/getGoodsList">全部商品分类</a></div>
 		      <div class="cateMenu2" style="display:none;" >
 		        <div style="position:relative;">
 		        	<div class="wst-nvgbk" style="diplay:none;"></div>
@@ -80,16 +80,15 @@
 		      </div>
 		    </div>
 		    <div class="navCon-menu fl">
-		     <ul class="fl">
+		      <ul class="fl">
 		       	<li ><a class="" href="__ROOT__/index.php"><s1></s1>&nbsp;&nbsp;&nbsp;&nbsp;商城首页</a></li>
 		        <li style='display:none'><a href=""><s2></s2>&nbsp;自营超市</a></li>
-		        <li <if condition="$nvg_mk eq 'brands'">class="curMenu"</if>><a href="__ROOT__/index.php/Home/Brands/index"><s2></s2>&nbsp;品牌汇</a></li>
-		        <li <if condition="$nvg_mk eq 'shopstreet'">class="curMenu"</if>><a href="__ROOT__/index.php/Home/Shops/toShopStreet"><s3></s3>&nbsp;店铺街</a></li>
+		        <li <if condition="$nvg_mk eq 'brands'">class="curMenu"</if>><a href="__ROOT__/index.php/Home/Brands/index"><s2 <if condition="$nvg_mk eq 'brands'">id="curs2"</if>></s2>&nbsp;品牌汇</a></li>
+		        <li <if condition="$nvg_mk eq 'shopstreet'">class="curMenu"</if>><a href="__ROOT__/index.php/Home/Shops/toShopStreet"><s3 <if condition="$nvg_mk eq 'shopstreet'">id="curs3"</if>></s3>&nbsp;店铺街</a></li>
 		      	<if condition="$selfShop['shopId'] gt 0">
-		       	<li <if condition="$selfShop['shopId'] eq $shopId">class="curMenu"</if>><a href="__ROOT__/index.php/Home/Shops/toShopHome/?shopId={$selfShop['shopId']}"><s4></s4>&nbsp;自营店铺</a></li>
+		       	<li <if condition="$selfShop['shopId'] eq $shopId">class="curMenu"</if>><a href="__ROOT__/index.php/Home/Shops/toShopHome/?shopId={$selfShop['shopId']}"><s4 <if condition="$selfShop['shopId'] eq $shopId">id="curs4"</if>></s4>&nbsp;自营店铺</a></li>
 		      	</if>
 		      </ul>
-		      <div class="wst-cart-box"><div style="line-height:100px;text-align:center;font-size:18px;">购物车中暂无商品</div></div>
 		    </div>
 		    <li id="wst-nvg-cart">
 		    	<div style="line-height:36px;padding-left:56px;margin-top:8px;">

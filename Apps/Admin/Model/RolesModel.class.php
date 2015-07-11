@@ -44,7 +44,7 @@ class RolesModel extends BaseModel {
 			if(false !== $rs){
 				$rd['status']= 1;
 				//实时更新当前用户权限
-				if($_SESSION['STAFF']['staffRoleId']==$id)$_SESSION['STAFF']['grant'] = explode(',',I("grant"));
+				if(session('WST_STAFF.staffRoleId')==$id)session('WST_STAFF.grant',explode(',',I("grant")));
 			}
 		}
 		return $rd;

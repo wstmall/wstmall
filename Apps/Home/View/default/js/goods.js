@@ -6,7 +6,7 @@ function getCommunitys(obj){
 	var params = {};
 	params.areaId = vid;
 	var html = [];
-	$.post(rooturl+"/index.php/Home/Communitys/queryByList",params,function(data,textStatus){
+	$.post(domainURL +"/index.php/Home/Communitys/queryByList",params,function(data,textStatus){
 	    html.push('<li class="searched">全部</li>');
 		var json = WST.toJson(data);
 		if(json.status=='1' && json.list.length>0){
@@ -27,10 +27,12 @@ function tohide(obj,id){
 	if($("#"+id).height()<=28){
 		$("#"+id).height('auto');
 		$("#"+id).css("overflow","");
+		$("#bs").val(1)
 		$("#"+id+"-tp").html("&nbsp;隐藏&nbsp;");
 	}else{
 		$("#"+id).height(28);
 		$("#"+id).css("overflow","hidden");
+		$("#bs").val(0)
 		$("#"+id+"-tp").html("&nbsp;显示&nbsp;");
 	}
 }
@@ -40,6 +42,7 @@ function queryGoods(obj,mark){
 	params.push("c1Id="+$("#c1Id").val());
 	params.push("c2Id="+$("#c2Id").val());
 	params.push("c3Id="+$("#c3Id").val());
+	params.push("bs="+$("#bs").val());
 	if(mark==8){
 		var sj = $("#sj").val();
 		if(sj==2){
@@ -55,8 +58,6 @@ function queryGoods(obj,mark){
 	}	
 	params.push("msort=" + $("#msort").val());
 	params.push("sj=" + $("#sj").val());	
-	params.push("stime=" + $("#stime").val());
-	params.push("etime=" + $("#etime").val());
 	if(mark==1){
 		var areaId3 = $(obj).attr("data");
 		params.push("areaId3="+areaId3);
@@ -118,17 +119,17 @@ function queryGoods(obj,mark){
 	if(keyword!=""){
 		params.push("keyWords="+keyword);
 	}
-	window.location = rooturl + '/index.php/Home/goods/getGoodsList/?' + (params.join("&"));
+	window.location = domainURL  + '/index.php/Home/goods/getGoodsList/?' + (params.join("&"));
 }
 
 /**
  * 加入购物车
  */
 function addCart(goodsId,type,goodsThums){
-	$("#flyItem img").attr("src",rooturl +"/"+ goodsThums)
-	jQuery.post(rooturl+"/index.php/Home/Cart/addToCartAjax/?goodsId="+goodsId+'&gcount=1&rnd='+Math.random() ,{goodsId:goodsId},function(data) {
+	$("#flyItem img").attr("src",domainURL  +"/"+ goodsThums)
+	jQuery.post(domainURL +"/index.php/Home/Cart/addToCartAjax/?goodsId="+goodsId+'&gcount=1&rnd='+Math.random() ,{goodsId:goodsId},function(data) {
 		if(type==1){
-			location.href=rooturl+'/index.php/Home/Cart/toCart';
+			location.href=domainURL +'/index.php/Home/Cart/toCart';
 		}else{
 			//layer.msg("添加成功!",1,1);
 		}
@@ -144,7 +145,7 @@ function changebuynum(goodsId,flag){
 	}else if(flag==2){
 		num = num+1;
 	}	
-	jQuery.post(rooturl+"/index.php/Home/Goods/getGoodsStock/" ,{goodsId:goodsId},function(data) {		
+	jQuery.post(domainURL +"/index.php/Home/Goods/getGoodsStock/" ,{goodsId:goodsId},function(data) {		
 		var json = WST.toJson(data);
 		if($("#haveGoodsToBuy").attr("display")=="" && json.goodsStock==0){
 			$("#haveGoodsToBuy").hide();
@@ -172,7 +173,7 @@ function getPage(pcurr){
 	params.goodsId = goodsId;	
 	params.pcurr = pcurr;
 	//加载商品评价
-	jQuery.post(rooturl+"/index.php/Home/Goods/getGoodsappraises/" ,params,function(data) {
+	jQuery.post(domainURL +"/index.php/Home/Goods/getGoodsappraises/" ,params,function(data) {
 		var json = WST.toJson(data);
 			
 		var html = new Array();		    	
@@ -185,17 +186,17 @@ function getPage(pcurr){
 			    html.push('<td width="180">');
 			    html.push('<div>商品评分：');
 				for(var i=0;i<appraises.goodsScore;i++){
-					html.push('<img src="'+rooturl+'/Apps/Home/View/default/images/icon_score_yes.png"/>');
+					html.push('<img src="'+domainURL +'/Apps/Home/View/default/images/icon_score_yes.png"/>');
 				}
 				html.push('</div>');
 				html.push('<div>时效评分：');
 				for(var i=0;i<appraises.timeScore;i++){
-					html.push('<img src="'+rooturl+'/Apps/Home/View/default/images/icon_score_yes.png"/>');
+					html.push('<img src="'+domainURL +'/Apps/Home/View/default/images/icon_score_yes.png"/>');
 				}
 				html.push('</div>');
 				html.push('<div>服务评分：');
 				for(var i=0;i<appraises.serviceScore;i++){
-					html.push('<img src="'+rooturl+'/Apps/Home/View/default/images/icon_score_yes.png"/>');
+					html.push('<img src="'+domainURL +'/Apps/Home/View/default/images/icon_score_yes.png"/>');
 				}
 				html.push('</div>');
 				html.push('</td>');

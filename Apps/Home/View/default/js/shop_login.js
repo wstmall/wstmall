@@ -28,10 +28,10 @@ function login(){
 			$("#errmsg").html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;验证码不能为空");
 			return false;
 	   }
-	   $.post(rooturl+"/index.php/Home/Shops/checkLogin",params,function(data,textStatus){
+	   $.post(domainURL +"/index.php/Home/Shops/checkLogin",params,function(data,textStatus){
 			var json = WST.toJson(data);
 			if(json.status=='1'){
-				location.href=rooturl+'/index.php/Home/Shops/index';
+				location.href=domainURL +'/index.php/Home/Shops/index';
 			}else if(json.status==-2){
 				$("#errmsg").html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;验证码错误");
 				getVerify();

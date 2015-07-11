@@ -1,29 +1,19 @@
-﻿WSTMall软件使用协议
+﻿WSTMall安装协议
 
-版权所有(c)2015,WSTMall开源商城
+版权所有(c)2015,广州晴暖信息科技有限公司
 
-WSTMall遵循Apache2开源协议发布，并提供免费使用。
+用户须知：
 
-WSTMall由广州市晴暖信息科技有限公司(官网 http://www.wstmall.com )基于ThinkPHP3.2.2开发并开源发布。
+感谢您选择WSTMall，WSTMall由广州市晴暖信息科技有限公司基于ThinkPHP3.2开发并开源发布。本协议是您与广州晴暖信息科技有限公司之间关于您使用WSTMall电子商务系统的法律协议。无论您是个人或组织 、盈利与否、用途如何（包括以学习和研究为目的），均需仔细阅读本协议。
 
-Apache Licence是著名的非盈利开源组织Apache采用的协议。
-该协议鼓励代码共享和尊重原作者的著作权，允许代码修改，再作为开源或商业软件发布。需要满足的条件： 
-1． 需要给代码的用户一份Apache Licence ；
-2． 如果你修改了代码，需要在被修改的文件中说明；
-3． 在延伸的代码中（修改和有源代码衍生的代码中）需要带有原来代码中的协议，商标，专利声明和其他原来作者规定需要包含的说明；
-4． 如果再发布的产品中包含一个Notice文件，则在Notice文件中需要带有本协议内容。你可以在Notice中增加自己的许可，但不可以表现为对Apache Licence构成更改。 
+1. 您可以在遵守本协议的基础上，免费获得WSTMall的授权并将本系统应用于商业用途或者非商业用途(包括个人用户：不具备法人资格的自然人，以个人名义从事电子商务开设网店的；非盈利性用途：从事非盈利活动的商业机构及非盈利性组织，将 WSTMall产品用且仅用于产品演示、展示及发布，或者用来买卖及盈利的运营活动)。
 
-具体的协议参考：http://www.apache.org/licenses/LICENSE-2.0
+2. 您可以在协议规定的约束和限制范围内二次开发 WSTMall功能、插件或者风格，以适应您的网站运营要求。
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
-COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
-ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGE.
+3. 您可免费将本软件用于多用户O2O电子商务网站搭建(包括但不限于个人、企业搭建电子商务网站)。
+
+4. WSTMall开源商城，保留WSTMall版权可二次开发并进行使用。无论用途如何、是否经过修改或美化、修改程度如何，只要使用 WSTMall的整体或任何部分，未经书面许可，网站顶部的 WSTMall名称和WSTMall的版权需保留，而不能清除或修改，或者拨打客服电话020-29806661进行咨询。
+
+5. 禁止在 WSTMall的整体或任何部分基础上以发展任何派生版本、修改版本或第三方版本用于重新分发。
+
+本协议一旦发生变更,广州晴暖信息科技有限公司将在WSTMall官方网站（http://www.wstmall.com）上公布修改内容。修改后的服务条款将有效代替原来的服务条款。

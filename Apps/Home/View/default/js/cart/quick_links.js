@@ -12,8 +12,8 @@ jQuery(function($){
 	quickPopXHR,
 	loadingTmpl = '<div class="loading" style="padding:30px 80px"><i></i><span>Loading...</span></div>',
 	popTmpl = '<a href="javascript:;" class="ibar_closebtn" title="关闭"></a><div class="ibar_plugin_title"><h3><%=title%></h3></div><div class="pop_panel"><%=content%></div><div class="arrow"><i></i></div><div class="fix_bg"></div>',
-	historyListTmpl = '<ul><%for(var i=0,len=items.length; i<5&&i<len; i++){%><li><a href="<%=items[i].productUrl%>" target="_blank" class="pic"><img alt="<%=items[i].productName%>" src="<%=items[i].productImage%>" width="60" height="60"/></a><a href="<%=items[i].productUrl%>" title="<%=items[i].productName%>" target="_blank" class="tit"><%=items[i].productName%></a><div class="price" title="单价"><em>&yen;<%=items[i].productPrice%></em></div></li><%}%></ul>',
-	newMsgTmpl = '<ul><li><a href="#"><span class="tips">新回复<em class="num"><b><%=items.commentNewReply%></b></em></span>商品评价/晒单</a></li><li><a href="#"><span class="tips">新回复<em class="num"><b><%=items.consultNewReply%></b></em></span>商品咨询</a></li><li><a href="#"><span class="tips">新回复<em class="num"><b><%=items.messageNewReply%></b></em></span>我的留言</a></li><li><a href="#"><span class="tips">新通知<em class="num"><b><%=items.arrivalNewNotice%></b></em></span>到货通知</a></li><li><a href="#"><span class="tips">新通知<em class="num"><b><%=items.reduceNewNotice%></b></em></span>降价提醒</a></li></ul>',
+	historyListTmpl = '',
+	newMsgTmpl = '',
 	quickPop = quickShell.find('#quick_links_pop'),
 	quickDataFns = {
 		//购物信息
@@ -39,7 +39,8 @@ jQuery(function($){
 		prevPopType = '';
 		quickPop.hide();
 		$(".quick_links_wrap").width(40);
-		quickPop.animate({left:280,queue:true});
+		quickPop.animate({left:280},100);
+		$(".quick_links_panel").animate({"right":"0px"},100);
 	},
 	showQuickPop = function(type){
 		if(quickPopXHR && quickPopXHR.abort){
@@ -49,10 +50,11 @@ jQuery(function($){
 			var fn = quickDataFns[type];
 			
 			if(fn && fn.msgtype==1){
-				$(".quick_links_wrap").width(320);
-				fn.content = "<div class='ibar_plugin_content' style='height:100%;padding-top:100%;padding-left:80px;'><img src='"+rooturl+"/Apps/Home/View/default/images/loading.gif' width='20'/>数据加载中...</div>";
+				$(".quick_links_wrap").animate({"width":"280px"},100);
+				$(".quick_links_panel").animate({"right":"280px"},100);
+				fn.content = "<div class='ibar_plugin_content' style='height:100%;padding-top:100%;padding-left:80px;'><img src='"+domainURL +"/Apps/Home/View/default/images/loading.gif' width='20'/>数据加载中...</div>";
 				quickPop.html(ds.tmpl(popTmpl, fn));
-				jQuery.post(rooturl+"/index.php/Home/Cart/getCartInfo/" ,{"axm":1},function(data) {
+				jQuery.post(domainURL +"/index.php/Home/Cart/getCartInfo/" ,{"axm":1},function(data) {
 					var cart = WST.toJson(data);	
 					var html = new Array();
 					var totalmoney = 0;
@@ -62,10 +64,10 @@ jQuery(function($){
 						totalmoney = totalmoney + parseFloat(goods.shopPrice * goods.cnt);
 						html.push(  "<li class='cart_item'>" +
 										"<div class='cart_item_pic'>" +
-											"<!--input type='checkbox' class='cart-goods-check'-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='"+rooturl+"/index.php/Home/Goods/getGoodsDetails/?goodsId="+goods.goodsId+"'><img src='"+rooturl+"/"+goods.goodsThums+"' /></a>" +
+											"<!--input type='checkbox' class='cart-goods-check'-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='"+domainURL +"/index.php/Home/Goods/getGoodsDetails/?goodsId="+goods.goodsId+"'><img src='"+domainURL +"/"+goods.goodsThums+"' /></a>" +
 										"</div>" +
 										"<div class='cart_item_desc'>" +
-											"<a href='"+rooturl+"/index.php/Home/Goods/getGoodsDetails/?goodsId="+goods.goodsId+"' class='cart_item_name'>"+goods.goodsName+"</a>" +
+											"<a href='"+domainURL +"/index.php/Home/Goods/getGoodsDetails/?goodsId="+goods.goodsId+"' class='cart_item_name'>"+goods.goodsName+"</a>" +
 											"<div class='cart_item_price'><span class='cart_price'>￥"+goods.shopPrice+"</span></div>" +
 											"<div class='cart-close-box' style=''>" +
 											"<span class='cart-colse'>x</span></div>	" +
@@ -85,15 +87,9 @@ jQuery(function($){
 					quickPop.html(ds.tmpl(popTmpl, fn));
 					fn.init.call(this, fn);
 					$("li.cart_item").bind("mouseover",function(){
-						//$(this).find(".cart-close-box").show();
-						//$(this).find(".cart-minus").show();
-						//$(this).find(".cart-plus").show();
 						$(this).css({"background-color":"#F7F7F7"});
 					});
 					$("li.cart_item").bind("mouseout",function(){
-						//$(this).find(".cart-close-box").hide();
-						//$(this).find(".cart-minus").hide();
-						//$(this).find(".cart-plus").hide();
 						$(this).css({"background-color":""});
 					});
 				});
@@ -103,7 +99,7 @@ jQuery(function($){
 				popDisplayed = true;
 				prevPopType = type;
 				quickPop.show();
-				quickPop.animate({left:0,queue:true});
+				quickPop.animate({left:0},100);
 			}
 			
 		}
@@ -116,7 +112,8 @@ jQuery(function($){
 	quickPop.delegate('a.ibar_closebtn','click',function(){
 		$(".quick_links_wrap").width(40);
 		quickPop.hide();
-		quickPop.animate({left:280,queue:true});
+		quickPop.animate({left:280,queue:true},100);
+		$(".quick_links_panel").animate({"right":"0px"},100);
 		if(prevTrigger){
 			prevTrigger.removeClass('current');
 		}
@@ -138,7 +135,6 @@ jQuery(function($){
 		if(prevTrigger){
 			prevTrigger.removeClass('current');
 		}
-		//prevTrigger = $(this).addClass('current');
 	},
 	quickHandlers = {
 		//购物车，最近浏览，商品咨询
@@ -156,24 +152,13 @@ jQuery(function($){
 		}
 	};
 	quickShell.delegate('a', 'click', function(e){
-		/*if($(".quick_links_wrap").width()>40){
-			$(".quick_links_wrap").width(40);
-		}else{
-			$(".quick_links_wrap").width(320);
-		}*/
+		
 		var type = getHandlerType(this.className);
 		if(type && quickHandlers[type]){
 			quickHandlers[type].call(this);
 			e.preventDefault();
 		}
 		
-		/*if($(this).parent().attr("id")=="shopCart"){
-			if($(".quick_links_wrap").width()>40){
-				$(".quick_links_wrap").width(40);
-			}else{
-				$(".quick_links_wrap").width(320);
-			}
-		}*/
 	});
 	
 	//Return top

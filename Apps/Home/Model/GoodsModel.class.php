@@ -8,7 +8,6 @@ namespace Home\Model;
  * ============================================================================
  * 商品服务类
  */
-use Think\Model;
 class GoodsModel extends BaseModel {
 	
 	/**
@@ -16,15 +15,13 @@ class GoodsModel extends BaseModel {
 	 */
 	public function getGoodsList($obj){
 		$areaId2 = $obj["areaId2"];
-		$areaId3 = I("areaId3");
+		$areaId3 = $obj["areaId3"];
 		$communityId = I("communityId");
-		$c1Id = I("c1Id");
+		$c1Id = I("c1Id",0);
 		$c2Id = I("c2Id");
 		$c3Id = I("c3Id");
 		$pcurr = I("pcurr");
-		
-		$msort = I("msort",0);//排序标识
-
+		$msort = I("msort",1);//排序标识
 		$prices = I("prices");
 		if($prices != ""){
 			$pricelist = explode("_",$prices);
@@ -33,15 +30,22 @@ class GoodsModel extends BaseModel {
 		
 		$keyWords = I("keyWords");
 		
-		$sql = "SELECT bd.brandId,bd.brandName, goodsId,goodsSn,goodsName,goodsThums,goodsStock,g.saleCount,p.shopId,marketPrice,shopPrice 
-				FROM ".$this->tablePrefix."shops p ,".$this->tablePrefix."goods g ";
-		$sql .=" LEFT JOIN ".$this->tablePrefix."brands bd ON bd.brandId=g.brandId ";
-		//$sql .=" LEFT JOIN ".$this->tablePrefix."order_goods og ON g.goodsId = og.goodsId ";
-		if($communityId>0){
-			$sql .=" LEFT JOIN ".$this->tablePrefix."shops_communitys sc ON sc.shopId=p.shopId AND sc.communityId = $communityId ";
+		$sql = "SELECT  goodsId,goodsSn,goodsName,goodsThums,goodsStock,g.saleCount,p.shopId,marketPrice,shopPrice 
+				FROM __PREFIX__goods g, __PREFIX__shops p ";
+	    if($communityId>0){
+			$sql .=" , __PREFIX__shops_communitys sc ";
+		}
+		
+		if($brandId>0){
+			$sql .=" , __PREFIX__brands bd ";
 		}
 		$sql .= "WHERE p.areaId2 = $areaId2 AND g.shopId = p.shopId AND  g.goodsStatus=1 AND g.goodsFlag = 1 and g.isSale=1 ";
-		
+		if($communityId>0){
+			$sql .= " AND sc.shopId=p.shopId AND sc.communityId = $communityId ";
+		}
+		if($brandId>0){
+			$sql .=" AND bd.brandId=g.brandId AND g.brandId = $brandId ";
+		}
 		if($c1Id>0){
 			$sql .= " AND g.goodsCatId1 = $c1Id";
 		}
@@ -58,7 +62,6 @@ class GoodsModel extends BaseModel {
 		if($keyWords!=""){
 			$sql .= " AND g.goodsName LIKE '%$keyWords%'";
 		}
-		
 		$glist = $this->query($sql);
 		$shops = array();
 		$maxPrice = 0;
@@ -71,10 +74,7 @@ class GoodsModel extends BaseModel {
 	    if($prices != "" && $pricelist[0]>=0 && $pricelist[1]>=0){
 			$sql .= " AND (g.shopPrice BETWEEN  ".(int)$pricelist[0]." AND ".(int)$pricelist[1].") ";
 		}
-	    if($brandId>0){
-		 	$sql .= " AND bd.brandId = $brandId";
-		}
-	    
+	   
 		if($msort==1){//综合
 			$sql .= " ORDER BY g.saleCount DESC ";
 		}else if($msort==6){//人气
@@ -90,10 +90,15 @@ class GoodsModel extends BaseModel {
 		}else if($msort==11){//上架时间
 			$sql .= " ORDER BY g.saleTime DESC ";
 		}
+
 		$pages = $this->pageQuery($sql,$pcurr,30);
 		$rs["maxPrice"] = $maxPrice;
 		$brands = array();
-		$sql = "SELECT * from ".$this->tablePrefix."brands WHERE brandFlag = 1";
+		$sql = "SELECT b.brandId, b.brandName FROM wst_brands b, wst_goods_cat_brands cb WHERE b.brandId = cb.brandId AND b.brandFlag=1 ";
+		if($c1Id>0){
+			$sql .= " AND cb.catId = $c1Id";
+		}
+		$sql .= " GROUP BY b.brandId";
 		$blist = $this->query($sql);
 		for($i=0;$i<count($blist);$i++){
 			$brand = $blist[$i];
@@ -101,6 +106,10 @@ class GoodsModel extends BaseModel {
 		}
 		$rs["brands"] = $brands;
 		$rs["pages"] = $pages;
+		$gcats["goodsCatId1"] = $c1Id;
+		$gcats["goodsCatId2"] = $c2Id;
+		$gcats["goodsCatId3"] = $c3Id;
+		$rs["goodsNav"] = self::getGoodsNav($gcats);
 		return $rs;
 	}
 	
@@ -118,7 +127,7 @@ class GoodsModel extends BaseModel {
 		$keyWords = I("keyWords");
 		
 		$sql = "SELECT bd.brandId,bd.brandName, goodsId,goodsSn,goodsName,goodsThums,g.saleCount,p.shopId,marketPrice,shopPrice,p.shopName 
-				FROM ".$this->tablePrefix."goods g , ".$this->tablePrefix."brands bd, ".$this->tablePrefix."shops p ";
+				FROM __PREFIX__goods g , __PREFIX__brands bd, __PREFIX__shops p ";
 		$sql .= "WHERE p.areaId2 = $areaId2 AND g.shopId = p.shopId AND bd.brandId=p.brandId AND  g.goodsStatus=1 AND g.goodsFlag = 1";
 		
 		if($c1Id>0){
@@ -156,8 +165,8 @@ class GoodsModel extends BaseModel {
 		$sql = "SELECT sc.catName,sc2.catName as pCatName, g.*,shop.shopName,shop.deliveryType,shop.shopAtive,
 				shop.shopTel,shop.shopAddress,shop.deliveryTime,shop.isInvoice, shop.deliveryStartMoney, 
 				shop.deliveryFreeMoney,shop.deliveryMoney ,g.goodsSn,shop.serviceStartTime,shop.serviceEndTime
-				FROM ".$this->tablePrefix."goods g, ".$this->tablePrefix."shops shop, ".$this->tablePrefix."shops_cats sc 
-				LEFT JOIN ".$this->tablePrefix."shops_cats sc2 ON sc.parentId = sc2.catId
+				FROM __PREFIX__goods g, __PREFIX__shops shop, __PREFIX__shops_cats sc 
+				LEFT JOIN __PREFIX__shops_cats sc2 ON sc.parentId = sc2.catId
 				WHERE g.goodsId = $goodsId AND shop.shopId=sc.shopId AND sc.catId=g.shopCatId1 AND g.shopId = shop.shopId AND g.goodsFlag = 1 ";		
 		$rs = $this->query($sql);
 		return $rs[0];
@@ -172,7 +181,7 @@ class GoodsModel extends BaseModel {
 		
 		$goodsId = I("goodsId");
 	
-		$sql = "SELECT img.* FROM ".$this->tablePrefix."goods_gallerys img WHERE img.goodsId = $goodsId ";		
+		$sql = "SELECT img.* FROM __PREFIX__goods_gallerys img WHERE img.goodsId = $goodsId ";		
 		$rs = $this->query($sql);
 		//print_r($rs);
 		return $rs;
@@ -186,7 +195,7 @@ class GoodsModel extends BaseModel {
 	public function getRelatedGoods(){
 		
 		$goodsId = I("goodsId");
-		$sql = "SELECT g.* FROM ".$this->tablePrefix."goods g, ".DB_PRE."goods_relateds gr WHERE g.goodsId = gr.relatedGoodsId AND g.goodsStock>0 AND g.goodsStatus = 1 AND gr.goodsId =$goodsId";
+		$sql = "SELECT g.* FROM __PREFIX__goods g, ".DB_PRE."goods_relateds gr WHERE g.goodsId = gr.relatedGoodsId AND g.goodsStock>0 AND g.goodsStatus = 1 AND gr.goodsId =$goodsId";
 		$rs = $this->query($sql);
 		return $rs;
 		
@@ -196,7 +205,7 @@ class GoodsModel extends BaseModel {
 	 * 获取上架中的商品
 	 */
 	public function queryOnSaleByPage(){
-		$shopId=(int)$_SESSION['USER']['shopId'];
+		$shopId=(int)session('WST_USER.shopId');
 		$shopCatId1 = I('shopCatId1',0);
 		$shopCatId2 = I('shopCatId2',0);
 		$goodsName = I('goodsName');
@@ -212,7 +221,7 @@ class GoodsModel extends BaseModel {
 	 * 获取下架的商品
 	 */
 	public function queryUnSaleByPage(){
-		$shopId=(int)$_SESSION['USER']['shopId'];
+		$shopId=(int)session('WST_USER.shopId');
 		$shopCatId1 = I('shopCatId1',0);
 		$shopCatId2 = I('shopCatId2',0);
 		$goodsName = I('goodsName');
@@ -228,7 +237,7 @@ class GoodsModel extends BaseModel {
 	 * 获取审核中的商品
 	 */
 	public function queryPenddingByPage(){
-		$shopId=(int)$_SESSION['USER']['shopId'];
+		$shopId=(int)session('WST_USER.shopId');
 		$shopCatId1 = I('shopCatId1',0);
 		$shopCatId2 = I('shopCatId2',0);
 		$goodsName = I('goodsName');
@@ -251,7 +260,7 @@ class GoodsModel extends BaseModel {
 		$data["goodsName"] = I("goodsName");
 		$data["goodsImg"] = I("goodsImg");
 		$data["goodsThums"] = I("goodsThumbs");
-		$data["shopId"] = $_SESSION['USER']['shopId'];
+		$data["shopId"] = session('WST_USER.shopId');
 		$data["marketPrice"] = I("marketPrice",0);
 		$data["shopPrice"] = I("shopPrice",0);
 		$data["goodsStock"] = I("goodsStock",0);
@@ -292,7 +301,7 @@ class GoodsModel extends BaseModel {
 						if($v=='')continue;
 						$str1 = explode('@',$v);
 						$data = array();
-						$data['shopId'] = $_SESSION['USER']['shopId'];
+						$data['shopId'] = session('WST_USER.shopId');
 						$data['goodsId'] = $rs;
 						$data['goodsImg'] = $str1[0];
 						$data['goodsThumbs'] = $str1[1];
@@ -311,7 +320,7 @@ class GoodsModel extends BaseModel {
 	public function edit(){
 		$rd = array('status'=>-1);
 	 	$id = I("id",0);
-	 	$shopId = (int)$_SESSION['USER']['shopId'];
+	 	$shopId = (int)session('WST_USER.shopId');
 	 	//加载商品信息
 	 	$m = M('goods');
 	 	$goods = $m->where('goodsId='.$id." and shopId=".$shopId)->find();
@@ -375,7 +384,7 @@ class GoodsModel extends BaseModel {
 	 public function get(){
 	 	$m = M('goods');
 	 	$id = I('id',0);
-	 	$shopId = (int)$_SESSION['USER']['shopId'];
+	 	$shopId = (int)session('WST_USER.shopId');
 		$goods = $m->where("goodsId=".$id." and shopId=".$shopId)->find();
 		if(empty($goods))return array();
 		$m = M('goods_gallerys');
@@ -388,7 +397,7 @@ class GoodsModel extends BaseModel {
 	 public function del(){
 	 	$rd = array('status'=>-1);
 	 	$m = M('goods');
-	 	$shopId = (int)$_SESSION['USER']['shopId'];
+	 	$shopId = (int)session('WST_USER.shopId');
 	 	$data = array();
 		$data["goodsFlag"] = -1;
 	 	$rs = $m->where("shopId=".$shopId." and goodsId=".I('id'))->save($data);
@@ -404,7 +413,7 @@ class GoodsModel extends BaseModel {
 	 public function batchDel(){
 	 	$rd = array('status'=>-1);
 	 	$m = M('goods');
-	 	$shopId = (int)$_SESSION['USER']['shopId'];
+	 	$shopId = (int)session('WST_USER.shopId');
 	 	$data = array();
 		$data["goodsFlag"] = -1;
 	 	$rs = $m->where("shopId=".$shopId." and goodsId in(".I('ids').")")->save($data);
@@ -422,7 +431,7 @@ class GoodsModel extends BaseModel {
 	 	$codeArr = array('isBest','isNew','isHot','isRecomm');
 	 	if(in_array($code,$codeArr)){
 		 	$m = M('goods');
-		 	$shopId = (int)$_SESSION['USER']['shopId'];
+		 	$shopId = (int)session('WST_USER.shopId');
 		 	$data = array();
 			$data[$code] = 1;
 		 	$rs = $m->where("shopId=".$shopId." and goodsId in(".I('ids').")")->save($data);
@@ -438,7 +447,7 @@ class GoodsModel extends BaseModel {
 	 public function sale(){
 	 	$rd = array('status'=>-1);
 	 	$m = M('goods');
-	 	$shopId = (int)$_SESSION['USER']['shopId'];
+	 	$shopId = (int)session('WST_USER.shopId');
 	 	$data = array();
 		$data["isSale"] = I('isSale');
 	 	$rs = $m->where("shopId=".$shopId." and goodsId in(".I('ids').")")->save($data);
@@ -462,9 +471,9 @@ class GoodsModel extends BaseModel {
 		$eprice = I("eprice");//结束价格
 		$goodsName = I("goodsName");//搜索店鋪名
 		$sql = "SELECT sp.shopName, SUM(og.goodsNums) totalnum, sp.shopId ,g.goodsStock, g.goodsId , g.goodsName,g.goodsImg, g.goodsThums,g.shopPrice,g.marketPrice, g.goodsSn 
-						FROM ".$this->tablePrefix."goods g
-						LEFT JOIN ".$this->tablePrefix."order_goods og ON g.goodsId = og.goodsId,
-						".$this->tablePrefix."shops sp 
+						FROM __PREFIX__goods g
+						LEFT JOIN __PREFIX__order_goods og ON g.goodsId = og.goodsId,
+						__PREFIX__shops sp 
 						WHERE g.shopId = sp.shopId AND g.goodsFlag = 1 AND g.isSale = 1 AND g.goodsStatus = 1 AND g.shopId = $shopId";
 		
 		if($ct1>0){
@@ -510,9 +519,9 @@ class GoodsModel extends BaseModel {
 	public function getHotGoods($shopId){
 		//热销排名
 		$sql = "SELECT sp.shopName, SUM(og.goodsNums) totalnum, sp.shopId , g.goodsId , g.goodsName,g.goodsImg, g.goodsThums,g.shopPrice,g.marketPrice, g.goodsSn 
-						FROM ".$this->tablePrefix."goods g
-						LEFT JOIN ".$this->tablePrefix."order_goods og ON g.goodsId = og.goodsId,
-						".$this->tablePrefix."shops sp 
+						FROM __PREFIX__goods g
+						LEFT JOIN __PREFIX__order_goods og ON g.goodsId = og.goodsId,
+						__PREFIX__shops sp 
 						WHERE g.shopId = sp.shopId AND g.goodsFlag = 1 AND g.isAdminBest = 1 AND g.isSale = 1 AND g.goodsStatus = 1 AND sp.shopId = $shopId
 						GROUP BY g.goodsId ORDER BY SUM(og.goodsNums) desc limit 5";
 				
@@ -527,9 +536,9 @@ class GoodsModel extends BaseModel {
 	 	$id = ('goodsId');
 		$isBook = ('isBook');
 		if($isBook==1){
-			$sql = "select goodsId,(goodsStock+bookQuantity) as goodsStock from ".$this->tablePrefix."goods where goodsId=".$id;
+			$sql = "select goodsId,(goodsStock+bookQuantity) as goodsStock from __PREFIX__goods where goodsId=".$id;
 		}else{
-			$sql = "select goodsId,goodsStock from ".$this->tablePrefix."goods where goodsId=".$id;
+			$sql = "select goodsId,goodsStock from __PREFIX__goods where goodsId=".$id;
 		}
 	 	$goods = $this->query($sql);
 	 	return $goods[0];
@@ -576,5 +585,27 @@ class GoodsModel extends BaseModel {
 
 	}
 	
-	
+	/**
+	 * 获取商品类别导航
+	 */
+	public function getGoodsNav($obj=array()){
+		
+		$goodsId = I("goodsId");
+		if($goodsId>0){
+			$sql = "SELECT goodsCatId1,goodsCatId2,goodsCatId3 FROM __PREFIX__goods WHERE goodsId = $goodsId";
+			$rs = $this->queryRow($sql);
+		}else{
+			$rs = $obj;
+		}
+		$gclist = M('goods_cats')->cache('WST_CACHE_GOODS_CATES_000',31536000)->where('isShow = 1')->field('catId,catName')->order('catId')->select();
+		$catslist = array();
+		foreach ($gclist as $key => $gcat) {
+			$catslist[$gcat["catId"]] = $gcat;
+		}
+		
+		$data[] = $catslist[$rs["goodsCatId1"]];
+		$data[] = $catslist[$rs["goodsCatId2"]];
+		$data[] = $catslist[$rs["goodsCatId3"]];
+		return $data;
+	}
 }

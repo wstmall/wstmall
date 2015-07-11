@@ -8,8 +8,19 @@ namespace Home\Model;
  * ============================================================================
  * 店铺服务类
  */
-use Think\Model;
 class ShopsModel extends BaseModel {
+     /**
+	  * 查询登录关键字
+	  */
+	 public function checkLoginKey($val,$id = 0){
+	 	$sql = " (loginName ='%s' or userPhone ='%s' or userEmail='%s') ";
+	 	$keyArr = array($val,$val,$val);
+	 	if($id>0)$sql.=" and userId!=".$id;
+	 	$m = M('users');
+	 	$rs = $m->where($sql,$keyArr)->count();
+	    if($rs==0)return 1;
+	    return 0;
+	 }
    /**
     * 商家登录验证
     */
@@ -27,6 +38,12 @@ class ShopsModel extends BaseModel {
 	 		$m->lastTime = date('Y-m-d H:i:s');
 	 		$m->lastIP = get_client_ip();
 	 		$m->where(' userId='.$shops['userId'])->save();
+	 		//记录登录日志
+			$data = array();
+			$data["userId"] = $shops['userId'];
+			$data["loginTime"] = date('Y-m-d H:i:s');
+			$data["loginIp"] = get_client_ip();
+			M('log_user_logins')->add($data);
 	 		
 	 	}
 	 	return $rd;
@@ -37,6 +54,17 @@ class ShopsModel extends BaseModel {
 	  */
 	 public function addByVisitor(){
 	 	$rd = array('status'=>-1);
+	 	//检测账号是否存在
+	 	$hasLoginName = self::checkLoginKey(I("loginName"));
+	    if($hasLoginName==0){
+	 		$rd = array('status'=>-2);
+	 		return $rd;
+	 	}
+	 	$hasUserPhone = self::checkLoginKey(I("userPhone"));
+	 	if($hasUserPhone==0){
+	 		$rd = array('status'=>-7);
+	 		return $rd;
+	 	}
 	 	//新注册账号
 	 	$data = array();
 	 	$data["loginName"] = I("loginName");
@@ -50,10 +78,10 @@ class ShopsModel extends BaseModel {
 		    $data["userFlag"] = 1;
 		    $data["createTime"] = date('Y-m-d H:i:s');
 			$m = M('users');
-			$rs = $m->add($data);
-			if(false !== $rs){
+			$userId = $m->add($data);
+			if(false !== $userId){
 				$data = array();
-				$data["userId"] = $rs;
+				$data["userId"] = $userId;
 				$data["areaId1"] = I("areaId1");
 				$data["areaId2"] = I("areaId2");
 				$data["areaId3"] = I("areaId3");
@@ -74,6 +102,13 @@ class ShopsModel extends BaseModel {
 					$rs = $m->add($data);
 				    if(false !== $rs){
 						$rd['status']= 1;
+						$rd['userId']= $userId;
+						//记录登录日志
+						$data = array();
+						$data["userId"] = $userId;
+						$data["loginTime"] = date('Y-m-d H:i:s');
+						$data["loginIp"] = get_client_ip();
+						M('log_user_logins')->add($data);
 					}
 				}
 				
@@ -182,9 +217,10 @@ class ShopsModel extends BaseModel {
 	    $data = array();
 		$data["shopName"] = I("shopName");
 		$data["shopCompany"] = I("shopCompany");
-		
 		$data["shopImg"] = I("shopImg");
 		$data["shopAddress"] = I("shopAddress");
+		$data["deliveryStartMoney"] = I("deliveryStartMoney",0);
+		$data["deliveryCostTime"] = I("deliveryCostTime",0);
 		$data["deliveryFreeMoney"] = I("deliveryFreeMoney",0);
 		$data["deliveryMoney"] = I("deliveryMoney",0);
 		$data["avgeCostMoney"] = I("avgeCostMoney",0);
@@ -197,8 +233,15 @@ class ShopsModel extends BaseModel {
 			$data["invoiceRemarks"] = I("invoiceRemarks");
 			$rs = $m->where("shopId=".$shopId)->save($data);
 		    if(false !== $rs){
-		    	$_SESSION['USER'] = array_merge($_SESSION['USER'],$data);
+		    	S('WST_CACHE_RECOMM_SHOP_'.$shops['areaId2'],null);
+		    	$USER = session('WST_USER');
+		    	session('WST_USER',array_merge($USER,$data));
 				$rd['status']= 1;
+				//修改用户资料
+				$m = M('users');
+				$data = array();
+				$data[userName] = I("userName");
+				$m->where("userId=".$shops['userId'])->save($data);
 				if($shops['isSelf']==0){
 			        //建立门店和社区的关系
 					$relateArea = I('relateAreaId');
@@ -263,6 +306,7 @@ class ShopsModel extends BaseModel {
 	 	}else{
 	 		$mc->add($scdata);
 	 	}
+	 	S('WST_CACHE_RECOMM_SHOP_'.$shopcg['areaId2'],null);
 	 	$rd['status']= 1;
 	 	return $rd;
 	 }
@@ -346,9 +390,9 @@ class ShopsModel extends BaseModel {
 
 		//热销排名
 		$sql = "SELECT sp.shopName, SUM(og.goodsNums) totalnum, sp.shopId , g.goodsId , g.goodsName,g.goodsImg, g.goodsThums,g.shopPrice,g.marketPrice, g.goodsSn 
-						FROM ".$this->tablePrefix."goods g
-						LEFT JOIN ".$this->tablePrefix."order_goods og ON g.goodsId = og.goodsId,
-						".$this->tablePrefix."shops sp 
+						FROM __PREFIX__goods g
+						LEFT JOIN __PREFIX__order_goods og ON g.goodsId = og.goodsId,
+						__PREFIX__shops sp 
 						WHERE g.shopId = sp.shopId AND g.goodsFlag = 1 AND g.isAdminBest = 1 AND g.isSale = 1 AND g.goodsStatus = 1 AND sp.shopId = $shopId
 						GROUP BY g.goodsId ORDER BY SUM(og.goodsNums) desc limit 5";	
 		$hotgoods = $this->query($sql);
@@ -383,13 +427,13 @@ class ShopsModel extends BaseModel {
    		$shopAtive = $obj["shopAtive"];
    		
 		$dsplist = array();
-		$sql = "SELECT communityId,communityName from ".$this->tablePrefix."communitys WHERE communityFlag=1 AND isShow = 1 AND areaId3=".$areaId3;
+		$sql = "SELECT communityId,communityName from __PREFIX__communitys WHERE communityFlag=1 AND isShow = 1 AND areaId3=".$areaId3;
 		$ctlist = $this->query($sql);
 		$ctsplist = array();
 		for($k=0;$k<count($ctlist);$k++){
 			$community = $ctlist[$k];
 			$communityId = $community["communityId"];
-			$sql = "SELECT count(*) as spcnt from ".$this->tablePrefix."shops_communitys sc,".$this->tablePrefix."shops sp WHERE sc.shopId = sp.shopId AND communityId=".$communityId;
+			$sql = "SELECT count(*) as spcnt from __PREFIX__shops_communitys sc,__PREFIX__shops sp WHERE sc.shopId = sp.shopId AND communityId=".$communityId;
 			if($keyWords!="" && $shopName!=""){
 				$sql .= " AND (sp.shopName like '%$keyWords%' OR shopName like '%$shopName%')";
 			}else{
@@ -452,7 +496,8 @@ class ShopsModel extends BaseModel {
 		 
 		$shopAtive = $obj["shopAtive"];
 		$dsplist = array();
-		$sql = "SELECT sp.* from ".$this->tablePrefix."shops_communitys sc,".$this->tablePrefix."shops sp WHERE sc.shopId = sp.shopId AND sc.communityId=".$communityId;
+		$sql = "SELECT sp.shopId,sp.shopName,sp.shopAddress,sp.deliveryStartMoney,sp.shopAtive,sp.deliveryMoney,sp.shopImg,sp.deliveryCostTime,sp.deliveryFreeMoney
+		   ,sp.avgeCostMoney from __PREFIX__shops_communitys sc,__PREFIX__shops sp WHERE sc.shopId = sp.shopId AND sc.communityId=".$communityId;
 		
 		if($keyWords!="" && $shopName!=""){
 			$sql .= " AND (sp.shopName like '%$keyWords%' OR shopName like '%$shopName%')";

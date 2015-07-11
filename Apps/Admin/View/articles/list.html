@@ -62,7 +62,7 @@
        <div class='wst-tbar' style='height:25px;'>
                     文章标题：<input type='text' id='articleTitle' name='articleTitle' class='form-control wst-ipt-15' value='{$articleTitle}'/> 
        <button type="button" class="btn btn-primary glyphicon glyphicon-search" onclick='javascript:query()'>查询</button>             
-       <php>if(in_array('wzlb_01',$_SESSION['STAFF']['grant'])){</php>
+       <php>if(in_array('wzlb_01',$WST_STAFF['grant'])){</php>
        <button type="button" class="btn btn-success glyphicon glyphicon-plus" onclick='javascript:edit(0)' style='float:right'>新增</button>
        <php>}</php>
        </div>
@@ -98,7 +98,7 @@
 					  <span class="caret"></span>
 				   </button>
                </if>
-               <php>if(in_array('wzlb_02',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('wzlb_02',$WST_STAFF['grant'])){</php>
                    <ul class="dropdown-menu" role="menu">
 					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:toggleIsShow(1,{$vo['articleId']})">显示</a></li>
 					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:toggleIsShow(0,{$vo['articleId']})">隐藏</a></li>
@@ -109,10 +109,10 @@
                <td>{$vo['staffName']}</td>
                <td>{$vo['createTime']}</td>
                <td>
-               <php>if(in_array('wzlb_02',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('wzlb_02',$WST_STAFF['grant'])){</php>
                <button type="button" class="btn btn-default glyphicon glyphicon-pencil" onclick="javascript:edit({$vo['articleId']})"">修改</button>&nbsp;
                <php>}</php>
-               <php>if(in_array('wzlb_03',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('wzlb_03',$WST_STAFF['grant'])){</php>
                <button type="button" class="btn btn-default glyphicon glyphicon-trash" onclick="javascript:del({$vo['articleId']})"">刪除</button>
                <php>}</php>
                </td>

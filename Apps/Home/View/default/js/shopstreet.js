@@ -19,25 +19,25 @@ function getShopByCommunitys(obj){
 	if(searchType==2){
 		keyWords = $.trim($("#keyword").val());
 	}
-	$.post(rooturl+"/index.php/Home/Shops/getShopByCommunitys/" ,{"communityId":communityId,"shopName":shopName,"deliveryStartMoney":deliveryStartMoney,"deliveryMoney":deliveryMoney,"shopAtive":shopAtive,"keyWords":keyWords},function(data) {		
+	$.post(domainURL +"/index.php/Home/Shops/getShopByCommunitys/" ,{"communityId":communityId,"shopName":shopName,"deliveryStartMoney":deliveryStartMoney,"deliveryMoney":deliveryMoney,"shopAtive":shopAtive,"keyWords":keyWords},function(data) {		
 		var json = WST.toJson(data);
 		$(".wst-shop-list").empty();
 		var html = new Array();
 		for(var i=0;i<json.length;i++){
 			var shop = json[i];
 			html.push('<div class="wst-shop-box">');
-				html.push('<div style="width:80px;height:80px; float:left;"><a href="'+rooturl+'/index.php/Home/Shops/toShopHome/?shopId='+shop.shopId+'"><img data-original="'+rooturl+"/"+shop.shopImg+'" width="80" height="80" title="'+shop.shopName+'"/></a></div>');
-				html.push('<div style="wst-shop-street-items">');
-				html.push('<div style="font-weight:bolder;"><a href="'+rooturl+'/index.php/Home/Shops/toShopHome/?shopId='+shop.shopId+'">'+shop.shopName+'</a></div>');
+				html.push('<div style="width:80px;height:80px; float:left;"><a href="'+domainURL +'/index.php/Home/Shops/toShopHome/?shopId='+shop.shopId+'"><img data-original="'+domainURL +"/"+shop.shopImg+'" width="80" height="80" title="'+shop.shopName+'"/></a></div>');
+				html.push('<div class="wst-shop-streets-items">');
+				html.push('<div style="font-weight:bolder;"><a href="'+domainURL +'/index.php/Home/Shops/toShopHome/?shopId='+shop.shopId+'">'+shop.shopName+'</a></div>');
 				html.push('<div style="">店铺地址：'+shop.shopAddress+'</div>');
-				html.push('<div style="">'+shop.deliveryCostTime+'分钟  ￥'+shop.deliveryStartMoney+'元起送 ￥'+shop.deliveryMoney+'元配送费</div>');
-				html.push('<div class="wst-shop-streets-items-status"><img src="'+rooturl+'/Apps/Home/View/default/images/icon_menu_01.png" style="vertical-align:middle"/>&nbsp;&nbsp;'+(shop.shopAtive==1?"营业中":"休息中")+'</div>');
+				html.push('<div style="">'+shop.deliveryStartMoney+'元起送，配送费'+shop.deliveryMoney+'元，'+shop.deliveryFreeMoney+'元起免配送费</div>');
+				html.push('<div class="wst-shop-streets-items-status"><img src="'+domainURL +'/Apps/Home/View/default/images/icon_menu_01.png" style="vertical-align:middle"/>&nbsp;&nbsp;'+(shop.shopAtive==1?"营业中":"休息中")+'</div>');
 				html.push('</div>');
 				html.push('<div class="wst-clear"></div>');
 			html.push('</div>');
 		}
 		$(".wst-shop-list").html(html.join(""));
-		$(".wst-shop-list img").lazyload({effect: "fadeIn",failurelimit : 1000,threshold: 200,placeholder:rooturl+'/Apps/Home/View/default/images/store_default_signlist.png'});
+		$(".wst-shop-list img").lazyload({effect: "fadeIn",failurelimit : 1000,threshold: 200,placeholder:domainURL +'/Apps/Home/View/default/images/store_default_signlist.png'});
 	});
 }
 
@@ -52,7 +52,7 @@ function getDistrictsShops(){
 	if(searchType==2){
 		keyWords = $.trim($("#keyword").val());
 	}
-	$.post(rooturl+"/index.php/Home/Shops/getDistrictsShops/" ,{"areaId3":areaId3,"shopName":shopName,"deliveryStartMoney":deliveryStartMoney,"deliveryMoney":deliveryMoney,"shopAtive":shopAtive,"keyWords":keyWords},function(data) {		
+	$.post(domainURL +"/index.php/Home/Shops/getDistrictsShops/" ,{"areaId3":areaId3,"shopName":shopName,"deliveryStartMoney":deliveryStartMoney,"deliveryMoney":deliveryMoney,"shopAtive":shopAtive,"keyWords":keyWords},function(data) {		
 		var json = WST.toJson(data);
 		$(".wst-shop-list").empty();
 		var html = new Array();

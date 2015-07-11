@@ -13,21 +13,21 @@
 			width="30" height="30">
 		</p>
 	</div>
-	<div class="mui-mbar-tabs" style="border: 1px solid red;">
+	<div class="mui-mbar-tabs">
 		<div class="quick_link_mian">
 			<div class="quick_links_panel">
 				<div id="quick_links" class="quick_links">
 					<li><a href="#" class="my_qlinks"><i class="setting"></i></a>
 						<div class="ibar_login_box status_login">
-							<if condition="$baseUser['userId'] gt 0">
+							<if condition="$WST_USER['userId'] gt 0">
 							<div class="avatar_box">
 								<p class="avatar_imgbox">
 									<img
 										src="__ROOT__/Apps/Home/View/default/images/no-img_mid_.jpg" />
 								</p>
-								<if condition="$baseUser['userId'] gt 0">
+								<if condition="$WST_USER['userId'] gt 0">
 								<ul class="user_info">
-									<li>用户名：{$baseUser['loginName']}</li>
+									<li>用户名：{$WST_USER['loginName']}</li>
 									<li>级&nbsp;别：普通会员</li>
 								</ul>
 								</if>
@@ -90,6 +90,7 @@
 		</div>
 	</div>
 	<script type="text/javascript">
+	var numberItem = {$cartcnt};
 	$(".quick_links_panel li").mouseenter(function() {
 		$(this).children(".mp_tooltip").animate({
 			left : -92,
@@ -125,7 +126,7 @@
 		curvature : 0.0012, //控制抛物线弧度
 		complete : function() {
 			eleFlyElement.style.visibility = "hidden";
-			jQuery.post(rooturl+"/index.php/Home/Cart/getCartInfo/" ,{"axm":1},function(data) {
+			jQuery.post(domainURL +"/index.php/Home/Cart/getCartInfo/" ,{"axm":1},function(data) {
 				var cart = WST.toJson(data);
 				eleShopCart.querySelector("span").innerHTML = cart.cartgoods.length;
 			});
@@ -153,15 +154,13 @@
 												eleFlyElement.style.top = event.clientY
 														+ scrollTop + "px";
 												eleFlyElement.style.visibility = "visible";
-$(eleFlyElement).show();
+												$(eleFlyElement).show();
 												// 需要重定位
 												myParabola.position().move();
 											});
 						});
 	}
-	$(document).ready(function(){
-		getVerify();
-	});
+
 	function getMyOrders(){
 		document.location.href = "__ROOT__/index.php/Home/Orders/queryByPage";
 	}

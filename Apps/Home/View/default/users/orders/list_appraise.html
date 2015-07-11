@@ -18,12 +18,12 @@
            </thead>
            <tbody>
             <volist name="appraiseOrders['root']" id="order" key='key1'>
-             <tr height="80">
+             <tr height="60">
              	<td width='80' style="padding-top:10px;vertical-align:top;">{$order["orderNo"]}</td>
                 <td width='*'>
 					<volist name="order['goodslist']" id="goods" key='key2'>
 						<a target='_blank' href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$goods['goodsId']}">
-							<img src="__ROOT__/{$goods['goodsThums']}" height="50" width="50"/>
+							<img src="__ROOT__/{$goods['goodsThums']}" height="50" width="50" class='wst-goods-tb'/>
 						</a>
 					</volist>
 				</td>
@@ -52,12 +52,12 @@
 				</td>
              </tr>
              </volist>
-             <if condition="$receiveOrders['totalPage'] gt 0">
+             <if condition="$appraiseOrders['totalPage'] gt 1">
              <tfoot>
              <tr>
-                <td colspan='8' align='center'>
+                <td colspan='8' align='center' style="height:30px;border-bottom: 0px;">
 					<div class="wst-page" style="float:right;padding-bottom:10px;">
-						<div class="wst-page-items">
+						<div id="wst-page-items">
 						</div>
 					</div>
 				</td>
@@ -68,4 +68,33 @@
         </table>
         </div>
     </div>
+    <script>
+    <if condition="$appraiseOrders['totalPage'] gt 1">
+    $(document).ready(function(){
+		laypage({
+		    cont: 'wst-page-items',
+		    pages: {$appraiseOrders['totalPage']}, //总页数
+		    skip: true, //是否开启跳页
+		    skin: '#e23e3d',
+		    groups: 3, //连续显示分页数
+		    curr: function(){ //通过url获取当前页，也可以同上（pages）方式获取
+		        var page = location.search.match(/pcurr=(\d+)/);
+		        return page ? page[1] : 1;
+		    }(), 
+		    jump: function(e, first){ //触发分页后的回调
+		        if(!first){ //一定要加此判断，否则初始时会无限刷新
+		        	var nuewurl = WST.splitURL("pcurr");
+		        	var ulist = nuewurl.split("?");
+		        	if(ulist.length>1){
+		        		location.href = nuewurl+'&pcurr='+e.curr;
+		        	}else{
+		        		location.href = '?pcurr='+e.curr;
+		        	}
+		            
+		        }
+		    }
+		});
+    });
+	</if>
+	</script>
 </block> 

@@ -17,6 +17,8 @@ class BaseAction extends Controller {
 		$m = D('Home/System');
 		$GLOBALS['CONFIG'] = $m->loadConfigs();
 		$this->assign('CONF',$GLOBALS['CONFIG']);
+		$s = session('WST_STAFF');
+		$this->assign('WST_STAFF',$s);
 	}
     
 	/**
@@ -25,7 +27,7 @@ class BaseAction extends Controller {
     public function uploadPic(){
 	   $config = array(
 		        'maxSize'       =>  0, //上传的文件大小限制 (0-不做限制)
-		        'exts'          =>  array('jpg','png','gif','jpge'), //允许上传的文件后缀
+		        'exts'          =>  array('jpg','png','gif','jpeg'), //允许上传的文件后缀
 		        'rootPath'      =>  './Upload/', //保存根路径
 		        'driver'        =>  'LOCAL', // 文件上传驱动
 		        'subName'       =>  array('date', 'Y-m'),
@@ -59,24 +61,28 @@ class BaseAction extends Controller {
      * ajax操作登录验证
      */
     public function isAjaxLogin(){
-    	if(empty($_SESSION['STAFF']))die("{status:-999,url:'toLogin'}");
+    	$s = session('WST_STAFF');
+    	if(empty($s))die("{status:-999,url:'toLogin'}");
     }
     /**
      * 登录操作验证
      */
     public function isLogin(){
-    	if(empty($_SESSION['STAFF']))$this->redirect("Index/toLogin");
+    	$s = session('WST_STAFF');
+        if(empty($s))$this->redirect("Index/toLogin");
     }
     /**
      * 跳转权限操作
      */
     public function checkPrivelege($grant){
-    	if(empty($_SESSION['STAFF']['grant']) || !in_array($grant,$_SESSION['STAFF']['grant'])){
+    	$s = session('WST_STAFF.grant');
+    	if(empty($s) || !in_array($grant,$s)){
     		$this->display("/noprivelege");exit();
     	}
     }
     public function checkAjaxPrivelege($grant){
-    	if(empty($_SESSION['STAFF']['grant']) || !in_array($grant,$_SESSION['STAFF']['grant']))die("{status:-998}");
+    	$s = session('WST_STAFF.grant');
+    	if(empty($s) || !in_array($grant,$s))die("{status:-998}");
     }
     
 }

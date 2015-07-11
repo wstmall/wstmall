@@ -22,7 +22,7 @@ class ArticlesModel extends BaseModel {
 		$data["isShow"] = I("isShow",0);
 		$data["articleContent"] = I("articleContent");
 		$data["articleKey"] = I("articleKey");
-		$data["staffId"] = (int)$_SESSION['STAFF']['staffId'];
+		$data["staffId"] = (int)session('WST_STAFF.staffId');
 		$data["createTime"] = date('Y-m-d H:i:s');
 	    if($this->checkEmpty($data,true)){
 			$m = M('articles');
@@ -45,7 +45,7 @@ class ArticlesModel extends BaseModel {
 		$data["isShow"] = I("isShow",0);
 		$data["articleContent"] = I("articleContent");
 		$data["articleKey"] = I("articleKey");
-		$data["staffId"] = (int)$_SESSION['STAFF']['staffId'];
+		$data["staffId"] = (int)session('WST_STAFF.staffId');
 	    if($this->checkEmpty($data,true)){	
 			$m = M('articles');
 		    $rs = $m->where("articleId=".I('id',0))->save($data);

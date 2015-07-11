@@ -8,7 +8,6 @@ namespace Home\Model;
  * ============================================================================
  * 会员服务类
  */
-use Think\Model;
 class UsersModel extends BaseModel {
 	
      /**
@@ -16,8 +15,15 @@ class UsersModel extends BaseModel {
 	  */
      public function get($userId=0){
 	 	$m = M('users');
-	 	$userId = $userId?$userId:I('id');
-		return $m->where("userId=".$userId)->find();
+	 	$userId = $userId?$userId:I('id',0);
+		$user = $m->where("userId=".$userId)->find();
+		if(!empty($user) && $user['userType']==1){
+			//加载商家信息
+		 	$s = M('shops');
+		 	$shops = $s->where('userId='.$user['userId']." and shopFlag=1")->find();
+		 	if(!empty($shops))$user = array_merge($shops,$user);
+		}
+		return $user;
 	 }
 	 
 	/**
@@ -44,31 +50,16 @@ class UsersModel extends BaseModel {
  	/**
 	  * 查询登录名是否存在
 	  */
-	 public function checkLoginKey(){
+	 public function checkLoginKey($loginName,$id = 0){
+	 	$loginName = ($loginName!='')?$loginName:I('loginName');
 	 	$rd = array('status'=>-1);
-	 	if(I('loginName')=='')return $rd;
-	 	$m = M('users');
-	 	$rs = $m->where(" loginName ='%s' or userPhone ='%s' or userEmail='%s' ",array(I('loginName'),I('loginName'),I('loginName')))->count();
-	    if($rs==0)$rd['status'] = 1;
-	    return $rd;
-	 }
-	 
-     /**
-	  * 查询登录关键字
-	  */
-	 public function checkLoginKey2(){
-	 	$rd = array('status'=>-1);
-	 	$key = I('clientid');
-	 	$id = $_SESSION['USER']['userId'];
-	 	if($key!=''  && I($key)=='')return $rd;
+	 	if($loginName=='')return $rd;
 	 	$sql = " (loginName ='%s' or userPhone ='%s' or userEmail='%s') ";
-	 	$keyArr = array(I($key),I($key),I($key));
-	 	if($id>0){
-	 		$sql.=" and userId!=".$id;
-	 		$keyArr[] = $id;
-	 	}
 	 	$m = M('users');
-	 	$rs = $m->where($sql,$keyArr)->count();
+	    if($id>0){
+	 		$sql.=" and userId!=".$id;
+	 	}
+	 	$rs = $m->where($sql,array($loginName,$loginName,$loginName))->count();
 	    if($rs==0)$rd['status'] = 1;
 	    return $rd;
 	 }
@@ -93,7 +84,7 @@ class UsersModel extends BaseModel {
 		$loginName = I('loginName');
 		$userPwd = I('loginPwd');
 		$rememberPwd = I('rememberPwd');
-		$sql ="SELECT * FROM ".$this->tablePrefix."users WHERE (loginName='".$loginName."' OR userEmail='".$loginName."' OR userPhone='".$loginName."') AND userFlag=1 and userStatus=1 ";
+		$sql ="SELECT * FROM __PREFIX__users WHERE (loginName='".$loginName."' OR userEmail='".$loginName."' OR userPhone='".$loginName."') AND userFlag=1 and userStatus=1 ";
 		$rss = $this->query($sql);
 		if(!empty($rss)){
 			$rs = $rss[0];
@@ -110,6 +101,12 @@ class UsersModel extends BaseModel {
 			 		  $shops = $s->where('userId='.$rs['userId']." and shopFlag=1")->find();
 			 		  if(!empty($shops))$rs = array_merge($shops,$rs);
 		    	}
+		    	//记录登录日志
+				$data = array();
+				$data["userId"] = $rs['userId'];
+				$data["loginTime"] = date('Y-m-d H:i:s');
+				$data["loginIp"] = get_client_ip();
+				M('log_user_logins')->add($data);
 			}
 			$rv = $rs;
 			setcookie("loginName", $loginName, time()+3600*24*60);
@@ -127,17 +124,15 @@ class UsersModel extends BaseModel {
 	 * 会员注册
 	 */
     public function regist(){
-    	
     	$m = M('users');
     	$rd = array('status'=>-1);	   
-    	$chars = array("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z");
-    	$data = array();
     	
+    	$data = array();
+    	$data['loginName'] = I('loginName','');
     	$data['loginPwd'] = I("loginPwd");
     	$data['reUserPwd'] = I("reUserPwd");
     	$data['protocol'] = I("protocol");
-    	$mobileCode = I("mobileCode");
-    	
+    	$loginName = $data['loginName'];
     	if($data['loginPwd']!=$data['reUserPwd']){
     		$rd['status'] = -3;
     		return $rd;
@@ -148,17 +143,21 @@ class UsersModel extends BaseModel {
     	}
     	foreach ($data as $v){
     		if($v ==''){
-    			$rd['status'] = -2;
+    			$rd['status'] = -7;
     			return $rd;
     		}
     	}
-    	$nameType = I("nameType");
-    	$loginName = I('loginName','');
-    	
-		if($nameType==3){
-			
-			$verify = $_SESSION['VerifyCode_userPhone'];
-			$startTime = (int)$_SESSION['VerifyCode_userPhone_Time'];
+        //检测账号是否存在
+        $crs = $this->checkLoginKey($loginName);
+        if($crs['status']!=1){
+	    	$rd['status'] = -2;
+	    	return $rd;
+	    }
+	    $nameType = I("nameType");
+	    $mobileCode = I("mobileCode");
+		if($nameType==3){//手机号码
+			$verify = session('VerifyCode_userPhone');
+			$startTime = (int)session('VerifyCode_userPhone_Time');
 			if((time()-$startTime)>120){
 				$rd['status'] = -5;
 				return $rd;
@@ -167,15 +166,16 @@ class UsersModel extends BaseModel {
 				$rd['status'] = -4;
 				return $rd;
 			}
-			$loginName = $loginName ."_". $chars[mt_rand(0,25)];
-		}else if($nameType==1){
-		
+			$loginName = $this->randomLoginName($loginName);
+		}else if($nameType==1){//邮箱注册
 			$unames = explode("@",$loginName);
-			$loginName = $unames[0] ."_". $chars[mt_rand(0, 25)];
+			$loginName = $this->randomLoginName($unames[0]);
 		}
+		if($loginName=='')return $rd;//分派不了登录名
 		$data['loginName'] = $loginName;
 	    unset($data['reUserPwd']);
 	    unset($data['protocol']);
+	    //检测账号，邮箱，手机是否存在
 	    $data["loginSecret"] = rand(1000,9999);
 	    $data['loginPwd'] = md5(I('loginPwd').$data['loginSecret']);
 	    $data['userType'] = 0;
@@ -183,18 +183,13 @@ class UsersModel extends BaseModel {
 	    $data['userQQ'] = I('userQQ');
 	    $data['userPhone'] = I('userPhone');
 	    $data['userScore'] = I('userScore');
-	 
 		$data['userEmail'] = I("userEmail");
 	    $data['createTime'] = date('Y-m-d H:i:s');
 	    $data['userFlag'] = 1;
-	
-	    if($this->checkLoginKey($loginName)==1){
-	    	$rd['status'] = -1;
-	    	return $rd;
-	    }
+	    
 	   
 		$rs = $m->add($data);
-		if($rs){
+		if(false !== $rs){
 			$rd['status']= 1;
 			$rd['userId']= $rs;
 		}
@@ -203,9 +198,35 @@ class UsersModel extends BaseModel {
 	    	$data = array();
 	    	$data['lastTime'] = date('Y-m-d H:i:s');
 	    	$data['lastIP'] = get_client_ip();
-	    	$m->where(" userId=".$rs['userId'])->data($data)->save();
+	    	$m->where(" userId=".$rs['userId'])->data($data)->save();	 		
+	    	//记录登录日志
+		 	$data = array();
+			$data["userId"] = $rd['userId'];
+			$data["loginTime"] = date('Y-m-d H:i:s');
+			$data["loginIp"] = get_client_ip();
+			$m = M('log_user_logins');
+			$m->add($data);
+	    	
 	    } 
 		return $rd;
+	}
+	
+	/**
+	 * 随机生成一个账号
+	 */
+	public function randomLoginName($loginName){
+		$chars = array("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z");
+		//简单的派字母
+		foreach ($chars as $key =>$c){
+			$crs = $this->checkLoginKey($loginName."_".$c);
+			if($crs['status']==1)return $loginName."_".$c;
+		}
+		//随机派三位数值
+		for($i=0;$i<1000;$i++){
+			$crs = $this->checkLoginKey($loginName."_".$i);
+			if($crs['status']==1)return $loginName."_".$i;
+		}
+		return '';
 	}
 	
 	/**
@@ -214,7 +235,7 @@ class UsersModel extends BaseModel {
     public function checkUserPhone($userPhone){
     	$userId = I("userId");
     	
-    	$rd = array('status'=>-2);
+    	$rd = array('status'=>-3);
 	 	
 	 	$m = M('users');
 		$sql =" userFlag=1 and userPhone='".$userPhone."'";
@@ -256,25 +277,73 @@ class UsersModel extends BaseModel {
 	 */
 	public function editUser($obj){
 		$rd = array('status'=>-1);
+		$userPhone = I("userPhone");
+		$userEmail = I("userEmail");
+		$userId = $obj["userId"];
+	    //检测账号是否存在
+        $crs = $this->checkLoginKey($userPhone,$userId);
+        if($crs['status']!=1){
+	    	$rd['status'] = -2;
+	    	return $rd;
+	    }
+	    //检测邮箱是否存在
+        $crs = $this->checkLoginKey($userEmail,$userId);
+        if($crs['status']!=1){
+	    	$rd['status'] = -3;
+	    	return $rd;
+	    }
 		$m = M('users');
 		$data = array();
-		$userId = $obj["userId"];
+		
 		$data["userName"] = I("userName");
 		$data["userQQ"] = I("userQQ");
-		$data["userPhone"] = I("userPhone");
+		$data["userPhone"] = $userPhone;
 		$data["userSex"] = I("userSex",0);
-		$data["userEmail"] = I("userEmail");
+		$data["userEmail"] = $userEmail;
 		$data["userPhoto"] = I("userPhoto");
 		$rs = $m->where(" userId=".$userId)->data($data)->save();
 	    if(false !== $rs){
 			$rd['status']= 1;
-			$_SESSION['USER']['userName'] = $data["userName"];
-			$_SESSION['USER']["userQQ"] = $data["userQQ"];
-			$_SESSION['USER']["userSex"] = $data["userSex"];
-			$_SESSION['USER']["userPhone"] = $data["userPhone"];
-			$_SESSION['USER']["userEmail"] = $data["userEmail"];
-			$_SESSION['USER']["userPhoto"] = $data["userPhoto"];
+			session('WST_USER.userName',$data["userName"]);
+			session('WST_USER.userQQ',$data["userQQ"]);
+			session('WST_USER.userSex',$data["userSex"]);
+			session('WST_USER.userPhone',$data["userPhone"]);
+			session('WST_USER.userEmail',$data["userEmail"]);
+			session('WST_USER.userPhoto',$data["userPhoto"]);
 		}
 		return $rd;
+	}
+	
+	/**
+	 * 重置用户密码
+	 */
+	public function resetPass(){
+		$rs = array('status'=>-1);
+    	$reset_userId = (int)session('REST_userId');
+    	if($reset_userId==0){
+    		$rs['msg'] = '无效的用户！';
+    		return $rs;
+    	}
+    	$m = M('Users');
+    	$user = $m->where("userId=".$reset_userId." and userFlag=1 and userStatus=1")->find();
+    	if(empty($user)){
+    		$rs['msg'] = '无效的用户！';
+    		return $rs;
+    	}
+    	$loginPwd = I('loginPwd');
+    	if(trim($loginPwd)==''){
+    		$rs['msg'] = '无效的密码！';
+    		return $rs;
+    	}
+    	$data['loginPwd'] = md5($loginPwd.$user["loginSecret"]);
+    	$rc = $m->where("userId=".$reset_userId)->save($data);
+    	if(false !== $rc){
+    	    $rs['status'] =1;
+    	}
+    	session('REST_userId',null);
+    	session('REST_Time',null);
+    	session('REST_success',null);
+    	session('findPass',null);
+    	return $rs;
 	}
 }

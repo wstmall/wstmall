@@ -155,7 +155,7 @@
                <td>{$vo['shopCatName']}&nbsp;</td>
                <td>
                <button type="button" class="btn btn-primary glyphicon" onclick='javascript:toView({$vo['goodsId']})'>查看</button> 
-               <php>if(in_array('spsh_04',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('spsh_04',$WST_STAFF['grant'])){</php>
                <if condition="$vo['goodsStatus']==1 ">
                <button type="button" class="btn btn-danger glyphicon glyphicon-pencil" onclick="javascript:changeStatus({$vo['goodsId']},0)">不通过</button>&nbsp;
                <else/>

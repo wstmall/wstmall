@@ -83,7 +83,7 @@ class UsersAction extends BaseAction{
     	$this->assign('userEmail',I('userEmail'));
     	$this->assign('userType',I('userType',-1));
     	$this->assign('Page',$page);
-        $this->display("users/list");
+        $this->display("/users/list");
 	}
 	/**
 	 * 列表查询
@@ -103,7 +103,9 @@ class UsersAction extends BaseAction{
 	public function checkLoginKey(){
 		$this->isAjaxLogin();
 		$m = D('Admin/Users');
-		$rs = $m->checkLoginKey();
+		$key = I('clientid');
+	 	$id = I('id',0);
+		$rs = $m->checkLoginKey(I($key),$id);
 		$this->ajaxReturn($rs);
 	}
 	

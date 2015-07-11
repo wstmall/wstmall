@@ -142,6 +142,8 @@
 				Plugins.setWaitTipsMsg({content:'操作成功',timeout:1000,callback:function(){
 				   location.href='__ROOT__/index.php/Admin/Users/';
 				}});
+			}else if(json.status=='-2'){
+				Plugins.setWaitTipsMsg({content:'用户手机号码或邮箱已存在!',timeout:1000});
 			}else{
 				Plugins.closeWindow();
 				Plugins.Tips({title:'信息提示',icon:'error',content:'操作失败!',timeout:1000});

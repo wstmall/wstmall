@@ -12,9 +12,10 @@
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/passport.css">
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/footer.css">
      	<link rel="stylesheet" href="__PUBLIC__/plugins/uploadify/uploadify.css">
-      	
-      	
    	</head>
+   	<script>
+   	var userProtocolUrl = "{:U('Home/Index/toUserProtocol')}";
+   	</script>
    	<body>
     <style>
     .yj-select select{height:30px;font-size:17px;margin-right:5px;}
@@ -22,7 +23,7 @@
 	<div id="shortcut-2013">
 		<include file="./Apps/Home/View/default/header_nav.html" />
 	</div>
-	<div class="w" id="registhd">
+	<div class="wst-regist" id="registhd">
 	    <div style="margin-top:10px;"> 
 	    <a href="#">
 	    	<span style="font-size:30px;color:black;">店铺注册</span>
@@ -30,7 +31,7 @@
    
 	    </div>
 	</div>
-	<div class="w" id="regist">	    
+	<div class="wst-regist" id="regist">	    
 	    <div class="mc">
 	        <form name="myform" method="post" id="myform" >
 	            <input type='hidden' id='shopImg' value='{$object.shopImg}'/>
@@ -151,7 +152,7 @@
 	                    <div class="fl item-ifo">
 	                        <label>
 	                        <input class="checkbox" id="protocol" name="protocol" type="checkbox"/>
-	                                                                        我已阅读并同意</label><a href="javascript:;" class="blue" id="protocolInfo" onclick="showXiey();">《WST店铺注册协议》</a>                       
+	                                                                        我已阅读并同意</label><a href="javascript:;" class="blue" id="protocolInfo" onclick="showXiey();">《用户注册协议》</a>                       
 	                        <label id="protocol_error" class="error hide">请接受服务条款</label>
 	                    </div>
 	                </div>
@@ -181,7 +182,9 @@
     	   getAreaList("areaId2",'{$area["parentId"]}',0,'{$area["areaId"]}');
 	       getAreaList("areaId3",'{$area["areaId"]}',1);
        })
-       
    </script>
+   <style>
+   	.layui-layer-btn a{background:#e23c3d;}
+   	</style>
 </body>
 </html>

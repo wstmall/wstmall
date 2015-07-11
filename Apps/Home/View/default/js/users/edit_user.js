@@ -11,7 +11,7 @@ $(function () {
 		}).ajaxValidator({
 			dataType : "json",
 			async : true,
-			url : rooturl+"/index.php/Home/Users/checkLoginKey/",
+			url : domainURL+"/index.php/Home/Users/checkLoginKey/",
 			success : function(data){
 				var json = WST.toJson(data);
 	            if( json.status == "1" ) {
@@ -30,7 +30,7 @@ $(function () {
 			}).ajaxValidator({
 				dataType : "json",
 				async : true,
-				url : rooturl+"/index.php/Home/Users/checkLoginKey/",
+				url : domainURL+"/index.php/Home/Users/checkLoginKey/",
 				success : function(data){
 					var json = WST.toJson(data);
 		            if( json.status == "1" ) {
@@ -41,7 +41,7 @@ $(function () {
 					return "该电子邮箱已被使用";
 				},
 				buttons: $("#dosubmit"),
-				onError : "该账号已存在。",
+				onError : "该邮箱已存在。",
 				onWait : "请稍候..."
 			}).defaultPassed().unFormValidator(true);
 		$("#userPhone").blur(function(){
@@ -64,10 +64,10 @@ $(function () {
 		    fileTypeDesc  : 'Image Files',
 	        fileTypeExts  : '*.gif; *.jpg; *.png',
 	        swf           : publicurl+'/plugins/uploadify/uploadify.swf',
-	        uploader      : rooturl+'/index.php/Home/Users/uploadPic',
+	        uploader      : domainURL+'/index.php/Home/Users/uploadPic',
 	        onUploadSuccess : function(file, data, response) {
 	        	var json = WST.toJson(data);
-	        	$('#preview').attr('src',rooturl+'/'+json.Filedata.savepath+json.Filedata.savethumbname).show();
+	        	$('#preview').attr('src',domainURL +'/'+json.Filedata.savepath+json.Filedata.savethumbname).show();
 	        	$('#userPhoto').val(json.Filedata.savepath+json.Filedata.savename);
           }
 	    });
@@ -80,14 +80,19 @@ $(function () {
 	   params.userEmail = $.trim($('#userEmail').val());
 	   params.userSex = $('input:radio[name="userSex"]:checked').val();
 	   params.userPhoto =  $.trim($('#userPhoto').val());		
-	   //layer.msg('数据处理中，请稍候...', 1, -1);
-	   $.post(rooturl+"/index.php/Home/Users/editUser",params,function(data,textStatus){
+	   var ll = layer.load('数据处理中，请稍候...');
+	   $.post(domainURL+"/index.php/Home/Users/editUser",params,function(data,textStatus){
+		   layer.close(ll);
 			var json = WST.toJson(data);
 			if(json.status=='1'){
-				layer.msg('修改用户资料成功!', 2, 1);
+				WST.msg('修改用户资料成功!', {icon: 1});
 				location.reload();
+			}else if(json.status=='-2'){
+				WST.msg('用户手机已存在!', {icon: 5});
+			}else if(json.status=='-3'){
+				WST.msg('用户邮箱已存在!', {icon: 5});
 			}else{
-				layer.msg('修改用户资料失败!', 2, 2);
+				WST.msg('修改用户资料失败!', {icon: 5});
 			}
 	   });
    }

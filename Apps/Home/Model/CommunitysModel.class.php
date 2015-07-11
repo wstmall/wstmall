@@ -8,21 +8,14 @@
  * ============================================================================
  * 社区服务类
  */
-use Think\Model;
 class CommunitysModel extends BaseModel {
      /**
-	  * 获取列表
+	  * 根据县区获取社区列表
 	  */
-	  public function queryByList($obj){
-		 $m = M('communitys');
-		 $areaId2 = $obj["areaId2"];
-		 $areaId3 = $obj["areaId3"];
-		 $sql = "SELECT * FROM ".$this->tablePrefix."communitys WHERE areaId2=$areaId2 AND communityFlag=1 AND isShow = 1 ";
-		 if($areaId3>0){
-	  		$sql .= " AND areaId3=$areaId3 ";
-	  	 }
-		 $sql .= " ORDER BY areaId3, communitySort";
-		 return $rs = $this->query($sql);
+	  public function getByDistrict($areaId3 = 0){
+	  	 $w = " communityFlag=1 AND isShow = 1 AND areaId3=$areaId3 ";
+		 $rs=  $this->cache('WST_CACHE_CITY_004_'.$areaId3,31536000)->where($w)->field('communityId,communityName')->order('communitySort asc')->select();
+		 return $rs;
 	  }
 	  
 	/**
@@ -30,7 +23,7 @@ class CommunitysModel extends BaseModel {
 	  */
 	public function getCommunityList($areaId2){
 	    $m = M('communitys');
-	    $sql = "SELECT * FROM ".$this->tablePrefix."communitys WHERE areaId2=$areaId2 AND communityFlag=1 AND isShow = 1 AND isService=1 ORDER BY areaId3, communitySort";
+	    $sql = "SELECT * FROM __PREFIX__communitys WHERE areaId2=$areaId2 AND communityFlag=1 AND isShow = 1 AND isService=1 ORDER BY areaId3, communitySort";
 	    $rs = $this->query($sql);
 		return $rs;
 	}

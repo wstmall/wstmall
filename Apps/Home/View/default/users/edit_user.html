@@ -23,11 +23,11 @@
              <td>
              	<label><input type='radio' name='userSex' value="1" <if condition="$user['userSex'] eq 1">checked</if>/>男</label>
              	<label><input type='radio' name='userSex' value="2" <if condition="$user['userSex'] eq 2">checked</if>/>女</label>
-             	<label><input type='radio' name='userSex' value="3" <if condition="$user['userSex'] eq 0">checked</if>/>保密</label>
+             	<label><input type='radio' name='userSex' value="3" <if condition="$user['userSex'] eq 3">checked</if>/>保密</label>
              </td>
            </tr>
             <tr>
-             <th align='right'>用户QQ <font color='red'>*</font>：</th>
+             <th align='right'>用户QQ ：</th>
              <td>
              <input type='text' id='userQQ' name='userQQ' value="{$user['userQQ']}"/>
              </td>

@@ -63,7 +63,7 @@
        账号：<input type='text' id='loginName' name='loginName' class='form-control wst-ipt-10' value='{$loginName}'/> 
        姓名：<input type='text' id='staffName' name='staffName' class='form-control wst-ipt-10' value='{$staffName}'/>   
   <button type="button" class="btn btn-primary glyphicon glyphicon-search" onclick='javascript:query()'>查询</button> 
-       <php>if(in_array('zylb_01',$_SESSION['STAFF']['grant'])){</php>
+       <php>if(in_array('zylb_01',$WST_STAFF['grant'])){</php>
        <button type="button" class="btn btn-success glyphicon glyphicon-plus" onclick='javascript:edit(0)' style='float:right'>新增</button>
        <php>}</php>
        </div>
@@ -110,7 +110,7 @@
 					  <span class="caret"></span>
 				   </button>
                </if>
-               <php>if(in_array('zylb_02',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('zylb_02',$WST_STAFF['grant'])){</php>
                    <ul class="dropdown-menu" role="menu">
 					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:toggleStatus(1,{$vo['staffId']})">显示</a></li>
 					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:toggleStatus(0,{$vo['staffId']})">隐藏</a></li>
@@ -119,10 +119,10 @@
                </div>
                </td>
                <td>
-               <php>if(in_array('zylb_02',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('zylb_02',$WST_STAFF['grant'])){</php>
                <button type="button" class="btn btn-default glyphicon glyphicon-pencil" onclick="javascript:edit({$vo['staffId']})">修改</button>&nbsp;
                <php>}</php>
-               <php>if(in_array('zylb_03',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('zylb_03',$WST_STAFF['grant'])){</php>
                <if condition="$vo['staffId'] != $Think.session.STAFF.staffId ">
                <button type="button" class="btn btn-default glyphicon glyphicon-trash" onclick="javascript:del({$vo['staffId']})">刪除</buttona>
                </if>

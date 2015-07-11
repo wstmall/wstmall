@@ -40,7 +40,7 @@
    </script>
    <body class='wst-page'>
        <div class='wst-tbar' style='text-align:right;height:25px;'>
-         <php>if(in_array('yqlj_01',$_SESSION['STAFF']['grant'])){</php>
+         <php>if(in_array('yqlj_01',$WST_STAFF['grant'])){</php>
          <button type="button" class="btn btn-success glyphicon glyphicon-plus" onclick='javascript:edit(0)' style='float:right'>新增</button>
          <php>}</php>
        </div>
@@ -63,10 +63,10 @@
                <td>{$vo['friendlinkUrl']}</td>
                <td><img src='__ROOT__/{$vo['friendlinkIco']}' width='60' height='30'></td>
                <td>
-               <php>if(in_array('yqlj_02',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('yqlj_02',$WST_STAFF['grant'])){</php>
                <button type="button" class="btn btn-default glyphicon glyphicon-pencil" onclick="javascript:edit({$vo['friendlinkId']})"">修改</button>&nbsp;
                <php>}</php>
-               <php>if(in_array('yqlj_03',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('yqlj_03',$WST_STAFF['grant'])){</php>
                <button type="button" class="btn btn-default glyphicon glyphicon-trash" onclick="javascript:del({$vo['friendlinkId']})"">刪除</button>
                <php>}</php>
                </td>

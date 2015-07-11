@@ -2,26 +2,110 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-         <title>买家中心</title>
+         <title>商品评价</title>
          <link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
          <link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/user.css">
-         <style>
-         	.wst-odetal-box{padding:10px;text-align:center;background-color:#ffffff;}
-         	.wst-tab{border-collapse: collapse; }
-         	.wst-tab-cpt{text-align:left;height:30px;font-weight:bold;}
-         	.wst-tab tr{height:30px;}
-         	.wst-tab tr td{border:1px solid #eeeeee;}
-         	.wst-td-title{width:100px;text-align:center;}
-         	.wst-td-content{padding-left:6px;text-align:left;}
-         	.wst-align-center{text-align:center;}
-         </style>
-	     <script src="__PUBLIC__/js/jquery.min.js"></script>
-	     <script src="__PUBLIC__/js/common.js"></script>
+		<script src="__PUBLIC__/js/jquery.min.js"></script>
+	     
+    </head>
+    
+    <body style="background-color:#f5f5f5;">
+        <div style="text-align:center;">
+        	<div class="wst-appraise-box">
+				<div>
+					<div class="appraise-title"><span style="color:red;">商品评价</span><span class='tips'>&nbsp;&nbsp;&nbsp;&nbsp;对商品进行评价</span></div>
+				</div>
+				<div class='main'>
+					<div class="head">
+						<div class="goods-no">序号</div>
+						<div class="goods-name">商品</div>
+						<div class="goods-status">评价</div>
+						<div class="goods-buy-time">购买时间</div>
+						<div style="clear: both;"></div>
+					</div>
+						
+					<volist name="orderInfo['goodsList']" id="goods" key='key1'>
+					<div class="selgoods">
+						<div class="goods-no goods-txt">{$key+1}</div>
+						<div class="goods-name goods-txt">
+							<div>
+								<div style="float: left;width: 65px;">
+								<a href="{:U('Home/Goods/getGoodsDetails',array('goodsId'=>$goods['goodsId']))}" target="_blank">
+								<img src="__ROOT__/{$goods['goodsThums']}" width="60" height="60" class='goods-img'/>
+								</a>
+								</div>
+								<div class='goods-name2 goods-txt'>
+									<a href="{:U('Home/Goods/getGoodsDetails',array('goodsId'=>$goods['goodsId']))}" target="_blank">{$goods["goodsName"]}</a>
+								</div>
+							</div>
+						</div>
+						<div id="{$goods['goodsId']}_status" class="goods-status goods-txt">
+							<if condition='$goods["gaId"] eq ""'>
+							未评价
+							<else/>
+							已评价
+							</if>
+						</div>
+						<div class="goods-buy-time goods-txt">{$orderInfo['order']['createTime']}</div>
+						<div style="clear: both;"></div>
+					</div>
+					<if condition='$goods["gaId"] eq ""'>
+					<div id="{$goods['goodsId']}_appraise" class="appraise-box">
+						<div class="main-box">
+							<div class="item">
+								<div class='title'>商品评分：</div>								
+								<div class='content'>
+									<div class="{$goods['goodsId']}_goodsScore" style='float:left'></div>
+									<div id="{$goods['goodsId']}_goodsScore_hint" style='float:left'></div>
+								</div>
+								<div style="clear: both;"></div>
+							</div>
+							<div class="item">
+								<div class='title'>时效得分：</div>								
+								<div class='content'>									
+									<div class="{$goods['goodsId']}_timeScore" style='float:left'></div>
+									<div id="{$goods['goodsId']}_timeScore_hint" style='float:left'></div>
+								</div>
+								<div style="clear: both;"></div>
+							</div>
+							<div class="item">
+								<div class='title'>服务得分：</div>								
+								<div class='content'>
+								    <div class="{$goods['goodsId']}_serviceScore" style='float:left'></div>
+								    <div id="{$goods['goodsId']}_serviceScore_hint" style='float:left'></div>									
+								</div>
+								<div style="clear: both;"></div>
+							</div>
+							<div class="item">
+								<div class='title'>点评内容：</div>					
+								<div class='content'>									
+									<textarea rows="5" cols="70" style="width:610px;" name="{$goods['goodsId']}_content" id="{$goods['goodsId']}_content" maxlength="50"></textarea>
+								</div>
+								<div style="clear: both;"></div>
+							</div>
+							<div id="checkout" class="btn-box" >						
+								<a class="btn-submit" href="javascript:;" onclick="addGoodsAppraises({$goods['goodsId']},{$orderInfo['order']['orderId']})">
+									<button class='wst-btn-query'>评价</button>
+								</a>
+								<div style="clear: both;"></div>
+							</div>
+							<div style="clear: both;"></div>
+						</div>
+					</div>
+					</if>
+					</volist>					
+					
+				</div>
+				
+			</div>
+        </div>
+    </body>
+    <script src="__PUBLIC__/js/common.js"></script>
 	     <script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
 	     <script type="text/javascript" src="__PUBLIC__/plugins/raty/jquery.raty.min.js"></script>
 	     <script src="__ROOT__/Apps/Home/View/default/js/users/orders.js" type="text/javascript"></script>
     	 <script type="text/javascript">
-    	 	var rooturl = "__ROOT__";
+    	 	var domainURL  = "{:WSTDomain()}";
     	 	var shopId = "{$orderInfo['shopId']}";
 	   		//添加商品评价
 			
@@ -47,100 +131,4 @@
 	   		});
 	   		
 		</script>
-    </head>
-    
-    <body style="background-color:#f5f5f5;">
-        <div style="text-align:center;">
-        	<div style="margin: 0 auto; margin-top:20px;margin-bottom :10px;">
-				
-				<div style="margin-top: 10px;">
-					<div style="font-weight: bold;text-align:left;padding-left:30px;padding-bottom:10px;"><span style="color:red;">商品评价</span><span style="font-weight:normal;color:#999999;">&nbsp;&nbsp;&nbsp;&nbsp;对商品进行评价</span></div>
-					
-				</div>
-				<div style="border: 1px solid #E9E9E9;border-top:2px solid  #999999;">
-					<div style="line-height: 35px;background-color: #E9E9E9;font-weight:bold;">
-						<div style="float: left;width:130px;text-align: center;">序号</div>
-						<div style="float: left;width:520px;">商品</div>
-						<div style="float: left;width:120px;text-align: center;">评价</div>
-						<div style="float: left;width:220px;text-align: center;">购买时间</div>
-						
-						<div style="clear: both;"></div>
-					</div>
-						
-					<volist name="orderInfo['goodsList']" id="goods" key='key1'>
-					<div class="selgoods">
-						<div style="float: left;width:130px;text-align: center;">{$key+1}</div>
-						<div style="float: left;width:520px;">
-							<div>
-								<div style="float: left;width: 65px;">
-								<a href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$goods['goodsId']}" target="_blank">
-								<img src="__ROOT__/{$goods['goodsThums']}" width="60" height="60"/>
-								</a>
-								</div>
-								<div style="float: left;width: 430px;line-height: 30px;">
-									<a href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$goods['goodsId']}" target="_blank">{$goods["goodsName"]}</a>
-								</div>
-							</div>
-						</div>
-						<div style="float: left;width:120px;text-align: center;">
-							<if condition='$goods["gaId"] eq ""'>
-							未评价
-							<else/>
-							已评价
-							</if>
-						</div>
-						<div style="float: left;width:220px;text-align: center;">{$orderInfo['order']['createTime']}</div>
-						<div style="clear: both;"></div>
-					</div>
-					<if condition='$goods["gaId"] eq ""'>
-					<div style="text-align: center;background-color: #DBEAF9;">
-						<div style="width: 800px;margin: 0 auto;">
-							<div style="line-height: 30px;">
-								<div style="float:left;width:80px;text-align: right;">商品评分：</div>								
-								<div style="float:left;width:700px;text-align: left;">
-									<div class="{$goods['goodsId']}_goodsScore" style='float:left'></div>
-									<div id="{$goods['goodsId']}_goodsScore_hint" style='float:left'></div>
-								</div>
-								<div style="clear: both;"></div>
-							</div>
-							<div style="line-height: 30px;">
-								<div style="float:left;width:80px;text-align: right;">时效得分：</div>								
-								<div style="float:left;width:700px;text-align: left;">									
-									<div class="{$goods['goodsId']}_timeScore" style='float:left'></div>
-									<div id="{$goods['goodsId']}_timeScore_hint" style='float:left'></div>
-								</div>
-								<div style="clear: both;"></div>
-							</div>
-							<div style="line-height: 30px;">
-								<div style="float:left;width:80px;text-align: right;">服务得分：</div>								
-								<div style="float:left;width:700px;text-align: left;">
-								    <div class="{$goods['goodsId']}_serviceScore" style='float:left'></div>
-								    <div id="{$goods['goodsId']}_serviceScore_hint" style='float:left'></div>									
-								</div>
-								<div style="clear: both;"></div>
-							</div>
-							<div style="line-height: 30px;">
-								<div style="float:left;width:80px;text-align: right;">点评内容：</div>					
-								<div style="float:left;width:700px;line-height: 100px;text-align: left;">									
-									<textarea rows="5" cols="70" style="width:610px;" name="{$goods['goodsId']}_content" id="{$goods['goodsId']}_content" maxlength="50"></textarea>
-								</div>
-								<div style="clear: both;"></div>
-							</div>
-							<div id="checkout" style="padding-right:80px;margin:15px;float: right;" >						
-								<a class="btn-submit" href="javascript:;" onclick="addGoodsAppraises({$goods['goodsId']},{$orderInfo['order']['orderId']})">
-									<button class='wst-btn-query'>评价</button>
-								</a>
-								<div style="clear: both;"></div>
-							</div>
-							<div style="clear: both;"></div>
-						</div>
-					</div>
-					</if>
-					</volist>					
-					
-				</div>
-				
-			</div>
-        </div>
-    </body>
 </html>

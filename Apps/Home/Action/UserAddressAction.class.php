@@ -23,8 +23,9 @@ class UserAddressAction extends BaseAction{
     	}
     	//获取地区信息
 		$m = D('Home/Areas');
-		$this->assign('areaList',$m->queryByList(0));
+		$this->assign('areaList',$m->getProvinceList());
     	$this->assign('object',$object);
+    	$this->assign("umark","addressQueryByPage");
 		$this->view->display('default/users/useraddress/edit');
 	}
 	/**
@@ -55,8 +56,9 @@ class UserAddressAction extends BaseAction{
 	 */
 	public function queryByPage(){
 		$this->isLogin();
+		$USER = session('WST_USER');
 		$m = D('Home/UserAddress');
-    	$list = $m->queryByList($_SESSION['USER']['userId']);
+    	$list = $m->queryByList($USER['userId']);
     	$this->assign('List',$list);
     	$this->assign("umark","addressQueryByPage");
         $this->display("default/users/useraddress/list");
@@ -121,5 +123,8 @@ class UserAddressAction extends BaseAction{
 		$this->ajaxReturn($communitys);
 			
 	}
+	
+	
+	
 };
 ?>

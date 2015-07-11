@@ -18,16 +18,15 @@
    
 	<include file="./Apps/Home/View/default/header.html" />
 	<div class="wst-container">
-		<div style="width: 210px;float: left;border: 1px solid #40CCF5;">
+		<div class='wst-article-menu'>
 			<dl class="fore1">
 			<volist name="articleList" key="key" id="articles">
-			
-			<dt style="background-color: #F7F7F7;height: 30px;line-height: 30px;padding-left: 14px;">
+			<dt class='item'>
 				<b></b><strong>{$articles["catName"]}</strong>
 			</dt>
 			<dd>
 				<volist name="articles['articlecats']" key="key2" id="article">
-				<div style="border-bottom : 1px dotted #B9E8F9;height: 28px;line-height: 28px;padding-left: 14px;">
+				<div class='sub-item'>
 					<if condition="$article.articleId eq $carticle.articleId">
 					<img src="__ROOT__/Apps/Home/View/default/images/helpcenter_icon2.gif"/>&nbsp;&nbsp;<a style="color: red" href="?articleId={$article.articleId}" rel="nofollow">{$article.articleTitle}</a>
 					<else/>
@@ -39,10 +38,10 @@
 			</volist>
 		</dl>
 		</div>
-		<div  style="width: 975px;float: right;border: 1px solid #40CCF5;padding: 4px;">			
+		<div class='wst-article-main'>			
 			<div>
-				<div style="padding-left:4px;font-size: 15px;font-weight: bold;line-height: 30px;background-color:#F7F7F7 ">{$carticle["articleTitle"]}</div>
-		        <div style="padding-left:4">{$carticle["articleContent"]}</div>
+				<div class='title'>{$carticle["articleTitle"]}</div>
+		        <div class='content'>{$carticle["articleContent"]}</div>
 			</div>			
 		</div>
 	</div>

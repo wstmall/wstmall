@@ -1,7 +1,7 @@
-<div style="text-align:center;margin-top:20px;">
+<div class="wst-footer-fl-box">
 	<div class="wst-footer" >
-		<div style="border:2px solid #D5D5D5;height:auto;line-height:30px;text-align:left;">
-			<div style="font-weight:bolder;padding-left:30px;">友情链接：</div>
+		<div class="wst-footer-cld-box">
+			<div class="wst-footer-fl">友情链接：</div>
 			<div style="padding-left:30px;">
 				<volist name="friendLikds" key="k" id="vo">
 				<div style="float:left;"><a href="{$vo["friendlinkUrl"]}" target="_blank">{$vo["friendlinkName"]}</a>&nbsp;&nbsp;</div> 
@@ -12,14 +12,14 @@
 	</div>
 </div>
 
-<div style="background-color:#F7F7F7;text-align:center;margin-top:20px;">
+<div class="wst-footer-hp-box">
 	<div class="wst-footer">
-		<div style="line-height:30px;text-align:left;">
+		<div class="wst-footer-hp-ck1">
 			<volist name="helps" key="k1" id="vo1">
-			<div style="float:left;width:200px;height:180px;">
-				<div style="padding-top:5px;line-height:25px;">
+			<div class="wst-footer-wz-ca">
+				<div class="wst-footer-wz-pt">
 				    <img src="__ROOT__/Apps/Home/View/default/images/a{$k1}.jpg" height="18" width="18"/>
-					<span style="font-weight:bolder;margin-left:10px;">{$vo1["catName"]}</span>
+					<span class="wst-footer-wz-pn">{$vo1["catName"]}</span>
 					<div style='margin-left:30px;'>
 						<volist name="vo1['articlecats']" key="k2" id="vo2">
 						<a href="__ROOT__/index.php/Home/Articles/index/?articleId={$vo2['articleId']}">{$vo2['articleTitle']}</a><br/>
@@ -29,30 +29,29 @@
 			</div>
 			</volist>
 			
-			<div style="float:left;width:160px;height:180px;margin-left:6px;">
+			<div class="wst-footer-wz-clt">
 				<div style="padding-top:5px;line-height:25px;">
 				    <img src="__ROOT__/Apps/Home/View/default/images/a6.jpg" height="18" width="18"/>
-					<span style="font-weight:bolder;margin-left:10px;">联系客服</span>
+					<span class="wst-footer-wz-kf">联系客服</span>
 					<div style='margin-left:30px;'>
-						<a href="">订购热线</a><br/>
-						<span style="color:red;font-weight:bolder;font-size:18px;">159-1876-1994</span><br/>
-						<a href="">在线客服</a><br/>
-						<a href="" style="color:green;font-size:16px;">点击这里进入</a><br/>
-						
+						<a href="#">订购热线</a><br/>
+						<span class="wst-footer-pno">020-29806661</span><br/>
+						<a href="#">在线客服</a><br/>
+						<a href="#" class="wst-footer-wz-ent">点击这里进入</a><br/>
 					</div>
 				</div>
 			</div>
 			<div class="wst-clear"></div>
 		</div>
 	    
-		<div style="border:2px solid #D5D5D5;height:50px;line-height:50px;margin-top:20px;background-color:#ffffff;">
+		<div class="wst-footer-hp-ck2">
 			<img src="__ROOT__/Apps/Home/View/default/images/alipay.jpg" height="40" width="120"/>支付宝签约商家&nbsp;|&nbsp;
-			<span style="color:#e23e3d;font-weight:bolder;font-size:18px;">正品保障</span><span >100%原产地</span>&nbsp;|&nbsp;
-			<span style="color:#e23e3d;font-weight:bolder;font-size:18px;">7天退货保障</span>购物无忧&nbsp;|&nbsp;
-			<span style="color:#e23e3d;font-weight:bolder;font-size:18px;">免费配送</span>满98包邮&nbsp;|&nbsp;
-			<span style="color:#e23e3d;font-weight:bolder;font-size:18px;">货到付款</span>400城市送货上门
+			<span class="wst-footer-frd">正品保障</span><span >100%原产地</span>&nbsp;|&nbsp;
+			<span class="wst-footer-frd">7天退货保障</span>购物无忧&nbsp;|&nbsp;
+			<span class="wst-footer-frd">免费配送</span>满98包邮&nbsp;|&nbsp;
+			<span class="wst-footer-frd">货到付款</span>400城市送货上门
 		</div>
-	    <div style="margin-top:20px;height:80px;">
+	    <div class="wst-footer-hp-ck3">
 	        <div class="links">       	 	 	
 		        <a rel="nofollow" target="_blank" href="#">关于我们</a>&nbsp;|&nbsp;
 		        <a rel="nofollow" target="_blank" href="#">WST百科</a>&nbsp;|&nbsp;
@@ -61,7 +60,7 @@
 		        <a rel="nofollow" target="_blank" href="#">诚征英才</a>&nbsp;|&nbsp;
 		        <a href="#" target="_blank">网站地图</a>&nbsp;|&nbsp;
 		        <a target="_blank" href="#">友情链接</a>&nbsp;|&nbsp;
-		        <a href="#" target="_blank">回顶部</a>&nbsp;|&nbsp;
+		        <a href="__ROOT__/shop.php" target="_blank">店铺管理</a>&nbsp;&nbsp;
 	        </div>
 	        <div class="copyright">Copyright&#169;2015&nbsp;&nbsp;Guangzhou Qingnuan Information Technology Co., Ltd. All rights Reserved 粤ICP备12082267号</div>
 	    	<div style=" text-align: center;">

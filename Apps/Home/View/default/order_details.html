@@ -5,30 +5,20 @@
       	<meta http-equiv="X-UA-Compatible" content="IE=edge">
       	<meta http-equiv="cache-control" content="no-cache">
       	<meta name="viewport" content="width=device-width, initial-scale=1">
-      	<title>填写核对订单信息 - {$CONF['shopTitle']['fieldValue']}</title>
-      	<meta name="keywords" content="{$CONF['shopKeywords']['fieldValue']},填写核对订单信息" />
-      	<meta name="description" content="{$CONF['shopTitle']['fieldValue']},填写核对订单信息" />
+      	<title>订单信息 - {$CONF['shopTitle']['fieldValue']}</title>
+      	<meta name="keywords" content="{$CONF['shopKeywords']['fieldValue']},订单信息" />
+      	<meta name="description" content="{$CONF['shopTitle']['fieldValue']},订单信息" />
       	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/checkorderinfo.css" />
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
 		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />
-      	<style>
-         	.wst-odetal-box{padding:0px;padding-top:10px;text-align:center;background-color:#ffffff;}
-         	.wst-tab{border-collapse: collapse; }
-         	.wst-tab-cpt{text-align:left;height:30px;font-weight:bold;}
-         	.wst-tab tr{height:30px;}
-         	.wst-tab tr td{border:1px solid #eeeeee;}
-         	.wst-td-title{width:100px;text-align:right;}
-         	.wst-td-content{padding-left:6px;text-align:left;}
-         	.wst-align-center{text-align:center;}
-         </style>
    	</head>
    	<body>
 	<include file="./Apps/Home/View/default/header.html" />
 	<div class="w">
         <div style=""><br/>
         	<div class="wst-odetal-box">
-        	<table cellspacing="0" cellpadding="0" class="wst-tab" width="1210" style="border:1px solid #eeeeee;margin:0 auto;">
+        	<table cellspacing="0" cellpadding="0" class="wst-tab" width="1210">
         		<caption class="wst-tab-cpt">日志信息
         		<span style="color:blue;float:right;">
         			<if condition='($order["orderStatus"] eq -3) OR ($order["orderStatus"] eq -4)'>
@@ -56,7 +46,7 @@
         	</div>
         	<br/><br/>
         	<div class="wst-odetal-box">
-        	<table cellspacing="0" cellpadding="0" class="wst-tab" width="1210" style="border:1px solid #eeeeee;margin:0 auto;">
+        	<table cellspacing="0" cellpadding="0" class="wst-tab" width="1210">
         		<caption class="wst-tab-cpt">订单信息</caption>
         		<tbody>
 	        		<tr>
@@ -84,7 +74,7 @@
         	</div>
         	<br/><br/>
         	<div class="wst-odetal-box">
-        	<table cellspacing="0" cellpadding="0" class="wst-tab" width="1210" style="border:1px solid #eeeeee;margin:0 auto;">
+        	<table cellspacing="0" cellpadding="0" class="wst-tab" width="1210">
         		<caption class="wst-tab-cpt">收货人信息</caption>
         		<tbody>
 	        		
@@ -94,20 +84,27 @@
 	        		</tr>
 	        		<tr>
 	        			<td class="wst-td-title">地址：</td>
-	        			<td class="wst-td-content">{$orderInfo["order"]["userAddress"]} <if condition='$orderInfo["order"]["userPostCode"] neq ""'>| {$orderInfo["order"]["userPostCode"]}</if></td>
+	        			<td class="wst-td-content">{$orderInfo["order"]["userAddress"]}</td>
+	        		</tr>
+	        		<tr>
+	        			<td class="wst-td-title">邮编：</td>
+	        			<td class="wst-td-content">{$orderInfo["order"]["userPostCode"]}</td>
 	        		</tr>
 	        		<tr>
 	        			<td class="wst-td-title">固定电话：</td>
 	        			<td class="wst-td-content">{$orderInfo["order"]["userPhone"]} <if condition='$orderInfo["order"]["userTel"] neq ""'>| {$orderInfo["order"]["userTel"]}</if></td>
 	        		</tr>
-	        		
+	        		<tr>
+	        			<td class="wst-td-title">期望送达时间：</td>
+	        			<td class="wst-td-content">{$orderInfo["order"]["requireTime"]}</td>
+	        		</tr>
         		</tbody>
         	</table>
         	</div>
         	<br/><br/>
         	<notempty name='orderInfo["order"]["invoiceClient"]'>
         	<div class="wst-odetal-box">
-        	<table cellspacing="0" cellpadding="0" class="wst-tab" width="1210" style="border:1px solid #eeeeee;margin:0 auto;">
+        	<table cellspacing="0" cellpadding="0" class="wst-tab" width="1210">
         		<caption class="wst-tab-cpt">发票信息</caption>
         		<tbody>
 	        		<tr>
@@ -123,7 +120,7 @@
         		<caption class="wst-tab-cpt">商品信息</caption>
         		<tbody>
 	        		<tr>
-	        			<td width='500' class="wst-align-left">商品</td>
+	        			<td width='500' class="wst-align-left" style='padding-left:5px'>商品</td>
 	        			<td width='80' class="wst-align-center">商品价格</td>
 	        			<td width='80' class="wst-align-center">商品数量</td>
 	        			<td width='100' class="wst-align-center">商品总金额</td>
@@ -132,7 +129,7 @@
 	        		<tr>
 	        			<td class="wst-align-left">
 	        			<a href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$goods['goodsId']}" target="_blank">
-	        			   <img style='margin:2px;' src="__ROOT__/{$goods['goodsThums']}" width='50' height='50'/>
+	        			   <img style='margin:5px;' src="__ROOT__/{$goods['goodsThums']}" width='50' height='50'/>
 	        			</a>
 	        			<a href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$goods['goodsId']}" target="_blank">{$goods["goodsName"]}</a>
 	        			</td>
@@ -143,10 +140,10 @@
 	        		</volist>
         		</tbody>
         		<tr>
-        		   <td colspan='4' style='border-left:0px;border-right:0px;border-bottom:0px;text-align:right;padding-right:5px;'>
+        		   <td colspan='4' class='wst-cart-total-money'>
         		  商品总金额： ￥{$orderInfo["order"]["totalMoney"]}  <br/>
         		   + 运费：￥{$orderInfo["order"]["deliverMoney"]}<br/> 
-        		   <span style='font-weight:bold;font-size:20px;'>订单总金额：</span><span style='font-weight:bold;font-size:20px;color:red;'>￥{$orderInfo["order"]["totalMoney"]}</span></td>
+        		   <span class='wst-cart-order-txt'>订单总金额：</span><span class='wst-cart-order-money'>￥{$orderInfo["order"]["totalMoney"]}</span></td>
         		</tr>
         	</table>
         	</div>

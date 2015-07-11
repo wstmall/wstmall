@@ -1,8 +1,5 @@
 $(document).ready(function(){
-	if($('.check0')[0])$('.nextBtn').attr('disabled',true);
-    $('#db_install').click(function(){
-        
-    });
+	if($('.check-1')[0])$('.nextBtn').attr('disabled',true);
     $('#admin_install').click(function(){
         var admin_name = $('#admin_name').val();
         var admin_password = $('#admin_password').val();

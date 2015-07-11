@@ -104,7 +104,7 @@
              </select> 
        <button type="button" class="btn btn-primary glyphicon glyphicon-search" onclick='javascript:query()'>查询</button>       
        </div>       
-       <php>if(in_array('sqlb_01',$_SESSION['STAFF']['grant'])){</php>
+       <php>if(in_array('sqlb_01',$WST_STAFF['grant'])){</php>
        <button type="button" class="btn btn-success glyphicon glyphicon-plus" onclick='javascript:edit(0)' style='float:right'>新增</button>
        <php>}</php>
        </div>
@@ -147,7 +147,7 @@
 					  <span class="caret"></span>
 				   </button>
                </if>
-               <php>if(in_array('sqlb_02',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('sqlb_02',$WST_STAFF['grant'])){</php>
                    <ul class="dropdown-menu" role="menu">
 					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:toggleIsShow(1,{$vo['communityId']})">显示</a></li>
 					  <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:toggleIsShow(0,{$vo['communityId']})">隐藏</a></li>
@@ -157,11 +157,11 @@
                </td>
                <td>{$vo['communitySort']}</td>
                <td>
-               <php>if(in_array('sqlb_02',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('sqlb_02',$WST_STAFF['grant'])){</php>
                <button type="button" class="btn btn-default glyphicon glyphicon-pencil" onclick="javascript:edit({$vo['communityId']})"">修改</button>
                <php>}</php>
                &nbsp;
-               <php>if(in_array('sqlb_03',$_SESSION['STAFF']['grant'])){</php>
+               <php>if(in_array('sqlb_03',$WST_STAFF['grant'])){</php>
                <button type="button" class="btn btn-default glyphicon glyphicon-trash" onclick="javascript:del({$vo['communityId']})"">刪除</button>
                <php>}</php>
                </td>

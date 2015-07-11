@@ -6,25 +6,6 @@
 				   edit();
 			       return false;
 			}});
-	   $("#loginName").formValidator({onShow:"",onFocus:"会员账号应该为5-16字母、数字或下划线",onCorrect:"输入正确"}).inputValidator({min:5,max:16,onError:"会员账号应该为5-16字母、数字或下划线"}).regexValidator({
-		       regExp:"username",dataType:"enum",onError:"会员账号格式错误"
-			}).ajaxValidator({
-				dataType : "json",
-				async : true,
-				url : "__ROOT__/index.php/Admin/Users/checkLoginKey/?id={$object.userId}",
-				success : function(data){
-					var json = WST.toJson(data);
-		            if( json.status == "1" ) {
-		                return true;
-					} else {
-		                return false;
-					}
-					return "该账号已被使用";
-				},
-				buttons: $("#dosubmit"),
-				onError : "该账号已存在。",
-				onWait : "请稍候..."
-			}).defaultPassed();
 		$("#loginPwd").formValidator({
 			onShow:"",onFocus:"登录密码长度应该为5-20位之间"
 			}).inputValidator({
@@ -40,7 +21,6 @@
    });
    function edit(){
 	   var params = {};
-	   params.loginName = $.trim($('#loginName').val());
 	   params.loginPwd = $.trim($('#loginPwd').val());
 	   params.userStatus = $('input[name="userStatus"]:checked').val();
 	   params.id = $('#id').val();
@@ -62,8 +42,8 @@
         <input type='hidden' id='id' value='{$object.userId}'/>
         <table class="table table-hover table-striped table-bordered wst-form">
            <tr>
-             <th width='100' align='right'>账号<font color='red'>*</font>：</th>
-             <td><input type='text' id='loginName' name='loginName' class="form-control wst-ipt-10" value='{$object.loginName}' maxLength='20'/></td>
+             <th width='100' align='right'>账号：</th>
+             <td>{$object.loginName}</td>
            </tr>
            <tr>
              <th width='120' align='right'>密码<font color='red'>*</font>：</th>

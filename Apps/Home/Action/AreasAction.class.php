@@ -14,12 +14,18 @@ class AreasAction extends BaseAction{
 	 */
     public function queryByList(){
     	$cityId = I('parentId',0);
-    	//如果是游客注册开店则取当前城市
-    	if(empty($_SESSION['USER']) && $cityId==0){
+    	//如果是游客注册开店则取当前城市;
+    	$USER = session('WST_USER');
+    	if(empty($USER) && $cityId==0){
     		$cityId = $this->getDefaultCity();
     	}
 		$m = D('Home/Areas');
-		$list = $m->queryByList($cityId);
+		$list = array();
+		if((int)I('type')==0){
+		    $list = $m->getCityListByProvince($cityId);
+		}else{
+			$list = $m->getDistricts($cityId);
+		}
 		$rs = array();
 		$rs['status'] = 1;
 		$rs['list'] = $list;
@@ -29,7 +35,7 @@ class AreasAction extends BaseAction{
     /**
 	 * 列表查询[带社区]
 	 */
-    public function queryAreaAndCommunitysByList(){
+    public function getAreaAndCommunitysByList(){
     	$this->isLogin();
 		$m = D('Home/Areas');
 		$list = $m->queryAreaAndCommunitysByList(I('areaId'));
@@ -44,8 +50,9 @@ class AreasAction extends BaseAction{
 	 * 通过省份获取城市列表
 	 */
 	public function getCityListByProvince(){
+		$provinceId = (int)I('provinceId');
 		$m = D('Home/Areas');
-		$cityList = $m->getCityListByProvince();
+		$cityList = $m->getCityListByProvince($provinceId);
 		$this->ajaxReturn($cityList);
 	}
 };

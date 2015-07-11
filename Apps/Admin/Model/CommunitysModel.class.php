@@ -26,10 +26,6 @@ class CommunitysModel extends BaseModel {
 		$data["communityFlag"] = 1;
 	    if($this->checkEmpty($data)){
 	    	$data["communityKey"] = I("communityKey");
-	    	$data["longitude"] = I("longitude");
-			$data["latitude"] = I("latitude");
-			$data["deliveryRadius"] = I("deliveryRadius");
-			$data["scale"] = I("scale");
 			$m = M('communitys');
 			$rs = $m->add($data);
 		    if(false !== $rs){
@@ -53,10 +49,6 @@ class CommunitysModel extends BaseModel {
 		$data["communitySort"] = I("communitySort",0);
 	    if($this->checkEmpty($data)){	
 	    	$data["communityKey"] = I("communityKey");
-	    	$data["longitude"] = I("longitude");
-			$data["latitude"] = I("latitude");
-			$data["scale"] = I("scale");
-			$data["deliveryRadius"] = I("deliveryRadius");
 			$m = M('communitys');
 		    $rs = $m->where("communityId=".I('id',0))->save($data);
 			if(false !== $rs){

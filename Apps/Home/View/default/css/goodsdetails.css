@@ -478,3 +478,22 @@
 #comment .answer b {
 	background-position: -57px -14px;
 }
+
+.goods-buy-cnt{text-align:center;padding-top:2px;}
+
+.buy-cnt-plus{cursor:pointer;position:absolute;width:28px;height:36px;top:0px;left:0px;}
+.buy-cnt-txt{border:0px;height:15px;width:56px;text-align:center;padding-top:8px;padding-bottom:6px;}
+.buy-cnt-add{cursor:pointer;position:absolute;width:28px;height:36px;top:0px;right:0px;}
+.wst-gdetail-wait{font-weight: bold;color:red;}
+
+.wst-goods-notext{text-align: center;line-height: 80px;font-size:26px;}
+
+
+
+
+
+
+
+
+
+

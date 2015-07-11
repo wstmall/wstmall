@@ -11,10 +11,7 @@
 		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />
 		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/pslocation.css" />
 		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/magnifier.css" />
-     	<script src="__PUBLIC__/js/jquery.min.js"></script>
-      	<script src="__PUBLIC__/js/common.js"></script>
-      	<script src="__ROOT__/Apps/Home/View/default/js/index.js"></script>      	
-      	<script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
+
 </head>
 
 <body class="root61">
@@ -22,67 +19,66 @@
 	<div class="w">
 		<div>
 			<div>
-                <div id="succeed" style="text-align: center; margin-top: 30px;">
+                <div id="succeed" class="wst-ods-success">
                     <div class="success2" style="margin: 0 auto;">
-                        <div style="float: left; width: 400px; text-align: left;">
-                            
-                        </div>
-                        <div style="float: right; width: 590px; height: 40px; text-align: right; position: relative;">
-                            
+                        <div class="wst-ods-success-blank"></div>
+                        <div class="wst-ods-success-step">
                             <img src="__ROOT__/Apps/Home/View/default/images/step3.png" alt="" /><br />
-                           
-                            <span style="position: absolute; top: 30px; left: 150px;">1.我的购物车</span>
-                            <span style="position: absolute; top: 30px; left: 290px;">2.填写核对订单信息</span>
-                            <span style="position: absolute; top: 30px; left: 465px; color: #7ABD54;">3.成功提交订单</span>
+                            <span class="wst-ods-success-step1">1.我的购物车</span>
+                            <span class="wst-ods-success-step2">2.填写核对订单信息</span>
+                            <span class="wst-ods-success-step3">3.成功提交订单</span>
                         </div>
-                        <div style="clear: both;"></div>
+                        <div class="wst-clear"></div>
                     </div>
-
                 </div>
             </div>
 
-			<div style="margin: 0 auto; margin-top:10px;margin-bottom :10px;">
-					<div style="border: 1px solid #E9E9E9;border-top:2px solid  #7ABD54;background-color:#F3FDED;padding:15px;">
-						<div style="width: 30px;float: left;text-align: right;padding-top: 5px;">
+			<div class="wst-ods-success-tb">
+					<div class="wst-ods-success-tc">
+						<div class="wst-ods-success-td">
 							<if condition="count($orderInfos) gt 0">
 							<img src="__ROOT__/Apps/Home/View/default/images/icon-succ.png" alt="" />
 							</if>
 						</div>
-						<div style="width: 1200px;float: left;padding-left: 10px;">
-							<div style="line-height: 25px;">
+						<div class="wst-ods-success-tf">
+							<div class="wst-ods-success-l25">
 								<if condition="count($orderInfos) gt 0">					
-								<span style="font-weight:bold;font-size: 16px;color:#7ABD54;">订单提交成功！</span>					
+								<span class="wst-ods-success-tg">订单提交成功！</span>					
 								订单号：
 								<volist name="orderInfos" key="key" id="order">
 								    <if condition="($key gt 1) AND ($isMoreOrder eq 1)">、</if>
-									<a href="javascript:;" onclick="getOrderInfo({$order['orderId']});"><span style="color:blue;font-weight: bold;">{$order['orderNo']}</span></a>&nbsp;
+									<a href="javascript:;" onclick="getOrderInfo({$order['orderId']});"><span class="wst-ods-success-th">{$order['orderNo']}</span></a>&nbsp;
 								</volist>
-								 应付金额：<span style="color: red;font-size:18px; font-weight: bold;">{$totalMoney}</span> 元
+								 应付金额：<span class="wst-ods-success-ti">{$totalMoney}</span> 元
 	   							<else/>
-	   								<div style="font-weight:bold;font-size: 16px;color:red;text-align:center;">不能重复提交订单</div>
+	   								<div class="wst-ods-success-tj">不能重复提交订单</div>
 	   							</if>
 	   						</div>							
 						</div>
-						<div style="clear: both;"></div>
+						<div class="wst-clear"></div>
 					</div>					
 					
-					<div style="clear: both;"></div>
-					<div style="margin-top:15px; ">			
+					<div class="wst-clear"></div>
+					<div class="wst-ods-success-tk">			
 						<div id="checkout" class="wst-checkout" >							
 							<a class="btn-submit" href="__ROOT__/index.php">
 								<span id="saveConsigneeTitleDiv" class="wst_btn-continue"></span>
 							</a>
-							<div style="clear: both;"></div>
+							<div class="wst-clear"></div>
 						</div>
 					</div>				
 				</div>							
 			</div>			
 		</div>
 	
-	 <div style="clear: both;"></div>
+	<div class="wst-clear"></div>
     <div style="height: 20px;"></div>
-    <script src="__ROOT__/Apps/Home/View/default/js/orders.js"></script>
+    
 	<include file="./Apps/Home/View/default/footer.html" />
-
+	
+	<script src="__PUBLIC__/js/common.js"></script>
+  	<script src="__ROOT__/Apps/Home/View/default/js/index.js"></script>      	
+ 	<script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
+	<script src="__ROOT__/Apps/Home/View/default/js/orders.js"></script>
 </body>
 </html>

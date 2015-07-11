@@ -13,48 +13,46 @@
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
 		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />
 		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/magnifier.css" />
-
       	<style>
       	.adsipt{height:28px;}
 		textarea{height:60px;}
       	</style>
-      	<script src="__PUBLIC__/js/jquery.min.js"></script>
    	</head>
    	<body>
 	<include file="./Apps/Home/View/default/header.html" />
 	<div class="w">
         <div>
             <div>
-                <div id="succeed" style="text-align: center; margin-top: 30px;">
-                    <div class="success2" style="margin: 0 auto;">
-                        <div style="float: left; width: 400px; text-align: left;"></div>
-                        <div style="float: right; width: 590px; height: 40px; text-align: right; position: relative;">
+                <div id="succeed">
+                    <div class="success2" style="">
+                        <div class="wst-chkod-blank"></div>
+                        <div class="wst-chkod-step">
                             <img src="__ROOT__/Apps/Home/View/default/images/step2.png" alt="" /><br />
-                            <span style="position: absolute; top: 30px; left: 150px;">1.我的购物车</span>
-                            <span style="position: absolute; top: 30px; left: 290px; color: #7ABD54;">2.填写核对订单信息</span>
-                            <span style="position: absolute; top: 30px; left: 465px;">3.成功提交订单</span>
+                            <span class="wst-chkod-step1">1.我的购物车</span>
+                            <span class="wst-chkod-step2">2.填写核对订单信息</span>
+                            <span class="wst-chkod-step3">3.成功提交订单</span>
                         </div>
-                        <div style="clear: both;"></div>
+                        <div class="wst-clear"></div>
                     </div>
 
                 </div>
             </div>
-            <div id="checkorderInfo" style="margin: 0 auto; margin-top: 40px; margin-bottom: 10px;">
-                <div style="border: 1px solid #E9E9E9; border-top: 2px solid  #999999;">
-                    <div style="line-height: 35px; background-color: #E9E9E9; font-weight: bold; font-size: 18px; padding-left: 10px;">
+            <div id="checkorderInfo">
+                <div class="wst-chkod-subox">
+                    <div class="wst-chkod-title">
                         	填写并核对订单信息
                     </div>
                     <div>                        
-						<div id="consignee1" style="padding: 10px;line-height: 30px;">
+						<div id="consignee1">
 							<div>
-								<span style="font-size: 15px;font-weight: bold;">收货人信息 </span>
-								<span style="padding-left:50px;color: #999999;cursor:pointer;"><a href="javascript:toEditAddress();">[修改]</a></span>
+								<span class="wst-chkod-s1-title">收货人信息 </span>
+								<span class="wst-chkod-s1-upd"><a href="javascript:toEditAddress();">[修改]</a></span>
 							</div>
 							<volist name="addressList" key="k" id="address">
 							
 								<if condition="$k eq 1">
 								<input type="hidden" id="consigneeId" name="consigneeId" value="{$address['addressId']}"/>
-								<div id="showaddinfo" style="padding-left:40px;">										
+								<div id="showaddinfo">										
 									<div>
 										<span style="font-weight: bold;">{$address["userName"]}&nbsp;&nbsp;&nbsp;&nbsp;</span>
 										<if condition="$address['userPhone'] neq ''">
@@ -70,14 +68,14 @@
 								</if>
 							</volist>
 							<if condition="count($addressList) eq 0">
-								<div id="showaddinfo" style="padding-left:40px;"></div>
+								<div id="showaddinfo"></div>
 								<input type="hidden" id="consigneeId" name="consigneeId" />
 							</if>
 						</div>
 						
-                        <div id="consignee2" style="padding: 10px; line-height: 30px; border: 2px solid #FF6600;<if condition="count($addressList) gt 0">display:none;</if>">
+                        <div id="consignee2" style="<if condition="count($addressList) gt 0">display:none;</if>">
                             <div>
-                                <span style="font-size: 15px; font-weight: bold;">收货人信息 </span>
+                                <span class="wst-chkod-cg-title">收货人信息 </span>
                             </div>
                             <div>
                             	<div id="userAddressDiv">
@@ -96,8 +94,8 @@
 										</if>
 										</span>
 									</label>
-									<span class="optionspan" style="padding-left:50px;color: #999999;cursor:pointer;">[<a onclick="javascript:changeAddress();">修改</a>]</span>
-									<span class="optionspan" style="padding-left:10px;color: #999999;cursor:pointer;">[<a onclick="javascript:delAddress({$address['addressId']});">删除</a>]</span>									
+									<span class="optionspan wst-opt-upd">[<a onclick="javascript:changeAddress();">修改</a>]</span>
+									<span class="optionspan wst-opt-del">[<a onclick="javascript:delAddress({$address['addressId']});">删除</a>]</span>									
 								</div>
 								</volist>
 								</div>
@@ -107,18 +105,18 @@
 									</label>
 								</div>
                             </div>
-                            <div id="address_form" style="padding-left: 40px;">
+                            <div id="address_form" style="">
                                 <input type='hidden' id='consignee_add_cityId' name='consignee_add_cityId' value='{$areaId2}'/>
-                                <div style="line-height: 35px;">
-                                    <div style="float: left; width: 100px; text-align: right;"><span style="color: red;">*</span>收货人：</div>
+                                <div class="wst-chkod-line35">
+                                    <div class="wst-chkod-cg-pp"><span style="color: red;">*</span>收货人：</div>
                                     <div style="float: left; width: 700px;">
                                         <input type="text" class="input adsipt" style="width: 200px;" maxlength="50" name="consignee_add_userName" id="consignee_add_userName" />&nbsp;
                                     </div>
                                     <div style="clear: both;"></div>
                                 </div>
-                                <div style="line-height: 35px;">
-                                    <div style="float: left; width: 100px; text-align: right;"><span style="color: red;">*</span>收货地址：</div>
-                                    <div style="float: left; width: 700px;">
+                                <div class="wst-chkod-line35">
+                                    <div class="wst-chkod-cg-ads"><span style="color: red;">*</span>收货地址：</div>
+                                    <div class="wst-chkod-area-box">
                                         <select name="consignee_add_countyId" id="consignee_add_countyId" class="adsipt" onchange="loadCommunitys(this);">
                                             <option value="0" selected="selected">请选择</option>
                                             <volist name="areaList2" key="key" id="area">
@@ -132,17 +130,17 @@
                                     </div>
                                     <div style="clear: both;"></div>
                                 </div>
-                                <div style="line-height: 35px;">
-                                    <div style="float: left; width: 100px; text-align: right;"><span style="color: red;">*</span>手机号码：</div>
-                                    <div style="float: left; width: 700px;">
+                                <div class="wst-chkod-line35">
+                                    <div class="wst-chkod-cg-pno"><span style="color: red;">*</span>手机号码：</div>
+                                    <div class="wst-chkod-cg-pno-box">
                                         <input type="text" class="input adsipt" style="width: 150px;" maxlength="11" name="consignee_add_userPhone" id="consignee_add_userPhone" onkeyup="javascript:WST.isChinese(this,1)" onkeypress="return WST.isNumberdoteKey(event)" />
                                         &nbsp;或&nbsp;&nbsp;&nbsp;&nbsp;
 										 固定电话:<input type="text" class="input adsipt" style="width: 150px;" maxlength="15" name="consignee_add_userTel" id="consignee_add_userTel" />(例：020-88888888)&nbsp;
                                     </div>
                                     <div style="clear: both;"></div>
                                 </div>
-                                <div style="line-height: 35px;">
-                                    <div style="float: left; width: 100px; text-align: right;">邮编：</div>
+                                <div class="wst-chkod-line35">
+                                    <div class="wst-chkod-cg-yb">邮编：</div>
                                     <div style="float: left; width: 700px;">
                                         <input type="text" class="input adsipt" style="width: 150px;" maxlength="6" name="consignee_add_zipCode" id="consignee_add_zipCode" onkeyup="javascript:WST.isChinese(this,1)" onkeypress="return WST.isNumberdoteKey(event)"/>
                                     </div>
@@ -150,7 +148,7 @@
                                 </div>
                             </div>
                             
-							<div class="wst-checkout" id="checkout" style="padding-left:100px;margin:15px;cursor:pointer;">
+							<div class="wst-checkout wst-chkod-sbx" id="checkout">
 								<li  onclick="saveAddress()">
 									<span id="saveConsigneeTitleDiv"></span>
 								</li>
@@ -158,35 +156,37 @@
 							</div>
                         </div>
                     </div>
-                    <div style="padding: 10px; border-bottom: 1px solid #E9E9E9; line-height: 30px;">
+                    <div class="wst-chkod-pay">
                         <div>
-                            <span style="font-size: 15px; font-weight: bold;">支付方式 </span>
+                            <span class="wst-chkod-pay-tt">支付方式 </span>
                         </div>
-                        <div id="newaddress" style="padding-left: 40px;">
+                        <div id="newaddress">
                             <div>
                                 <label>
                                     <input id="pay_hd" name="payway" checked="checked" type="radio" value="0" />货到付款
                                 </label>
-                                <span style="padding-left: 100px; color: #999999">送货上门后再收款，支持现金</span>
+                                <span class="wst-chkod-sh-tips">送货上门后再收款，支持现金</span>
                             </div>
+                            <!--  
                             <div>
                                 <label>
                                     <input id="pay_ali" name="payway" type="radio" value="1" />在线支付
                                 </label>
-                                <span style="padding-left: 100px; color: #999999">支持支付宝</span>
+                                <span class="wst-chkod-sh-tips">支持支付宝</span>
                             </div>
+                            -->
                         </div>
                     </div>
-                    <div style="padding: 10px; border-bottom: 1px solid #E9E9E9; line-height: 30px;">
+                    <div class="wst-chkod-dp-box">
                         <div>
-                            <span style="font-size: 15px; font-weight: bold;">发票信息 </span>
+                            <span class="wst-chkod-dp-hds">发票信息 </span>
                         </div>
                         <div style="padding-left: 40px;">
                             <label>
                                 <input id="receipt_1" name="needreceipt" type="radio" value="1" />需要开发票
                             </label>
                             <div id="invoiceClientdiv" style="display: none;">
-                                抬头：<input id="invoiceClient" name="invoiceClient" style="width: 400px;" />
+                                	抬头：<input id="invoiceClient" name="invoiceClient" style="width: 573px;height: 25px;" />
                             </div>
                         </div>
                         <div style="padding-left: 40px;">
@@ -195,9 +195,9 @@
                             </label>
                         </div>
                     </div>
-                    <div style="padding: 10px; border-bottom: 1px solid #E9E9E9; line-height: 30px;">
+                    <div class="wst-chkod-dp-box">
                         <div>
-                            <span style="font-size: 15px; font-weight: bold;">送货方式</span>
+                            <span class="wst-chkod-dp-hds">送货方式</span>
                         </div>
                         <div style="padding-left: 40px;">
                             <label>
@@ -206,13 +206,13 @@
                         </div>
                         <div style="padding-left: 40px;">
                             <label>
-                                <input id="isself_1" name="isself" type="radio" value="1" />自提 <span style="color:red;">&nbsp;&nbsp;&nbsp;&nbsp;[注：自提只支持在线支付]</span>
+                                <input id="isself_1" name="isself" type="radio" value="1" />自提 
                             </label>
                         </div>
                     </div>
-                    <div style="padding: 10px; border-bottom: 1px solid #E9E9E9; line-height: 30px;">
+                    <div class="wst-chkod-dp-box">
                         <div>
-                            <span style="font-size: 15px; font-weight: bold;">送达时间</span>
+                            <span class="wst-chkod-dp-hds">送达时间</span>
                         </div>
                         <div style="padding-left: 40px;">
                             <label>
@@ -225,9 +225,9 @@
                             </select> 
                         </div>
                     </div>
-                    <div style="padding: 10px; border-bottom: 1px solid #E9E9E9; line-height: 30px;">
+                    <div class="wst-chkod-dp-box">
                         <div>
-                            <span style="font-size: 15px; font-weight: bold;">订单备注<span style="font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;</span></span>
+                            <span class="wst-chkod-dp-hds">订单备注<span style="font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;</span></span>
                         </div>
                         <div style="padding-left: 40px;">
                             <label>
@@ -235,50 +235,50 @@
                             </label>                           
                         </div>
                     </div>
-                    <div style="padding: 10px; border-bottom: 1px solid #E9E9E9; line-height: 30px;">
+                    <div class="wst-chkod-dp-box">
                         
                         <volist name="catgoods" key="key" id="shopgoods">						
 							<div>
-                                <div style="width: 500px; float: left;">
-                                    <span style="font-size: 15px; font-weight: bold;">商品清单</span><span style="color: #E43E41; font-weight: bold;">【<span id="sp_{$shopgoods['shopgoods'][0]['shopId']}">{$shopgoods["shopgoods"][0]["shopName"]}</span><if condition='$shopgoods["shopgoods"][0]["isInvoice"] eq 1'>：本店可开具发票<else/>：不可开发票</if>】</span>
+                                <div class="wst-chkod-dp-pb1">
+                                    <span class="wst-chkod-dp-hds">商品清单</span><span class="wst-chkod-shop-span">【<span id="sp_{$shopgoods['shopgoods'][0]['shopId']}">{$shopgoods["shopgoods"][0]["shopName"]}</span><if condition='$shopgoods["shopgoods"][0]["isInvoice"] eq 1'>：本店可开具发票<else/>：不可开发票</if>】</span>
                                 </div>
-                                <div style="width: 200px; float: right;text-align: right;padding-right: 6px;">
+                                <div class="wst-goods-tips">
                                    	 包邮起步价：¥{$shopgoods["shopgoods"][0]["deliveryFreeMoney"]}元
                                 </div>
                                 <div style="clear: both;"></div>
                             </div>
                             <if condition='$shopgoods["shopgoods"][0]["deliveryStartMoney"] gt $shopgoods["totalMoney"]'>
-                            	<div id="showwarnmsg_{$key}" style="background-color: #FFE8E8;margin-top: 6px;margin-bottom: 6px;padding:6px;text-align: center;color:#CC0000;border: 1px solid #DB9A9A;">
+                            	<div id="showwarnmsg_{$key}" class="wst-chkod-dp-pb2">
 			                		抱歉，您的订单金额未达到该门店的配送订单起步价¥{$shopgoods["shopgoods"][0]["deliveryStartMoney"]}元，不能提交订单。
 			                	</div>
 			                	<input type="hidden" id="tst_{$key}"  class="tst" value="-1"/>
                             </if>                            
                         <div>
-                            <div style="line-height: 35px; background-color: #E9E9E9; text-align: center;">
-                                <div style="float: left; width: 500px; text-align: left;">&nbsp;&nbsp;商品</div>
-                                <div style="float: left; width: 220px; text-align: center;">商品单价</div>
-                                <div style="float: left; width: 120px; text-align: center;">数量</div>
-                                <div style="float: left; width: 140px; text-align: center;">总价</div>
-                                <div style="float: left; width: 200px; text-align: center;">库存状态</div>
-                                <div style="clear: both;"></div>
+                            <div class="wst-chkod-glist-tb">
+                                <div class="wst-chkod-glist-tt1">&nbsp;&nbsp;商品</div>
+                                <div class="wst-chkod-glist-tt2">商品单价</div>
+                                <div class="wst-chkod-glist-tt3">数量</div>
+                                <div class="wst-chkod-glist-tt4">总价</div>
+                                <div class="wst-chkod-glist-tt5">库存状态</div>
+                                <div class="wst-clear"></div>
                             </div>
                             <volist name="shopgoods['shopgoods']" key="key2" id="goods">
-								<div class="selgoods" style="padding-top:6px;padding-bottom:6px;border-bottom: 1px solid #E9E9E9;">
-                                    <div style="float: left; width: 496px; padding-left: 4px;">
+								<div class="selgoods" class="wst-chkod-dp-pb3">
+                                    <div class="wst-chkod-dp-pb4">
                                         <div>
-                                            <div style="float: left; width: 65px;">
+                                            <div class="wst-cart-goods-img">
                                                 <a href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$goods['goodsId']}" target="_blank">
                                                     <img src="__ROOT__/{$goods['goodsThums']}" width="60" height="60" /></a>
                                             </div>
-                                            <div style="float: left; width: 390px; line-height: 30px;">
+                                            <div class="wst-cart-goods-name">
                                                 <a target="_blank" href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$goods['goodsId']}" target="_blank">{$goods["goodsName"]}</a>
                                             </div>
                                         </div>
                                     </div>
-                                    <div style="float: left; width: 220px; text-align: center;">¥{$goods["shopPrice"]}元</div>
-                                    <div style="float: left; width: 120px; text-align: center;">{$goods['cnt']}</div>
-                                    <div style="float: left; width: 140px; text-align: center;">¥{$goods["shopPrice"]*$goods['cnt']}元</div>
-                                    <div style="float: left; width: 200px; text-align: center;">
+                                    <div class="wst-chkod-od-crt1">¥{$goods["shopPrice"]}元</div>
+                                    <div class="wst-chkod-od-crt2">{$goods['cnt']}</div>
+                                    <div class="wst-chkod-od-crt3">¥{$goods["shopPrice"]*$goods['cnt']}元</div>
+                                    <div class="wst-chkod-od-crt4">
 	                                    <if condition="$goods['goodsStock'] egt $goods['cnt']">
 	                                    	有货
 	                                    <elseif condition="$goods['goodsStock'] eq 0"/>
@@ -287,36 +287,36 @@
 	                                    	<span style="color:red;">库存不足,仅剩{$goods["goodsStock"]}份</span>
 	                                    </if>
                                     </div>
-                                    <div style="clear: both;"></div>
+                                    <div class="wst-clear"></div>
                                 </div>
                             </volist>													
                         </div>
-                        <div style="padding-left: 40px; background-color: #F7F7F7; border-bottom: 2px solid #C0C0C4;">
+                        <div class="wst-chkod-dp-pb5">
                             <div style="width: 310px; float: right;">
                                 <div>
-                                    <div style="width: 200px; float: left; text-align: right;"><span style="color: red;">{$shopgoods["totalCnt"]}</span> 件商品，总商品金额：</div>
-                                    <div style="width: 100px; float: right; text-align: right;color:red;">¥{$shopgoods["totalMoney"]}&nbsp;&nbsp;</div>
-                                    <div style="clear: both;"></div>
+                                    <div class="wst-chkod-my1"><span style="color: red;">{$shopgoods["totalCnt"]}</span> 件商品，总商品金额：</div>
+                                    <div class="wst-chkod-my2">¥{$shopgoods["totalMoney"]}&nbsp;&nbsp;</div>
+                                    <div class="wst-clear"></div>
                                 </div>
                                 <div>
-                                    <div style="width: 200px; float: left; text-align: right;">运费：</div>
-                                    <div style="width: 100px; float: right; text-align: right;">
+                                    <div class="wst-chkod-yy1">运费：</div>
+                                    <div class="wst-chkod-yy2">
                                     	<input type="hidden" id="deliveryMoney_{$key}" value='<if condition='$shopgoods["totalMoney"] lt $shopgoods["shopgoods"][0]["deliveryFreeMoney"]'>¥{$shopgoods["shopgoods"][0]["deliveryMoney"]}<else/>免运费</if>'/>
 
                                     	<span id="deliveryMoney_span_{$key}">
                                     	<if condition='$shopgoods["totalMoney"] lt $shopgoods["shopgoods"][0]["deliveryFreeMoney"]'>¥{$shopgoods["shopgoods"][0]["deliveryMoney"]}<else/>免运费</if>
                                    	 	</span>
                                    	&nbsp;&nbsp;</div>
-                                    <div style="clear: both;"></div>
+                                    <div class="wst-clear"></div>
                                 </div>
                             </div>
-                            <div style="clear: both;"></div>
+                            <div class="wst-clear"></div>
                         </div>
                         </volist>	
                     </div>
                     <div class="checkout-buttons group" id="checkout-floatbar">
                         <div class="sticky-placeholder hide" style="display: none;"></div>
-                        <div style="padding-right:10px;border:1px solid #eeeeee;padding:15px;text-align:right;">
+                        <div class="wst-chkod-yf1">
                         	<span class="total">应付总额：<span style="color: red;">
 	                                <strong id="payPriceId">￥
 	                                	<input type="hidden" id="gtotalMoney" value="{$gtotalMoney}"/>
@@ -327,11 +327,11 @@
                         </div>
                         <div class="sticky-wrap">
                             <div class="wst-inner" style="padding:15px;">
-                            <button onclick="javascript:backCart();" class="btn"  style="height:30px;width:85px;cursor:pointer;">
+                            <button onclick="javascript:backCart();" class="wst-prev-btn">
                                     	返回上一步                                   
                                     <b></b>
                                 </button>
-                                <button style="margin-left:500px;height:30px;width:85px;float:right;cursor:pointer;" onclick="javascript:submitOrder();" id="order-submit" class="checkout-submit" type="submit" >
+                                <button class="wst-next-btn" onclick="javascript:submitOrder();" id="order-submit" class="checkout-submit" type="submit" >
                                     	提交订单                                       
                                     <b></b>
                                 </button>
@@ -451,7 +451,7 @@
 	}
 		
 		 function backCart(){
-		location.href=rooturl+'/index.php/Home/Cart/getCartInfo/?rnd='+Math.random();
+		location.href=domainURL +'/index.php/Home/Cart/getCartInfo/?rnd='+Math.random();
 	}
 	
 	var times = ["00:00","00:15","00:30","00:45",

@@ -263,6 +263,11 @@ WST.checkMaxLength = function(o,maxLength){
 	}
 	return true;
 }
+WST.msg = function(msg,opts,func){
+	opts.shade = opts.shade?opts.shade:[0.3, '#000'];
+	opts.time = opts.time?opts.time:2000;
+	layer.msg(msg, {icon: opts.icon,shade: opts.shade,time: opts.time,offset: '200px'},func);
+}
 WST.toJson = function(str){
 	var json = {};
 	try{
@@ -297,6 +302,7 @@ WST.toJson = function(str){
 $(function () {
 	if($('.wst-panel-full').height()<WST.pageHeight())$('.wst-panel-full').height(WST.pageHeight()-3);
 });
+
 
 /***
  * 加载下拉搜索选项
@@ -368,4 +374,36 @@ function loadSearchList(loginName,namelist){
 			}			
 		}
 	});
+}
+
+/**
+ * 去除url中指定的参数(用于分页)
+ */
+WST.splitURL = function(spchar){
+	var url = location.href;
+	var urlist = url.split("?");
+	var furl = new Array();
+	var fparams = new Array();
+		furl.push(urlist[0]);
+	if(urlist.length>1){
+		var urlparam = urlist[1];
+			params = urlparam.split("&");
+		for(var i=0; i<params.length; i++){
+			var vparam = params[i];
+			var param = vparam.split("=");
+			if(param[0]!=spchar){
+				fparams.push(vparam);
+			}
+		}
+		if(fparams.length>0){
+			furl.push(fparams.join("&"));
+		}
+		
+	}
+	if(furl.length>1){
+		return furl.join("?");
+	}else{
+		return furl.join("");
+	}
+	
 }

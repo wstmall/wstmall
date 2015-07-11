@@ -59,5 +59,6 @@ a.install:hover {
 .check-env {width: 98%;margin: 0 auto;text-align: left;}
 .check-env .left{width: 350px;}
 .red{color:red}
-.check0{background:url('../images/fail.gif') no-repeat;width:16px;height:16px;display: inline-block;margin-right:5px;}
+.check-1{background:url('../images/fail.gif') no-repeat;width:16px;height:16px;display: inline-block;margin-right:5px;}
 .check1{background:url('../images/ok.gif') no-repeat;width:16px;height:16px;display: inline-block;margin-right:5px;}
+.check0{background:url('../images/unkown.gif') no-repeat;width:16px;height:16px;display: inline-block;margin-right:5px;}

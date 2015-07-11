@@ -20,7 +20,7 @@ class LogLoginsAction extends BaseAction{
 			$object = $m->get();
 			$this->assign('object',$object);
 		}
-		$this->view->display('/loglogins/view.html');
+		$this->view->display('/loglogins/view');
 	}
 	/**
 	 * 分页查询

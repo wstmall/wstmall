@@ -14,11 +14,12 @@ class GoodsAppraisesAction extends BaseAction{
 	 */
 	public function index(){
 		$this->isShopLogin();
+		$USER = session("WST_USER");
 		//获取商家商品分类
 		$m = D('Home/ShopsCats');
-		$this->assign('shopCatsList',$m->queryByList($_SESSION['USER']['shopId'],0));
+		$this->assign('shopCatsList',$m->queryByList($USER['shopId'],0));
 		$m = D('Home/Goods_appraises');
-    	$page = $m->queryByPage($_SESSION['USER']['shopId']);
+    	$page = $m->queryByPage($USER['shopId']);
     	$pager = new \Think\Page($page['total'],$page['pageSize']);
     	$page['pager'] = $pager->show();
     	$this->assign('Page',$page);
@@ -65,8 +66,9 @@ class GoodsAppraisesAction extends BaseAction{
 	 */
     public function toAppraise(){
     	$this->isUserLogin();
+    	$USER = session('WST_USER');
     	$morders = D('Home/Goods_appraises');
-    	$obj["userId"] = $_SESSION['USER']['userId'];
+    	$obj["userId"] = $USER['userId'];
     	$obj["orderId"] = I("orderId");
 		$rs = $morders->getOrderAppraises($obj);
 		$this->assign("orderInfo",$rs);
@@ -77,8 +79,9 @@ class GoodsAppraisesAction extends BaseAction{
 	 */
     public function addGoodsAppraises(){
     	$this->isUserAjaxLogin();
+    	$USER = session('WST_USER');
     	$morders = D('Home/Goods_appraises');
-    	$obj["userId"] = $_SESSION['USER']['userId'];
+    	$obj["userId"] = $USER['userId'];
     	$obj["orderId"] = I("orderId");
 		$rs = $morders->addGoodsAppraises($obj);
 		$data["status"] = $rs;
@@ -89,8 +92,9 @@ class GoodsAppraisesAction extends BaseAction{
 	 */
     public function getAppraisesList(){
     	$this->isUserLogin();
+    	$USER = session('WST_USER');
     	$morders = D('Home/Goods_appraises');
-    	$obj["userId"] = $_SESSION['USER']['userId'];
+    	$obj["userId"] = $USER['userId'];
     	$this->assign("umark","getAppraisesList");
 		$appraiseList = $morders->getAppraisesList($obj);
 		$this->assign("appraiseList",$appraiseList);

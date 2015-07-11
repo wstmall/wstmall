@@ -9,7 +9,7 @@ function changebuynum(goodsId,flag){
 	}else if(flag==2){
 		num = num+1;
 	}	
-	jQuery.post(rooturl+"/index.php/Home/Goods/getGoodsStock/" ,{goodsId:goodsId},function(data) {		
+	jQuery.post(domainURL +"/index.php/Home/Goods/getGoodsStock/" ,{goodsId:goodsId},function(data) {		
 		var json = WST.toJson(data);
 		if($("#haveGoodsToBuy").attr("display")=="" && json.goodsStock==0){
 			$("#haveGoodsToBuy").hide();

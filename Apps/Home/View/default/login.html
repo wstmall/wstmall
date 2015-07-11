@@ -9,9 +9,6 @@
       	<meta name="description" content="{$CONF['shopTitle']['fieldValue']},用户登录" />
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css">
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/login.css">
-      	<script>
-      	var rooturl = "__ROOT__";
-		</script>
    	</head>
    	<body>
    		<include file="./Apps/Home/View/default/header_nav.html" />
@@ -19,13 +16,13 @@
       	<script src="__PUBLIC__/js/html5shiv.min.js"></script>
       	<script src="__PUBLIC__/js/respond.min.js"></script>
       	<![endif]-->
-   			<div style="margin: 0 auto;width: 890px;">
+   			<div class='wst-login'>
    				<div style="margin: 0 auto;padding-left:60px;">
    					<a href="__ROOT__/index.php">
    						<img src="__ROOT__/Apps/Home/View/default/images/logo.png"/>
    					</a>
    				</div>
-		    	<div class=" w1" id="entry">
+		    	<div class="w1" id="entry">
 		    	
 		        	<div class="mc " id="bgDiv" style="position:relative">
 		        	<div><a style="text-decoration: none;font-size:65px;color:red;position:absolute;top:160px;left:60px;" href="{:U('Index/index')}">WST 商城</a></div>

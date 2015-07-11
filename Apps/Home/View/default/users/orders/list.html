@@ -6,12 +6,12 @@
        
 	   <div class="wst-order-userinfo-box" style="">
 	   		<div class="wst-userimg-box">
-	   			<img src="<empty name="baseUser['userPhoto']">__ROOT__/Apps/Home/View/default/images/logo.png<else/>__ROOT__/{$baseUser['userPhoto']}</empty>" height="100" width="100" />
+	   			<img src="<empty name="WST_USER['userPhoto']">__ROOT__/Apps/Home/View/default/images/logo.png<else/>__ROOT__/{$WST_USER['userPhoto']}</empty>" height="100" width="100" />
 	   		</div>
 	   		<div class="wst-userlogin-box">
-	   			<div><span style="font-size:16px;">欢迎您：</span><span style="font-weight:bolder;color:#fff100;">{$baseUser["loginName"]}</span><if condition='$baseUser["userRank"]["rankName"] neq ""'>({$baseUser["userRank"]['rankName']})</if></div>
-	   			<div>上次登录时间：{$baseUser["lastTime"]}</div>
-	   			<div>上次登录IP：{$baseUser["lastIP"]}</div>
+	   			<div><span style="font-size:16px;">欢迎您：</span><span style="font-weight:bolder;color:#fff100;">{$WST_USER["loginName"]}</span><if condition='$WST_USER["userRank"]["rankName"] neq ""'>({$WST_USER["userRank"]['rankName']})</if></div>
+	   			<div>上次登录时间：{$WST_USER["lastTime"]}</div>
+	   			<div>上次登录IP：{$WST_USER["lastIP"]}</div>
 	   			<div class="wst-user-adr">
 	   				<a style="color:#ffffff;" href='__ROOT__/index.php/Home/UserAddress/queryByPage'>我的收货地址</a>&nbsp;&nbsp;&nbsp;
 	   				<a href="__ROOT__/index.php/Home/Users/toEdit" style="color:#ffffff;">编辑个人资料</a>
@@ -58,7 +58,7 @@
 	       						在线支付
 			               	</if>
        					</td>
-       					<td width="80">
+       					<td width="60">
 	       					<if condition='($order["orderStatus"] eq -3) OR ($order["orderStatus"] eq -4)'>拒收
 			               	<elseif condition='$order["orderStatus"] eq -2'/>未付款
 			               	<elseif condition='$order["orderStatus"] eq -1'/>已取消
@@ -84,17 +84,17 @@
        							</if>
        						</if>
 							<a href="javascript:;" onclick="showOrder({$order['orderId']})">[ 查看 ]</a>
-							<if condition='($order["orderStatus"] eq 0)AND ($order["orderStatus"] eq -2)'> 
+							<if condition='($order["orderStatus"] eq 0) or ($order["orderStatus"] eq -2)'> 
 							<a href="javascript:;" onclick="orderCancel({$order['orderId']})">[ 取消订单 ]</a>
        						</if>
        					</td>
        				</tr>
        				</volist>
-       				<if condition="count($orderList['root']) gt 0">
+       				<if condition="$orderList['totalPage'] gt 1">
        				<tr >
-						<td colspan="5" style="height:30px;">
+						<td colspan="5" style="height:30px;border-bottom: 0px;">
 							<div class="wst-page" style="float:right;padding-bottom:10px;">
-								<div class="wst-page-items">	
+								<div id="wst-page-items">	
 								</div>
 							</div>
 						</td>
@@ -104,5 +104,34 @@
        		</table>
        </div>
     </div>
-
+	<script>
+	
+    <if condition="$orderList['totalPage'] gt 1">
+    $(document).ready(function(){
+    	laypage({
+    	    cont: 'wst-page-items',
+    	    pages: {$orderList['totalPage']}, //总页数
+    	    skip: true, //是否开启跳页
+    	    skin: '#e23e3d',
+    	    groups: 3, //连续显示分页数
+    	    curr: function(){ //通过url获取当前页，也可以同上（pages）方式获取
+    	        var page = location.search.match(/pcurr=(\d+)/);
+    	        return page ? page[1] : 1;
+    	    }(), 
+    	    jump: function(e, first){ //触发分页后的回调
+    	        if(!first){ //一定要加此判断，否则初始时会无限刷新
+    	        	var nuewurl = WST.splitURL("pcurr");
+    	        	var ulist = nuewurl.split("?");
+    	        	if(ulist.length>1){
+    	        		location.href = nuewurl+'&pcurr='+e.curr;
+    	        	}else{
+    	        		location.href = '?pcurr='+e.curr;
+    	        	}
+    	            
+    	        }
+    	    }
+    	});
+    })
+	</if>
+	</script>
 </block> 
