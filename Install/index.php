@@ -30,7 +30,8 @@ timezone_set();
 </script>
 </head>
 <body>
-    <div style="margin:0 auto;margin-top:20px;background:url('./images/1_03.png') no-repeat left top;width:300px;height:47px;"></div>
+<div style="width:960px;margin:0 auto;">
+    <div style="margin:0 auto;margin-top:20px;background:url('./images/1_03.png') no-repeat left top;width:280px;height:47px;"></div>
     <form id='form1'action='index.php'>
     <input type='hidden' name="step" id='step' value='0'/>
     <input type='hidden' name="rnd" id='rnd' value='0'/>
@@ -200,16 +201,19 @@ timezone_set();
     </div>
     <?php }else if($step==3){?>
     <div class="main" id="system_success">
-        <div class="content" style='text-align:center'>
+        <div class="content" style='text-align:center;'>
+        <div style="margin-top: 200px;">
         <span style="display:inline-block;margin-top:10px;">
-            恭喜，WSTMall已安装成功!<br />
+           <span style="font-weight: bold;font-size:18px;"> 恭喜</span>，WSTMall已安装成功&nbsp;!<br /><br />
             安装成功后，建议删除Insatall目录
         </span><br /><br />
         <a href="../index.php" target="_blank" title="跳到WSTMALL首页">跳到WSTMall首页</a>&nbsp;&nbsp;
         <a href="../index.php/Admin/index" target="_blank" title="跳到WSTMALL后台">跳到WSTMall后台</a>
         </div>
+        </div>
     </div>
     <?php }?>
     </form>
+    </div>
 </body>
 </html>

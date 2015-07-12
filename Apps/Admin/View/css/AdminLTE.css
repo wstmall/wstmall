@@ -3579,7 +3579,7 @@ label{display:inline;}
 .wst-current{background:#31b0d5;border-radius: 4px;box-sizing: content-box;display: inline-block;line-height: 20px;min-width: 16px;padding: 3px 5px;text-align: center;text-decoration: none;-moz-border-bottom-colors: none;-moz-border-left-colors: none;-moz-border-right-colors: none;-moz-border-top-colors: none;border-color: rgba(0, 0, 0, 0.2) rgba(0, 0, 0, 0.2) rgba(0, 0, 0, 0.3);border-image: none;border-style: solid;border-width: 1px;color: #FFFFFF;text-shadow: 0 1px 0 #fff;margin-left:5px;}
 
 .wst-tab-pane{padding:5px;}
-.wst-tbar{margin-bottom:5px;height:100%}
+.wst-tbar{margin-bottom:5px;height:auto;}
 .form-control{height:25px;padding:3px;display :inline-block;}
 .btn{padding:2px 8px;margin-right:0px;font-weight:bold;}
 

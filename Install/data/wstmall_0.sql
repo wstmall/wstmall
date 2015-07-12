@@ -4,13 +4,13 @@ Navicat MySQL Data Transfer
 Source Server         : 127.0.0.1
 Source Server Version : 50520
 Source Host           : localhost:3306
-Source Database       : temp
+Source Database       : wstmall_full
 
 Target Server Type    : MYSQL
 Target Server Version : 50520
 File Encoding         : 65001
 
-Date: 2015-06-27 10:20:27
+Date: 2015-06-28 12:16:32
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -3853,11 +3853,12 @@ CREATE TABLE `wst_friendlinks` (
   `friendlinkUrl` varchar(150) DEFAULT NULL,
   `friendlinkSort` int(11) DEFAULT '0',
   PRIMARY KEY (`friendlinkId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of wst_friendlinks
 -- ----------------------------
+INSERT INTO `wst_friendlinks` VALUES ('1', 'Apps/Home/View/default/images/logo.png', 'WSTMall', 'http://www.wstmall.com', '0');
 
 -- ----------------------------
 -- Table structure for `wst_goods`
@@ -4032,23 +4033,6 @@ CREATE TABLE `wst_goods_scores` (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for `wst_log_logins`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_log_logins`;
-CREATE TABLE `wst_log_logins` (
-  `loginId` int(11) NOT NULL AUTO_INCREMENT,
-  `staffId` int(11) NOT NULL,
-  `loginTime` datetime NOT NULL,
-  `loginIp` varchar(16) NOT NULL,
-  PRIMARY KEY (`loginId`),
-  KEY `loginTime` (`loginTime`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_log_logins
--- ----------------------------
-
--- ----------------------------
 -- Table structure for `wst_log_operates`
 -- ----------------------------
 DROP TABLE IF EXISTS `wst_log_operates`;
@@ -4084,6 +4068,67 @@ CREATE TABLE `wst_log_orders` (
 
 -- ----------------------------
 -- Records of wst_log_orders
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_log_sms`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_log_sms`;
+CREATE TABLE `wst_log_sms` (
+  `smsId` int(11) NOT NULL AUTO_INCREMENT,
+  `smsSrc` tinyint(4) DEFAULT '0',
+  `smsUserId` int(11) DEFAULT '0',
+  `smsContent` varchar(255) DEFAULT NULL,
+  `smsPhoneNumber` varchar(11) DEFAULT NULL,
+  `smsReturnCode` varchar(255) DEFAULT NULL,
+  `smsFunc` varchar(50) DEFAULT NULL,
+  `createTime` datetime DEFAULT NULL,
+  PRIMARY KEY (`smsId`),
+  KEY `logSrcType` (`smsSrc`,`smsPhoneNumber`),
+  KEY `createTime` (`createTime`),
+  KEY `logFunc` (`smsFunc`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_log_sms
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_log_staff_logins`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_log_staff_logins`;
+CREATE TABLE `wst_log_staff_logins` (
+  `loginId` int(11) NOT NULL AUTO_INCREMENT,
+  `staffId` int(11) NOT NULL,
+  `loginTime` datetime NOT NULL,
+  `loginIp` varchar(16) NOT NULL,
+  PRIMARY KEY (`loginId`),
+  KEY `loginTime` (`loginTime`),
+  KEY `staffId` (`staffId`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_log_staff_logins
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_log_user_logins`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_log_user_logins`;
+CREATE TABLE `wst_log_user_logins` (
+  `loginId` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` int(11) NOT NULL,
+  `loginTime` datetime NOT NULL,
+  `loginIp` varchar(16) NOT NULL,
+  `loginSrc` tinyint(3) unsigned DEFAULT '0' COMMENT '0:商城  1:webapp  2:App',
+  `loginRemark` varchar(30) DEFAULT NULL COMMENT '登录备注信息',
+  PRIMARY KEY (`loginId`),
+  KEY `loginTime` (`loginTime`),
+  KEY `userId` (`userId`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_log_user_logins
 -- ----------------------------
 
 -- ----------------------------
@@ -4235,7 +4280,7 @@ INSERT INTO `wst_roles` VALUES ('4', '客服', 'sppl_00,sppl_04,sppl_03', '2014-
 -- ----------------------------
 DROP TABLE IF EXISTS `wst_shop_configs`;
 CREATE TABLE `wst_shop_configs` (
-  `configId` int(11) DEFAULT NULL,
+  `configId` int(11) NOT NULL AUTO_INCREMENT,
   `shopId` int(11) DEFAULT NULL,
   `shopTitle` varchar(255) DEFAULT NULL,
   `shopKeywords` varchar(255) DEFAULT NULL,
@@ -4243,6 +4288,7 @@ CREATE TABLE `wst_shop_configs` (
   `shopBanner` varchar(150) DEFAULT NULL,
   `shopAds` text,
   `shopAdsUrl` text,
+  PRIMARY KEY (`configId`),
   KEY `shopId` (`shopId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -4386,7 +4432,7 @@ CREATE TABLE `wst_sys_configs` (
   `fieldSort` int(11) DEFAULT '0' COMMENT '字段排序',
   PRIMARY KEY (`configId`),
   KEY `parentId` (`parentId`)
-) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of wst_sys_configs
@@ -4402,6 +4448,16 @@ INSERT INTO `wst_sys_configs` VALUES ('9', '1', '验证码高度', 'captcha_heig
 INSERT INTO `wst_sys_configs` VALUES ('10', '1', '验证模式', 'captcha_show', 'hidden', '字母,数字,混合', '0,1,6', '0', null, '0');
 INSERT INTO `wst_sys_configs` VALUES ('13', '0', '商品是否需要审核', 'isGoodsVerify', 'radio', '是||否', '1,0', '0', null, '0');
 INSERT INTO `wst_sys_configs` VALUES ('14', '0', '访问统计', 'visitStatistics', 'textarea', null, null, '&lt;script language=&quot;javascript&quot; type=&quot;text/javascript&quot; src=&quot;http://js.users.51.la/17819468.js&quot;&gt;&lt;/script&gt;', null, '0');
+INSERT INTO `wst_sys_configs` VALUES ('15', '1', 'SMTP服务器', 'mailSmtp', 'text', null, null, 'smtp.163.com', null, '1');
+INSERT INTO `wst_sys_configs` VALUES ('16', '1', 'SMTP端口', 'mailPort', 'text', null, null, '25', null, '2');
+INSERT INTO `wst_sys_configs` VALUES ('17', '1', '是否验证SMTP', 'mailAuth', 'radio', '是||否', '1,0', '1', null, '3');
+INSERT INTO `wst_sys_configs` VALUES ('18', '1', 'SMTP发件人邮箱', 'mailAddress', 'text', null, null, 'xxxxx@163.com', null, '4');
+INSERT INTO `wst_sys_configs` VALUES ('19', '1', 'SMTP登录账号', 'mailUserName', 'text', null, null, 'username', null, '5');
+INSERT INTO `wst_sys_configs` VALUES ('20', '1', 'SMTP登录密码', 'mailPassword', 'text', null, null, 'password', null, '6');
+INSERT INTO `wst_sys_configs` VALUES ('21', '1', '发件人名称', 'mailSendTitle', 'text', null, null, 'WSTMall', null, '7');
+INSERT INTO `wst_sys_configs` VALUES ('22', '2', '短信账号', 'smsKey', 'text', null, null, 'WSTMall', null, '1');
+INSERT INTO `wst_sys_configs` VALUES ('23', '2', '短信密码', 'smsPass', 'text', null, null, 'WSTMall', null, '2');
+INSERT INTO `wst_sys_configs` VALUES ('24', '2', '号码每日发送数', 'smsLimit', 'text', null, null, '20', '避免恶意浪费短信的行为', '3');
 
 -- ----------------------------
 -- Table structure for `wst_user_address`

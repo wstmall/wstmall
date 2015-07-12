@@ -89,7 +89,7 @@ class ArticleCatsModel extends BaseModel {
 	  */
 	  public function queryByList($pid){
 	     $m = M('article_cats');
-	     return $m->where('catFlag=1 and parentId='.$pid)->order('catSort asc')->select(); 
+	     return $m->where('catFlag=1 and parentId='.$pid)->order('catSort asc,catId asc')->select(); 
 	  }
 	 /**
 	  * 迭代获取下级

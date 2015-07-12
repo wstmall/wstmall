@@ -27,6 +27,11 @@
 26.商品搜索时建立分类和品牌的关系。
 27.修复品牌汇查出多余品牌的bug。
 28.修复商家后台编辑商家资料时，营业时间为输入框的bug。
+======================================================
+v1.1.1_150711更新
+1.修复管理员后台地区分页时，地区数据因为排序相同导致重复显示的bug
+2.修复清除缓存时，目录为0导致无法清除缓存的bug
+
 
 更新用户
 1.请在wstmall\Apps\Common\Conf\config.php文件夹下增加如下配置(红色文字)：
@@ -50,8 +55,8 @@ return array(
 );
 2.请在wstmall\Apps\Common\Conf\wst_config.php里边的内容修改为：
   return array(
-	    'WST_VERSION' => '1.1.0_150707',
-	    'WST_MD5' => 'b0fbe9922c0b79ef17a9767f57329d0d'
+	    'WST_VERSION' => '1.1.1_150711',
+	    'WST_MD5' => 'ec738518a0711ac3a6a1f56fa150e489'
   )
 
 
@@ -62,3 +67,5 @@ WSTMall客服电话：020-29806661
 WSTMall邮箱 wasonteam@163.com
 WSTMall官网：http://www.wstmall.com
 百度贴吧：http://tieba.baidu.com/wstmall
+
+

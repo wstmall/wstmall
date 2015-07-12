@@ -85,7 +85,7 @@ function WSTStrReplace($str,$repStr,$start,$splilt = ''){
  */
 function WSTDelDir($dirpath){
 	$dh=opendir($dirpath);
-	while ($file=readdir($dh)) {
+	while (($file=readdir($dh))!==false) {
 		if($file!="." && $file!="..") {
 		    $fullpath=$dirpath."/".$file;
 		    if(!is_dir($fullpath)) {
@@ -99,7 +99,7 @@ function WSTDelDir($dirpath){
 	closedir($dh);
     $isEmpty = 1;
 	$dh=opendir($dirpath);
-	while ($file=readdir($dh)) {
+	while (($file=readdir($dh))!== false) {
 		if($file!="." && $file!="..") {
 			$isEmpty = 0;
 			break;
