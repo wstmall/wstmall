@@ -4,9 +4,10 @@
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>{$CONF['shopTitle']['fieldValue']}后台管理中心</title>
+      <title>{$CONF['mallTitle']}后台管理中心</title>
       <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
       <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
+      <link rel="stylesheet" href="__PUBLIC__/plugins/uploadify/uploadify.css">
       <!--[if lt IE 9]>
       <script src="__PUBLIC__/js/html5shiv.min.js"></script>
       <script src="__PUBLIC__/js/respond.min.js"></script>
@@ -15,12 +16,36 @@
       <script src="__PUBLIC__/plugins/bootstrap/js/bootstrap.min.js"></script>
       <script src="__PUBLIC__/js/common.js"></script>
       <script src="__PUBLIC__/plugins/plugins/plugins.js"></script>
+      <script src="__PUBLIC__/plugins/uploadify/jquery.uploadify.min.js"></script>
       <script>
       $(function(){
     	  $('#myTab a').click(function (e) {
     		  e.preventDefault();
     		  $(this).tab('show');
-    	  })
+    	  });
+    	  <PHP>if($CONF['mallLicense']==''){</PHP>
+    	  //$('#mallCopyright').attr('disabled',true);
+    	  <PHP>}</PHP>
+    	  <php>
+  		  foreach($configs as $key =>$cf){
+  		  foreach($cf as $key =>$vo){
+  			if($vo['fieldType']=='upload'){
+  		  </php>
+    	  $("#{$vo["fieldCode"]}Upload").uploadify({
+  		    formData      : {'dir':'mall','width':240,'height':132},
+  		    buttonText    : '选择图标',
+  		    fileTypeDesc  : 'Image Files',
+  	        fileTypeExts  : '*.gif; *.jpg; *.png',
+  	        swf           : '__PUBLIC__/plugins/uploadify/uploadify.swf',
+  	        uploader      : '{:U("Admin/Index/uploadPic")}',
+  	        onUploadSuccess : function(file, data, response) {
+  	        	var json = WST.toJson(data);
+  	        	var url = '__ROOT__/'+json.Filedata.savepath+json.Filedata.savethumbname;
+  	        	$('#{$vo["fieldCode"]}').val(json.Filedata.savepath+json.Filedata.savename);
+  	        	$('#{$vo["fieldCode"]}Preview').attr('src',url);
+              }
+  	      });
+    	  <php>}}}</php>
       })
       function save(){
     		var params = {};
@@ -34,7 +59,7 @@
     			params.{$vo['fieldCode']} = $('#{$vo['fieldCode']}').val();
     		<php>}}}</php>
     		Plugins.waitTips({title:'信息提示',content:'正在提交数据，请稍后...'});
-    		$.post("__ROOT__/index.php/Admin/index/saveMallConfig",params,function(data,textStatus){
+    		$.post("{:U('Admin/index/saveMallConfig')}",params,function(data,textStatus){
     			var json = WST.toJson(data);
     			if(json.status=='1'){
     				Plugins.setWaitTipsMsg({content:'操作成功',timeout:1000,callback:function(){}});
@@ -64,7 +89,7 @@
                      <php>
                      if($v['fieldType']=='text'){
                      </php>
-                     <input type='text' class="form-control wst-ipt" id='{$v["fieldCode"]}' name='{$v["code"]}' value="{$v['fieldValue']}"/>
+                     <input type='text' class="form-control wst-ipt" id='{$v["fieldCode"]}' name='{$v["code"]}' value="{$v['fieldValue']}" />{$v['fieldTips']}
                      <php>
                      }else if($v['fieldType']=='radio'){
                         foreach($v['txt'] as $kt => $vt){
@@ -74,9 +99,13 @@
 			           </label>
 			         <php>
 			            }
-			         </php>
+			         </php>{$v['fieldTips']}
                      <php>}else if($v['fieldType']=='textarea'){</php>
-                     <textarea id='{$v["fieldCode"]}' name='{$vo["fieldCode"]}' style='width:400px;height:100px;'>{$v['fieldValue']}</textarea>{$vo['txtTips']}
+                     <textarea id='{$v["fieldCode"]}' name='{$vo["fieldCode"]}' style='width:400px;height:100px;'>{$v['fieldValue']}</textarea>{$v['fieldTips']}
+                     <php>}else if($v['fieldType']=='upload'){</php>
+                     <input type='text' id='{$v["fieldCode"]}Upload' class="form-control wst-ipt"/>{$v['fieldTips']}
+                     <input type='hidden' id='{$v["fieldCode"]}' value='{$v['fieldValue']}'/>
+                     <img id='{$v["fieldCode"]}Preview' src='__ROOT__/{$v['fieldValue']}'/>
                      <php>}</php>
                   </td>
                </tr>

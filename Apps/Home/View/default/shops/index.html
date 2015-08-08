@@ -10,14 +10,14 @@
 				<tr>
 					<td width="140">
 						<div class='wst-shophome-img'>
-							<a target="_blank" href="__ROOT__/index.php/Home/Shops/toShopHome/?shopId={$shopInfo['shop']['shopId']}">
+							<a target="_blank" href="{:U('Home/Shops/toShopHome/',array('shopId'=>$shopInfo['shop']['shopId']))}">
 								<img src="__ROOT__/{$shopInfo['shop']['shopImg']}" height="120" width="120" />
 							</a>
 						</div>
 					</td>
 					<td style="vertical-align:top;line-height:25px;">
 						<div style="font-weight:bolder;">{$shopInfo['shop']['shopName']}</div>
-						<div style="">店铺名称：<a target="_blank" href="__ROOT__/index.php/Home/Shops/toShopHome/?shopId={$shopInfo['shop']['shopId']}"><span style="color:#55AAFF">{$shopInfo['shop']['shopName']}</a></span></div>
+						<div style="">店铺名称：<a target="_blank" href="{:U('Home/Shops/toShopHome/',array('shopId'=>$shopInfo['shop']['shopId']))}"><span style="color:#55AAFF">{$shopInfo['shop']['shopName']}</a></span></div>
 						<div style="">店铺状态：<if condition="$shopInfo['shop']['shopAtive'] eq 1">
 						已开启，<if condition="$shopInfo['shop']['shopStatus'] eq 1">展示中<else/>待审核</if>
 						<else/>休息中

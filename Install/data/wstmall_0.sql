@@ -10,36 +10,975 @@ Target Server Type    : MYSQL
 Target Server Version : 50520
 File Encoding         : 65001
 
-Date: 2015-06-28 12:16:32
+Date: 2015-08-08 02:56:18
 */
 
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
--- Table structure for `wst_ads`
+-- Table structure for `wst_users`
 -- ----------------------------
-DROP TABLE IF EXISTS `wst_ads`;
-CREATE TABLE `wst_ads` (
-  `adId` int(11) NOT NULL AUTO_INCREMENT,
-  `adPositionId` int(11) DEFAULT NULL,
-  `areaId1` int(11) NOT NULL,
-  `areaId2` int(11) NOT NULL,
-  `adType` tinyint(4) NOT NULL DEFAULT '0',
-  `adFile` varchar(150) NOT NULL,
-  `adName` varchar(100) NOT NULL,
-  `adURL` varchar(150) NOT NULL,
-  `adStartDate` date NOT NULL,
-  `adEndDate` date NOT NULL,
-  `adSort` int(11) NOT NULL DEFAULT '0',
-  `adClickNum` int(11) DEFAULT '0',
-  PRIMARY KEY (`adId`),
-  KEY `adPositionId` (`adPositionId`,`areaId1`,`areaId2`,`adStartDate`,`adEndDate`),
-  KEY `adPositionId_2` (`adPositionId`,`areaId1`,`areaId2`)
+DROP TABLE IF EXISTS `wst_users`;
+CREATE TABLE `wst_users` (
+  `userId` int(11) NOT NULL AUTO_INCREMENT,
+  `loginName` varchar(20) NOT NULL,
+  `loginSecret` int(11) NOT NULL,
+  `loginPwd` varchar(50) NOT NULL,
+  `userSex` tinyint(4) DEFAULT '0',
+  `userType` tinyint(4) DEFAULT '0',
+  `userName` varchar(20) DEFAULT NULL,
+  `userQQ` varchar(20) DEFAULT NULL,
+  `userPhone` char(11) DEFAULT NULL,
+  `userEmail` varchar(50) DEFAULT NULL,
+  `userScore` int(11) DEFAULT '0',
+  `userPhoto` varchar(150) DEFAULT NULL,
+  `userTotalScore` int(11) DEFAULT '0',
+  `userStatus` tinyint(4) DEFAULT '1',
+  `userFlag` tinyint(4) DEFAULT '1',
+  `createTime` datetime DEFAULT NULL,
+  `lastIP` varchar(16) DEFAULT NULL,
+  `lastTime` datetime DEFAULT NULL,
+  PRIMARY KEY (`userId`),
+  KEY `userStatus` (`userStatus`,`userFlag`),
+  KEY `loginName` (`loginName`),
+  KEY `userPhone` (`userPhone`),
+  KEY `userEmail` (`userEmail`),
+  KEY `userType` (`userType`,`userFlag`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of wst_ads
+-- Records of wst_users
 -- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_user_ranks`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_user_ranks`;
+CREATE TABLE `wst_user_ranks` (
+  `rankId` int(11) NOT NULL AUTO_INCREMENT,
+  `rankName` varchar(20) NOT NULL,
+  `startScore` int(11) NOT NULL DEFAULT '0',
+  `endScore` int(11) NOT NULL DEFAULT '0',
+  `rebate` int(11) DEFAULT '100',
+  `createTime` datetime NOT NULL,
+  PRIMARY KEY (`rankId`),
+  KEY `startScore` (`startScore`,`endScore`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_user_ranks
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_user_address`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_user_address`;
+CREATE TABLE `wst_user_address` (
+  `addressId` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` int(11) NOT NULL,
+  `userName` varchar(50) NOT NULL,
+  `userPhone` varchar(20) DEFAULT NULL,
+  `userTel` varchar(20) DEFAULT NULL,
+  `areaId1` int(11) NOT NULL DEFAULT '0',
+  `areaId2` int(11) NOT NULL DEFAULT '0',
+  `areaId3` int(11) NOT NULL DEFAULT '0',
+  `communityId` int(11) NOT NULL DEFAULT '0',
+  `address` varchar(255) NOT NULL,
+  `postCode` char(6) NOT NULL,
+  `isDefault` tinyint(4) NOT NULL DEFAULT '0',
+  `addressFlag` tinyint(4) NOT NULL DEFAULT '1',
+  `createTime` datetime NOT NULL,
+  PRIMARY KEY (`addressId`),
+  KEY `userId` (`userId`,`addressFlag`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_user_address
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_sys_configs`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_sys_configs`;
+CREATE TABLE `wst_sys_configs` (
+  `configId` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+  `parentId` int(11) DEFAULT '0' COMMENT '所属类别ID',
+  `fieldName` varchar(50) DEFAULT NULL COMMENT '字段名称',
+  `fieldCode` varchar(20) DEFAULT NULL COMMENT '字段代码',
+  `fieldType` char(10) DEFAULT NULL COMMENT '字段类型',
+  `valueRangeTxt` varchar(255) DEFAULT NULL COMMENT '范围值名称',
+  `valueRange` varchar(255) DEFAULT NULL COMMENT '范围值',
+  `fieldValue` varchar(255) DEFAULT NULL COMMENT '字段值',
+  `fieldTips` varchar(255) DEFAULT NULL COMMENT '字段提示',
+  `fieldSort` int(11) DEFAULT '0' COMMENT '字段排序',
+  PRIMARY KEY (`configId`),
+  KEY `parentId` (`parentId`)
+) ENGINE=MyISAM AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_sys_configs
+-- ----------------------------
+INSERT INTO `wst_sys_configs` VALUES ('1', '0', '商城名称', 'mallName', 'text', null, '', 'WSTMall开源商城', null, '1');
+INSERT INTO `wst_sys_configs` VALUES ('2', '0', '商城标题', 'mallTitle', 'text', null, null, 'WSTMall开源商城', null, '2');
+INSERT INTO `wst_sys_configs` VALUES ('3', '0', '商城描述', 'mallDesc', 'text', null, null, 'WSTMall开源商城,本地O2O商城,多商户,PHP多用户开源商城,O2O开源商城', null, '3');
+INSERT INTO `wst_sys_configs` VALUES ('4', '0', '商城关键字', 'mallKeywords', 'text', null, null, 'WSTMall开源商城,本地O2O商城,多商户,PHP多用户开源商城,O2O开源商城', '&nbsp;&nbsp;以，号分隔', '4');
+INSERT INTO `wst_sys_configs` VALUES ('6', '1', '验证码显示范围', 'captcha_model', 'hidden', '管理员登录||商家加盟||商家登录||新用户注册||用户登录||留言反馈', '0,1,2,3,4,5', '0,1,2,3,4,5', null, '0');
+INSERT INTO `wst_sys_configs` VALUES ('7', '1', '验证码个数', 'captcha_len', 'hidden', null, null, '4', null, '0');
+INSERT INTO `wst_sys_configs` VALUES ('8', '1', '验证码宽度', 'captcha_width', 'hidden', null, null, '85', null, '0');
+INSERT INTO `wst_sys_configs` VALUES ('9', '1', '验证码高度', 'captcha_height', 'hidden', null, null, '25', null, '0');
+INSERT INTO `wst_sys_configs` VALUES ('10', '1', '验证模式', 'captcha_show', 'hidden', '字母,数字,混合', '0,1,6', '0', null, '0');
+INSERT INTO `wst_sys_configs` VALUES ('13', '0', '商品是否需要审核', 'isGoodsVerify', 'radio', '是||否', '1,0', '0', null, '5');
+INSERT INTO `wst_sys_configs` VALUES ('14', '0', '访问统计', 'visitStatistics', 'textarea', null, null, '&lt;script language=&quot;javascript&quot; type=&quot;text/javascript&quot; src=&quot;http://js.users.51.la/18256266.js&quot;&gt;&lt;/script&gt;', null, '10');
+INSERT INTO `wst_sys_configs` VALUES ('15', '1', 'SMTP服务器', 'mailSmtp', 'text', null, null, 'smtp.163.com', null, '1');
+INSERT INTO `wst_sys_configs` VALUES ('16', '1', 'SMTP端口', 'mailPort', 'text', null, null, '25', null, '2');
+INSERT INTO `wst_sys_configs` VALUES ('17', '1', '是否验证SMTP', 'mailAuth', 'radio', '是||否', '1,0', '1', null, '3');
+INSERT INTO `wst_sys_configs` VALUES ('18', '1', 'SMTP发件人邮箱', 'mailAddress', 'text', null, null, 'xxxxx@163.com', null, '4');
+INSERT INTO `wst_sys_configs` VALUES ('19', '1', 'SMTP登录账号', 'mailUserName', 'text', null, null, 'username', null, '5');
+INSERT INTO `wst_sys_configs` VALUES ('20', '1', 'SMTP登录密码', 'mailPassword', 'text', null, null, 'password', null, '6');
+INSERT INTO `wst_sys_configs` VALUES ('21', '1', '发件人名称', 'mailSendTitle', 'text', null, null, 'WSTMall', null, '7');
+INSERT INTO `wst_sys_configs` VALUES ('22', '2', '短信账号', 'smsKey', 'text', null, null, 'WSTMall', null, '1');
+INSERT INTO `wst_sys_configs` VALUES ('23', '2', '短信密码', 'smsPass', 'text', null, null, 'WSTMall', null, '2');
+INSERT INTO `wst_sys_configs` VALUES ('24', '2', '号码每日发送数', 'smsLimit', 'text', null, null, '20', '避免恶意浪费短信的行为', '3');
+INSERT INTO `wst_sys_configs` VALUES ('25', '0', '授权码', 'mallLicense', 'hidden', null, null, null, null, '6');
+INSERT INTO `wst_sys_configs` VALUES ('26', '0', '商城Logo', 'mallLogo', 'upload', null, null, 'Apps/Home/View/default/images/logo.png', '(建议为240x132)<br/>', '7');
+INSERT INTO `wst_sys_configs` VALUES ('27', '0', '默认图片', 'goodsImg', 'upload', null, null, 'Apps/Home/View/default/images/item-pic.jpg', '', '8');
+INSERT INTO `wst_sys_configs` VALUES ('28', '0', '底部设置', 'mallFooter', 'textarea', null, null, 'CROPYRIGHT 2013-2015 广州晴暖信息科技有限公司 版权所有  电话：020-29806661&lt;br/&gt;公司邮箱：wasonteam@163.com  客服QQ:707563272  粤ICP备13014375号&lt;br/&gt;我们愿与更多中小企业一起努力，一起成功 We Success together', null, '9');
+
+-- ----------------------------
+-- Table structure for `wst_staffs`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_staffs`;
+CREATE TABLE `wst_staffs` (
+  `staffId` int(11) NOT NULL AUTO_INCREMENT,
+  `loginName` varchar(40) NOT NULL,
+  `loginPwd` varchar(50) NOT NULL,
+  `secretKey` int(32) NOT NULL,
+  `staffName` varchar(50) NOT NULL,
+  `staffNo` varchar(20) DEFAULT NULL,
+  `staffPhoto` varchar(150) DEFAULT NULL,
+  `staffRoleId` int(11) NOT NULL,
+  `workStatus` tinyint(4) NOT NULL DEFAULT '1',
+  `staffStatus` tinyint(4) NOT NULL DEFAULT '0',
+  `staffFlag` tinyint(4) NOT NULL DEFAULT '1',
+  `createTime` datetime NOT NULL,
+  `lastTime` datetime DEFAULT NULL,
+  `lastIP` char(16) DEFAULT NULL,
+  PRIMARY KEY (`staffId`),
+  KEY `loginName` (`loginName`),
+  KEY `staffStatus` (`staffStatus`,`staffFlag`)
+) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_staffs
+-- ----------------------------
+INSERT INTO `wst_staffs` VALUES ('1', 'admin', '9875e806ef6f9494e0de4ae1bbf9f815', '9365', 'admin', '001', 'Upload/staffs/2015-04/55306cf76bc1f.jpg', '3', '1', '1', '1', '2014-04-06 11:47:20', '2015-06-02 22:50:57', '127.0.0.1');
+INSERT INTO `wst_staffs` VALUES ('14', 'system', 'a0da805e0b77f6cc05cdf0ef6ca8caad', '2508', '系统管理员', 'sn001', null, '3', '1', '1', '1', '2014-12-20 00:13:36', null, null);
+INSERT INTO `wst_staffs` VALUES ('15', 'goodsAdmin', '1600195af828b21c1f586b1e01cb89fc', '1729', '商品管理员', 'sn001', 'Upload/staffs/2014-12/5496376a7ff89.jpg', '1', '1', '1', '1', '2014-12-21 10:58:40', null, null);
+
+-- ----------------------------
+-- Table structure for `wst_shops_communitys`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_shops_communitys`;
+CREATE TABLE `wst_shops_communitys` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `shopId` int(11) NOT NULL,
+  `areaId1` int(11) NOT NULL,
+  `areaId2` int(11) NOT NULL,
+  `areaId3` int(11) NOT NULL,
+  `communityId` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `shopId` (`shopId`),
+  KEY `communityId` (`communityId`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_shops_communitys
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_shops_cats`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_shops_cats`;
+CREATE TABLE `wst_shops_cats` (
+  `catId` int(11) NOT NULL AUTO_INCREMENT,
+  `shopId` int(11) NOT NULL,
+  `parentId` int(11) NOT NULL,
+  `isShow` tinyint(4) NOT NULL DEFAULT '1',
+  `catName` varchar(100) NOT NULL,
+  `catSort` int(11) NOT NULL DEFAULT '0',
+  `catFlag` tinyint(4) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`catId`),
+  KEY `parentId` (`isShow`,`catFlag`) USING BTREE,
+  KEY `shopId` (`shopId`,`catFlag`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_shops_cats
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_shops`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_shops`;
+CREATE TABLE `wst_shops` (
+  `shopId` int(11) NOT NULL AUTO_INCREMENT,
+  `shopSn` varchar(20) NOT NULL,
+  `userId` int(11) NOT NULL,
+  `areaId1` int(11) NOT NULL,
+  `areaId2` int(11) NOT NULL,
+  `areaId3` int(11) NOT NULL,
+  `goodsCatId1` int(11) NOT NULL,
+  `goodsCatId2` int(11) DEFAULT NULL,
+  `goodsCatId3` int(11) DEFAULT NULL,
+  `isSelf` tinyint(4) NOT NULL DEFAULT '0',
+  `shopName` varchar(100) NOT NULL,
+  `shopCompany` varchar(255) NOT NULL,
+  `shopImg` varchar(150) NOT NULL,
+  `shopTel` varchar(20) DEFAULT NULL,
+  `shopAddress` varchar(255) NOT NULL,
+  `avgeCostMoney` float NOT NULL DEFAULT '0',
+  `deliveryStartMoney` float NOT NULL DEFAULT '0',
+  `deliveryMoney` float NOT NULL DEFAULT '0',
+  `deliveryFreeMoney` float NOT NULL DEFAULT '0',
+  `deliveryCostTime` int(11) NOT NULL DEFAULT '0',
+  `deliveryTime` varchar(255) NOT NULL,
+  `deliveryType` tinyint(4) NOT NULL DEFAULT '0',
+  `bankId` int(11) NOT NULL,
+  `bankNo` varchar(20) NOT NULL,
+  `isInvoice` tinyint(4) NOT NULL DEFAULT '0',
+  `invoiceRemarks` varchar(255) DEFAULT NULL,
+  `serviceStartTime` float(11,1) NOT NULL,
+  `serviceEndTime` float(11,1) NOT NULL,
+  `shopStatus` tinyint(4) NOT NULL DEFAULT '0',
+  `statusRemarks` varchar(255) DEFAULT NULL,
+  `shopAtive` tinyint(4) NOT NULL DEFAULT '1',
+  `shopFlag` tinyint(4) NOT NULL DEFAULT '1',
+  `createTime` datetime NOT NULL,
+  PRIMARY KEY (`shopId`),
+  KEY `areaId1` (`areaId2`) USING BTREE,
+  KEY `shopStatus` (`shopStatus`,`shopFlag`) USING BTREE
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_shops
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_shop_configs`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_shop_configs`;
+CREATE TABLE `wst_shop_configs` (
+  `configId` int(11) NOT NULL AUTO_INCREMENT,
+  `shopId` int(11) DEFAULT NULL,
+  `shopTitle` varchar(255) DEFAULT NULL,
+  `shopKeywords` varchar(255) DEFAULT NULL,
+  `shopDesc` varchar(255) DEFAULT NULL,
+  `shopBanner` varchar(150) DEFAULT NULL,
+  `shopAds` text,
+  `shopAdsUrl` text,
+  PRIMARY KEY (`configId`),
+  KEY `shopId` (`shopId`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_shop_configs
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_roles`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_roles`;
+CREATE TABLE `wst_roles` (
+  `roleId` int(11) NOT NULL AUTO_INCREMENT,
+  `roleName` varchar(30) NOT NULL,
+  `grant` text,
+  `createTime` datetime NOT NULL,
+  `roleFlag` tinyint(4) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`roleId`),
+  KEY `roleFlag` (`roleFlag`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_roles
+-- ----------------------------
+INSERT INTO `wst_roles` VALUES ('1', '商品管理员', 'spfl_00,spfl_01,spfl_02,spfl_03,ppgl_00,ppgl_01,ppgl_02,ppgl_03,splb_00,splb_04,splb_03,spsh_00,spsh_04,spsh_03,sppl_00,sppl_04,sppl_03', '2014-11-02 12:07:12', '1');
+INSERT INTO `wst_roles` VALUES ('2', '门店管理员', 'dplb_00,dplb_01,dplb_02,dplb_03,dpsh_00,dpsh_04,dpsh_03', '2014-11-02 12:09:05', '1');
+INSERT INTO `wst_roles` VALUES ('3', '系统管理员', 'spgl_00,spfl_00,spfl_01,spfl_02,spfl_03,ppgl_00,ppgl_01,ppgl_02,ppgl_03,splb_00,splb_04,spsh_00,spsh_04,sppl_00,sppl_04,sppl_03,ddgl_00,ddlb_00,tk_00,tk_04,dpgl_00,dplb_00,dplb_01,dplb_02,dplb_03,dpsh_00,dqgl_00,dqlb_00,dqlb_01,dqlb_02,dqlb_03,sqlb_00,sqlb_01,sqlb_02,sqlb_03,wzgl_00,wzlb_00,wzlb_01,wzlb_02,wzlb_03,wzfl_00,wzfl_01,wzfl_02,wzfl_03,hygl_00,hydj_00,hydj_01,hydj_02,hydj_03,hylb_00,hylb_01,hylb_02,hylb_03,hyzh_00,hyzh_04,xtgl_00,jsgl_00,jsgl_01,jsgl_02,jsgl_03,zylb_00,zylb_01,zylb_02,zylb_03,dlrz_00,scsz_00,scxx_00,scxx_02,dhgl_00,dhgl_01,dhgl_02,dhgl_03,yqlj_00,yqlj_01,yqlj_02,yqlj_03,gggl_00,gggl_01,gggl_02,gggl_03,yhgl_00,yhgl_01,yhgl_02,yhgl_03,zfgl_00,zfgl_01,zfgl_02,zfgl_03', '2014-11-02 12:09:09', '1');
+INSERT INTO `wst_roles` VALUES ('4', '客服', 'sppl_00,sppl_04,sppl_03', '2014-12-20 00:08:53', '1');
+
+-- ----------------------------
+-- Table structure for `wst_payments`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_payments`;
+CREATE TABLE `wst_payments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `payCode` varchar(255) DEFAULT NULL,
+  `payName` varchar(255) DEFAULT NULL,
+  `payDesc` text,
+  `payOrder` int(11) DEFAULT '0',
+  `payConfig` text,
+  `enabled` tinyint(4) DEFAULT '0',
+  `isOnline` tinyint(4) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `payCode` (`payCode`,`enabled`,`isOnline`)
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_payments
+-- ----------------------------
+INSERT INTO `wst_payments` VALUES ('1', 'Cod', '货到付款', '开通城市', '1', '', '1', '0');
+INSERT INTO `wst_payments` VALUES ('2', 'Alipay', '支付宝', '', '2', '', '0', '1');
+
+-- ----------------------------
+-- Table structure for `wst_orders`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_orders`;
+CREATE TABLE `wst_orders` (
+  `orderId` int(11) NOT NULL AUTO_INCREMENT,
+  `orderNo` varchar(20) NOT NULL,
+  `areaId1` int(11) NOT NULL,
+  `areaId2` int(11) NOT NULL,
+  `areaId3` int(11) NOT NULL,
+  `shopId` int(11) NOT NULL,
+  `orderStatus` tinyint(4) NOT NULL DEFAULT '-2',
+  `totalMoney` float(11,1) NOT NULL,
+  `deliverMoney` float(11,1) NOT NULL,
+  `payType` tinyint(4) NOT NULL DEFAULT '0',
+  `isSelf` tinyint(4) NOT NULL DEFAULT '0',
+  `isPay` tinyint(4) NOT NULL DEFAULT '0',
+  `deliverType` tinyint(4) NOT NULL DEFAULT '0',
+  `userId` int(11) NOT NULL,
+  `userName` varchar(20) NOT NULL,
+  `communityId` int(11) NOT NULL,
+  `userAddress` varchar(255) NOT NULL,
+  `userTel` varchar(20) DEFAULT NULL,
+  `userPhone` char(11) DEFAULT NULL,
+  `userPostCode` char(6) NOT NULL,
+  `orderScore` int(11) NOT NULL DEFAULT '0',
+  `isInvoice` tinyint(4) NOT NULL DEFAULT '0',
+  `invoiceClient` varchar(255) DEFAULT NULL,
+  `orderRemarks` varchar(255) DEFAULT NULL,
+  `requireTime` datetime NOT NULL,
+  `isAppraises` tinyint(4) NOT NULL DEFAULT '0',
+  `createTime` datetime NOT NULL,
+  `isClosed` tinyint(4) NOT NULL DEFAULT '0',
+  `isRefund` tinyint(4) NOT NULL DEFAULT '0',
+  `refundRemark` varchar(255) DEFAULT NULL,
+  `orderunique` varchar(20) NOT NULL,
+  `orderSrc` tinyint(4) NOT NULL DEFAULT '0',
+  `orderFlag` tinyint(4) NOT NULL DEFAULT '1',
+  `needPay` float DEFAULT '0',
+  PRIMARY KEY (`orderId`),
+  KEY `shopId` (`shopId`,`orderFlag`),
+  KEY `userId` (`userId`,`orderFlag`),
+  KEY `isRefund` (`isRefund`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_orders
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_orderids`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_orderids`;
+CREATE TABLE `wst_orderids` (
+  `id` bigint(11) NOT NULL AUTO_INCREMENT,
+  `rnd` float(16,2) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=10000000 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_orderids
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_order_reminds`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_order_reminds`;
+CREATE TABLE `wst_order_reminds` (
+  `remindId` int(11) NOT NULL AUTO_INCREMENT,
+  `orderId` int(11) NOT NULL,
+  `userId` int(11) NOT NULL,
+  `shopId` int(11) NOT NULL,
+  `remindType` tinyint(4) NOT NULL DEFAULT '0',
+  `userType` tinyint(4) NOT NULL DEFAULT '0',
+  `createTime` datetime NOT NULL,
+  PRIMARY KEY (`remindId`),
+  KEY `shopId` (`shopId`,`remindType`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_order_reminds
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_order_goods`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_order_goods`;
+CREATE TABLE `wst_order_goods` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `orderId` int(11) NOT NULL,
+  `goodsId` int(11) NOT NULL,
+  `goodsNums` int(11) NOT NULL DEFAULT '0',
+  `goodsPrice` float(11,1) NOT NULL DEFAULT '0.0',
+  `goodsAttrId` int(11) DEFAULT '0',
+  `goodsAttrName` varchar(255) DEFAULT '',
+  PRIMARY KEY (`id`),
+  KEY `goodsId` (`goodsId`),
+  KEY `orderId` (`orderId`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_order_goods
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_navs`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_navs`;
+CREATE TABLE `wst_navs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `navType` tinyint(4) NOT NULL DEFAULT '0',
+  `areaId1` int(11) DEFAULT NULL,
+  `areaId2` int(11) DEFAULT NULL,
+  `navTitle` varchar(50) NOT NULL,
+  `navUrl` varchar(100) NOT NULL,
+  `isShow` tinyint(4) NOT NULL DEFAULT '1',
+  `isOpen` tinyint(4) NOT NULL DEFAULT '0',
+  `navSort` int(11) NOT NULL DEFAULT '0',
+  `createTime` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_navs
+-- ----------------------------
+INSERT INTO `wst_navs` VALUES ('1', '0', '0', '0', '品牌街', 'index.php/Home/Brands/index.html', '1', '0', '2', '2015-07-12 20:08:22');
+INSERT INTO `wst_navs` VALUES ('2', '0', '0', '0', '首页', 'index.php', '1', '0', '0', '2015-07-12 20:08:36');
+INSERT INTO `wst_navs` VALUES ('3', '0', '0', '0', '店铺街', 'index.php/Home/Shops/toShopStreet', '1', '0', '3', '2015-07-12 20:10:00');
+INSERT INTO `wst_navs` VALUES ('4', '0', '0', '0', '自营店铺', 'index.php/Home/Shops/toShopHome.html', '1', '0', '4', '2015-07-12 20:11:21');
+INSERT INTO `wst_navs` VALUES ('5', '1', '0', '0', '关于我们', '#', '1', '0', '0', '2015-07-12 20:25:58');
+INSERT INTO `wst_navs` VALUES ('7', '1', '0', '0', 'WST百科', '#', '1', '0', '0', '2015-07-12 23:02:39');
+INSERT INTO `wst_navs` VALUES ('10', '1', '0', '0', '诚征英才', '#', '1', '0', '0', '2015-07-12 23:04:41');
+INSERT INTO `wst_navs` VALUES ('8', '1', '0', '0', '帮助中心', '#', '1', '0', '0', '2015-07-12 23:03:43');
+INSERT INTO `wst_navs` VALUES ('9', '1', '0', '0', '交易条款', '#', '1', '0', '0', '2015-07-12 23:03:55');
+INSERT INTO `wst_navs` VALUES ('11', '1', '0', '0', '网站地图', '#', '1', '0', '0', '2015-07-12 23:04:51');
+INSERT INTO `wst_navs` VALUES ('12', '1', '0', '0', '友情链接', '#', '1', '0', '0', '2015-07-12 23:05:08');
+INSERT INTO `wst_navs` VALUES ('13', '1', '0', '0', '店铺管理', 'shop.php', '1', '0', '0', '2015-07-12 23:05:42');
+
+-- ----------------------------
+-- Table structure for `wst_messages`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_messages`;
+CREATE TABLE `wst_messages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `msgType` tinyint(4) DEFAULT '0',
+  `sendUserId` int(11) DEFAULT NULL,
+  `receiveUserId` int(11) DEFAULT NULL,
+  `msgContent` text,
+  `createTime` datetime DEFAULT NULL,
+  `msgStatus` tinyint(4) DEFAULT '0',
+  `msgFlag` tinyint(4) DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `receiveUserId` (`receiveUserId`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_messages
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_log_user_logins`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_log_user_logins`;
+CREATE TABLE `wst_log_user_logins` (
+  `loginId` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` int(11) NOT NULL,
+  `loginTime` datetime NOT NULL,
+  `loginIp` varchar(16) NOT NULL,
+  `loginSrc` tinyint(3) unsigned DEFAULT '0' COMMENT '0:商城  1:webapp  2:App',
+  `loginRemark` varchar(30) DEFAULT NULL COMMENT '登录备注信息',
+  PRIMARY KEY (`loginId`),
+  KEY `loginTime` (`loginTime`),
+  KEY `userId` (`userId`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_log_user_logins
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_log_staff_logins`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_log_staff_logins`;
+CREATE TABLE `wst_log_staff_logins` (
+  `loginId` int(11) NOT NULL AUTO_INCREMENT,
+  `staffId` int(11) NOT NULL,
+  `loginTime` datetime NOT NULL,
+  `loginIp` varchar(16) NOT NULL,
+  PRIMARY KEY (`loginId`),
+  KEY `loginTime` (`loginTime`),
+  KEY `staffId` (`staffId`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_log_staff_logins
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_log_sms`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_log_sms`;
+CREATE TABLE `wst_log_sms` (
+  `smsId` int(11) NOT NULL AUTO_INCREMENT,
+  `smsSrc` tinyint(4) DEFAULT '0',
+  `smsUserId` int(11) DEFAULT '0',
+  `smsContent` varchar(255) DEFAULT NULL,
+  `smsPhoneNumber` varchar(11) DEFAULT NULL,
+  `smsReturnCode` varchar(255) DEFAULT NULL,
+  `smsFunc` varchar(50) DEFAULT NULL,
+  `createTime` datetime DEFAULT NULL,
+  PRIMARY KEY (`smsId`),
+  KEY `logSrcType` (`smsSrc`,`smsPhoneNumber`),
+  KEY `createTime` (`createTime`),
+  KEY `logFunc` (`smsFunc`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_log_sms
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_log_orders`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_log_orders`;
+CREATE TABLE `wst_log_orders` (
+  `logId` int(11) NOT NULL AUTO_INCREMENT,
+  `orderId` int(11) NOT NULL,
+  `logContent` varchar(255) NOT NULL,
+  `logUserId` int(11) NOT NULL,
+  `logType` tinyint(4) NOT NULL DEFAULT '0',
+  `logTime` datetime NOT NULL,
+  PRIMARY KEY (`logId`),
+  KEY `orderId` (`orderId`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_log_orders
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_log_operates`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_log_operates`;
+CREATE TABLE `wst_log_operates` (
+  `operateId` int(11) NOT NULL AUTO_INCREMENT,
+  `staffId` int(11) NOT NULL,
+  `operateTime` datetime NOT NULL,
+  `module` varchar(20) NOT NULL,
+  `operateURI` varchar(150) NOT NULL,
+  `content` text NOT NULL,
+  PRIMARY KEY (`operateId`),
+  KEY `operateTime` (`operateTime`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_log_operates
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_goods_scores`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_goods_scores`;
+CREATE TABLE `wst_goods_scores` (
+  `scoreId` int(11) NOT NULL AUTO_INCREMENT,
+  `goodsId` int(11) DEFAULT NULL,
+  `shopId` int(11) DEFAULT NULL,
+  `totalScore` int(11) DEFAULT '0',
+  `totalUsers` int(11) DEFAULT '0',
+  `goodsScore` int(11) DEFAULT '0',
+  `goodsUsers` int(11) DEFAULT '0',
+  `serviceScore` int(11) DEFAULT '0',
+  `serviceUsers` int(11) DEFAULT '0',
+  `timeScore` int(11) DEFAULT '0',
+  `timeUsers` int(11) DEFAULT '0',
+  PRIMARY KEY (`scoreId`),
+  KEY `goodsId` (`goodsId`,`shopId`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_goods_scores
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_goods_relateds`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_goods_relateds`;
+CREATE TABLE `wst_goods_relateds` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `goodsId` int(11) NOT NULL,
+  `relatedGoodsId` int(11) NOT NULL,
+  `relatedType` tinyint(4) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_goods_relateds
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_goods_gallerys`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_goods_gallerys`;
+CREATE TABLE `wst_goods_gallerys` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `goodsId` int(11) NOT NULL,
+  `shopId` int(11) NOT NULL,
+  `goodsImg` varchar(150) NOT NULL,
+  `goodsThumbs` varchar(150) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `goodsId` (`goodsId`,`shopId`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_goods_gallerys
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_goods_cats`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_goods_cats`;
+CREATE TABLE `wst_goods_cats` (
+  `catId` int(11) NOT NULL AUTO_INCREMENT,
+  `parentId` int(11) NOT NULL,
+  `isShow` tinyint(4) NOT NULL DEFAULT '1',
+  `catName` varchar(20) NOT NULL,
+  `priceSection` text,
+  `catSort` int(11) NOT NULL DEFAULT '0',
+  `catFlag` tinyint(4) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`catId`),
+  KEY `parentId` (`parentId`,`isShow`,`catFlag`) USING BTREE
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_goods_cats
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_goods_cat_brands`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_goods_cat_brands`;
+CREATE TABLE `wst_goods_cat_brands` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `catId` int(11) DEFAULT NULL,
+  `brandId` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `catId` (`catId`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_goods_cat_brands
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_goods_attributes`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_goods_attributes`;
+CREATE TABLE `wst_goods_attributes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `shopId` int(11) NOT NULL,
+  `goodsId` int(11) NOT NULL,
+  `attrId` int(11) NOT NULL,
+  `attrVal` text NOT NULL,
+  `attrPrice` float(11,1) DEFAULT '0.0',
+  `attrStock` int(11) DEFAULT '0',
+  `isRecomm` tinyint(4) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `shopId` (`shopId`),
+  KEY `goodsId` (`goodsId`) USING BTREE
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_goods_attributes
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_goods_appraises`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_goods_appraises`;
+CREATE TABLE `wst_goods_appraises` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `shopId` int(11) NOT NULL,
+  `orderId` int(11) NOT NULL,
+  `goodsId` int(11) NOT NULL,
+  `userId` int(11) NOT NULL,
+  `goodsScore` int(11) NOT NULL DEFAULT '0',
+  `serviceScore` int(11) NOT NULL DEFAULT '0',
+  `timeScore` int(11) NOT NULL DEFAULT '0',
+  `content` text NOT NULL,
+  `isShow` tinyint(4) NOT NULL DEFAULT '1',
+  `createTime` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `shopId` (`shopId`),
+  KEY `orderId` (`orderId`,`goodsId`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_goods_appraises
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_goods`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_goods`;
+CREATE TABLE `wst_goods` (
+  `goodsId` int(11) NOT NULL AUTO_INCREMENT,
+  `goodsSn` varchar(20) NOT NULL,
+  `goodsName` varchar(50) NOT NULL,
+  `goodsImg` varchar(150) NOT NULL,
+  `goodsThums` varchar(150) NOT NULL,
+  `brandId` int(11) DEFAULT NULL,
+  `shopId` int(11) NOT NULL,
+  `marketPrice` float(11,1) NOT NULL DEFAULT '0.0',
+  `shopPrice` float(11,1) NOT NULL DEFAULT '0.0',
+  `goodsStock` int(11) NOT NULL DEFAULT '0',
+  `saleCount` int(11) DEFAULT '0',
+  `isBook` tinyint(4) NOT NULL DEFAULT '0',
+  `bookQuantity` int(11) NOT NULL DEFAULT '0',
+  `warnStock` int(11) NOT NULL DEFAULT '0',
+  `goodsUnit` char(10) NOT NULL,
+  `goodsSpec` text,
+  `isSale` tinyint(4) NOT NULL DEFAULT '1',
+  `isBest` tinyint(4) DEFAULT '1',
+  `isHot` tinyint(4) DEFAULT '1',
+  `isRecomm` tinyint(4) DEFAULT '1',
+  `isNew` tinyint(4) DEFAULT '1',
+  `isAdminBest` tinyint(4) DEFAULT '0',
+  `isAdminRecom` tinyint(4) DEFAULT '0',
+  `recommDesc` varchar(255) DEFAULT NULL,
+  `goodsCatId1` int(11) NOT NULL,
+  `goodsCatId2` int(11) NOT NULL,
+  `goodsCatId3` int(11) NOT NULL,
+  `shopCatId1` int(11) NOT NULL,
+  `shopCatId2` int(11) NOT NULL,
+  `goodsDesc` text NOT NULL,
+  `isShopRecomm` tinyint(4) NOT NULL DEFAULT '0',
+  `isIndexRecomm` tinyint(4) NOT NULL DEFAULT '0',
+  `isActivityRecomm` tinyint(4) NOT NULL DEFAULT '0',
+  `isInnerRecomm` tinyint(4) NOT NULL DEFAULT '0',
+  `goodsStatus` tinyint(4) NOT NULL DEFAULT '0',
+  `statusRemarks` varchar(255) DEFAULT NULL,
+  `goodsFlag` tinyint(4) NOT NULL DEFAULT '1',
+  `createTime` datetime NOT NULL,
+  `saleTime` datetime DEFAULT NULL,
+  `attrCatId` int(11) DEFAULT '0',
+  PRIMARY KEY (`goodsId`),
+  KEY `shopId` (`shopId`) USING BTREE,
+  KEY `goodsStatus` (`goodsStatus`,`goodsFlag`,`isSale`) USING BTREE
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_goods
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_friendlinks`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_friendlinks`;
+CREATE TABLE `wst_friendlinks` (
+  `friendlinkId` int(11) NOT NULL AUTO_INCREMENT,
+  `friendlinkIco` varchar(150) DEFAULT NULL,
+  `friendlinkName` varchar(50) DEFAULT NULL,
+  `friendlinkUrl` varchar(150) DEFAULT NULL,
+  `friendlinkSort` int(11) DEFAULT '0',
+  PRIMARY KEY (`friendlinkId`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_friendlinks
+-- ----------------------------
+INSERT INTO `wst_friendlinks` VALUES ('1', 'Apps/Home/View/default/images/logo.png', 'WSTMall', 'http://www.wstmall.com', '0');
+
+-- ----------------------------
+-- Table structure for `wst_feedbacks`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_feedbacks`;
+CREATE TABLE `wst_feedbacks` (
+  `feedbackId` int(11) NOT NULL AUTO_INCREMENT,
+  `feedbackType` tinyint(4) NOT NULL DEFAULT '0',
+  `content` text NOT NULL,
+  `userId` int(11) DEFAULT NULL,
+  `userName` varchar(50) DEFAULT NULL,
+  `userPhone` varchar(20) DEFAULT NULL,
+  `createTime` datetime NOT NULL,
+  `adminId` int(11) DEFAULT NULL,
+  `adminReply` text,
+  `replyTime` datetime DEFAULT NULL,
+  PRIMARY KEY (`feedbackId`),
+  KEY `feedbackType` (`feedbackType`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_feedbacks
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_communitys`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_communitys`;
+CREATE TABLE `wst_communitys` (
+  `communityId` int(11) NOT NULL AUTO_INCREMENT,
+  `areaId1` int(11) NOT NULL,
+  `areaId2` int(11) NOT NULL,
+  `areaId3` int(11) NOT NULL,
+  `isShow` tinyint(4) NOT NULL DEFAULT '1',
+  `isService` tinyint(4) NOT NULL DEFAULT '0',
+  `communityName` varchar(80) NOT NULL,
+  `communitySort` int(11) NOT NULL DEFAULT '0',
+  `communityKey` char(255) NOT NULL,
+  `communityFlag` tinyint(4) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`communityId`),
+  KEY `isShow` (`isShow`,`communityFlag`),
+  KEY `areaId1` (`areaId1`) USING BTREE,
+  KEY `areaId2` (`areaId2`),
+  KEY `areaId3` (`areaId3`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_communitys
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_brands`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_brands`;
+CREATE TABLE `wst_brands` (
+  `brandId` int(11) NOT NULL AUTO_INCREMENT,
+  `brandName` varchar(100) NOT NULL,
+  `brandIco` varchar(150) NOT NULL,
+  `brandDesc` text,
+  `createTime` datetime NOT NULL,
+  `brandFlag` tinyint(4) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`brandId`),
+  KEY `brandFlag` (`brandFlag`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_brands
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_banks`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_banks`;
+CREATE TABLE `wst_banks` (
+  `bankId` int(11) NOT NULL AUTO_INCREMENT,
+  `bankName` varchar(50) DEFAULT NULL,
+  `bankFlag` tinyint(4) DEFAULT '1',
+  PRIMARY KEY (`bankId`),
+  KEY `bankFlag` (`bankFlag`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_banks
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_attributes`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_attributes`;
+CREATE TABLE `wst_attributes` (
+  `attrId` int(11) NOT NULL AUTO_INCREMENT,
+  `shopId` int(11) NOT NULL,
+  `catId` int(11) NOT NULL,
+  `attrName` varchar(255) NOT NULL,
+  `attrType` tinyint(4) NOT NULL DEFAULT '0',
+  `isPriceAttr` tinyint(4) DEFAULT '0',
+  `attrContent` text,
+  `attrFlag` tinyint(4) NOT NULL DEFAULT '1',
+  `attrSort` int(11) DEFAULT '0',
+  `createTime` datetime NOT NULL,
+  PRIMARY KEY (`attrId`),
+  KEY `shopId` (`shopId`,`catId`,`attrFlag`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_attributes
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_attribute_cats`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_attribute_cats`;
+CREATE TABLE `wst_attribute_cats` (
+  `catId` int(11) NOT NULL AUTO_INCREMENT,
+  `shopId` int(11) NOT NULL,
+  `catName` varchar(255) NOT NULL,
+  `catFlag` tinyint(4) NOT NULL DEFAULT '1',
+  `createTime` datetime NOT NULL,
+  PRIMARY KEY (`catId`),
+  KEY `shopId` (`shopId`,`catFlag`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_attribute_cats
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `wst_articles`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_articles`;
+CREATE TABLE `wst_articles` (
+  `articleId` int(11) NOT NULL AUTO_INCREMENT,
+  `catId` int(11) NOT NULL,
+  `articleTitle` varchar(200) NOT NULL,
+  `articleImg` varchar(150) NOT NULL,
+  `isShow` tinyint(4) NOT NULL DEFAULT '1',
+  `articleContent` text NOT NULL,
+  `articleKey` varchar(255) DEFAULT NULL,
+  `staffId` int(11) NOT NULL,
+  `createTime` datetime NOT NULL,
+  PRIMARY KEY (`articleId`),
+  KEY `catId` (`catId`,`isShow`)
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_articles
+-- ----------------------------
+INSERT INTO `wst_articles` VALUES ('1', '1', 'wstmall正式上线', '', '1', '热烈庆祝wstmall正式上线 &amp;nbsp;帐户自助服务', 'wstmall', '1', '2015-03-14 16:48:58');
+INSERT INTO `wst_articles` VALUES ('2', '2', '帐户自助服务', '', '1', '&amp;nbsp;帐户自助服务&amp;nbsp;帐户自助服务', '帐户自助服务', '1', '2015-04-09 21:37:30');
+INSERT INTO `wst_articles` VALUES ('3', '3', '支付方式', '', '1', '支付方式&amp;nbsp;支付方式&amp;nbsp;支付方式&lt;br /&gt;', '支付方式', '1', '2015-04-09 21:37:56');
+INSERT INTO `wst_articles` VALUES ('4', '4', '运费说明', '', '1', '运费说明 这里是运费说明', '运费说明', '1', '2015-04-09 21:38:12');
+INSERT INTO `wst_articles` VALUES ('5', '5', '退换货原则和流程', '', '1', '&lt;p&gt;\n	&amp;nbsp; &amp;nbsp; &amp;nbsp; 退换货原则和流程 &amp;nbsp;\n&lt;/p&gt;\n&lt;p&gt;\n	&amp;nbsp; &amp;nbsp; &amp;nbsp;&amp;nbsp;退换货原则和流程\n&lt;/p&gt;\n&lt;p&gt;\n	&amp;nbsp; &amp;nbsp; &amp;nbsp; 退换货原则和流程\n&lt;/p&gt;', '退换货原则和流程', '1', '2015-04-09 21:38:45');
+INSERT INTO `wst_articles` VALUES ('6', '6', '帐号&amp;密码问题', '', '1', '&lt;u&gt;111111111111111&amp;nbsp;&lt;/u&gt;', '帐号&amp;密码问题', '1', '2015-04-09 21:39:06');
+
+-- ----------------------------
+-- Table structure for `wst_article_cats`
+-- ----------------------------
+DROP TABLE IF EXISTS `wst_article_cats`;
+CREATE TABLE `wst_article_cats` (
+  `catId` int(11) NOT NULL AUTO_INCREMENT,
+  `parentId` int(11) NOT NULL,
+  `catType` tinyint(4) NOT NULL DEFAULT '0',
+  `isShow` tinyint(4) NOT NULL DEFAULT '1',
+  `catName` varchar(20) NOT NULL,
+  `catSort` int(11) NOT NULL DEFAULT '0',
+  `catFlag` tinyint(4) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`catId`),
+  KEY `isShow` (`catType`,`catFlag`,`isShow`) USING BTREE,
+  KEY `parentId` (`catFlag`,`parentId`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of wst_article_cats
+-- ----------------------------
+INSERT INTO `wst_article_cats` VALUES ('1', '0', '0', '0', '商城快讯', '0', '1');
+INSERT INTO `wst_article_cats` VALUES ('2', '0', '1', '1', '新手上路', '0', '1');
+INSERT INTO `wst_article_cats` VALUES ('3', '0', '1', '1', '如何付款', '0', '1');
+INSERT INTO `wst_article_cats` VALUES ('4', '0', '1', '1', '配送说明', '0', '1');
+INSERT INTO `wst_article_cats` VALUES ('5', '0', '1', '1', '售后服务', '0', '1');
+INSERT INTO `wst_article_cats` VALUES ('6', '0', '1', '1', '常见问题', '0', '1');
 
 -- ----------------------------
 -- Table structure for `wst_areas`
@@ -3704,838 +4643,27 @@ INSERT INTO `wst_areas` VALUES ('820300', '820000', '路环岛', '0', '0', 'L', 
 INSERT INTO `wst_areas` VALUES ('820301', '820300', '圣方济各堂区 ', '0', '0', '', '2', '1');
 
 -- ----------------------------
--- Table structure for `wst_article_cats`
+-- Table structure for `wst_ads`
 -- ----------------------------
-DROP TABLE IF EXISTS `wst_article_cats`;
-CREATE TABLE `wst_article_cats` (
-  `catId` int(11) NOT NULL AUTO_INCREMENT,
-  `parentId` int(11) NOT NULL,
-  `catType` tinyint(4) NOT NULL DEFAULT '0',
-  `isShow` tinyint(4) NOT NULL DEFAULT '1',
-  `catName` varchar(20) NOT NULL,
-  `catSort` int(11) NOT NULL DEFAULT '0',
-  `catFlag` tinyint(4) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`catId`),
-  KEY `isShow` (`catType`,`catFlag`,`isShow`) USING BTREE,
-  KEY `parentId` (`catFlag`,`parentId`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_article_cats
--- ----------------------------
-INSERT INTO `wst_article_cats` VALUES ('1', '0', '0', '0', '商城快讯', '0', '1');
-INSERT INTO `wst_article_cats` VALUES ('2', '0', '1', '1', '新手上路', '0', '1');
-INSERT INTO `wst_article_cats` VALUES ('3', '0', '1', '1', '如何付款', '0', '1');
-INSERT INTO `wst_article_cats` VALUES ('4', '0', '1', '1', '配送说明', '0', '1');
-INSERT INTO `wst_article_cats` VALUES ('5', '0', '1', '1', '售后服务', '0', '1');
-INSERT INTO `wst_article_cats` VALUES ('6', '0', '1', '1', '常见问题', '0', '1');
-
--- ----------------------------
--- Table structure for `wst_articles`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_articles`;
-CREATE TABLE `wst_articles` (
-  `articleId` int(11) NOT NULL AUTO_INCREMENT,
-  `catId` int(11) NOT NULL,
-  `articleTitle` varchar(200) NOT NULL,
-  `articleImg` varchar(150) NOT NULL,
-  `isShow` tinyint(4) NOT NULL DEFAULT '1',
-  `articleContent` text NOT NULL,
-  `articleKey` varchar(255) DEFAULT NULL,
-  `staffId` int(11) NOT NULL,
-  `createTime` datetime NOT NULL,
-  PRIMARY KEY (`articleId`),
-  KEY `catId` (`catId`,`isShow`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_articles
--- ----------------------------
-INSERT INTO `wst_articles` VALUES ('1', '1', 'wstmall正式上线', '', '1', '热烈庆祝wstmall正式上线 &amp;nbsp;帐户自助服务', 'wstmall', '1', '2015-03-14 16:48:58');
-INSERT INTO `wst_articles` VALUES ('2', '2', '帐户自助服务', '', '1', '&amp;nbsp;帐户自助服务&amp;nbsp;帐户自助服务', '帐户自助服务', '1', '2015-04-09 21:37:30');
-INSERT INTO `wst_articles` VALUES ('3', '3', '支付方式', '', '1', '支付方式&amp;nbsp;支付方式&amp;nbsp;支付方式&lt;br /&gt;', '支付方式', '1', '2015-04-09 21:37:56');
-INSERT INTO `wst_articles` VALUES ('4', '4', '运费说明', '', '1', '运费说明 这里是运费说明', '运费说明', '1', '2015-04-09 21:38:12');
-INSERT INTO `wst_articles` VALUES ('5', '5', '退换货原则和流程', '', '1', '&lt;p&gt;\n	&amp;nbsp; &amp;nbsp; &amp;nbsp; 退换货原则和流程 &amp;nbsp;\n&lt;/p&gt;\n&lt;p&gt;\n	&amp;nbsp; &amp;nbsp; &amp;nbsp;&amp;nbsp;退换货原则和流程\n&lt;/p&gt;\n&lt;p&gt;\n	&amp;nbsp; &amp;nbsp; &amp;nbsp; 退换货原则和流程\n&lt;/p&gt;', '退换货原则和流程', '1', '2015-04-09 21:38:45');
-INSERT INTO `wst_articles` VALUES ('6', '6', '帐号&amp;密码问题', '', '1', '&lt;u&gt;111111111111111&amp;nbsp;&lt;/u&gt;', '帐号&amp;密码问题', '1', '2015-04-09 21:39:06');
-
--- ----------------------------
--- Table structure for `wst_banks`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_banks`;
-CREATE TABLE `wst_banks` (
-  `bankId` int(11) NOT NULL AUTO_INCREMENT,
-  `bankName` varchar(50) DEFAULT NULL,
-  `bankFlag` tinyint(4) DEFAULT '1',
-  PRIMARY KEY (`bankId`),
-  KEY `bankFlag` (`bankFlag`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_banks
--- ----------------------------
-
--- ----------------------------
--- Table structure for `wst_brands`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_brands`;
-CREATE TABLE `wst_brands` (
-  `brandId` int(11) NOT NULL AUTO_INCREMENT,
-  `brandName` varchar(100) NOT NULL,
-  `brandIco` varchar(150) NOT NULL,
-  `brandDesc` text,
-  `createTime` datetime NOT NULL,
-  `brandFlag` tinyint(4) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`brandId`),
-  KEY `brandFlag` (`brandFlag`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_brands
--- ----------------------------
-
--- ----------------------------
--- Table structure for `wst_communitys`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_communitys`;
-CREATE TABLE `wst_communitys` (
-  `communityId` int(11) NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS `wst_ads`;
+CREATE TABLE `wst_ads` (
+  `adId` int(11) NOT NULL AUTO_INCREMENT,
+  `adPositionId` int(11) DEFAULT NULL,
   `areaId1` int(11) NOT NULL,
   `areaId2` int(11) NOT NULL,
-  `areaId3` int(11) NOT NULL,
-  `isShow` tinyint(4) NOT NULL DEFAULT '1',
-  `isService` tinyint(4) NOT NULL DEFAULT '0',
-  `communityName` varchar(80) NOT NULL,
-  `communitySort` int(11) NOT NULL DEFAULT '0',
-  `communityKey` char(255) NOT NULL,
-  `communityFlag` tinyint(4) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`communityId`),
-  KEY `isShow` (`isShow`,`communityFlag`),
-  KEY `areaId1` (`areaId1`) USING BTREE,
-  KEY `areaId2` (`areaId2`),
-  KEY `areaId3` (`areaId3`)
+  `adType` tinyint(4) NOT NULL DEFAULT '0',
+  `adFile` varchar(150) NOT NULL,
+  `adName` varchar(100) NOT NULL,
+  `adURL` varchar(150) NOT NULL,
+  `adStartDate` date NOT NULL,
+  `adEndDate` date NOT NULL,
+  `adSort` int(11) NOT NULL DEFAULT '0',
+  `adClickNum` int(11) DEFAULT '0',
+  PRIMARY KEY (`adId`),
+  KEY `adPositionId` (`adPositionId`,`areaId1`,`areaId2`,`adStartDate`,`adEndDate`),
+  KEY `adPositionId_2` (`adPositionId`,`areaId1`,`areaId2`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ----------------------------
--- Records of wst_communitys
--- ----------------------------
-
--- ----------------------------
--- Table structure for `wst_feedbacks`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_feedbacks`;
-CREATE TABLE `wst_feedbacks` (
-  `feedbackId` int(11) NOT NULL AUTO_INCREMENT,
-  `feedbackType` tinyint(4) NOT NULL DEFAULT '0',
-  `content` text NOT NULL,
-  `userId` int(11) DEFAULT NULL,
-  `userName` varchar(50) DEFAULT NULL,
-  `userPhone` varchar(20) DEFAULT NULL,
-  `createTime` datetime NOT NULL,
-  `adminId` int(11) DEFAULT NULL,
-  `adminReply` text,
-  `replyTime` datetime DEFAULT NULL,
-  PRIMARY KEY (`feedbackId`),
-  KEY `feedbackType` (`feedbackType`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_feedbacks
--- ----------------------------
-
--- ----------------------------
--- Table structure for `wst_friendlinks`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_friendlinks`;
-CREATE TABLE `wst_friendlinks` (
-  `friendlinkId` int(11) NOT NULL AUTO_INCREMENT,
-  `friendlinkIco` varchar(150) DEFAULT NULL,
-  `friendlinkName` varchar(50) DEFAULT NULL,
-  `friendlinkUrl` varchar(150) DEFAULT NULL,
-  `friendlinkSort` int(11) DEFAULT '0',
-  PRIMARY KEY (`friendlinkId`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_friendlinks
--- ----------------------------
-INSERT INTO `wst_friendlinks` VALUES ('1', 'Apps/Home/View/default/images/logo.png', 'WSTMall', 'http://www.wstmall.com', '0');
-
--- ----------------------------
--- Table structure for `wst_goods`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_goods`;
-CREATE TABLE `wst_goods` (
-  `goodsId` int(11) NOT NULL AUTO_INCREMENT,
-  `goodsSn` varchar(20) NOT NULL,
-  `goodsName` varchar(50) NOT NULL,
-  `goodsImg` varchar(150) NOT NULL,
-  `goodsThums` varchar(150) NOT NULL,
-  `brandId` int(11) DEFAULT NULL,
-  `shopId` int(11) NOT NULL,
-  `marketPrice` float(11,1) NOT NULL DEFAULT '0.0',
-  `shopPrice` float(11,1) NOT NULL DEFAULT '0.0',
-  `goodsStock` int(11) NOT NULL DEFAULT '0',
-  `saleCount` int(11) DEFAULT '0',
-  `isBook` tinyint(4) NOT NULL DEFAULT '0',
-  `bookQuantity` int(11) NOT NULL DEFAULT '0',
-  `warnStock` int(11) NOT NULL DEFAULT '0',
-  `goodsUnit` char(10) NOT NULL,
-  `goodsSpec` text,
-  `isSale` tinyint(4) NOT NULL DEFAULT '1',
-  `isBest` tinyint(4) DEFAULT '1',
-  `isHot` tinyint(4) DEFAULT '1',
-  `isRecomm` tinyint(4) DEFAULT '1',
-  `isNew` tinyint(4) DEFAULT '1',
-  `isAdminBest` tinyint(4) DEFAULT '0',
-  `isAdminRecom` tinyint(4) DEFAULT '0',
-  `recommDesc` varchar(255) DEFAULT NULL,
-  `goodsCatId1` int(11) NOT NULL,
-  `goodsCatId2` int(11) NOT NULL,
-  `goodsCatId3` int(11) NOT NULL,
-  `shopCatId1` int(11) NOT NULL,
-  `shopCatId2` int(11) NOT NULL,
-  `goodsDesc` text NOT NULL,
-  `isShopRecomm` tinyint(4) NOT NULL DEFAULT '0',
-  `isIndexRecomm` tinyint(4) NOT NULL DEFAULT '0',
-  `isActivityRecomm` tinyint(4) NOT NULL DEFAULT '0',
-  `isInnerRecomm` tinyint(4) NOT NULL DEFAULT '0',
-  `goodsStatus` tinyint(4) NOT NULL DEFAULT '0',
-  `statusRemarks` varchar(255) DEFAULT NULL,
-  `goodsFlag` tinyint(4) NOT NULL DEFAULT '1',
-  `createTime` datetime NOT NULL,
-  `saleTime` datetime DEFAULT NULL,
-  PRIMARY KEY (`goodsId`),
-  KEY `shopId` (`shopId`) USING BTREE,
-  KEY `goodsStatus` (`goodsStatus`,`goodsFlag`,`isSale`) USING BTREE
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_goods
--- ----------------------------
-
--- ----------------------------
--- Table structure for `wst_goods_appraises`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_goods_appraises`;
-CREATE TABLE `wst_goods_appraises` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `shopId` int(11) NOT NULL,
-  `orderId` int(11) NOT NULL,
-  `goodsId` int(11) NOT NULL,
-  `userId` int(11) NOT NULL,
-  `goodsScore` int(11) NOT NULL DEFAULT '0',
-  `serviceScore` int(11) NOT NULL DEFAULT '0',
-  `timeScore` int(11) NOT NULL DEFAULT '0',
-  `content` text NOT NULL,
-  `isShow` tinyint(4) NOT NULL DEFAULT '1',
-  `createTime` datetime NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `shopId` (`shopId`),
-  KEY `orderId` (`orderId`,`goodsId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_goods_appraises
--- ----------------------------
-
--- ----------------------------
--- Table structure for `wst_goods_cat_brands`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_goods_cat_brands`;
-CREATE TABLE `wst_goods_cat_brands` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `catId` int(11) DEFAULT NULL,
-  `brandId` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `catId` (`catId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_goods_cat_brands
--- ----------------------------
-
--- ----------------------------
--- Table structure for `wst_goods_cats`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_goods_cats`;
-CREATE TABLE `wst_goods_cats` (
-  `catId` int(11) NOT NULL AUTO_INCREMENT,
-  `parentId` int(11) NOT NULL,
-  `isShow` tinyint(4) NOT NULL DEFAULT '1',
-  `catName` varchar(20) NOT NULL,
-  `priceSection` text,
-  `catSort` int(11) NOT NULL DEFAULT '0',
-  `catFlag` tinyint(4) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`catId`),
-  KEY `parentId` (`parentId`,`isShow`,`catFlag`) USING BTREE
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_goods_cats
--- ----------------------------
-
--- ----------------------------
--- Table structure for `wst_goods_gallerys`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_goods_gallerys`;
-CREATE TABLE `wst_goods_gallerys` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `goodsId` int(11) NOT NULL,
-  `shopId` int(11) NOT NULL,
-  `goodsImg` varchar(150) NOT NULL,
-  `goodsThumbs` varchar(150) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `goodsId` (`goodsId`,`shopId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_goods_gallerys
--- ----------------------------
-
--- ----------------------------
--- Table structure for `wst_goods_relateds`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_goods_relateds`;
-CREATE TABLE `wst_goods_relateds` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `goodsId` int(11) NOT NULL,
-  `relatedGoodsId` int(11) NOT NULL,
-  `relatedType` tinyint(4) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_goods_relateds
--- ----------------------------
-
--- ----------------------------
--- Table structure for `wst_goods_scores`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_goods_scores`;
-CREATE TABLE `wst_goods_scores` (
-  `scoreId` int(11) NOT NULL AUTO_INCREMENT,
-  `goodsId` int(11) DEFAULT NULL,
-  `shopId` int(11) DEFAULT NULL,
-  `totalScore` int(11) DEFAULT '0',
-  `totalUsers` int(11) DEFAULT '0',
-  `goodsScore` int(11) DEFAULT '0',
-  `goodsUsers` int(11) DEFAULT '0',
-  `serviceScore` int(11) DEFAULT '0',
-  `serviceUsers` int(11) DEFAULT '0',
-  `timeScore` int(11) DEFAULT '0',
-  `timeUsers` int(11) DEFAULT '0',
-  PRIMARY KEY (`scoreId`),
-  KEY `goodsId` (`goodsId`,`shopId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_goods_scores
--- ----------------------------
-
--- ----------------------------
--- Table structure for `wst_log_operates`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_log_operates`;
-CREATE TABLE `wst_log_operates` (
-  `operateId` int(11) NOT NULL AUTO_INCREMENT,
-  `staffId` int(11) NOT NULL,
-  `operateTime` datetime NOT NULL,
-  `module` varchar(20) NOT NULL,
-  `operateURI` varchar(150) NOT NULL,
-  `content` text NOT NULL,
-  PRIMARY KEY (`operateId`),
-  KEY `operateTime` (`operateTime`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_log_operates
--- ----------------------------
-
--- ----------------------------
--- Table structure for `wst_log_orders`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_log_orders`;
-CREATE TABLE `wst_log_orders` (
-  `logId` int(11) NOT NULL AUTO_INCREMENT,
-  `orderId` int(11) NOT NULL,
-  `logContent` varchar(255) NOT NULL,
-  `logUserId` int(11) NOT NULL,
-  `logType` tinyint(4) NOT NULL DEFAULT '0',
-  `logTime` datetime NOT NULL,
-  PRIMARY KEY (`logId`),
-  KEY `orderId` (`orderId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_log_orders
--- ----------------------------
-
--- ----------------------------
--- Table structure for `wst_log_sms`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_log_sms`;
-CREATE TABLE `wst_log_sms` (
-  `smsId` int(11) NOT NULL AUTO_INCREMENT,
-  `smsSrc` tinyint(4) DEFAULT '0',
-  `smsUserId` int(11) DEFAULT '0',
-  `smsContent` varchar(255) DEFAULT NULL,
-  `smsPhoneNumber` varchar(11) DEFAULT NULL,
-  `smsReturnCode` varchar(255) DEFAULT NULL,
-  `smsFunc` varchar(50) DEFAULT NULL,
-  `createTime` datetime DEFAULT NULL,
-  PRIMARY KEY (`smsId`),
-  KEY `logSrcType` (`smsSrc`,`smsPhoneNumber`),
-  KEY `createTime` (`createTime`),
-  KEY `logFunc` (`smsFunc`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_log_sms
--- ----------------------------
-
--- ----------------------------
--- Table structure for `wst_log_staff_logins`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_log_staff_logins`;
-CREATE TABLE `wst_log_staff_logins` (
-  `loginId` int(11) NOT NULL AUTO_INCREMENT,
-  `staffId` int(11) NOT NULL,
-  `loginTime` datetime NOT NULL,
-  `loginIp` varchar(16) NOT NULL,
-  PRIMARY KEY (`loginId`),
-  KEY `loginTime` (`loginTime`),
-  KEY `staffId` (`staffId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_log_staff_logins
--- ----------------------------
-
--- ----------------------------
--- Table structure for `wst_log_user_logins`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_log_user_logins`;
-CREATE TABLE `wst_log_user_logins` (
-  `loginId` int(11) NOT NULL AUTO_INCREMENT,
-  `userId` int(11) NOT NULL,
-  `loginTime` datetime NOT NULL,
-  `loginIp` varchar(16) NOT NULL,
-  `loginSrc` tinyint(3) unsigned DEFAULT '0' COMMENT '0:商城  1:webapp  2:App',
-  `loginRemark` varchar(30) DEFAULT NULL COMMENT '登录备注信息',
-  PRIMARY KEY (`loginId`),
-  KEY `loginTime` (`loginTime`),
-  KEY `userId` (`userId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_log_user_logins
--- ----------------------------
-
--- ----------------------------
--- Table structure for `wst_messages`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_messages`;
-CREATE TABLE `wst_messages` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `msgType` tinyint(4) DEFAULT '0',
-  `sendUserId` int(11) DEFAULT NULL,
-  `receiveUserId` int(11) DEFAULT NULL,
-  `msgContent` text,
-  `createTime` datetime DEFAULT NULL,
-  `msgStatus` tinyint(4) DEFAULT '0',
-  `msgFlag` tinyint(4) DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `receiveUserId` (`receiveUserId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_messages
--- ----------------------------
-
--- ----------------------------
--- Table structure for `wst_order_goods`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_order_goods`;
-CREATE TABLE `wst_order_goods` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `orderId` int(11) NOT NULL,
-  `goodsId` int(11) NOT NULL,
-  `goodsNums` int(11) NOT NULL DEFAULT '0',
-  `goodsPrice` float(11,1) NOT NULL DEFAULT '0.0',
-  PRIMARY KEY (`id`),
-  KEY `goodsId` (`goodsId`),
-  KEY `orderId` (`orderId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_order_goods
--- ----------------------------
-
--- ----------------------------
--- Table structure for `wst_order_reminds`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_order_reminds`;
-CREATE TABLE `wst_order_reminds` (
-  `remindId` int(11) NOT NULL AUTO_INCREMENT,
-  `orderId` int(11) NOT NULL,
-  `userId` int(11) NOT NULL,
-  `shopId` int(11) NOT NULL,
-  `remindType` tinyint(4) NOT NULL DEFAULT '0',
-  `userType` tinyint(4) NOT NULL DEFAULT '0',
-  `createTime` datetime NOT NULL,
-  PRIMARY KEY (`remindId`),
-  KEY `shopId` (`shopId`,`remindType`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_order_reminds
--- ----------------------------
-
--- ----------------------------
--- Table structure for `wst_orderids`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_orderids`;
-CREATE TABLE `wst_orderids` (
-  `id` bigint(11) NOT NULL AUTO_INCREMENT,
-  `rnd` float(16,2) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=10000000 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_orderids
--- ----------------------------
-
--- ----------------------------
--- Table structure for `wst_orders`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_orders`;
-CREATE TABLE `wst_orders` (
-  `orderId` int(11) NOT NULL AUTO_INCREMENT,
-  `orderNo` varchar(20) NOT NULL,
-  `areaId1` int(11) NOT NULL,
-  `areaId2` int(11) NOT NULL,
-  `areaId3` int(11) NOT NULL,
-  `shopId` int(11) NOT NULL,
-  `orderStatus` tinyint(4) NOT NULL DEFAULT '-2',
-  `totalMoney` float(11,1) NOT NULL,
-  `deliverMoney` float(11,1) NOT NULL,
-  `payType` tinyint(4) NOT NULL DEFAULT '0',
-  `isSelf` tinyint(4) NOT NULL DEFAULT '0',
-  `isPay` tinyint(4) NOT NULL DEFAULT '0',
-  `deliverType` tinyint(4) NOT NULL DEFAULT '0',
-  `userId` int(11) NOT NULL,
-  `userName` varchar(20) NOT NULL,
-  `communityId` int(11) NOT NULL,
-  `userAddress` varchar(255) NOT NULL,
-  `userTel` varchar(20) DEFAULT NULL,
-  `userPhone` char(11) DEFAULT NULL,
-  `userPostCode` char(6) NOT NULL,
-  `orderScore` int(11) NOT NULL DEFAULT '0',
-  `isInvoice` tinyint(4) NOT NULL DEFAULT '0',
-  `invoiceClient` varchar(255) DEFAULT NULL,
-  `orderRemarks` varchar(255) DEFAULT NULL,
-  `requireTime` datetime NOT NULL,
-  `isAppraises` tinyint(4) NOT NULL DEFAULT '0',
-  `createTime` datetime NOT NULL,
-  `isClosed` tinyint(4) NOT NULL DEFAULT '0',
-  `isRefund` tinyint(4) NOT NULL DEFAULT '0',
-  `refundRemark` varchar(255) DEFAULT NULL,
-  `orderunique` varchar(20) NOT NULL,
-  `orderSrc` tinyint(4) NOT NULL DEFAULT '0',
-  `orderFlag` tinyint(4) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`orderId`),
-  KEY `shopId` (`shopId`,`orderFlag`),
-  KEY `userId` (`userId`,`orderFlag`),
-  KEY `isRefund` (`isRefund`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_orders
--- ----------------------------
-
--- ----------------------------
--- Table structure for `wst_roles`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_roles`;
-CREATE TABLE `wst_roles` (
-  `roleId` int(11) NOT NULL AUTO_INCREMENT,
-  `roleName` varchar(30) NOT NULL,
-  `grant` text,
-  `createTime` datetime NOT NULL,
-  `roleFlag` tinyint(4) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`roleId`),
-  KEY `roleFlag` (`roleFlag`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_roles
--- ----------------------------
-INSERT INTO `wst_roles` VALUES ('1', '商品管理员', 'spfl_00,spfl_01,spfl_02,spfl_03,ppgl_00,ppgl_01,ppgl_02,ppgl_03,splb_00,splb_04,splb_03,spsh_00,spsh_04,spsh_03,sppl_00,sppl_04,sppl_03', '2014-11-02 12:07:12', '1');
-INSERT INTO `wst_roles` VALUES ('2', '门店管理员', 'dplb_00,dplb_01,dplb_02,dplb_03,dpsh_00,dpsh_04,dpsh_03', '2014-11-02 12:09:05', '1');
-INSERT INTO `wst_roles` VALUES ('3', '系统管理员', 'spgl_00,spfl_00,spfl_01,spfl_02,spfl_03,ppgl_00,ppgl_01,ppgl_02,ppgl_03,splb_00,splb_04,spsh_00,spsh_04,sppl_00,sppl_04,sppl_03,ddgl_00,ddlb_00,tk_00,tk_04,dpgl_00,dplb_00,dplb_01,dplb_02,dplb_03,dpsh_00,dqgl_00,dqlb_00,dqlb_01,dqlb_02,dqlb_03,sqlb_00,sqlb_01,sqlb_02,sqlb_03,wzgl_00,wzlb_00,wzlb_01,wzlb_02,wzlb_03,wzfl_00,wzfl_01,wzfl_02,wzfl_03,hygl_00,hydj_00,hydj_01,hydj_02,hydj_03,hylb_00,hylb_01,hylb_02,hylb_03,hyzh_00,hyzh_04,xtgl_00,jsgl_00,jsgl_01,jsgl_02,jsgl_03,zylb_00,zylb_01,zylb_02,zylb_03,dlrz_00,scsz_00,scxx_00,scxx_02,yqlj_00,yqlj_01,yqlj_02,yqlj_03,gggl_00,gggl_01,gggl_02,gggl_03,yhgl_00,yhgl_01,yhgl_02,yhgl_03', '2014-11-02 12:09:09', '1');
-INSERT INTO `wst_roles` VALUES ('4', '客服', 'sppl_00,sppl_04,sppl_03', '2014-12-20 00:08:53', '1');
-
--- ----------------------------
--- Table structure for `wst_shop_configs`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_shop_configs`;
-CREATE TABLE `wst_shop_configs` (
-  `configId` int(11) NOT NULL AUTO_INCREMENT,
-  `shopId` int(11) DEFAULT NULL,
-  `shopTitle` varchar(255) DEFAULT NULL,
-  `shopKeywords` varchar(255) DEFAULT NULL,
-  `shopDesc` varchar(255) DEFAULT NULL,
-  `shopBanner` varchar(150) DEFAULT NULL,
-  `shopAds` text,
-  `shopAdsUrl` text,
-  PRIMARY KEY (`configId`),
-  KEY `shopId` (`shopId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_shop_configs
--- ----------------------------
-
--- ----------------------------
--- Table structure for `wst_shops`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_shops`;
-CREATE TABLE `wst_shops` (
-  `shopId` int(11) NOT NULL AUTO_INCREMENT,
-  `shopSn` varchar(20) NOT NULL,
-  `userId` int(11) NOT NULL,
-  `areaId1` int(11) NOT NULL,
-  `areaId2` int(11) NOT NULL,
-  `areaId3` int(11) NOT NULL,
-  `goodsCatId1` int(11) NOT NULL,
-  `goodsCatId2` int(11) DEFAULT NULL,
-  `goodsCatId3` int(11) DEFAULT NULL,
-  `isSelf` tinyint(4) NOT NULL DEFAULT '0',
-  `shopName` varchar(100) NOT NULL,
-  `shopCompany` varchar(255) NOT NULL,
-  `shopImg` varchar(150) NOT NULL,
-  `shopTel` varchar(20) DEFAULT NULL,
-  `shopAddress` varchar(255) NOT NULL,
-  `avgeCostMoney` float NOT NULL DEFAULT '0',
-  `deliveryStartMoney` float NOT NULL DEFAULT '0',
-  `deliveryMoney` float NOT NULL DEFAULT '0',
-  `deliveryFreeMoney` float NOT NULL DEFAULT '0',
-  `deliveryCostTime` int(11) NOT NULL DEFAULT '0',
-  `deliveryTime` varchar(255) NOT NULL,
-  `deliveryType` tinyint(4) NOT NULL DEFAULT '0',
-  `bankId` int(11) NOT NULL,
-  `bankNo` varchar(20) NOT NULL,
-  `isInvoice` tinyint(4) NOT NULL DEFAULT '0',
-  `invoiceRemarks` varchar(255) DEFAULT NULL,
-  `serviceStartTime` float(11,1) NOT NULL,
-  `serviceEndTime` float(11,1) NOT NULL,
-  `shopStatus` tinyint(4) NOT NULL DEFAULT '0',
-  `statusRemarks` varchar(255) DEFAULT NULL,
-  `shopAtive` tinyint(4) NOT NULL DEFAULT '1',
-  `shopFlag` tinyint(4) NOT NULL DEFAULT '1',
-  `createTime` datetime NOT NULL,
-  PRIMARY KEY (`shopId`),
-  KEY `areaId1` (`areaId2`) USING BTREE,
-  KEY `shopStatus` (`shopStatus`,`shopFlag`) USING BTREE
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_shops
--- ----------------------------
-
--- ----------------------------
--- Table structure for `wst_shops_cats`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_shops_cats`;
-CREATE TABLE `wst_shops_cats` (
-  `catId` int(11) NOT NULL AUTO_INCREMENT,
-  `shopId` int(11) NOT NULL,
-  `parentId` int(11) NOT NULL,
-  `isShow` tinyint(4) NOT NULL DEFAULT '1',
-  `catName` varchar(100) NOT NULL,
-  `catSort` int(11) NOT NULL DEFAULT '0',
-  `catFlag` tinyint(4) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`catId`),
-  KEY `parentId` (`isShow`,`catFlag`) USING BTREE,
-  KEY `shopId` (`shopId`,`catFlag`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_shops_cats
--- ----------------------------
-
--- ----------------------------
--- Table structure for `wst_shops_communitys`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_shops_communitys`;
-CREATE TABLE `wst_shops_communitys` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `shopId` int(11) NOT NULL,
-  `areaId1` int(11) NOT NULL,
-  `areaId2` int(11) NOT NULL,
-  `areaId3` int(11) NOT NULL,
-  `communityId` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `shopId` (`shopId`),
-  KEY `communityId` (`communityId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_shops_communitys
--- ----------------------------
-
--- ----------------------------
--- Table structure for `wst_staffs`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_staffs`;
-CREATE TABLE `wst_staffs` (
-  `staffId` int(11) NOT NULL AUTO_INCREMENT,
-  `loginName` varchar(40) NOT NULL,
-  `loginPwd` varchar(50) NOT NULL,
-  `secretKey` int(32) NOT NULL,
-  `staffName` varchar(50) NOT NULL,
-  `staffNo` varchar(20) DEFAULT NULL,
-  `staffPhoto` varchar(150) DEFAULT NULL,
-  `staffRoleId` int(11) NOT NULL,
-  `workStatus` tinyint(4) NOT NULL DEFAULT '1',
-  `staffStatus` tinyint(4) NOT NULL DEFAULT '0',
-  `staffFlag` tinyint(4) NOT NULL DEFAULT '1',
-  `createTime` datetime NOT NULL,
-  `lastTime` datetime DEFAULT NULL,
-  `lastIP` char(16) DEFAULT NULL,
-  PRIMARY KEY (`staffId`),
-  KEY `loginName` (`loginName`),
-  KEY `staffStatus` (`staffStatus`,`staffFlag`)
-) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_staffs
--- ----------------------------
-INSERT INTO `wst_staffs` VALUES ('1', 'admin', '9875e806ef6f9494e0de4ae1bbf9f815', '9365', 'admin', '001', 'Upload/staffs/2015-04/55306cf76bc1f.jpg', '3', '1', '1', '1', '2014-04-06 11:47:20', '2015-06-02 22:50:57', '127.0.0.1');
-INSERT INTO `wst_staffs` VALUES ('14', 'system', 'a0da805e0b77f6cc05cdf0ef6ca8caad', '2508', '系统管理员', 'sn001', null, '3', '1', '1', '1', '2014-12-20 00:13:36', null, null);
-INSERT INTO `wst_staffs` VALUES ('15', 'goodsAdmin', '1600195af828b21c1f586b1e01cb89fc', '1729', '商品管理员', 'sn001', 'Upload/staffs/2014-12/5496376a7ff89.jpg', '1', '1', '1', '1', '2014-12-21 10:58:40', null, null);
-
--- ----------------------------
--- Table structure for `wst_sys_configs`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_sys_configs`;
-CREATE TABLE `wst_sys_configs` (
-  `configId` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增ID',
-  `parentId` int(11) DEFAULT '0' COMMENT '所属类别ID',
-  `fieldName` varchar(50) DEFAULT NULL COMMENT '字段名称',
-  `fieldCode` varchar(20) DEFAULT NULL COMMENT '字段代码',
-  `fieldType` char(10) DEFAULT NULL COMMENT '字段类型',
-  `valueRangeTxt` varchar(255) DEFAULT NULL COMMENT '范围值名称',
-  `valueRange` varchar(255) DEFAULT NULL COMMENT '范围值',
-  `fieldValue` varchar(255) DEFAULT NULL COMMENT '字段值',
-  `fieldTips` varchar(255) DEFAULT NULL COMMENT '字段提示',
-  `fieldSort` int(11) DEFAULT '0' COMMENT '字段排序',
-  PRIMARY KEY (`configId`),
-  KEY `parentId` (`parentId`)
-) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_sys_configs
--- ----------------------------
-INSERT INTO `wst_sys_configs` VALUES ('1', '0', '商城名称', 'shopName', 'text', null, '', 'WSTMall开源商城', null, '0');
-INSERT INTO `wst_sys_configs` VALUES ('2', '0', '商城标题', 'shopTitle', 'text', null, null, 'WSTMall开源商城', null, '0');
-INSERT INTO `wst_sys_configs` VALUES ('3', '0', '商城描述', 'shopDesc', 'text', null, null, 'WSTMall开源商城,本地O2O商城,多商户,PHP多用户开源商城,O2O开源商城', null, '0');
-INSERT INTO `wst_sys_configs` VALUES ('4', '0', '商城关键字', 'shopKeywords', 'text', null, null, 'WSTMall开源商城,本地O2O商城,多商户,PHP多用户开源商城,O2O开源商城', '&nbsp;&nbsp;以，号分隔', '0');
-INSERT INTO `wst_sys_configs` VALUES ('6', '1', '验证码显示范围', 'captcha_model', 'hidden', '管理员登录||商家加盟||商家登录||新用户注册||用户登录||留言反馈', '0,1,2,3,4,5', '0,1,2,3,4,5', null, '0');
-INSERT INTO `wst_sys_configs` VALUES ('7', '1', '验证码个数', 'captcha_len', 'hidden', null, null, '4', null, '0');
-INSERT INTO `wst_sys_configs` VALUES ('8', '1', '验证码宽度', 'captcha_width', 'hidden', null, null, '85', null, '0');
-INSERT INTO `wst_sys_configs` VALUES ('9', '1', '验证码高度', 'captcha_height', 'hidden', null, null, '25', null, '0');
-INSERT INTO `wst_sys_configs` VALUES ('10', '1', '验证模式', 'captcha_show', 'hidden', '字母,数字,混合', '0,1,6', '0', null, '0');
-INSERT INTO `wst_sys_configs` VALUES ('13', '0', '商品是否需要审核', 'isGoodsVerify', 'radio', '是||否', '1,0', '0', null, '0');
-INSERT INTO `wst_sys_configs` VALUES ('14', '0', '访问统计', 'visitStatistics', 'textarea', null, null, '&lt;script language=&quot;javascript&quot; type=&quot;text/javascript&quot; src=&quot;http://js.users.51.la/17819468.js&quot;&gt;&lt;/script&gt;', null, '0');
-INSERT INTO `wst_sys_configs` VALUES ('15', '1', 'SMTP服务器', 'mailSmtp', 'text', null, null, 'smtp.163.com', null, '1');
-INSERT INTO `wst_sys_configs` VALUES ('16', '1', 'SMTP端口', 'mailPort', 'text', null, null, '25', null, '2');
-INSERT INTO `wst_sys_configs` VALUES ('17', '1', '是否验证SMTP', 'mailAuth', 'radio', '是||否', '1,0', '1', null, '3');
-INSERT INTO `wst_sys_configs` VALUES ('18', '1', 'SMTP发件人邮箱', 'mailAddress', 'text', null, null, 'xxxxx@163.com', null, '4');
-INSERT INTO `wst_sys_configs` VALUES ('19', '1', 'SMTP登录账号', 'mailUserName', 'text', null, null, 'username', null, '5');
-INSERT INTO `wst_sys_configs` VALUES ('20', '1', 'SMTP登录密码', 'mailPassword', 'text', null, null, 'password', null, '6');
-INSERT INTO `wst_sys_configs` VALUES ('21', '1', '发件人名称', 'mailSendTitle', 'text', null, null, 'WSTMall', null, '7');
-INSERT INTO `wst_sys_configs` VALUES ('22', '2', '短信账号', 'smsKey', 'text', null, null, 'WSTMall', null, '1');
-INSERT INTO `wst_sys_configs` VALUES ('23', '2', '短信密码', 'smsPass', 'text', null, null, 'WSTMall', null, '2');
-INSERT INTO `wst_sys_configs` VALUES ('24', '2', '号码每日发送数', 'smsLimit', 'text', null, null, '20', '避免恶意浪费短信的行为', '3');
-
--- ----------------------------
--- Table structure for `wst_user_address`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_user_address`;
-CREATE TABLE `wst_user_address` (
-  `addressId` int(11) NOT NULL AUTO_INCREMENT,
-  `userId` int(11) NOT NULL,
-  `userName` varchar(50) NOT NULL,
-  `userPhone` varchar(20) DEFAULT NULL,
-  `userTel` varchar(20) DEFAULT NULL,
-  `areaId1` int(11) NOT NULL DEFAULT '0',
-  `areaId2` int(11) NOT NULL DEFAULT '0',
-  `areaId3` int(11) NOT NULL DEFAULT '0',
-  `communityId` int(11) NOT NULL DEFAULT '0',
-  `address` varchar(255) NOT NULL,
-  `postCode` char(6) NOT NULL,
-  `isDefault` tinyint(4) NOT NULL DEFAULT '0',
-  `addressFlag` tinyint(4) NOT NULL DEFAULT '1',
-  `createTime` datetime NOT NULL,
-  PRIMARY KEY (`addressId`),
-  KEY `userId` (`userId`,`addressFlag`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_user_address
--- ----------------------------
-
--- ----------------------------
--- Table structure for `wst_user_ranks`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_user_ranks`;
-CREATE TABLE `wst_user_ranks` (
-  `rankId` int(11) NOT NULL AUTO_INCREMENT,
-  `rankName` varchar(20) NOT NULL,
-  `startScore` int(11) NOT NULL DEFAULT '0',
-  `endScore` int(11) NOT NULL DEFAULT '0',
-  `rebate` int(11) DEFAULT '100',
-  `createTime` datetime NOT NULL,
-  PRIMARY KEY (`rankId`),
-  KEY `startScore` (`startScore`,`endScore`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_user_ranks
--- ----------------------------
-
--- ----------------------------
--- Table structure for `wst_users`
--- ----------------------------
-DROP TABLE IF EXISTS `wst_users`;
-CREATE TABLE `wst_users` (
-  `userId` int(11) NOT NULL AUTO_INCREMENT,
-  `loginName` varchar(20) NOT NULL,
-  `loginSecret` int(11) NOT NULL,
-  `loginPwd` varchar(50) NOT NULL,
-  `userSex` tinyint(4) DEFAULT '0',
-  `userType` tinyint(4) DEFAULT '0',
-  `userName` varchar(20) DEFAULT NULL,
-  `userQQ` varchar(20) DEFAULT NULL,
-  `userPhone` char(11) DEFAULT NULL,
-  `userEmail` varchar(50) DEFAULT NULL,
-  `userScore` int(11) DEFAULT '0',
-  `userPhoto` varchar(150) DEFAULT NULL,
-  `userTotalScore` int(11) DEFAULT '0',
-  `userStatus` tinyint(4) DEFAULT '1',
-  `userFlag` tinyint(4) DEFAULT '1',
-  `createTime` datetime DEFAULT NULL,
-  `lastIP` varchar(16) DEFAULT NULL,
-  `lastTime` datetime DEFAULT NULL,
-  PRIMARY KEY (`userId`),
-  KEY `userStatus` (`userStatus`,`userFlag`),
-  KEY `loginName` (`loginName`),
-  KEY `userPhone` (`userPhone`),
-  KEY `userEmail` (`userEmail`),
-  KEY `userType` (`userType`,`userFlag`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_users
+-- Records of wst_ads
 -- ----------------------------

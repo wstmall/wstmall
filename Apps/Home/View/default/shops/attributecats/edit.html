@@ -1,0 +1,26 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+       <div class="wst-body"> 
+       <div class='wst-page-header'>卖家中心 > <if condition="$object['catId'] ==0 ">新增<else/>编辑</if>商品类型</div>
+       <div class='wst-page-content'>
+       <form name="myform" method="post" id="myform">
+        <input type='hidden' id='id' value='{$object.catId}'/>
+        <table class="table table-hover table-striped table-bordered wst-form">
+           <tr>
+             <th width='120' align='right'>商品类型名称<font color='red'>*</font>：</th>
+             <td><input type='text' id='catName' class="form-control wst-ipt" value='{$object.catName}' maxLength='25' size='40'/></td>
+           </tr>
+           <tr>
+             <td colspan='2' style='padding-left:100px;'>
+                 <button class='wst-btn-query' type="button" onclick='javascript:editAttrCats(0,"{$umark}")'>保&nbsp;存</button>
+                 <if condition="$object['catId']  eq 0 ">
+                 <button class='wst-btn-query' style='width:120px;' onclick='javascript:editAttrCats(1,"{$umark}")' type="button">保存并继续新增</button>
+                 </if>
+                 <button class='wst-btn-query' type="button" onclick='javascript:location.href="{:U('Home/AttributeCats/index')}"'>返&nbsp;回</button>
+             </td>
+           </tr>
+        </table>
+       </form>
+       </div>
+       </div>
+</block>  

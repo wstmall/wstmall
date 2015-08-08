@@ -4,7 +4,7 @@
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>{$CONF['shopTitle']['fieldValue']}后台管理中心</title>
+      <title>{$CONF['mallTitle']}后台管理中心</title>
       <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
       <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
       <!--[if lt IE 9]>
@@ -36,11 +36,11 @@
 	   params.isShow = $('input[name="isShow"]:checked').val();;
 	   params.catSort = $('#catSort').val();
 	   Plugins.waitTips({title:'信息提示',content:'正在提交数据，请稍后...'});
-	   $.post("__ROOT__/index.php/Admin/ArticleCats/edit",params,function(data,textStatus){
+	   $.post("{:U('Admin/ArticleCats/edit')}",params,function(data,textStatus){
 			var json = WST.toJson(data);
 			if(json.status=='1'){
-				Plugins.setWaitTipsMsg({content:'操作成功',timeout:1000,callback:function(){
-				   location.href='__ROOT__/index.php/Admin/ArticleCats/';
+				Plugins.setWaitTipsMsg({ content:'操作成功',timeout:1000,callback:function(){
+				   location.href='{:U("Admin/ArticleCats/index")}';
 				}});
 			}else{
 				Plugins.closeWindow();
@@ -77,7 +77,7 @@
            <tr>
              <td colspan='2' style='padding-left:250px;'>
                  <button type="submit" class="btn btn-success">保&nbsp;存</button>
-                 <button type="button" class="btn btn-primary" onclick='javascript:location.href="__ROOT__/index.php/Admin/ArticleCats/"'>返&nbsp;回</button>
+                 <button type="button" class="btn btn-primary" onclick='javascript:location.href="{:U('Admin/ArticleCats/index')}"'>返&nbsp;回</button>
              </td>
            </tr>
         </table>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>{$CONF['mallTitle']}后台管理中心</title>
+      <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
+      <!--[if lt IE 9]>
+      <script src="__PUBLIC__/js/html5shiv.min.js"></script>
+      <script src="__PUBLIC__/js/respond.min.js"></script>
+      <![endif]-->
+      <script src="__PUBLIC__/js/jquery.min.js"></script>
+      <script src="__PUBLIC__/plugins/bootstrap/js/bootstrap.min.js"></script>
+      <script src="__PUBLIC__/js/common.js"></script>
+      <script src="__PUBLIC__/plugins/plugins/plugins.js"></script>
+   </head>
+   <script>
+   function del(id){
+	   Plugins.confirm({title:'信息提示',content:'您确定要卸载该支付方式吗?',okText:'确定',cancelText:'取消',okFun:function(){
+		   Plugins.closeWindow();
+		   Plugins.waitTips({title:'信息提示',content:'正在操作，请稍后...'});
+		   $.post("{:U('Admin/Payments/del')}",{id:id},function(data,textStatus){
+					var json = WST.toJson(data);
+					if(json.status=='1'){
+						Plugins.setWaitTipsMsg({content:'操作成功',timeout:1000,callback:function(){
+						   location.reload();
+						}});
+					}else{
+						Plugins.closeWindow();
+						Plugins.Tips({title:'信息提示',icon:'error',content:'操作失败!',timeout:1000});
+					}
+				});
+		        return false;
+		}});
+   }
+   </script>
+   <body class="wst-page">
+
+       <div class='wst-body'> 
+        <table class="table table-hover table-striped table-bordered wst-list">
+           <thead>
+             <tr>
+               <th width='40'>&nbsp;</th>
+               <th>名称 </th>
+               <th>描述 </th>
+               <th>状态  </th>
+               <th>排序号</th>
+               <th width='200'>操作</th>
+             </tr>
+           </thead>
+           <tbody>
+            <volist name="Page['root']" id="vo" key='i'>
+             <tr height="80">
+               <td>{$i}</td>
+               <td width="220">{$vo['payName']}</td>
+               <td>{$vo['payDesc']}</td>
+               <td width="120">
+               		<if condition="$vo['enabled'] eq 1">
+               		启用
+              		<else/>
+              		关闭
+               		</if>
+               </td>
+               <td width="120">{$vo['payOrder']}</td>
+               <td width="120">
+            		<if condition="$vo['enabled'] eq 1">
+            		<php>if(in_array('zfgl_02',$WST_STAFF['grant'])){</php>
+               			<a class="btn btn-default glyphicon glyphicon-pencil" href="{:U('Admin/Payments/toEdit',array('id'=>$vo['id'],'payCode'=>$vo['payCode']))}"">编辑</a>&nbsp;
+              		<php>}</php>
+              		<php>if(in_array('zfgl_03',$WST_STAFF['grant'])){</php>
+              			<a class="btn btn-default glyphicon glyphicon-trash" onclick="javascript:del({$vo['id']})">卸载</a>
+              		<php>}</php>
+              		<else/>
+              		<php>if(in_array('zfgl_01',$WST_STAFF['grant'])){</php>
+              		<a class="btn btn-default glyphicon glyphicon-pencil" href="{:U('Admin/Payments/toEdit',array('id'=>$vo['id'],'payCode'=>$vo['payCode']))}"">安装</a>&nbsp;
+               		<php>}</php>
+               		</if>
+               </td>
+             </tr>
+             </volist>
+             <tr>
+                <td colspan='6' align='center'>{$Page['pager']}</td>
+             </tr>
+           </tbody>
+        </table>
+        </div>
+   </body>
+</html>

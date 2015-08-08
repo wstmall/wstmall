@@ -8,23 +8,7 @@ namespace Admin\Model;
  * ============================================================================
  * 首页服务类
  */
-use Think\Model;
-class IndexModel extends Model {
-    /**
-     * 获取商城配置文件
-     */
-	public function loadConfigs(){
-		$sql = "select * from __PREFIX__sys_configs order by parentId asc,fieldSort asc";
-		$rs = $this->query($sql);
-		$configs = array();
-		if(count($rs)>0){
-			foreach ($rs as $key=>$v){
-				$configs[$v['fieldCode']] = $v;
-			}
-		}
-		unset($rs);
-		return $configs;
-	}
+class IndexModel extends BaseModel {
 	/**
 	 * 获取商品配置分类信息
 	 */
@@ -60,6 +44,20 @@ class IndexModel extends Model {
 				}
 			}
 			$rd['status'] = 1;
+			WSTDataFile("mall_config",'',null);
+		}
+		return $rd;
+	}
+	/**
+	 * 保存授权码
+	 */
+	public function saveLicense(){
+		$rd = array('status'=>-1);
+		$m = M('sys_configs');
+	    $result = $m-> where('fieldCode="mallLicense"')->setField('fieldValue',I('license'));
+		if(false !== $result){
+			$rd['status']= 1;
+			WSTDataFile("mall_config",'',null);
 		}
 		return $rd;
 	}

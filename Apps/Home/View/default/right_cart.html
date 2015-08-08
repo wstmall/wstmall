@@ -74,7 +74,7 @@
 							</div>
 						</if></li>
 					<li id="shopCart"><a href="#" class="message_list"><i class="message"></i>
-					<div class="span">购物车</div> <span class="cart_num">{$cartcnt}</span></a></li>
+					<div class="span">购物车</div> <span class="cart_num">0</span></a></li>
 				</div>
 				<div class="quick_toggle">
 					<li><a href="#none"><i class="mpbtn_qrcode"></i></a>
@@ -90,7 +90,8 @@
 		</div>
 	</div>
 	<script type="text/javascript">
-	var numberItem = {$cartcnt};
+	var numberItem = {:WSTCartNum()};
+	$('.cart_num').html(numberItem);
 	$(".quick_links_panel li").mouseenter(function() {
 		$(this).children(".mp_tooltip").animate({
 			left : -92,
@@ -126,9 +127,9 @@
 		curvature : 0.0012, //控制抛物线弧度
 		complete : function() {
 			eleFlyElement.style.visibility = "hidden";
-			jQuery.post(domainURL +"/index.php/Home/Cart/getCartInfo/" ,{"axm":1},function(data) {
+			jQuery.post(domainURL +"/index.php/Home/Cart/getCartGoodCnt/" ,{"axm":1},function(data) {
 				var cart = WST.toJson(data);
-				eleShopCart.querySelector("span").innerHTML = cart.cartgoods.length;
+				eleShopCart.querySelector("span").innerHTML = cart.goodscnt;
 			});
 			
 		}
@@ -162,6 +163,6 @@
 	}
 
 	function getMyOrders(){
-		document.location.href = "__ROOT__/index.php/Home/Orders/queryByPage";
+		document.location.href = "{:U('Home/Orders/queryByPage/')}";
 	}
 </script>

@@ -40,7 +40,7 @@ class CommunitysAction extends BaseAction{
     		$rs = $m->edit();
     	}else{
     		$this->checkAjaxPrivelege('sqlb_01');
-    		$rs = $m->add();
+    		$rs = $m->insert();
     	}
     	$this->ajaxReturn($rs);
 	}

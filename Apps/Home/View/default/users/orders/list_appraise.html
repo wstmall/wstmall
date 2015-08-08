@@ -22,7 +22,7 @@
              	<td width='80' style="padding-top:10px;vertical-align:top;">{$order["orderNo"]}</td>
                 <td width='*'>
 					<volist name="order['goodslist']" id="goods" key='key2'>
-						<a target='_blank' href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$goods['goodsId']}">
+						<a target='_blank' href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}">
 							<img src="__ROOT__/{$goods['goodsThums']}" height="50" width="50" class='wst-goods-tb'/>
 						</a>
 					</volist>

@@ -1,11 +1,10 @@
 <extend name="./Apps/Home/View/default/shops/layout.html" />
 <block name="content">
-
 <div class="wst-body"> 
 <div class='wst-page-header'>卖家中心 > 商品分类</div>
 <div class='wst-page-content'>
    <div class='wst-tbar-group' style='text-align:left;'>
-     <a href='javascript:toEditGoodsCat(0,0)'style='margin-right:15px;'><span class='add btn'></span>新增</a>
+     <a href='{:U("Home/ShopsCats/toEdit")}'style='margin-right:15px;'><span class='add btn'></span>新增</a>
    </div>
    <table class='wst-list wst-form'>
    <thead>
@@ -31,8 +30,8 @@
      </if>
      </td>
      <td>
-     <a href="javascript:toEditGoodsCat(0,{$vo['catId']})" class='add btn' title='新增'></a>
-     <a href="javascript:toEditGoodsCat({$vo['catId']},0)" class='edit btn' title='编辑'>
+     <a href='{:U("Home/ShopsCats/toEdit",array("parentId"=>$vo['catId']))}' class='add btn' title='新增'></a>
+     <a href='{:U("Home/ShopsCats/toEdit",array("id"=>$vo['catId']))}' class='edit btn' title='编辑'>
      <a href="javascript:delGoodsCat({$vo['catId']},0)" class='del btn' title='删除'></a>&nbsp;
      </td>
    </tr>
@@ -52,7 +51,7 @@
 	     </if>
 	     </td>
 	     <td>
-	     <a href="javascript:toEditGoodsCat({$vo2['catId']},0)" class='edit btn' title='编辑'>
+	     <a href='{:U("Home/ShopsCats/toEdit",array("id"=>$vo2['catId']))}' class='edit btn' title='编辑'>
 	     <a href="javascript:delGoodsCat({$vo2['catId']},0)" class='del btn' title='删除'></a>&nbsp;
 	     </td>
 	  </tr>
@@ -61,7 +60,7 @@
    </volist>
 </table>
 <div class='wst-tbar-group' style='text-align:left;'>
-     <a href='javascript:toEditGoodsCat(0,0)' style='margin-right:15px;'><span class='add btn'></span>新增</a>
+     <a href='{:U("Home/ShopsCats/toEdit")}' style='margin-right:15px;'><span class='add btn'></span>新增</a>
 </div>
 </div>
 </div>

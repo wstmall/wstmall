@@ -13,9 +13,14 @@ class ShopsAction extends BaseAction {
      * 跳到商家首页面
      */
 	public function toShopHome(){
-		self::getBaseInfo();
 		$mshops = D('Home/Shops');
-		$shops = $mshops->getShopInfo();
+		$shopId = (int)I('shopId');
+		//如果沒有传店铺ID进来则取默认自营店铺
+		if($shopId==0){
+			$areaId2 = $this->getDefaultCity();
+			$shopId = $mshops->checkSelfShopId($areaId2);
+		}
+		$shops = $mshops->getShopInfo($shopId);
 		$shops["serviceEndTime"] = str_replace('.5',':30',$shops["serviceEndTime"]);
 		$shops["serviceEndTime"] = str_replace('.0',':00',$shops["serviceEndTime"]);
 		$shops["serviceStartTime"] = str_replace('.5',':30',$shops["serviceStartTime"]);
@@ -23,23 +28,24 @@ class ShopsAction extends BaseAction {
 		$this->assign('shops',$shops);
 
 		if(!empty($shops)){		
-			$this->assign('shopId',I("shopId",0));
-			$this->assign('ct1',I("ct1",0));
-			$this->assign('ct2',I("ct2",0));
-			$this->assign('msort',I("msort",0));
+			$this->assign('shopId',$shopId);
+			$this->assign('ct1',(int)I("ct1"));
+			$this->assign('ct2',(int)I("ct2"));
+			$this->assign('msort',(int)I("msort"));
 			$this->assign('sj',I("sj",0));
 			$this->assign('sprice',I("sprice"));//上架开始时间
 			$this->assign('eprice',I("eprice"));//上架结束时间
 			$this->assign('goodsName',I("goodsName"));//上架结束时间
 					
 			$mshopscates = D('Home/ShopsCats');
-			$shopscates = $mshopscates->getShopCateList();
+			$shopscates = $mshopscates->getShopCateList($shopId);
 			$this->assign('shopscates',$shopscates);
 			
 			$mgoods = D('Home/Goods');
-			$shopsgoods = $mgoods->getShopsGoods();
+			$shopsgoods = $mgoods->getShopsGoods($shopId);
 			$this->assign('shopsgoods',$shopsgoods);
 			//获取评分
+			$obj = array();
 			$obj["shopId"] = $shopId;
 			$shopScores = $mshops->getShopScores($obj);
 			$this->assign("shopScores",$shopScores);
@@ -50,27 +56,23 @@ class ShopsAction extends BaseAction {
      * 跳到店铺街
      */
 	public function toShopStreet(){
-		self::getBaseInfo();
 		$areas= D('Home/Areas');
 		$areaId2 = $this->getDefaultCity();
    		$areaList = $areas->getDistricts($areaId2);
    		$mshops = D('Home/Shops');
-   		
+   		$obj = array();
    		if(cookie("bstreesAreaId3")){
    			$obj["areaId3"] = cookie("bstreesAreaId3");
    		}else{
    			$obj["areaId3"] = ((int)I('areaId3')>0)?(int)I('areaId3'):$areaList[0]['areaId'];
    			cookie("bstreesAreaId3",$obj["areaId3"]);
    		}
-   		$dsplist = $mshops->getDistrictsShops($obj);
    		//广告
    		$ads = D('Home/Ads');
    		$ads = $ads->getAds($areaId2,-3);
    		$this->assign('areaId3',$obj["areaId3"]);
    		$this->assign('keyWords',I("keyWords"));
    		$this->assign('ads',$ads);
-   		$this->assign('nvg_mk',"shopstreet");
-   		$this->assign('dsplist',$dsplist);
    		$this->assign('areaList',$areaList);
         $this->display("default/shop_street");
 	}

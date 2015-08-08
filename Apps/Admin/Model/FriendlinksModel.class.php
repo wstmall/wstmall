@@ -8,7 +8,6 @@ namespace Admin\Model;
  * ============================================================================
  * 社区服务类
  */
-use Think\Model;
 class FriendlinksModel extends BaseModel {
     /**
      * 获取分页记录
@@ -21,7 +20,7 @@ class FriendlinksModel extends BaseModel {
 	/**
 	 * 新增
 	 */
-	public function add(){
+	public function insert(){
 		$rd = array('status'=>-1);
 		$data = array();
 		$data['friendlinkIco'] = I('friendlinkIco');

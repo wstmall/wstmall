@@ -54,25 +54,6 @@ class GoodsAppraisesModel extends BaseModel {
 		}
 		return $rd;
 	 }
-	 
-	/**
-	  * 修改商品评价
-	  */
-	 public function editAppraise(){
-	 	$id = I('id');
-	 	$m = M('goods_appraises');
-	
-		$data = array();
-		
-		$data["goodsScore"] = I("goodsScore");
-		$data["serviceScore"] = I("serviceScore");
-		$data["timeScore"] = I("timeScore");
-		$data["content"] = I("content");
-		
-		$m->where(" id=".$id)->data($data)->save();
-		$rd['status']=1;
-		return $rd;
-	 }
 	 /**
 	  * 增加商品评论
 	  */
@@ -80,16 +61,18 @@ class GoodsAppraisesModel extends BaseModel {
 		$m = M('goods_appraises');
 		$userId = $obj["userId"];
 		$orderId = $obj["orderId"];
+		$goodsId = $obj["goodsId"];
 		//检查订单是否已评论
-		$sql="select isAppraises,orderFlag,shopId from __PREFIX__orders where orderId=".$orderId." and userId=".$userId;
+		$sql="select isAppraises,orderFlag,shopId,goodsId from __PREFIX__orders o, __PREFIX__order_goods og 
+		     where o.orderId=og.orderId and o.orderStatus in (4,5) and og.goodsId=".$goodsId." and o.orderId=".$orderId." and o.userId=".$userId;
 		$rs = $this->query($sql);
-		if($rs[0]['isAppraises']==1 || $rs[0]['orderFlag']==-1){
-			return -1;
-		}
+		
+		if(empty($rs))return -1;
+		if($rs[0]['isAppraises']==1 || $rs[0]['orderFlag']==-1)return -1;
 		$shopId = $rs[0]['shopId'];
 		//新增评价记录
 		$data = array();
-		$goodsId = I("goodsId");
+		
 		$data["goodsId"] = $goodsId;
 		$data["shopId"] = $shopId;
 		$data["userId"] = $userId;
@@ -99,59 +82,59 @@ class GoodsAppraisesModel extends BaseModel {
 		$data["content"] = I("content");
 		$data["isShow"] = 1;
 		$data["createTime"] = date('Y-m-d H:i:s');
-		$data["orderId"] = I("orderId");
+		$data["orderId"] = (int)I("orderId");
 		$rs = $m->add($data);
-		
-		$data["totalScore"] = $data["goodsScore"]+$data["timeScore"]+$data["serviceScore"];
-		
-		$sql ="SELECT * FROM __PREFIX__goods_scores WHERE goodsId=$goodsId";
-		$goodsScores = $this->queryRow($sql);
-		
-		if($goodsScores["goodsId"]>0){
-			$sql = "UPDATE __PREFIX__goods_scores set 
-					totalUsers = totalUsers +1 , totalScore = totalScore +".$data["totalScore"]."
-					,goodsUsers = goodsUsers +1 , goodsScore = goodsScore +".$data["goodsScore"]."
-					,timeUsers = timeUsers +1 , timeScore = timeScore +".$data["timeScore"]."
-					,serviceUsers = serviceUsers +1 , serviceScore = serviceScore +".$data["serviceScore"]."
-					WHERE goodsId = ".$goodsId;		
-			$this->query($sql);		
-		}else{
-			$data = array();
-			$gm = M('goods_scores');
-
-			$data["goodsId"] = I("goodsId");
-			$data["shopId"] = I("shopId");
+		if(false !== $rs){
+			$data["totalScore"] = $data["goodsScore"]+$data["timeScore"]+$data["serviceScore"];
 			
-			$data["goodsScore"] =(int)I("goodsScore");
-			$data["goodsUsers"] = 1;
+			$sql ="SELECT * FROM __PREFIX__goods_scores WHERE goodsId=$goodsId";
+			$goodsScores = $this->queryRow($sql);
 			
-			$data["timeScore"] =(int)I("timeScore");
-			$data["timeUsers"] = 1;
-			
-			$data["serviceScore"] =(int)I("serviceScore");
-			$data["serviceUsers"] = 1;
-			
-			$data["totalScore"] = (int)$data["goodsScore"]+$data["timeScore"]+$data["serviceScore"];
-			$data["totalUsers"] = 1;
-			
-			$rs = $gm->add($data);
+			if($goodsScores["goodsId"]>0){
+				$sql = "UPDATE __PREFIX__goods_scores set 
+						totalUsers = totalUsers +1 , totalScore = totalScore +".$data["totalScore"]."
+						,goodsUsers = goodsUsers +1 , goodsScore = goodsScore +".$data["goodsScore"]."
+						,timeUsers = timeUsers +1 , timeScore = timeScore +".$data["timeScore"]."
+						,serviceUsers = serviceUsers +1 , serviceScore = serviceScore +".$data["serviceScore"]."
+						WHERE goodsId = ".$goodsId;		
+				$this->query($sql);		
+			}else{
+				$data = array();
+				$gm = M('goods_scores');
+	
+				$data["goodsId"] = I("goodsId");
+				$data["shopId"] = $shopId;
+				
+				$data["goodsScore"] =(int)I("goodsScore");
+				$data["goodsUsers"] = 1;
+				
+				$data["timeScore"] =(int)I("timeScore");
+				$data["timeUsers"] = 1;
+				
+				$data["serviceScore"] =(int)I("serviceScore");
+				$data["serviceUsers"] = 1;
+				
+				$data["totalScore"] = (int)$data["goodsScore"]+$data["timeScore"]+$data["serviceScore"];
+				$data["totalUsers"] = 1;
+				
+				$rs = $gm->add($data);
+			}
+			//检查下是不是订单的所有商品都评论完了
+			$sql = "SELECT g.goodsId,og.goodsNums as ogoodsNums,og.goodsPrice as ogoodsPrice ,ga.id as gaId
+					FROM __PREFIX__order_goods og, __PREFIX__goods g 
+					LEFT JOIN __PREFIX__goods_appraises ga ON g.goodsId = ga.goodsId AND ga.orderId = $orderId
+					WHERE og.orderId = $orderId AND og.goodsId = g.goodsId";
+			$goodslist = $this->query($sql);
+			$gmark = 1;
+			for($i=0;$i<count($goodslist);$i++){
+				$goods = $goodslist[$i];
+				if(!$goods["gaId"]) $gmark =0;
+			}
+			if($gmark==1){
+				$sql="update __PREFIX__orders set isAppraises=1 where orderId=".$orderId;
+				$this->query($sql);
+			}
 		}
-		//检查下是不是订单的所有商品都评论完了
-		$sql = "SELECT g.goodsId,og.goodsNums as ogoodsNums,og.goodsPrice as ogoodsPrice ,ga.id as gaId
-				FROM __PREFIX__order_goods og, __PREFIX__goods g 
-				LEFT JOIN __PREFIX__goods_appraises ga ON g.goodsId = ga.goodsId AND ga.orderId = $orderId
-				WHERE og.orderId = $orderId AND og.goodsId = g.goodsId";
-		$goodslist = $this->query($sql);
-		$gmark = 1;
-		for($i=0;$i<count($goodslist);$i++){
-			$goods = $goodslist[$i];
-			if(!$goods["gaId"]) $gmark =0;
-		}
-		if($gmark==1){
-			$sql="update __PREFIX__orders set isAppraises=1 where orderId=".$orderId;
-			$this->query($sql);
-		}
-		
 		return 1;
 	}
 	/**
@@ -162,7 +145,7 @@ class GoodsAppraisesModel extends BaseModel {
 		$orderId = $obj["orderId"];
 		$data = array();
 		
-		$sql = "SELECT o.*,sp.shopId,sp.shopName FROM __PREFIX__orders o,__PREFIX__shops sp WHERE o.shopId=sp.shopId AND o.orderId = $orderId ";		
+		$sql = "SELECT o.*,sp.shopId,sp.shopName FROM __PREFIX__orders o,__PREFIX__shops sp WHERE o.orderStatus in (4,5) and o.shopId=sp.shopId AND o.orderId = $orderId ";		
 		$order = $this->queryRow($sql);
 		$data["order"] = $order;
 		

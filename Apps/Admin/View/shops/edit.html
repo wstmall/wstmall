@@ -48,7 +48,7 @@ dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
 		}).ajaxValidator({
 			dataType : "json",
 			async : true,
-			url : "__ROOT__/index.php/Admin/Users/checkLoginKey/",
+			url : "{:U('Admin/Users/checkLoginKey')}",
 			success : function(data){
 				var json = WST.toJson(data);
 	            if( json.status == "1" ) {
@@ -72,7 +72,7 @@ dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
 		}).ajaxValidator({
 			dataType : "json",
 			async : true,
-			url : "__ROOT__/index.php/Admin/Users/checkLoginKey/?id={$object.userId}",
+			url : "{:U('Admin/Users/checkLoginKey',array('id'=>$object.userId))}",
 			success : function(data){
 				var json = WST.toJson(data);
 	            if( json.status == "1" ) {
@@ -104,7 +104,7 @@ dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
 		    fileTypeDesc  : 'Image Files',
 	        fileTypeExts  : '*.gif; *.jpg; *.png',
 	        swf           : '__PUBLIC__/plugins/uploadify/uploadify.swf',
-	        uploader      : '__ROOT__/index.php/Admin/shops/uploadPic',
+	        uploader      : '{:U("Admin/shops/uploadPic")}',
 	        onUploadSuccess : function(file, data, response) {
 	        	var json = WST.toJson(data);
 	        	var url = '__ROOT__/'+json.Filedata.savepath+json.Filedata.savethumbname;
@@ -190,7 +190,7 @@ dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
 		   $('#areaId3').html('<option value="">请选择</option>');
 	   }
 	   var html = [];
-	   $.post("__ROOT__/index.php/Admin/Areas/queryShowByList",params,function(data,textStatus){
+	   $.post("{:U('Admin/Areas/queryShowByList')}",params,function(data,textStatus){
 		    html.push('<option value="">请选择</option>');
 			var json = WST.toJson(data);
 			if(json.status=='1' && json.list.length>0){
@@ -212,7 +212,7 @@ dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
 		$('#areaTree').empty();
 		var v = $('#areaId2').val();
 		if(v!==-1){
-			$.post("__ROOT__/index.php/Admin/Areas/queryAreaAndCommunitysByList",{areaId:v},function(data,textStatus){
+			$.post("{:U('Admin/Areas/queryAreaAndCommunitysByList')}",{areaId:v},function(data,textStatus){
 				var json = data;
 				if(json.list){
 					var html = [];
@@ -324,13 +324,12 @@ dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
 		   Plugins.Tips({title:'信息提示',icon:'error',content:'请选择配送区域!',timeout:1000});
 		   return;
 	   }
-	   var src = '{$src}';
 	   Plugins.waitTips({title:'信息提示',content:'正在提交数据，请稍后...'});
-	   $.post("__ROOT__/index.php/Admin/Shops/edit",params,function(data,textStatus){
+	   $.post("{:U('Admin/Shops/edit')}",params,function(data,textStatus){
 			var json = WST.toJson(data);
 			if(json.status=='1'){
-				Plugins.setWaitTipsMsg({content:'操作成功',timeout:1000,callback:function(){
-				   location.href='__ROOT__/index.php/Admin/Shops/'+src;
+				Plugins.setWaitTipsMsg({ content:'操作成功',timeout:1000,callback:function(){
+				   location.href='{:U("Admin/Shops/$src")}';
 				}});
 			}else if(json.status=='-2'){
 				Plugins.closeWindow();
@@ -551,7 +550,7 @@ dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
            <tr>
              <td colspan='2' style='padding-left:250px;'>
                  <button type="submit" class="btn btn-success">保&nbsp;存</button>
-                 <button type="button" class="btn btn-primary" onclick='javascript:location.href="__ROOT__/index.php/Admin/Shops/"'>返&nbsp;回</button>
+                 <button type="button" class="btn btn-primary" onclick='javascript:location.href="{:U('Admin/Shops/index')}"'>返&nbsp;回</button>
              </td>
            </tr>
         </table>

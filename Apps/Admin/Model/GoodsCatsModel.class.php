@@ -8,12 +8,11 @@ namespace Admin\Model;
  * ============================================================================
  * 商品分类服务类
  */
-use Think\Model;
 class GoodsCatsModel extends BaseModel {
     /**
 	  * 新增
 	  */
-	 public function add(){
+	 public function insert(){
 	 	$rd = array('status'=>-1);
 	 	$id = I("id",0);
 		$data = array();
@@ -162,6 +161,14 @@ class GoodsCatsModel extends BaseModel {
 		$ids[] = (int)I('id');
 	 	$ids = $this->getChild($ids,$ids);
 	 	$m = M('goods_cats');
+	 	//把相关的商品下架了
+	 	$sql = "update __PREFIX__goods set isSale=0 where goodsCatId1 in(".implode(',',$ids).")";
+	 	$m->query($sql);
+	 	$sql = "update __PREFIX__goods set isSale=0 where goodsCatId2 in(".implode(',',$ids).")";
+	 	$m->query($sql);
+	 	$sql = "update __PREFIX__goods set isSale=0 where goodsCatId3 in(".implode(',',$ids).")";
+	 	$m->query($sql);
+	 	//设置商品分类为删除状态
 	 	$m->catFlag = -1;
 		$rs = $m->where(" catId in(".implode(',',$ids).")")->save();
 	    if(false !== $rs){
@@ -175,12 +182,22 @@ class GoodsCatsModel extends BaseModel {
 	 public function editiIsShow(){
 	 	$rd = array('status'=>-1);
 	 	if(I('id',0)==0)return $rd;
+	 	$isShow = (int)I('isShow');
 	 	//获取子集
 	 	$ids = array();
 		$ids[] = (int)I('id');
 	 	$ids = $this->getChild($ids,$ids);
 	 	$m = M('goods_cats');
-	 	$m->isShow = (I('isShow')==1)?1:0;
+	 	if($isShow!=1){
+	 		//把相关的商品下架了
+		 	$sql = "update __PREFIX__goods set isSale=0 where goodsCatId1 in(".implode(',',$ids).")";
+		 	$m->query($sql);
+		 	$sql = "update __PREFIX__goods set isSale=0 where goodsCatId2 in(".implode(',',$ids).")";
+		 	$m->query($sql);
+		 	$sql = "update __PREFIX__goods set isSale=0 where goodsCatId3 in(".implode(',',$ids).")";
+		 	$m->query($sql);
+	 	}
+	 	$m->isShow = ($isShow==1)?1:0;
 	 	$rs = $m->where("catId in(".implode(',',$ids).")")->save();
 	    if(false !== $rs){
 			$rd['status']= 1;

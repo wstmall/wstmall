@@ -4,7 +4,7 @@
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>{$CONF['shopTitle']['fieldValue']}后台管理中心</title>
+      <title>{$CONF['mallTitle']}后台管理中心</title>
       <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
       <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
       <!--[if lt IE 9]>
@@ -62,7 +62,7 @@
 		   $('#goodsCatId3').html('<option value="">请选择</option>');
 	   }
 	   var html = [];
-	   $.post("__ROOT__/index.php/Admin/goodsCats/queryByList",params,function(data,textStatus){
+	   $.post("{:U('Admin/goodsCats/queryByList')}",params,function(data,textStatus){
 		    html.push('<option value="">请选择</option>');
 			var json = WST.toJson(data);
 			if(json.status=='1' && json.list){
@@ -81,7 +81,7 @@
 	   params.shopId = $('#shopId').val();
 	   $('#shopCatId2').empty();
 	   var html = [];
-	   $.post("__ROOT__/index.php/Admin/ShopsCats/queryByList",params,function(data,textStatus){
+	   $.post("{:U('Admin/ShopsCats/queryByList')}",params,function(data,textStatus){
 		    html.push('<option value="">请选择</option>');
 			var json = WST.toJson(data);
 			if(json.status=='1' && json.list){
@@ -96,11 +96,11 @@
    }
    function changeStatus(id,v){
 	   Plugins.waitTips({title:'信息提示',content:'正在操作，请稍后...'});
-	   $.post("__ROOT__/index.php/Admin/Goods/changeGoodsStatus",{id:id,status:v},function(data,textStatus){
+	   $.post("{:U('Admin/Goods/changeGoodsStatus')}",{id:id,status:v},function(data,textStatus){
 				var json = WST.toJson(data);
 				if(json.status=='1'){
-					Plugins.setWaitTipsMsg({content:'操作成功',timeout:1000,callback:function(){
-						location.href="__ROOT__/index.php/Admin/Goods";
+					Plugins.setWaitTipsMsg({ content:'操作成功',timeout:1000,callback:function(){
+						location.href="{:U('Admin/Goods/index')}";
 					}});
 				}else{
 					Plugins.closeWindow();
@@ -145,7 +145,7 @@
 	             <td><input type='text' id='shopPrice' name='shopPrice' class="form-control wst-ipt" value='{$object.shopPrice}' maxLength='25'/></td>
 	           </tr>
 	            <tr>
-	             <th width='120'>市场库存<font color='red'>*</font>：</th>
+	             <th width='120'>商品库存<font color='red'>*</font>：</th>
 	             <td><input type='text' id='goodsStock' name='goodsStock' class="form-control wst-ipt" value='{$object.goodsStock}' maxLength='25'/></td>
 	           </tr>
 	            <tr>
@@ -209,7 +209,7 @@
 	           <tr>
 	             <td colspan='3' style='padding-left:250px;'>
 	                 <button type="button" class="btn btn-danger" onclick='javascript:changeStatus({$object['goodsId']},0)'>禁&nbsp;售</button>
-	                 <button type="button" class="btn btn-primary" onclick='javascript:location.href="__ROOT__/index.php/Admin/Goods"'>返&nbsp;回</button>
+	                 <button type="button" class="btn btn-primary" onclick='javascript:location.href="{:U('Admin/Goods/index')}"'>返&nbsp;回</button>
 	             </td>
 	           </tr>
 	        </table>

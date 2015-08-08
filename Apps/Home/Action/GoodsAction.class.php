@@ -13,7 +13,6 @@ class GoodsAction extends BaseAction {
 	 * 商品列表
 	 */
     public function getGoodsList(){
-    	self::getBaseInfo();
    		$mgoods = D('Home/Goods');
    		$mareas = D('Home/Areas');
    		$mcommunitys = D('Home/Communitys');
@@ -97,13 +96,12 @@ class GoodsAction extends BaseAction {
 	 * 
 	 */
 	public function getGoodsDetails(){
-		self::getBaseInfo();
 		$goods = D('Home/Goods');
 		$kcode = I("kcode");
 		$scrictCode = base64_encode(md5("wstmall".date("Y-m-d")));
 		
 		//查询商品详情		
-		$goodsId = I("goodsId");
+		$goodsId = (int)I("goodsId");
 		$this->assign('goodsId',$goodsId);
 		$obj["goodsId"] = $goodsId;	
 		$goodsDetails = $goods->getGoodsDetails($obj);
@@ -122,13 +120,13 @@ class GoodsAction extends BaseAction {
 			$goodsDetails["serviceStartTime"] = str_replace('.0',':00',$goodsDetails["serviceStartTime"]);
 			$goodsDetails["shopServiceStatus"] = $shopServiceStatus;
 			$goodsDetails['goodsDesc'] = htmlspecialchars_decode($goodsDetails['goodsDesc']);
-			$this->assign("goodsDetails",$goodsDetails);
+			
 			
 			$areas = D('Home/Areas');
 			$shopId = intval($goodsDetails["shopId"]);
 			$obj["shopId"] = $shopId;
 			$obj["areaId2"] = $this->getDefaultCity();
-			
+			$obj["attrCatId"] = $goodsDetails['attrCatId'];
 			$shops = D('Home/Shops');
 			$shopScores = $shops->getShopScores($obj);
 			$this->assign("shopScores",$shopScores);
@@ -139,17 +137,12 @@ class GoodsAction extends BaseAction {
 			$shopCommunitys = $areas->getShopCommunitys($obj);
 			$this->assign("shopCommunitys",json_encode($shopCommunitys));
 			
-			$goodsImgs = $goods->getGoodsImgs();
-			$this->assign("goodsImgs",$goodsImgs);
-			
-			$hotgoods = $goods->getHotGoods($goodsDetails['shopId']);
-			$this->assign("hotgoods",$hotgoods);
-			
-			$relatedGoods = $goods->getRelatedGoods($goodsId);
-			$this->assign("relatedGoods",$relatedGoods);
-			$goodsNav = $goods->getGoodsNav();
-			$this->assign("goodsNav",$goodsNav);
-			
+			$this->assign("goodsImgs",$goods->getGoodsImgs());
+			$this->assign("hotgoods",$goods->getHotGoods($goodsDetails['shopId']));
+			$this->assign("relatedGoods",$goods->getRelatedGoods($goodsId));
+			$this->assign("goodsNav",$goods->getGoodsNav());
+			$this->assign("goodsAttrs",$goods->getAttrs($obj));
+			$this->assign("goodsDetails",$goodsDetails);
 			$this->display('default/goods_details');
 		}else{
 			$this->display('default/goods_notexist');
@@ -162,9 +155,12 @@ class GoodsAction extends BaseAction {
 	 * 
 	 */
 	public function getGoodsStock(){
-		
+		$data = array();
+		$data['goodsId'] = (int)I('goodsId');
+		$data['isBook'] = (int)I('isBook');
+		$data['goodsAttrId'] = (int)I('goodsAttrId');
 		$goods = D('Home/Goods');
-		$goodsStock = $goods->getGoodsStock();
+		$goodsStock = $goods->getGoodsStock($data);
 		echo json_encode($goodsStock);
 		
 	}
@@ -251,9 +247,11 @@ class GoodsAction extends BaseAction {
 		//获取商家商品分类
 		$m = D('Home/ShopsCats');
 		$this->assign('shopCatsList',$m->queryByList($USER['shopId'],0));
+		//获取商品类型
+		$m = D('Home/AttributeCats');
+		$this->assign('attributeCatsCatsList',$m->queryByList());
 		$m = D('Home/Goods');
 		$object = array();
-		
     	if(I('id',0)>0){
     		$object = $m->get();
     	}else{
@@ -273,7 +271,7 @@ class GoodsAction extends BaseAction {
     	if(I('id',0)>0){
     		$rs = $m->edit();
     	}else{
-    		$rs = $m->add();
+    		$rs = $m->insert();
     	}
     	$this->ajaxReturn($rs);
 	}
@@ -323,8 +321,9 @@ class GoodsAction extends BaseAction {
 		$shopcart = session("WST_CART")?session("WST_CART"):array();	
 		
 		$catgoods = array();		
-		foreach($shopcart as $key=>$cgoods){				
-			$goods = $m->getGoodsInfo($key);
+		foreach($shopcart as $key=>$cgoods){
+			$temp = explode('_',$key);			
+			$goods = $m->getGoodsInfo((int)$temp[0],(int)$temp[1]);
 			if($goods["isBook"]==1){
 				$goods["goodsStock"] = $goods["goodsStock"]+$goods["bookQuantity"];
 			}
@@ -337,11 +336,8 @@ class GoodsAction extends BaseAction {
 	}
 	
 	public function getGoodsappraises(){	
-		
 		$goods = D('Home/Goods');
-		
 		$goodsAppraises = $goods->getGoodsAppraises();
-		
 		$this->ajaxReturn($goodsAppraises);
 	}
 	
@@ -356,7 +352,14 @@ class GoodsAction extends BaseAction {
 		$this->ajaxReturn($data);
 	}
 	
+	/**
+	 * 查询商品属性价格及库存
+	 */
+    public function getPriceAttrInfo(){
+    	$goods = D('Home/Goods');
+		$rs = $goods->getPriceAttrInfo();
+		$this->ajaxReturn($rs);
+    }
 	
-
 	
 }

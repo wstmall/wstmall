@@ -4,7 +4,7 @@
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>{$CONF['shopTitle']['fieldValue']}后台管理中心</title>
+      <title>{$CONF['mallTitle']}后台管理中心</title>
       <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
       <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
       <!--[if lt IE 9]>
@@ -17,21 +17,11 @@
       <script src="__PUBLIC__/plugins/plugins/plugins.js"></script>
    </head>
    <script>
-   function query(){
-	   var shopName = $('#shopName').val();
-	   var goodsName = $('#goodsName').val();
-	   var areaId1 = $('#areaId1').val();
-	   var areaId2 = $('#areaId2').val();
-	   location.href='__ROOT__/index.php/Admin/GoodsAppraises/index/?goodsName='+goodsName+"&shopName="+shopName+'&areaId1='+areaId1+'&areaId2='+areaId2; 
-   }
-   function edit(id){
-       location.href='__ROOT__/index.php/Admin/GoodsAppraises/toEdit/?id='+id;     
-   }
    function del(id){
 	   Plugins.confirm({title:'信息提示',content:'您确定要删除该商品评价吗?',okText:'确定',cancelText:'取消',okFun:function(){
 		   Plugins.closeWindow();
 		   Plugins.waitTips({title:'信息提示',content:'正在操作，请稍后...'});
-		   $.post("__ROOT__/index.php/Admin/GoodsAppraises/del",{id:id},function(data,textStatus){
+		   $.post("{:U('Admin/GoodsAppraises/del')}",{id:id},function(data,textStatus){
 					var json = WST.toJson(data);
 					if(json.status=='1'){
 						Plugins.setWaitTipsMsg({content:'操作成功',timeout:1000,callback:function(){
@@ -53,7 +43,7 @@
 		   $('#areaId3').html('<option value="">请选择</option>');
 	   }
 	   var html = [];
-	   $.post("__ROOT__/index.php/Admin/Areas/queryByList",params,function(data,textStatus){
+	   $.post("{:U('Admin/Areas/queryByList')}",params,function(data,textStatus){
 		    html.push('<option value="">请选择</option>');
 			var json = WST.toJson(data);
 			if(json.status=='1' && json.list.length>0){
@@ -73,20 +63,22 @@
    })
    </script>
    <body class='wst-page'>
+     <form method='post' action="{:U('Admin/GoodsAppraises/index')}">
        <div class='wst-tbar' style='height:25px;'>
-   地区：<select id='areaId1' onchange='javascript:getAreaList("areaId2",this.value,0)'>
+   地区：<select id='areaId1' name='areaId1' onchange='javascript:getAreaList("areaId2",this.value,0)'>
                <option value=''>请选择</option>
                <volist name="areaList" id="vo">
                <option value='{$vo['areaId']}' <if condition="$areaId1 == $vo['areaId'] ">selected</if>>{$vo['areaName']}</option>
                </volist>
              </select>
-             <select id='areaId2'>
+             <select id='areaId2' name='areaId2'>
                <option value=''>请选择</option>
              </select>
-        所属店铺：<input type='text' id='shopName' value='{$shopName}'/>
-        商品：<input type='text' id='goodsName' value='{$goodsName}'/>
-      <input type='button' value='查询' onclick='javascript:query()'/>
+        所属店铺：<input type='text' name='shopName' id='shopName' value='{$shopName}'/>
+        商品：<input type='text' name='goodsName' id='goodsName' value='{$goodsName}'/>
+      <button type='submit' class='btn btn-primary glyphicon glyphicon-search'>查询</button>
        </div>
+       </form>
        <div class="wst-body"> 
         <table class="table table-hover table-striped table-bordered wst-list">
            <thead>
@@ -138,7 +130,7 @@
 				</div>
                </td>
                <td rowspan='2'>
-               <button type="button" class="btn btn-default glyphicon glyphicon-pencil" onclick="javascript:edit({$vo['id']})"">修改</button>&nbsp;
+               <a class="btn btn-default glyphicon glyphicon-pencil" href="{:U('Admin/GoodsAppraises/toEdit',array('id'=>$vo['id']))}"">修改</a>&nbsp;
                <button type="button" class="btn btn-default glyphicon glyphicon-trash" onclick="javascript:del({$vo['id']})"">刪除</button>
                </td>
              </tr>
@@ -147,7 +139,7 @@
              </tr>
              </volist>
              <tr>
-                <td colspan='5' align='center'>{$Page['pager']}</td>
+                <td colspan='8' align='center'>{$Page['pager']}</td>
              </tr>
            </tbody>
         </table>

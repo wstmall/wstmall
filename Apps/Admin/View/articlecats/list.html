@@ -4,7 +4,7 @@
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>{$CONF['shopTitle']['fieldValue']}后台管理中心</title>
+      <title>{$CONF['mallTitle']}后台管理中心</title>
       <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
       <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
       <!--[if lt IE 9]>
@@ -18,11 +18,13 @@
    </head>
    <script>
    function toEdit(id,pid){
-       location.href='__ROOT__/index.php/Admin/ArticleCats/toEdit/?id='+id+"&parentId="+pid;     
+	   var url = "{:U('Admin/ArticleCats/toEdit',array('id'=>'__0','parentId'=>'__1'))}";
+	   url = WST.replaceURL(url,[id,pid]);
+       location.href=url;     
    }
    function editName(obj){
 	   Plugins.waitTips({title:'信息提示',content:'正在操作，请稍后...'});
-	   $.post("__ROOT__/index.php/Admin/ArticleCats/editName",{id:$(obj).attr('dataId'),catName:obj.value},function(data,textStatus){
+	   $.post("{:U('Admin/ArticleCats/editName')}",{id:$(obj).attr('dataId'),catName:obj.value},function(data,textStatus){
 			var json = WST.toJson(data);
 			if(json.status=='1'){
 				Plugins.setWaitTipsMsg({content:'操作成功',timeout:1000});
@@ -34,7 +36,7 @@
    }
    function toggleIsShow(t,v){
 	   Plugins.waitTips({title:'信息提示',content:'正在操作，请稍后...'});
-	   $.post("__ROOT__/index.php/Admin/ArticleCats/editiIsShow",{id:v,isShow:t},function(data,textStatus){
+	   $.post("{:U('Admin/ArticleCats/editiIsShow')}",{id:v,isShow:t},function(data,textStatus){
 			var json = WST.toJson(data);
 			if(json.status=='1'){
 				Plugins.setWaitTipsMsg({content:'操作成功',timeout:1000,callback:function(){
@@ -50,7 +52,7 @@
 	   Plugins.confirm({title:'信息提示',content:'您确定要删除该文章分类吗?',okText:'确定',cancelText:'取消',okFun:function(){
 		   Plugins.closeWindow();
 		   Plugins.waitTips({title:'信息提示',content:'正在操作，请稍后...'});
-		   $.post("__ROOT__/index.php/Admin/ArticleCats/del",{id:id},function(data,textStatus){
+		   $.post("{:U('Admin/ArticleCats/del')}",{id:id},function(data,textStatus){
 					var json = WST.toJson(data);
 					if(json.status=='1'){
 						Plugins.setWaitTipsMsg({content:'操作成功',timeout:1000,callback:function(){
@@ -77,7 +79,7 @@
 					//$(this).find('img').attr('src','../images/nolines_minus.gif');
 				});
 			}else{
-				$.post("__ROOT__/index.php/Admin/ArticleCats/queryByList",{id:pid},function(data,textStatus){
+				$.post("{:U('Admin/ArticleCats/queryByList')}",{id:pid},function(data,textStatus){
 					$(obj).attr("isLoad",1);
 					var json = WST.toJson(data);
 					if(json.list && json.list.length>0){
@@ -126,7 +128,7 @@
    <body class='wst-page'>
        <div class='wst-tbar' style='text-align:right;height:25px;'>
        <php>if(in_array('wzfl_01',$WST_STAFF['grant'])){</php>
-       <button type="button" class="btn btn-success glyphicon glyphicon-plus" onclick='javascript:toEdit(0)' style='float:right'>新增</button>
+       <a class="btn btn-success glyphicon glyphicon-plus" href="{:U('Admin/ArticleCats/toEdit')}" style='float:right'>新增</a>
        <php>}</php>
        </div>
        <div class="wst-body"> 
@@ -172,10 +174,10 @@
                </td>
                <td>
                <php>if(in_array('wzfl_01',$WST_STAFF['grant'])){</php>
-               <button type="button" class="btn btn-default glyphicon glyphicon-plus" onclick="javascript:toEdit(0,{$vo['catId']})"">新增子分类</button>&nbsp;
+               <a class="btn btn-default glyphicon glyphicon-plus" href="{:U('Admin/ArticleCats/toEdit',array('parentId'=>$vo['catId']))}">新增子分类</a>&nbsp;
                <php>}</php>
                <php>if(in_array('wzfl_02',$WST_STAFF['grant'])){</php>
-               <button type="button" class="btn btn-default glyphicon glyphicon-pencil" onclick="javascript:toEdit({$vo['catId']},0)"">修改</button>&nbsp;
+               <a class="btn btn-default glyphicon glyphicon-pencil" href="{:U('Admin/ArticleCats/toEdit',array('id'=>$vo['catId']))}">修改</a>&nbsp;
                <php>}</php>
                <php>if(in_array('wzfl_03',$WST_STAFF['grant'])){</php>
                <if condition="$vo['catType']==0 ">

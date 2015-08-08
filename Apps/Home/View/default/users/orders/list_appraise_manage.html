@@ -1,6 +1,5 @@
 <extend name="./Apps/Home/View/default/users/layout.html" />
 <block name="content">
-
     <div class="wst-body"> 
        <div class='wst-page-header'>买家中心 > 待评价交易</div>
        <div class='wst-page-content'>
@@ -21,7 +20,7 @@
                 <td width='*'>
                     <div style='width:200px;'>
                     <div style='width:70px;float:left'>
-					<a target='_blank' href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$appraise['goodsId']}">
+					<a target='_blank' href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$appraise['goodsId']))}">
 						<img src="__ROOT__/{$appraise['goodsThums']}" height="60" width="60"/>
 					</a>
 					</div>

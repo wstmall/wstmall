@@ -91,14 +91,16 @@ WST.getWSTMAllVersion = function(url){
 			json = eval("("+data+")");
 	      }
 		}catch(e){}
-	   if(json && json.version && json.version!='same'){
-		   $('.wstmall-version-tips').show();
-		   $('#wstmall_version').html(json.version);
-		   $('#wstmall_down').attr('href',json.downloadUrl);
+	   if(json){
+		   if(json.version && json.version!='same'){
+			   $('.wstmall-version-tips').show();
+			   $('#wstmall_version').html(json.version);
+			   $('#wstmall_down').attr('href',json.downloadUrl);
+		   }
+		   if(json.licenseStatus)$('#licenseStatus').html(json.licenseStatus);
 	   }
 	});
 }
-
  /******************** 
  * 取窗口滚动条高度  
  ******************/  
@@ -263,10 +265,15 @@ WST.checkMaxLength = function(o,maxLength){
 	}
 	return true;
 }
-WST.msg = function(msg,opts,func){
-	opts.shade = opts.shade?opts.shade:[0.3, '#000'];
-	opts.time = opts.time?opts.time:2000;
-	layer.msg(msg, {icon: opts.icon,shade: opts.shade,time: opts.time,offset: '200px'},func);
+WST.msg = function(msg, options, func){
+	var opts = {};
+	//有抖動的效果,第二位是函數
+	if(typeof(options)!='function'){
+		opts = $.extend(opts,{time:2000},options);
+		return layer.msg(msg, opts, func);
+	}else{
+		return layer.msg(msg, options);
+	}
 }
 WST.toJson = function(str){
 	var json = {};
@@ -405,5 +412,18 @@ WST.splitURL = function(spchar){
 	}else{
 		return furl.join("");
 	}
-	
+}
+
+/**
+ * 替换url
+ */
+WST.replaceURL = function(url,ar){
+	if(ar instanceof Array){
+		for(var i=0;i<ar.length;i++){
+			url = url.replace('__'+i,ar[i]);
+		}
+		return url;
+	}else{
+		return url.replace('__0',ar);
+	}
 }

@@ -363,9 +363,10 @@ class ShopsModel extends BaseModel {
 	/**
 	 * 获取店铺信息
 	 */
-	public function getShopInfo(){
+	public function getShopInfo($oshopId = 0){
 		$m = M('shops');
-		$shopId = I("shopId",0);
+		$shopId = (int)I("shopId");
+		$shopId = ($shopId==0)?$oshopId:$shopId;
 		$rs = $m->where("shopStatus=1 and shopId=".$shopId)->find();
 		if(empty($rs))return array();
 		$mc = M('shop_configs');
@@ -639,6 +640,16 @@ class ShopsModel extends BaseModel {
 		$sql = "select * from wst_shops where areaId2=".$areaId2." and isSelf=1 and shopFlag=1 and shopStatus = 1";
 		$shop = $this->queryRow($sql);
 		return $shop;
+	}
+	
+	/**
+	 * 检测自营店铺ID
+	 */
+	function checkSelfShopId($areaId2){
+		$m = M('shops');
+		$sql = "select shopId from wst_shops where areaId2=".$areaId2." and isSelf=1 and shopFlag=1 and shopStatus = 1";
+		$shop = $this->queryRow($sql);
+		return (int)$shop['shopId'];
 	}
 	 
 }

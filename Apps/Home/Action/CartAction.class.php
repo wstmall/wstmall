@@ -13,12 +13,10 @@ class CartAction extends BaseAction {
 	 * 跳到购物车列表
 	 */
     public function toCart(){
-    	self::getBaseInfo();
    		$m = D('Home/Cart');
 		$cartInfo = $m->getCartInfo();
    		$pnow = I("pnow",0);
    		$this->assign('cartInfo',$cartInfo);
-
    		$this->display('default/cart_pay_list');
 
     }
@@ -29,7 +27,7 @@ class CartAction extends BaseAction {
 	public function addToCartAjax(){
    		$m = D('Home/Cart');
    		$res = $m->addToCart();
-   		return "{status:1}";
+   		echo "{status:1}";
     }
     /**
      * 修改购物车商品
@@ -46,19 +44,24 @@ class CartAction extends BaseAction {
 	 * 
 	 */
 	public function getCartInfo() {
-		
 		$m = D('Home/Cart');
 		$cartInfo = $m->getCartInfo();
-		
 		$axm = I("axm",0);
 		if($axm ==1){
 			echo json_encode($cartInfo);
 		}else{
-			self::getBaseInfo();
 			$this->assign('cartInfo',$cartInfo);
 			$this->display('default/cart_pay_list');
 		}
 		
+	}
+	
+	/**
+	 * 获取购物车商品数量
+	 */
+	public function getCartGoodCnt(){
+		$shopcart = session("WST_CART")?session("WST_CART"):array();
+		echo json_encode(array("goodscnt"=>count($shopcart)));
 	}
     
 	/**
@@ -66,7 +69,6 @@ class CartAction extends BaseAction {
 	 * 
 	 */
 	public function checkCartGoodsStock(){
-		
 		$m = D('Home/Cart');
 		$res = $m->checkCatGoodsStock();
 		echo json_encode($res);
@@ -103,7 +105,6 @@ class CartAction extends BaseAction {
 	 * 
 	 */
 	public function toCatpaylist(){	
-		self::getBaseInfo();
 		$m = D('Home/Cart');
 		$cartInfo = $goodsmodel->getCartInfo();
 		$this->assign("cartInfo",$cartInfo);

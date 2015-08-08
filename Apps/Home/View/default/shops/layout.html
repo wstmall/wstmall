@@ -2,14 +2,15 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  		<title>卖家中心 - {$CONF['shopTitle']['fieldValue']}</title>
+  		<title>卖家中心 - {$CONF['mallTitle']}</title>
+  		<meta name="keywords" content="{$CONF['mallKeywords']}" />
+      	<meta name="description" content="{$CONF['mallDesc']},卖家中心" />
   		<meta http-equiv="Expires" content="0">
 		<meta http-equiv="Pragma" content="no-cache">
 		<meta http-equiv="Cache-control" content="no-cache">
 		<meta http-equiv="Cache" content="no-cache">
   		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/shop.css">
-      	
       	<script>
 		var publicurl = '__PUBLIC__/';
 		var shopId = '{$orderInfo["order"]["shopId"]}';
@@ -26,7 +27,7 @@
 			<div class="wst-user-top-main">
 					<div class='wst-user-top-logo'>
 						<a href="{:WSTDomain()}"  title='商城首页'>
-						<img src="__ROOT__/Apps/Home/View/default/images/logo.png" height="132" width='240'/>	
+						<img src="{:WSTDomain()}/{$CONF['mallLogo']}" height="132" width='240'/>	
 						</a>
 					</div>
 					<div class='wst-user-top-search'>
@@ -52,21 +53,22 @@
             <div class='wst-menu'>
             <span class='wst-menu-title' style='border-top:0px;'><span></span>商品管理</span>
             
-               <a href='__ROOT__/index.php/Home/ShopsCats/index'><li <if condition='$umark eq "index"'> class='liselect'</if>>商品分类</li></a>
-               <a href='__ROOT__/index.php/Home/Goods/queryOnSaleByPage'><li <if condition='$umark eq "queryOnSaleByPage"'> class='liselect'</if>>出售中的商品</li></a>
-               <a href='__ROOT__/index.php/Home/Goods/queryPenddingByPage'><li <if condition='$umark eq "queryPenddingByPage"'> class='liselect'</if>>待审核商品</li></a>
-               <a href='__ROOT__/index.php/Home/Goods/queryUnSaleByPage'><li <if condition='$umark eq "queryUnSaleByPage"'> class='liselect'</if>>仓库中的商品</li></a>
-               <a href='__ROOT__/index.php/Home/Goods/toEdit/?umark=toEditGoods'><li <if condition='$umark eq "toEditGoods"'> class='liselect'</if>>新增商品</li></a>
-               <a href='__ROOT__/index.php/Home/GoodsAppraises/index'><li <if condition='$umark eq "GoodsAppraises"'> class='liselect'</if>>评价管理</li></a>
+               <a href="{:U('Home/ShopsCats/index/')}"><li <if condition='$umark eq "index"'> class='liselect'</if>>商品分类</li></a>
+               <a href="{:U('Home/Goods/queryOnSaleByPage/')}"><li <if condition='$umark eq "queryOnSaleByPage"'> class='liselect'</if>>出售中的商品</li></a>
+               <a href="{:U('Home/Goods/queryPenddingByPage/')}"><li <if condition='$umark eq "queryPenddingByPage"'> class='liselect'</if>>待审核商品</li></a>
+               <a href="{:U('Home/Goods/queryUnSaleByPage/')}"><li <if condition='$umark eq "queryUnSaleByPage"'> class='liselect'</if>>仓库中的商品</li></a>
+               <a href="{:U('Home/Goods/toEdit/',array('umark'=>'toEditGoods'))}"><li <if condition='$umark eq "toEditGoods"'> class='liselect'</if>>新增商品</li></a>
+               <a href="{:U('Home/GoodsAppraises/index/')}"><li <if condition='$umark eq "GoodsAppraises"'> class='liselect'</if>>评价管理</li></a>
+
+               <a href="{:U('Home/AttributeCats/index')}"><li <if condition='$umark eq "AttributeCats"'> class='liselect'</if>>商品类型</li></a>
+			<span class='wst-menu-title'><span></span>交易管理</span>
             
-            <span class='wst-menu-title'><span></span>交易管理</span>
-            
-              <a href='__ROOT__/index.php/Home/Orders/toShopOrdersList'><li <if condition='$umark eq "toShopOrdersList"'> class='liselect'</if>>订单管理</li></a>
+              <a href='{:U("Home/Orders/toShopOrdersList")}'><li <if condition='$umark eq "toShopOrdersList"'> class='liselect'</if>>订单管理</li></a>
               <span class='wst-menu-title'><span></span>网店设置</span>
-            	<a href='__ROOT__/index.php/Home/Shops/toEdit'><li <if condition='$umark eq "toEdit"'> class='liselect'</if>>店铺资料</li></a>
-              	<a href='__ROOT__/index.php/Home/Shops/toShopCfg'><li <if condition='$umark eq "setShop"'> class='liselect'</if>>店铺设置</li></a>
-              	<a href='__ROOT__/index.php/Home/Messages/queryByPage'><li <if condition='$umark eq "queryMessageByPage"'> class='liselect'</if>>商城消息</li></a>
-              	<a href='__ROOT__/index.php/Home/Shops/toEditPass'><li <if condition='$umark eq "toEditPass"'> class='liselect'</if>>修改密码</li></a>
+            	<a href="{:U('Home/Shops/toEdit/')}"><li <if condition='$umark eq "toEdit"'> class='liselect'</if>>店铺资料</li></a>
+              	<a href="{:U('Home/Shops/toShopCfg/')}"><li <if condition='$umark eq "setShop"'> class='liselect'</if>>店铺设置</li></a>
+              	<a href="{:U('Home/Messages/queryByPage/')}"><li <if condition='$umark eq "queryMessageByPage"'> class='liselect'</if>>商城消息</li></a>
+              	<a href="{:U('Home/Shops/toEditPass')}"><li <if condition='$umark eq "toEditPass"'> class='liselect'</if>>修改密码</li></a>
             </div>
             <div class='wst-content'>
             <block name="content"><div class="result">卖家中心</div></block>

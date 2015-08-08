@@ -4,9 +4,9 @@
   		<meta charset="utf-8">
       	<meta http-equiv="X-UA-Compatible" content="IE=edge">
       	<meta name="viewport" content="width=device-width, initial-scale=1">
-      	<title>用户登录 - {$CONF['shopTitle']['fieldValue']}</title>
-      	<meta name="keywords" content="{$CONF['shopKeywords']['fieldValue']}" />
-      	<meta name="description" content="{$CONF['shopTitle']['fieldValue']},用户登录" />
+      	<title>用户登录 - {$CONF['mallTitle']}</title>
+      	<meta name="keywords" content="{$CONF['mallKeywords']}" />
+      	<meta name="description" content="{$CONF['mallDesc']},用户登录" />
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css">
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/login.css">
    	</head>
@@ -17,15 +17,16 @@
       	<script src="__PUBLIC__/js/respond.min.js"></script>
       	<![endif]-->
    			<div class='wst-login'>
-   				<div style="margin: 0 auto;padding-left:60px;">
-   					<a href="__ROOT__/index.php">
-   						<img src="__ROOT__/Apps/Home/View/default/images/logo.png"/>
+   				<div style="margin: 0 auto;width: 890px;padding-left:60px;">
+   					<a href="{:WSTDomain()}">
+   						<img width='240' src="{:WSTDomain()}/{$CONF['mallLogo']}"/>
    					</a>
    				</div>
 		    	<div class="w1" id="entry">
 		    	
 		        	<div class="mc " id="bgDiv" style="position:relative">
-		        	<div><a style="text-decoration: none;font-size:65px;color:red;position:absolute;top:160px;left:60px;" href="{:U('Index/index')}">WST 商城</a></div>
+
+		        	<div><a style="text-decoration: none;font-size:65px;color:red;position:absolute;top:160px;left:60px;" href="{:U('Index/index')}">用户登录</a></div>
 		            
 		            <div class="form">
 		                <div class="item fore1" style="position:relative;">
@@ -69,7 +70,9 @@
 		            <span><a href="javascript:regist();" >免费注册&gt;&gt;</a></span>
 		        </div>
 		    </div>
-		</div><script src="__PUBLIC__/plugins/formValidator/formValidator-4.1.3.js"></script>
+		</div>
+		<include file="./Apps/Home/View/default/footer.html" />
+		<script src="__PUBLIC__/plugins/formValidator/formValidator-4.1.3.js"></script>
       	<script src="__PUBLIC__/js/common.js"></script>
       	<script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
       	<script src="__ROOT__/Apps/Home/View/default/js/login.js"></script>

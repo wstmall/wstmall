@@ -110,7 +110,7 @@
 .wst-shophome-nav {
 	height: 45px;
 	background-image: url(../../../View/default/images/store_menubg.png);
-	background-repeat: no-repeat;
+	background-repeat: repeat-x;
 }
 
 .wst-shophome-nav-box {

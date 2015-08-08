@@ -4,9 +4,9 @@
   		<meta charset="utf-8">
       	<meta http-equiv="X-UA-Compatible" content="IE=edge">
       	<meta name="viewport" content="width=device-width, initial-scale=1">
-      	<title>{$shops['shopName']} - 首页</title>
-      	<meta name="keywords" content="{$shops['shopKeywords']}" />
-      	<meta name="description" content="{$CONF['shopTitle']['fieldValue']},{$shops['shopDesc']}" />
+      	<title>{$shops['shopName']} - {$CONF['mallTitle']}</title>
+      	<meta name="keywords" content="{$shops['shopKeywords']},首页" />
+      	<meta name="description" content="{$CONF['mallDesc']},{$shops['shopDesc']}" />
       	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/shophome.css" />
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
@@ -23,7 +23,7 @@
    		<input type="hidden" id="shopId" value="{$shopId}"/>
    		<input type="hidden" id="ct1" value="{$ct1}"/>
    		<input type="hidden" id="ct2" value="{$ct2}"/>
-		<include file="./Apps/Home/View/default/header.html" />
+		<include file="./Apps/Home/View/default/header_common.html" />
 		<div>
 			<if condition="$shops['shopBanner'] neq ''">
 				<img data-original="__ROOT__/{$shops['shopBanner']}" width="100%" height="120"/>
@@ -31,10 +31,10 @@
 		</div>
 		<div class="wst-shophome-nav">
 			<div class="wst-shophome-nav-box">
-				<a href="__ROOT__/index.php/Home/Shops/toShopHome/?shopId={$shopId}&ct1=-1"><li <if condition="$ct1 eq -1">class="liselected"</if>>本店所有商品</li></a>
-				<a href="__ROOT__/index.php/Home/Shops/toShopHome/?shopId={$shopId}&ct1=0"><li <if condition="$ct1 eq 0">class="liselected"</if>>店铺首页</li></a>
+				<a href="{:U('Home/Shops/toShopHome/',array('shopId'=>$shopId,'ct1'=>-1))}"><li <if condition="$ct1 eq -1">class="liselected"</if>>本店所有商品</li></a>
+				<a href="{:U('Home/Shops/toShopHome/',array('shopId'=>$shopId,'ct1'=>0))}"><li <if condition="$ct1 eq 0">class="liselected"</if>>店铺首页</li></a>
 				<volist name="shopscates" key="k" id="vo">
-				<a href="__ROOT__/index.php/Home/Shops/toShopHome/?shopId={$vo['shopId']}&ct1={$vo['catId']}"><li <if condition="$ct1 eq $vo['catId']">class="liselected"</if>>{$vo["catName"]}</li></a>
+				<a href="{:U('Home/Shops/toShopHome/',array('shopId'=>$vo['shopId'],'ct1'=>$vo['catId']))}"><li <if condition="$ct1 eq $vo['catId']">class="liselected"</if>>{$vo["catName"]}</li></a>
 				</volist>
 			</div>
 		</div>
@@ -123,7 +123,7 @@
 							<volist name="shopscates" key="k" id="vo">
 								<li data="pcate-{$k}" class="pcate-{$k} pcate" style=""><span id="pcate-{$k}-s" class="span2"></span>&nbsp;&nbsp;&nbsp;&nbsp;{$vo["catName"]}</li>
 								<volist name="vo['children']" key="k2" id="vo2">
-									<a href="__ROOT__/index.php/Home/Shops/toShopHome/?shopId={$vo2['shopId']}&ct1={$vo['catId']}&ct2={$vo2['catId']}"><li class="pcate-{$k}-c ccate" ><img src="__ROOT__/Apps/Home/View/default/images/icon_dire_more.png" width="5" height="10"/>&nbsp;{$vo2["catName"]}</li></a>
+									<a href="{:U('Home/Shops/toShopHome/',array('shopId'=>$vo2['shopId'],'ct1'=>$vo['catId'],'ct2'=>$vo2['catId']))}"><li class="pcate-{$k}-c ccate" ><img src="__ROOT__/Apps/Home/View/default/images/icon_dire_more.png" width="5" height="10"/>&nbsp;{$vo2["catName"]}</li></a>
 								</volist>
 							</volist>
 						</div>
@@ -136,7 +136,7 @@
 								<img data-original="__ROOT__/{$vo['goodsThums']}" width="65" height="65" />
 							</div>
 							<div class="hotsale-goods-title">
-								<a href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$vo['goodsId']}">{$vo['goodsName']}</a>
+								<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo['goodsId']))}">{$vo['goodsName']}</a>
 								<div><span class="span1">￥{$vo['shopPrice']}</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="span2">￥{$vo['marketPrice']}</span></div>
 							</div>
 							<div class="wst-clear"></div>
@@ -174,13 +174,13 @@
 							
 							<li class="wst-goods-item">
 								<div class="goods-img">
-									<a href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$vo['goodsId']}">
+									<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo['goodsId']))}">
 										<img data-original="__ROOT__/{$vo['goodsThums']}" width="180" />
 									</a>
 								</div>
 								<div class="goods-des">
-									<div class="goods-title"><a href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$vo['goodsId']}">{$vo['goodsName']}</a></div>
-									<div class="goods-price"><span class="span1">￥{$vo['shopPrice']}</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="span2">￥{$vo['marketPrice']}</span></div>
+									<div class="goods-title"><a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo['goodsId']))}">{$vo['goodsName']}</a></div>
+									<div class="goods-price"><span class="span1" id='shopGoodsPrice_{$vo["goodsId"]}' dataId='{$vo["goodsAttrId"]}'>￥{$vo['shopPrice']}</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="span2">￥{$vo['marketPrice']}</span></div>
 									<div class="goods-buy">
 										<div class="goods-left">
 											<span class='total-buy'>{$vo["totalnum"]?$vo["totalnum"]:0}</span>人已购买

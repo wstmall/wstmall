@@ -13,8 +13,8 @@
 	   			<div>上次登录时间：{$WST_USER["lastTime"]}</div>
 	   			<div>上次登录IP：{$WST_USER["lastIP"]}</div>
 	   			<div class="wst-user-adr">
-	   				<a style="color:#ffffff;" href='__ROOT__/index.php/Home/UserAddress/queryByPage'>我的收货地址</a>&nbsp;&nbsp;&nbsp;
-	   				<a href="__ROOT__/index.php/Home/Users/toEdit" style="color:#ffffff;">编辑个人资料</a>
+	   				<a style="color:#ffffff;" href="{:U('Home/UserAddress/queryByPage/')}">我的收货地址</a>&nbsp;&nbsp;&nbsp;
+	   				<a href="{:U('Home/Users/toEdit/')}" style="color:#ffffff;">编辑个人资料</a>
 	   			</div>
 	   		</div>
 	   		<div class="wst-clear"></div>
@@ -23,11 +23,11 @@
        <div class="wst-order-tg">
        		<div class="wst-oinfo-box">
        			<div style="">
-       			<div style="float:left;width:110px;">待付款<a href="__ROOT__/index.php/Home/Orders/queryPayByPage"><span>{$statusList[-2]}</span></a></div>
-       			<div style="float:left;width:108px;border-left:1px solid #cccccc;border-right:1px solid #cccccc;">待发货<a href="__ROOT__/index.php/Home/Orders/queryDeliveryByPage"><span>{$statusList[2]}</span></a></div>
-       			<div style="float:left;width:108px;border-left:1px solid #cccccc;border-right:1px solid #cccccc;">待收货<a href="__ROOT__/index.php/Home/Orders/queryReceiveByPage"><span>{$statusList[3]}</span></a></div>
-       			<div style="float:left;width:108px;border-left:1px solid #cccccc;border-right:1px solid #cccccc;">待评价<a href="__ROOT__/index.php/Home/Orders/queryAppraiseByPage"><span>{$statusList[4]}</span></a></div>
-       			<div style="float:left;width:110px;">退款<a href="__ROOT__/index.php/Home/Orders/queryRefundByPage"><span>{$statusList[-3]}</span></a></div>
+       			<div style="float:left;width:110px;">待付款<a href="{:U('Home/Orders/queryPayByPage/')}"><span>{$statusList[-2]}</span></a></div>
+       			<div style="float:left;width:108px;border-left:1px solid #cccccc;border-right:1px solid #cccccc;">待发货<a href="{:U('Home/Orders/queryDeliveryByPage/')}"><span>{$statusList[2]}</span></a></div>
+       			<div style="float:left;width:108px;border-left:1px solid #cccccc;border-right:1px solid #cccccc;">待收货<a href="{:U('Home/Orders/queryReceiveByPage/')}"><span>{$statusList[3]}</span></a></div>
+       			<div style="float:left;width:108px;border-left:1px solid #cccccc;border-right:1px solid #cccccc;">待评价<a href="{:U('Home/Orders/queryAppraiseByPage/')}"><span>{$statusList[4]}</span></a></div>
+       			<div style="float:left;width:110px;">退款<a href="{:U('Home/Orders/queryRefundByPage/')}"><span>{$statusList[-3]}</span></a></div>
        			<div class="wst-clear"></div>
        			</div>
        		</div>
@@ -42,7 +42,7 @@
        				<tr >
        					<td width="150">
        						<volist name="order['goodslist']" id="goods" key='key2'>
-								<a href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$goods['goodsId']}">
+								<a href="{:U('Home/Goods/getGoodsDetails',array('goodsId'=>$goods['goodsId']))}">
 									<img src="__ROOT__/{$goods['goodsThums']}" height="50" width="50"/>
 								</a>
 							</volist>

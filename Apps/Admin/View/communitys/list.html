@@ -4,7 +4,7 @@
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>{$CONF['shopTitle']['fieldValue']}后台管理中心</title>
+      <title>{$CONF['mallTitle']}后台管理中心</title>
       <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
       <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
       <!--[if lt IE 9]>
@@ -17,12 +17,9 @@
       <script src="__PUBLIC__/plugins/plugins/plugins.js"></script>
    </head>
    <script>
-   function edit(id){
-       location.href='__ROOT__/index.php/Admin/Communitys/toEdit/?id='+id;     
-   }
    function toggleIsShow(t,v){
 	   Plugins.waitTips({title:'信息提示',content:'正在操作，请稍后...'});
-	   $.post("__ROOT__/index.php/Admin/Communitys/editiIsShow",{id:v,isShow:t},function(data,textStatus){
+	   $.post("{:U('Admin/Communitys/editiIsShow')}",{id:v,isShow:t},function(data,textStatus){
 			var json = WST.toJson(data);
 			if(json.status=='1'){
 				Plugins.setWaitTipsMsg({content:'操作成功',timeout:1000,callback:function(){
@@ -38,7 +35,7 @@
 	   Plugins.confirm({title:'信息提示',content:'您确定要删除该社区吗?',okText:'确定',cancelText:'取消',okFun:function(){
 		   Plugins.closeWindow();
 		   Plugins.waitTips({title:'信息提示',content:'正在操作，请稍后...'});
-		   $.post("__ROOT__/index.php/Admin/Communitys/del",{id:id},function(data,textStatus){
+		   $.post("{:U('Admin/Communitys/del')}",{id:id},function(data,textStatus){
 					var json = WST.toJson(data);
 					if(json.status=='1'){
 						Plugins.setWaitTipsMsg({content:'操作成功',timeout:1000,callback:function(){
@@ -60,7 +57,7 @@
 		   $('#areaId3').html('<option value="">请选择</option>');
 	   }
 	   var html = [];
-	   $.post("__ROOT__/index.php/Admin/Areas/queryByList",params,function(data,textStatus){
+	   $.post("{:U('Admin/Areas/queryByList')}",params,function(data,textStatus){
 		    html.push('<option value="">请选择</option>');
 			var json = WST.toJson(data);
 			if(json.status=='1' && json.list.length>0){
@@ -73,13 +70,6 @@
 			$('#'+objId).html(html.join(''));
 	   });
    }
-   function query(){
-	   var q = [];
-	   q.push('areaId1='+$('#areaId1').val());
-	   q.push('areaId2='+$('#areaId2').val());
-	   q.push('areaId3='+$('#areaId3').val());
-	   location.href="__ROOT__/index.php/Admin/Communitys/index/?"+q.join('&');
-   }
    $(document).ready(function(){
 	    <notempty name='areaId1'>
 		   getAreaList("areaId2",'{$areaId1}',0,'{$areaId2}');
@@ -88,26 +78,28 @@
    });
    </script>
    <body class='wst-page'>
+     <form method='post' action='{:U("Admin/Communitys/index")}'>
        <div class='wst-tbar' style='text-align:right;height:25px;'>
        <div style='float:left;'>
-           地区：<select id='areaId1' onchange='javascript:getAreaList("areaId2",this.value,0)'>
+           地区：<select id='areaId1' name='areaId1' onchange='javascript:getAreaList("areaId2",this.value,0)'>
                <option value=''>请选择</option>
                <volist name="areaList" id="vo">
                <option value='{$vo['areaId']}' <if condition="$areaId1 == $vo['areaId'] ">selected</if>>{$vo['areaName']}</option>
                </volist>
              </select>
-             <select id='areaId2' onchange='javascript:getAreaList("areaId3",this.value,1);'>
+             <select id='areaId2' name='areaId2' onchange='javascript:getAreaList("areaId3",this.value,1);'>
                <option value=''>请选择</option>
              </select>
-             <select id='areaId3'>
+             <select id='areaId3' name='areaId3'>
                <option value=''>请选择</option>
              </select> 
-       <button type="button" class="btn btn-primary glyphicon glyphicon-search" onclick='javascript:query()'>查询</button>       
+       <button type="submit" class="btn btn-primary glyphicon glyphicon-search">查询</button>      
        </div>       
        <php>if(in_array('sqlb_01',$WST_STAFF['grant'])){</php>
-       <button type="button" class="btn btn-success glyphicon glyphicon-plus" onclick='javascript:edit(0)' style='float:right'>新增</button>
+       <a class="btn btn-success glyphicon glyphicon-plus" href="{:U('Admin/Communitys/toEdit')}" style='float:right'>新增</a>
        <php>}</php>
        </div>
+       </form>
         <div class="wst-body">
         <table class="table table-hover table-striped table-bordered wst-list">
            <thead>
@@ -158,11 +150,11 @@
                <td>{$vo['communitySort']}</td>
                <td>
                <php>if(in_array('sqlb_02',$WST_STAFF['grant'])){</php>
-               <button type="button" class="btn btn-default glyphicon glyphicon-pencil" onclick="javascript:edit({$vo['communityId']})"">修改</button>
+               <a class="btn btn-default glyphicon glyphicon-pencil" href="{:U('Admin/Communitys/toEdit',array('id'=>$vo['communityId']))}"">修改</a>
                <php>}</php>
                &nbsp;
                <php>if(in_array('sqlb_03',$WST_STAFF['grant'])){</php>
-               <button type="button" class="btn btn-default glyphicon glyphicon-trash" onclick="javascript:del({$vo['communityId']})"">刪除</button>
+               <a class="btn btn-default glyphicon glyphicon-trash" onclick="javascript:del({$vo['communityId']})"">刪除</a>
                <php>}</php>
                </td>
              </tr>

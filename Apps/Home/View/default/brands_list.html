@@ -4,26 +4,25 @@
   		<meta charset="utf-8">
       	<meta http-equiv="X-UA-Compatible" content="IE=edge">
       	<meta name="viewport" content="width=device-width, initial-scale=1">
-      	<title>品牌汇 - {$CONF['shopTitle']['fieldValue']}</title>
-      	<meta name="keywords" content="{$CONF['shopKeywords']['fieldValue']}" />
-      	<meta name="description" content="{$CONF['shopTitle']['fieldValue']},商城品牌展示" />
+      	<title>品牌汇 - {$CONF['mallTitle']}</title>
+      	<meta name="keywords" content="{$CONF['mallKeywords']}" />
+      	<meta name="description" content="{$CONF['mallDesc']},商城品牌展示" />
       	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/brandslist.css" />
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
 		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />
-
    	</head>
    	<body>
 
-		<include file="./Apps/Home/View/default/header.html" />
+		<include file="./Apps/Home/View/default/header_common.html" />
 		<div>
 			<div class="wst-brands-ads">
 				<volist name="ads" id="vo" key='i'>
 					<if condition="$i eq 1">
-				   <a href="__ROOT__/index.php/Home/Index/access/?id={$vo['adId']}&url={$vo['adURL']}" target="_blank">
+				   	<a href="{:U('Home/Index/access/',array('id'=>$vo['adId'],'url'=>$vo['adURL']))}" target="_blank">
 						<img src="__ROOT__/{$vo['adFile']}" width='1210' height="350" title="{$vo['adName']}"/>
-				   </a>
-				   </if>
+				   	</a>
+				   	</if>
 				</volist>
 			</div>
 		</div>

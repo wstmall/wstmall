@@ -47,5 +47,8 @@
 .wst-ods-success-tk{margin-top:15px;}
 
 
+.wst-payCode{float:left;width:160px;cursor:pointer;}
+.wst-payCode-curr{float:left;width:160px;cursor:pointer;border:2px solid red;}
+
 
 

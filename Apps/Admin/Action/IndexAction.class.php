@@ -94,9 +94,11 @@ class IndexAction extends BaseAction {
      * 获取当前版本
      */
     public function getWSTMallVersion(){
+    	$rs = $this->isLogin();
     	$version = C('WST_VERSION');
     	$key = C('WST_MD5');
-    	$content = file_get_contents('http://www.wstmall.com/index.php?m=Api&c=Download&a=getLastVersion&version='.$version.'&version_md5='.$key);
+    	$license = $GLOBALS['CONFIG']['mallLicense'];
+    	$content = file_get_contents('http://www.wstmall.com/index.php?m=Api&c=Download&a=getLastVersion&version='.$version.'&version_md5='.$key."&license=".$license."&host=".WSTDomain());
     	$json = json_decode($content,true);
         if($json['version'] ==  $version){
     		$json['version'] = "same";
@@ -105,15 +107,34 @@ class IndexAction extends BaseAction {
     }
     
     /**
+     * 输入授权码
+     */
+    public function enterLicense(){
+    	$rs = $this->isLogin();
+    	$this->display("/enter_license");
+    }
+    /**
+     * 验证授权码
+     */
+    public function verifyLicense(){
+    	$this->checkPrivelege('scxx_00');
+    	$license = I('license');
+    	$content = file_get_contents('http://www.wstmall.com/index.php?m=Api&c=License&a=verifyLicense&host='.WSTRootDomain().'&license='.$license);
+    	$json = json_decode($content,true);
+    	$rs = array('status'=>1);
+    	if($json['status']==1){
+    		$rs = D('Admin/Index')->saveLicense();
+    	}
+    	$rs['license'] = $json;
+		$this->ajaxReturn($rs);
+    }
+    /**
      * 清除缓存
      */
     public function cleanAllCache(){
-    	error_reporting(E_ALL); 
-        ini_set('display_errors', 1);
+    	$rs = $this->isLogin();
         $rv = array('status'=>-1);
-        $BasePath = dirname(dirname(dirname(__File__)));
-        $BasePath = $BasePath."/Runtime/Temp";
-		$rv['status'] = WSTDelDir($BasePath);
+		$rv['status'] = WSTDelDir(C('WST_RUNTIME_PATH'));
     	$this->ajaxReturn($rv);
     }
 }

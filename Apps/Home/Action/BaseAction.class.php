@@ -23,7 +23,7 @@ class BaseAction extends Controller {
 		$this->assign('currArea',$currArea);
    		$this->assign('searchType',I("searchType",1));
    		
-   		$this->assign('currCity',$areaList[$areaId2]);
+   		//$this->assign('currCity',$areaList[$areaId2]);
    		$this->assign('areaId2',$areaId2);
    		$this->assign('template_path',$template_path);
    		$this->assign('CONF',$GLOBALS['CONFIG']);
@@ -31,24 +31,24 @@ class BaseAction extends Controller {
 	}
 	
 	/**
-	 * 
+	 * 生成URL
 	 */
-	public function getBaseInfo(){
-		$areaId2 = $this->getDefaultCity();
-		//获取分类
-		$gcm = D('Home/GoodsCats');
-		$catList = $gcm->getGoodsCats($areaId2);
-		$this->assign('catList',$catList);
+	public function getURL(){
+		$params = I('post.');
+		$wstModel = $params["wstModel"];
+		$wstControl = $params["wstControl"];
+		$wstAction = $params["wstAction"];
+		$newparams = array();
+		$baseParas = array("wstModel","wstControl","wstAction");
+		foreach ($params as $key => $p) {
+			if(!in_array($key, $baseParas) ){
+				$newparams[$key] = $p;
+			}
+		}
+		$data["url"] = U($wstModel.'/'.$wstControl.'/'.$wstAction,$newparams);
 		
-		//获取自营商店
-		$spm = D('Home/Shops');
-		$selfShop = $spm->getSelfShop($areaId2);
-		$this->assign('selfShop',$selfShop);
-		
-		//获取购物车
-		$m = D('Home/Cart');
-		$cartInfo = $m->getCartInfo();
-		$this->assign('cartcnt',count($cartInfo["cartgoods"]));
+		return $this->ajaxReturn($data);
+
 	}
 	
 	/**
@@ -64,7 +64,7 @@ class BaseAction extends Controller {
      */
 	public function isUserLogin($ref="") {
 		$USER = session('WST_USER');
-		if (empty($USER) || ($USER['userType']!=0 && $USER['userType']<1)){
+		if (empty($USER) || ($USER['userId']=='')){
 			$this->redirect("Users/login");
 		}
 	}
@@ -73,9 +73,9 @@ class BaseAction extends Controller {
      */
     public function isUserAjaxLogin() {
     	$USER = session('WST_USER');
-		if (empty($USER) || ($USER['userType']!=0 || $USER['userType']<1)){
+		if (empty($USER) || ($USER['userId']=='')){
 			if(!empty($_COOKIE['loginName']) && !empty($_COOKIE['loginPwd'])){ //自动登录(已保存loginName，loginPwd)
-				$m = D('Home/User');
+				$m = D('Home/Users');
 				$user = $m->getUserInfo($_COOKIE['loginName'],$_COOKIE['loginPwd']);
 				if(empty($user)){
 					session('WST_USER',$user);

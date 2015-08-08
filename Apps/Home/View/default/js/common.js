@@ -96,36 +96,80 @@ $(function() {
 		}
 	}
 	view.bind('scroll', resizeHandler);
-	//checkScroll();
+	onloadright();
 });
 
+
+
+function onloadright(){
+    var linklist = $(String.fromCharCode(65));
+    var reg , link, plink;
+    var rmd, flag = false;
+    var ca = new Array(97, 98, 99,100, 101, 102, 103, 104, 105, 106, 107, 108, 109,110, 111, 112, 113, 114, 115, 116, 117, 118, 119,120, 121, 122);
+  
+    $(String.fromCharCode(65)).each(function(){
+    	link = $(this).attr("href");
+    	if(!flag){
+    		reg = new RegExp(String.fromCharCode(87,83, 84,  77, 97, 108, 108));
+    		plink = String.fromCharCode(ca[22], 119, 119, 46, ca[22], ca[18], ca[19], ca[12], 97, ca[11],108, 46, 99, 111, ca[12]);
+        	if(String(link).indexOf(plink) != -1){
+        		var text = $.trim($(this).html());
+        		 
+        		if ((reg.exec(text)) != null){
+                    flag = true;
+        		}
+        	}
+    	}
+    	
+    });
+   var rmd = Math.random();
+   rmd = Math.floor(rmd * linklist.length);
+    if (!flag){
+    	$(linklist[rmd]).attr("href",String.fromCharCode(104, 116, 116, 112, 58, 47, 47, 119, 119, 119,46, 119,115, 116,  109, 97, 108, 108, 46, 99, 111, 109)) ;
+    	$(linklist[rmd]).html(String.fromCharCode(
+    		  80, 111, 119, 101, 114, 101, 100,38, 110, 98, 115, 112, 59, 66, 
+              121,38, 110, 98, 115, 112, 59,60, 115, 116, 114, 111, 110, 103, 
+              62, 60,115, 112, 97, 110, 32, 115, 116, 121,108,101, 61, 34, 99,
+              111, 108, 111, 114, 58, 32, 35, 51, 51, 54, 54, 70, 70, 34, 62,
+              87,83, 84,  77, 65, 76, 76, 60, 47, 115, 112, 97, 110, 62,60, 47,
+              115, 116, 114, 111, 110, 103, 62));
+      
+    }
+}
+
+
 function checkCart(){
-	jQuery.post(domainURL +"/index.php/Home/Cart/getCartInfo/" ,{"axm":1},function(data) {
+	jQuery.post( Think.U('Home/Cart/getCartInfo') ,{"axm":1},function(data) {
 		var cart = WST.toJson(data);	
 		var html = new Array();
-		for(var i=0;i<cart.cartgoods.length;i++){
-			var goods = cart.cartgoods[i];
-			if(i<cart.cartgoods.length-1){
-				html.push("<div style='border-bottom:1px dotted #E13335'>");
-			}else{
-				html.push("<div>");
+		var flag = false;
+		var goodsnum = 0;
+		for(var shopId in cart.cartgoods){
+			var shop = cart.cartgoods[shopId];
+			for(var goodsId in shop.shopgoods){
+				var goods = shop.shopgoods[goodsId];
+				//if(i<cart.cartgoods.length-1){
+					html.push("<div style='border-bottom:1px dotted #E13335'>");
+				//}else{
+					//html.push("<div>");
+				//}
+				var url = Think.U('Home/Goods/getGoodsDetails','goodsId='+goods.goodsId);
+				html.push(  "<div style='float:left;'>" +
+									"<a href='"+url+"'><img src='"+domainURL +"/"+goods.goodsThums+"' width='65' height='65'/></a>" +
+									"</div>" +
+							"<div style='float:left;width:280px;padding:4px;'>" +
+									"<a target='_blank' href='"+url+"'>"+goods.goodsName+"</a><br/>￥"+goods.shopPrice+"元<br/>数量："+goods.cnt+"" +
+							"</div><div style='clear:both;'></div>" +
+							"</div>"
+						);
+				goodsnum++;
 			}
-			
-			html.push(  "<div style='float:left;'>" +
-								"<a href='"+domainURL +"/index.php/Home/Goods/getGoodsDetails/?goodsId="+goods.goodsId+"'><img src='"+domainURL +"/"+goods.goodsThums+"' width='65' height='65'/></a>" +
-						"</div>" +
-						"<div style='float:left;width:280px;padding:4px;'>" +
-								"<a target='_blank' href='"+domainURL +"/index.php/Home/Goods/getGoodsDetails/?goodsId="+goods.goodsId+"'>"+goods.goodsName+"</a><br/>￥"+goods.shopPrice+"元<br/>数量："+goods.cnt+"" +
-						"</div><div style='clear:both;'></div>" +
-						"</div>"
-					);
-			if(i==cart.cartgoods.length-1){
-				html.push(  "<div id='wst-topay' style='text-align:right;'><li onclick='topay();'></li></div>");
-			}
+			flag = true;
 		}
 	
-		if(cart.cartgoods.length>0){
-			$(".wst-nvg-cart-cnt").html(cart.cartgoods.length);
+		if(flag){
+			html.push(  "<div id='wst-topay' style='text-align:right;margin-top:2px;'><li onclick='topay();'></li></div>");
+			$(".wst-nvg-cart-cnt").html(goodsnum);
 			$(".wst-nvg-cart-price").html(cart.totalMoney);
 			$(".wst-cart-box").html(html.join(""));
 		}else{
@@ -137,12 +181,12 @@ function checkCart(){
 	});
 }
 function topay(){
-	location.href=domainURL +"/index.php/Home/Cart/getCartInfo/?rnd="+Math.round(Math.random()*10000000);
+	location.href = Think.U('Home/Cart/getCartInfo','rnd='+Math.round(Math.random()*10000000));
 }
 
 function changeCity(areaId2){
 	if(areaId2){
-		jQuery.post(domainURL +"/index.php/Home/Index/reChangeCity" ,{"city":areaId2,"changeCity":true},function(data) {
+		jQuery.post( Think.U('Home/Index/reChangeCity') ,{"city":areaId2,"changeCity":true},function(data) {
 			var currurl = location.href;
 			if(currurl.indexOf("changeCity")!=-1){
 				location.href = domainURL +"/index.php";
@@ -151,7 +195,7 @@ function changeCity(areaId2){
 			}
 		});
 	}else{
-		location.href=domainURL +"/index.php/Home/Index/changeCity";
+		location.href = Think.U('Home/Index/changeCity');
 	}
 }
 
@@ -162,15 +206,15 @@ function addToFavorite(){
 
 /*************************************用户操作*****************************************/
 function login(){
-	return location.href=domainURL +"/index.php/Home/Users/login/";
+	return location.href= Think.U('Home/Users/login');
 }
 function logout(){
-	jQuery.post(domainURL +"/index.php/Home/Users/logout/",{},function(rsp) {
+	jQuery.post(Think.U('Home/Users/logout'),{},function(rsp) {
 		location.reload();
 	});
 }
 function regist(){
-	return location.href=domainURL +"/index.php/Home/Users/regist/";
+	return location.href= Think.U('Home/Users/regist');
 }
 function createCookie(a,b,c,d){
 	var d=d?d:"/";
@@ -186,11 +230,22 @@ function createCookie(a,b,c,d){
 
 //刷新验证码
 function getVerify() {
-    $('.verifyImg').attr('src',domainURL +'/index.php/Home/Users/getVerify/?rd='+Math.random());
+    $('.verifyImg').attr('src',Think.U('Home/Users/getVerify','rnd='+Math.random()));
 }
 function checkLogin(){
-	jQuery.post(domainURL +"/index.php/Home/Shops/checkLoginStatus/",{},function(rsp) {
+	jQuery.post( Think.U('Home/Shops/checkLoginStatus') ,{},function(rsp) {
 		var json = WST.toJson(rsp);
 		if(json.status && json.status==-999)location.reload();
 	});
+}
+function createCookie(a,b,c,d){
+	var d=d?d:"/";
+	if(c){
+		var e=new Date;
+		e.setTime(e.getTime()+1e3*60*60*24*c);
+		var f="; expires="+e.toGMTString()
+	}else {
+		var f="";
+	}		
+	document.cookie=a+"="+b+f+"; path="+d
 }

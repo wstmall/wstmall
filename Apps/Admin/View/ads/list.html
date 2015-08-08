@@ -4,7 +4,7 @@
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>{$CONF['shopTitle']['fieldValue']}后台管理中心</title>
+      <title>{$CONF['mallTitle']}后台管理中心</title>
       <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
       <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
       <!--[if lt IE 9]>
@@ -17,14 +17,11 @@
       <script src="__PUBLIC__/plugins/plugins/plugins.js"></script>
    </head>
    <script>
-   function edit(id){
-       location.href='__ROOT__/index.php/Admin/Ads/toEdit/?id='+id;     
-   }
    function del(id){
 	   Plugins.confirm({title:'信息提示',content:'您确定要删除该广告吗?',okText:'确定',cancelText:'取消',okFun:function(){
 		   Plugins.closeWindow();
 		   Plugins.waitTips({title:'信息提示',content:'正在操作，请稍后...'});
-		   $.post("__ROOT__/index.php/Admin/Ads/del",{id:id},function(data,textStatus){
+		   $.post("{:U('Admin/Ads/del')}",{id:id},function(data,textStatus){
 					var json = WST.toJson(data);
 					if(json.status=='1'){
 						Plugins.setWaitTipsMsg({content:'操作成功',timeout:1000,callback:function(){
@@ -74,8 +71,8 @@
                <td><img src='__ROOT__/{$vo['adFile']}' width='60' height='30'></td>
                <td>{$vo['adClickNum']}</td>
                <td>
-               <button type="button" class="btn btn-default glyphicon glyphicon-pencil" onclick="javascript:edit({$vo['adId']})"">修改</button>&nbsp;
-               <button type="button" class="btn btn-default glyphicon glyphicon-trash" onclick="javascript:del({$vo['adId']})"">刪除</button>
+               <a class="btn btn-default glyphicon glyphicon-pencil" href='{:U("Admin/Ads/toEdit",array('id'=>$vo['adId']))}'>修改</a>&nbsp;
+               <a class="btn btn-default glyphicon glyphicon-trash" onclick="javascript:del({$vo['adId']})">刪除</a>
                </td>
              </tr>
              </volist>

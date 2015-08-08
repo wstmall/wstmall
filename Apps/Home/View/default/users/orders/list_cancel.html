@@ -24,7 +24,7 @@
              	<td width='80' style="padding-top:10px;vertical-align:top;">{$order["orderNo"]}</td>
                 <td width='*'>
 					<volist name="order['goodslist']" id="goods" key='key2'>
-						<a href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$goods['goodsId']}">
+						<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}">
 							<img src="__ROOT__/{$goods['goodsThums']}" height="50" width="50" class='wst-goods-tb'/>
 						</a>
 					</volist>
@@ -33,9 +33,11 @@
                	<td width='70'>{$order["totalMoney"]}</td>
                	<td width='140'><div style="line-height:20px;">{$order["createTime"]}</div></td>
                	<td width='100'>
-               		<if condition='$order["orderStatus"] eq -3'>拒收
+               		<if condition='$order["orderStatus"] eq -5'>门店同意取消
+               		<elseif condition='$order["orderStatus"] eq -4'/>门店同意拒收
+               		<elseif condition='$order["orderStatus"] eq -3'/>用户拒收
                		<elseif condition='$order["orderStatus"] eq -2'/>未付款
-               		<elseif condition='$order["orderStatus"] eq -1'/>已取消
+               		<elseif condition='$order["orderStatus"] eq -1'/>用户已取消
                		<elseif condition='$order["orderStatus"] eq 0'/>未受理
                		<elseif condition='$order["orderStatus"] eq 1'/>已受理
                		<elseif condition='$order["orderStatus"] eq 2'/>打包中

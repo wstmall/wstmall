@@ -4,7 +4,7 @@
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>{$CONF['shopTitle']['fieldValue']}后台管理中心</title>
+      <title>{$CONF['mallTitle']}后台管理中心</title>
       <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
       <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
       <!--[if lt IE 9]>
@@ -20,37 +20,9 @@
 	  </style>
    </head>
    <script>
-   function query(){
-	   var shopName = $('#shopName').val();
-	   var goodsName = $('#goodsName').val();
-	   var areaId1 = $('#areaId1').val();
-	   var areaId2 = $('#areaId2').val();
-	   location.href='__ROOT__/index.php/Admin/Goods/queryPenddingByPage/?goodsName='+goodsName+"&shopName="+shopName+'&areaId1='+areaId1+'&areaId2='+areaId2; 
-   }
-   function edit(id){
-       location.href='__ROOT__/index.php/Admin/Goods/toEdit/?id='+id;     
-   }
-   function del(id){
-	   Plugins.confirm({title:'信息提示',content:'您确定要删除该商品吗?',okText:'确定',cancelText:'取消',okFun:function(){
-		   Plugins.closeWindow();
-		   Plugins.waitTips({title:'信息提示',content:'正在操作，请稍后...'});
-		   $.post("__ROOT__/index.php/Admin/Goods/del",{id:id},function(data,textStatus){
-					var json = WST.toJson(data);
-					if(json.status=='1'){
-						Plugins.setWaitTipsMsg({content:'操作成功',timeout:1000,callback:function(){
-						location.reload();
-						}});
-					}else{
-						Plugins.closeWindow();
-						Plugins.Tips({title:'信息提示',icon:'error',content:'操作失败!',timeout:1000});
-					}
-		   });
-		       
-		}});
-   }
    function changeStatus(id,v){
 	   Plugins.waitTips({title:'信息提示',content:'正在操作，请稍后...'});
-	   $.post("__ROOT__/index.php/Admin/Goods/changePenddingGoodsStatus",{id:id,status:v},function(data,textStatus){
+	   $.post("{:U('Admin/Goods/changePenddingGoodsStatus')}",{id:id,status:v},function(data,textStatus){
 				var json = WST.toJson(data);
 				if(json.status=='1'){
 					Plugins.setWaitTipsMsg({content:'操作成功',timeout:1000,callback:function(){
@@ -62,9 +34,6 @@
 				
 				}
 	   });
-   }
-   function toView(id){
-	   location.href='__ROOT__/index.php/Admin/Goods/toPenddingView/?id='+id; 
    }
    $.fn.imagePreview = function(options){
 		var defaults = {}; 
@@ -93,7 +62,7 @@
 		   $('#areaId3').html('<option value="">请选择</option>');
 	   }
 	   var html = [];
-	   $.post("__ROOT__/index.php/Admin/Areas/queryByList",params,function(data,textStatus){
+	   $.post("{:U('Admin/Areas/queryByList')}",params,function(data,textStatus){
 		    html.push('<option value="">请选择</option>');
 			var json = WST.toJson(data);
 			if(json.status=='1' && json.list.length>0){
@@ -114,30 +83,32 @@
   });
    </script>
    <body class='wst-page'>
+    <form method='post' action='{:U("Admin/Goods/queryPenddingByPage")}'>
        <div class='wst-tbar'> 
-      地区：<select id='areaId1' onchange='javascript:getAreaList("areaId2",this.value,0)'>
+      地区：<select id='areaId1' name='areaId1' onchange='javascript:getAreaList("areaId2",this.value,0)'>
                <option value=''>请选择</option>
                <volist name="areaList" id="vo">
                <option value='{$vo['areaId']}' <if condition="$areaId1 == $vo['areaId'] ">selected</if>>{$vo['areaName']}</option>
                </volist>
              </select>
-             <select id='areaId2'>
+             <select id='areaId2' name='areaId2'>
                <option value=''>请选择</option>
              </select>
-       所属店铺：<input type='text' id='shopName' value='{$shopName}'/>          
-       商品：<input type='text' id='goodsName' name='goodsName' class='form-control wst-ipt-10' value='{$goodsName}'/> 
-  <button type="button" class="btn btn-primary glyphicon glyphicon-search" onclick='javascript:query()'>查询</button> 
+       所属店铺：<input type='text' id='shopName' name='shopName' value='{$shopName}'/>          
+       商品：<input type='text' id='goodsName' name='goodsName' value='{$goodsName}'/> 
+  <button type="submit" class="btn btn-primary glyphicon glyphicon-search">查询</button> 
        </div>
+       </form>
        <div class='wst-body'>
         <table class="table table-hover table-striped table-bordered wst-list">
            <thead>
              <tr>
-               <th width='10'>序号</th>
-               <th width='80'>商品名称</th>
-               <th width='80'>商品编号</th>
-               <th width='60'>价格</th>
-               <th width='80'>商城分类</th>
-               <th width='80'>分类店铺</th>
+               <th width='20'>序号</th>
+               <th width='180'>商品名称</th>
+               <th width='60'>商品编号</th>
+               <th width='40'>价格</th>
+               <th width='100'>商城分类</th>
+               <th width='80'>店铺分类</th>
                <th width='50'>操作</th>
              </tr>
            </thead>
@@ -154,7 +125,7 @@
                <td>{$vo['catName']}&nbsp;</td>
                <td>{$vo['shopCatName']}&nbsp;</td>
                <td>
-               <button type="button" class="btn btn-primary glyphicon" onclick='javascript:toView({$vo['goodsId']})'>查看</button> 
+               <a class="btn btn-primary glyphicon" href='{:U("Admin/Goods/toPenddingView",array("id"=>$vo["goodsId"]))}'>查看</a> 
                <php>if(in_array('spsh_04',$WST_STAFF['grant'])){</php>
                <if condition="$vo['goodsStatus']==1 ">
                <button type="button" class="btn btn-danger glyphicon glyphicon-pencil" onclick="javascript:changeStatus({$vo['goodsId']},0)">不通过</button>&nbsp;

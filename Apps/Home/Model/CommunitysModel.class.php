@@ -23,7 +23,7 @@ class CommunitysModel extends BaseModel {
 	  */
 	public function getCommunityList($areaId2){
 	    $m = M('communitys');
-	    $sql = "SELECT * FROM __PREFIX__communitys WHERE areaId2=$areaId2 AND communityFlag=1 AND isShow = 1 AND isService=1 ORDER BY areaId3, communitySort";
+	    $sql = "SELECT * FROM __PREFIX__communitys WHERE areaId2=$areaId2 AND communityFlag=1 AND isShow = 1 ORDER BY areaId3, communitySort";
 	    $rs = $this->query($sql);
 		return $rs;
 	}

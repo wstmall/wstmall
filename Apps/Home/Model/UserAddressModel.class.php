@@ -12,7 +12,7 @@ class UserAddressModel extends BaseModel {
     /**
 	  * 新增
 	  */
-	 public function add(){
+	 public function insert(){
 	 	$rd = array('status'=>-1);
 	 	$id = I("id",0);
 		$data = array();
@@ -178,7 +178,7 @@ class UserAddressModel extends BaseModel {
 	public function getCommunitys($districtId){	
 			
 		$m = M('communitys'); 
-		$sql = "SELECT * FROM __PREFIX__communitys WHERE areaId3=$districtId  AND isService = 1 AND isShow =1 ORDER BY communitySort";		
+		$sql = "SELECT * FROM __PREFIX__communitys WHERE areaId3=$districtId  AND isShow =1 ORDER BY communitySort";		
 		$rs = $m->query($sql);		
 		return $rs;
 		
@@ -229,8 +229,8 @@ class UserAddressModel extends BaseModel {
 	public function getCommunitysOption($districtId){	
 			
 		$m = M('communitys'); 
-		$sql = "SELECT communityId as id,communityName as name FROM __PREFIX__communitys WHERE areaId3=$districtId  AND isService = 1 AND isShow =1 ORDER BY communitySort";		
-		$rs = $m->query($sql);		
+		$sql = "SELECT communityId as id,communityName as name FROM __PREFIX__communitys WHERE areaId3=$districtId AND isShow =1 ORDER BY communitySort";		
+		$rs = $m->query($sql);
 		return $rs;
 		
 	}
@@ -257,7 +257,7 @@ class UserAddressModel extends BaseModel {
 		$rs = $this->queryRow($sql);
 		$districtsName = $rs["areaName"];//区
 		
-		$sql = "SELECT communityId ,communityName FROM __PREFIX__communitys WHERE communityId=$communityId  AND isService = 1 AND isShow =1";		
+		$sql = "SELECT communityId ,communityName FROM __PREFIX__communitys WHERE communityId=$communityId  AND isShow =1";		
 		$rs = $this->queryRow($sql);
 		$communityName = $rs["communityName"];//社区
 		

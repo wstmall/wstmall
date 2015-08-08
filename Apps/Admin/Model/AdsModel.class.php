@@ -8,12 +8,11 @@
  * ============================================================================
  * 广告服务类
  */
-use Think\Model;
 class AdsModel extends BaseModel {
     /**
 	  * 新增
 	  */
-	 public function add(){
+	 public function insert(){
 	 	$rd = array('status'=>-1);
 	 	$id = I("id",0);
 		$data = array();

@@ -27,7 +27,7 @@
 		   $('#areaId3').html('<option value="">请选择</option>');
 	   }
 	   var html = [];
-	   $.post("__ROOT__/index.php/Admin/Areas/queryByList",params,function(data,textStatus){
+	   $.post("{:U('Admin/Areas/queryByList')}",params,function(data,textStatus){
 		    html.push('<option value="">请选择</option>');
 			var json = WST.toJson(data);
 			if(json.status=='1' && json.list.length>0){
@@ -44,44 +44,37 @@
 	   getAreaList("areaId2",'{$areaId1}',0,'{$areaId2}');
 	   getAreaList("areaId3",'{$areaId2}',1,'{$areaId3}');
    });
-   function query(){
-	   var q = [];
-	   q.push('shopName='+$('#shopName').val());
-	   q.push('orderNo='+$('#orderNo').val());
-	   q.push('isRefund='+$('#isRefund').val());
-	   q.push('areaId1='+$('#areaId1').val());
-	   q.push('areaId2='+$('#areaId2').val());
-	   q.push('areaId3='+$('#areaId3').val());
-	   location.href="__ROOT__/index.php/Admin/Orders/queryRefundByPage/?"+q.join('&');
-   }
-   function refund(id){
-	   Plugins.Modal({url:'__ROOT__/index.php/Admin/Orders/toRefund/?id='+id,title:'订单退款',width:600});
+   function refund(url){
+	   Plugins.Modal({url:url,title:'订单退款',width:600});
    }
    </script>
    <body class='wst-page'>
+     <form method='post' action="{:U('Admin/Orders/queryRefundByPage')}">
        <div class='wst-tbar'>
-          所属区域：
-          <select id='areaId1' onchange='javascript:getAreaList("areaId2",this.value,0)'>
+          区域：<select id='areaId1' name='areaId1' onchange='javascript:getAreaList("areaId2",this.value,0)'>
              <option value=''>请选择</option>
              <volist name="areaList" id="vo">
              <option value='{$vo['areaId']}' <if condition="$areaId1 == $vo['areaId'] ">selected</if>>{$vo['areaName']}</option>
              </volist>
           </select>
-          <select id='areaId2' onchange='javascript:getAreaList("areaId3",this.value,1);getCommunitys()'>
+          <select id='areaId2' name='areaId2' onchange='javascript:getAreaList("areaId3",this.value,1);getCommunitys()'>
              <option value=''>请选择</option>
           </select>
-          <select id='areaId3'>
+          <select id='areaId3' name='areaId3'>
              <option value=''>请选择</option>
           </select>
-       店铺：<input type='text' id='shopName' value='{$shopName}'/>  
-       订单：<input type='text' id='orderNo' value='{$orderNo}'/>
-       退款状态 ：<select id='isRefund'>
+       </div>
+       <div class='wst-tbar'>
+       店铺：<input type='text' id='shopName' name='shopName' value='{$shopName}'/>  
+       订单：<input type='text' id='orderNo' name='orderNo' value='{$orderNo}'/>
+       退款状态 ：<select id='isRefund' name='isRefund'>
              <option value='-1'>全部</option>
              <option value='0' <if condition="$isRefund ==0 ">selected</if>>未退</option>
              <option value='1' <if condition="$isRefund ==1 ">selected</if>>已退</option>
          </select>
-       <button type="button" class="btn btn-primary glyphicon glyphicon-search" onclick='javascript:query()'>查询</button> 
+       <button type="submit" class="btn btn-primary glyphicon glyphicon-search">查询</button> 
        </div>
+       </form>
        <div class="wst-body"> 
         <table class="table table-hover table-striped table-bordered wst-list">
            <volist name="Page['root']" id="vo" key='key'>
@@ -107,10 +100,10 @@
                <td >{$vo['createTime']}</td>
                <td><if condition="$vo['isRefund'] ==1 ">已退款<else/>未退款</if></td>
                <td width='150'>
-               <a class="btn btn-primary glyphicon" href="__ROOT__/index.php/Admin/Orders/toRefundView/?id={$vo['orderId']}">查看</a>&nbsp;
+               <a class="btn btn-primary glyphicon" href="{:U('Admin/Orders/toRefundView',array('id'=>$vo['orderId']))}">查看</a>&nbsp;
                <if condition="$vo['isRefund'] ==0 ">
                <php>if(in_array('tk_04',$WST_STAFF['grant'])){</php>
-               <a class="btn btn-primary glyphicon" href="javascript:refund({$vo['orderId']})">退款</a>&nbsp;
+               <a class="btn btn-primary glyphicon" href='javascript:refund("{:U('Admin/Orders/toRefund',array('id'=>$vo['orderId']))}")'>退款</a>&nbsp;
                <php>}</php>
                </if>
                </td>

@@ -8,7 +8,6 @@
  * ============================================================================
  * 订单服务类
  */
-use Think\Model;
 class OrdersModel extends BaseModel {
 	/**
 	 * 获取订单详细信息
@@ -103,7 +102,7 @@ class OrdersModel extends BaseModel {
      	$areaId2 = I('areaId2',0);
      	$areaId3 = I('areaId3',0);
 	 	$sql = "select o.*,s.shopName from __PREFIX__orders o
-	 	         left join __PREFIX__shops s on o.shopId=s.shopId  where o.orderFlag=1 and o.orderStatus=-4 and payType=1 and isPay=1 ";
+	 	         left join __PREFIX__shops s on o.shopId=s.shopId  where o.orderFlag=1 and o.orderStatus in (-4,-5) and payType=1 and isPay=1 ";
 	 	if($areaId1>0)$sql.=" and s.areaId1=".$areaId1;
 	 	if($areaId2>0)$sql.=" and s.areaId2=".$areaId2;
 	 	if($areaId3>0)$sql.=" and s.areaId3=".$areaId3;

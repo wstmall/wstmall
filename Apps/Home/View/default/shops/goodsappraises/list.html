@@ -38,7 +38,7 @@ $(document).ready(function(){
              <tr>
                <td rowspan='2'>{$k}</td>
                <td rowspan='2'>
-               <a target='_blank' href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$vo['goodsId']}">
+               <a target='_blank' href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo['goodsId']))}">
 						<img src="__ROOT__/{$vo['goodsThums']}" height="50" width="50"/>
 			   </a>
                {$vo['goodsName']}

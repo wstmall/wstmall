@@ -4,16 +4,15 @@
   		<meta charset="utf-8">
       	<meta http-equiv="X-UA-Compatible" content="IE=edge">
       	<meta name="viewport" content="width=device-width, initial-scale=1">
-      	<title>店铺街 - {$CONF['shopTitle']['fieldValue']}</title>
-      	<meta name="keywords" content="{$CONF['shopKeywords']['fieldValue']}" />
-      	<meta name="description" content="{$CONF['shopTitle']['fieldValue']},切换城市" />
+      	<title>店铺街 - {$CONF['mallTitle']}</title>
+      	<meta name="keywords" content="{$CONF['mallKeywords']}" />
+      	<meta name="description" content="{$CONF['mallDesc']},切换城市" />
       	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
 		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />
-	
    	</head>
    	<body>
-		<include file="./Apps/Home/View/default/header.html" />
+		<include file="./Apps/Home/View/default/header_common.html" />
 
 		<!----加载商品楼层start----->
 		<div class="wst-container">
@@ -81,7 +80,7 @@
 	    });
 	    function getCitys(){
 	    	var provinceId = $("#provinceId").val();
-	    	jQuery.post(domainURL +"/index.php/Home/Areas/getCityListByProvince/",{provinceId:provinceId},function(rsp) {
+	    	jQuery.post("{:U('Home/Areas/getCityListByProvince/')}",{provinceId:provinceId},function(rsp) {
 	    		var json = WST.toJson(rsp);
 	    		var citys = new Array();
 	    		
@@ -104,7 +103,7 @@
 	    		cityId = $("#cityId").val();
 	    	}
 	    	if(cityId){
-	    		jQuery.post(domainURL +"/index.php/Home/Index/clearAllCache/",{cityId:cityId},function(rsp) {
+	    		jQuery.post("{:U('Home/Index/clearAllCache/')}",{cityId:cityId},function(rsp) {
 	    			changeCity(cityId);
 	    		});
 	    	}

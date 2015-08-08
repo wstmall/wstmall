@@ -4,7 +4,7 @@
 	<div id="wst-search-pbox">
 		<div style="float:left;width:240px;" class="wst-header-car">
 		  <a href='{:WSTDomain()}'>
-			<img id="wst-logo" src="__ROOT__/Apps/Home/View/default/images/logo.png" height="132" width="240"/>
+			<img id="wst-logo" width='240' height='132' src="{:WSTDomain()}/{$CONF['mallLogo']}"/>
 		  </a>	
 		</div>
 		<div id="wst-search-container">
@@ -47,12 +47,15 @@
 			</div>
 		    <div class="navCon-cate fl navCon_on" >
 		      <div class="navCon-cate-title"> <a href="{:U('Home/goods/getGoodsList')}">全部商品分类</a></div>
-		      <div class="cateMenu1" >
-		      </div>
-		      <div class="cateMenu1" >
+		      
+		      	<if condition="$ishome eq 1">
+		     	 	<div class="cateMenu1" >
+		      	<else/>
+		      		<div class="cateMenu2" style="display:none;" >
+		      	</if>
 		        <div style="position:relative;">
 		        	<div class="wst-nvgbk" style="diplay:none;"></div>
-		        	<volist name="catList" key="k1" id="vo1">
+		        	<volist name=":WSTGoodsCats()" key="k1" id="vo1">
 				    	<li style="border-top: none;">
 				    	<div>
 				            <div class="cate-tag"> 
@@ -91,15 +94,12 @@
 		        </div>
 		      </div>
 		    </div>
+		    
 		    <div class="navCon-menu fl">
 		      <ul class="fl">
-		       	<li ><a class="" href="__ROOT__/index.php"><s1></s1>&nbsp;&nbsp;&nbsp;&nbsp;商城首页</a></li>
-		        <li style='display:none'><a href=""><s2></s2>&nbsp;自营超市</a></li>
-		        <li <if condition="$nvg_mk eq 'brands'">class="curMenu"</if>><a href="{:U('Home/Brands/index')}"><s2 <if condition="$nvg_mk eq 'brands'">id="curs2"</if>></s2>&nbsp;品牌汇</a></li>
-		        <li <if condition="$nvg_mk eq 'shopstreet'">class="curMenu"</if>><a href="{:U('Home/Shops/toShopStreet')}"><s3 <if condition="$nvg_mk eq 'shopstreet'">id="curs3"</if>></s3>&nbsp;店铺街</a></li>
-		      	<if condition="$selfShop['shopId'] gt 0">
-		       	<li <if condition="$selfShop['shopId'] eq $shopId">class="curMenu"</if>><a href="{:U('Home/Shops/toShopHome',array('shopId'=>$selfShop['shopId']))}"><s4 <if condition="$selfShop['shopId'] eq $shopId">id="curs4"</if>></s4>&nbsp;自营店铺</a></li>
-		      	</if>
+		        <volist name=":WSTNavigation(0)" id="vo" >
+		       	<li ><a href="{$vo['navUrl']}" <if condition="$vo['isOpen'] eq 1">target="_blank"</if> <if condition="$vo['active'] eq 1">class="curMenu"</if>>&nbsp;&nbsp;{$vo['navTitle']}&nbsp;&nbsp;</a></li>
+		       	</volist>
 		      </ul>
 		    </div>
 		    <li id="wst-nvg-cart">

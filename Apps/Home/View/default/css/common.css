@@ -999,7 +999,7 @@ b, strong {
 .wst-footer-hp-box{background-color:#F7F7F7;text-align:center;margin-top:20px;}
 .wst-footer-hp-ck1{line-height:30px;text-align:left;}
 .wst-footer-hp-ck2{border:2px solid #D5D5D5;height:50px;line-height:50px;margin-top:20px;background-color:#ffffff;}
-.wst-footer-hp-ck3{margin-top:20px;height:80px;}
+.wst-footer-hp-ck3{margin-top:20px;padding-bottom:10px;}
 
 .wst-footer-frd{color:#e23e3d;font-weight:bolder;font-size:18px;}
 .wst-footer-pno{color:red;font-weight:bolder;font-size:18px;}

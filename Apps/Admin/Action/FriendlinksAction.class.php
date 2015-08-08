@@ -53,7 +53,7 @@ class FriendlinksAction extends BaseAction {
     		$rs = $m->edit();
     	}else{
     		$this->checkAjaxPrivelege('yqlj_03');
-    		$rs = $m->add();
+    		$rs = $m->insert();
     	}
     	$this->ajaxReturn($rs);
     }

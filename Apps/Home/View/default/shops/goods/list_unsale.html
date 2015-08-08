@@ -34,7 +34,7 @@ $(document).ready(function(){
            <a href='javascript:goodsSet("isBest","queryUnSaleByPage")'><span class='hot btn'></span>精品</a>
            <a href='javascript:goodsSet("isNew","queryUnSaleByPage")'><span class='new btn'></span>新品</a>
            <a href='javascript:goodsSet("isHot","queryUnSaleByPage")'><span class='hot btn'></span>热销</a>
-           <a href='javascript:toEditGoods(0,"queryUnSaleByPage")'><span class='add btn'></span>新增</a>
+           <a href='{:U("Home/Goods/toEdit",array("umark"=>"queryUnSaleByPage"))}'><span class='add btn'></span>新增</a>
         </div>
         <table class='wst-list'>
            <thead>
@@ -100,7 +100,7 @@ $(document).ready(function(){
                <td>{$vo['goodsStock']}</td>
                <td>
                <a href="javascript:toViewGoods({$vo['goodsId']})" class='btn view'></a>
-               <a href="javascript:toEditGoods({$vo['goodsId']},'queryUnSaleByPage')" class='btn edit'></a>
+               <a href='{:U("Home/Goods/toEdit",array("umark"=>"queryUnSaleByPage","id"=>$vo['goodsId']))}' class='btn edit'></a>
                <a href="javascript:delGoods({$vo['goodsId']})" class='btn del'></a>
                &nbsp;
                </td>
@@ -120,7 +120,7 @@ $(document).ready(function(){
            <a href='javascript:goodsSet("isBest","queryUnSaleByPage")'><span class='hot btn'></span>精品</a>
            <a href='javascript:goodsSet("isNew","queryUnSaleByPage")'><span class='new btn'></span>新品</a>
            <a href='javascript:goodsSet("isHot","queryUnSaleByPage")'><span class='hot btn'></span>热销</a>
-           <a href='javascript:toEditGoods(0,"queryUnSaleByPage")'><span class='add btn'></span>新增</a>
+           <a href='{:U("Home/Goods/toEdit",array("umark"=>"queryUnSaleByPage"))}'><span class='add btn'></span>新增</a>
         </div>
         </div>
     </div>

@@ -4,9 +4,9 @@
   		<meta charset="utf-8">
       	<meta http-equiv="X-UA-Compatible" content="IE=edge">
       	<meta name="viewport" content="width=device-width, initial-scale=1">
-      	<title>店铺街 - {$CONF['shopTitle']['fieldValue']}</title>
-      	<meta name="keywords" content="{$CONF['shopKeywords']['fieldValue']}" />
-      	<meta name="description" content="{$CONF['shopTitle']['fieldValue']},商城店铺展示" />
+      	<title>店铺街 - {$CONF['mallTitle']}</title>
+      	<meta name="keywords" content="{$CONF['mallKeywords']}" />
+      	<meta name="description" content="{$CONF['mallDesc']},商城店铺展示" />
       	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/shopstreet.css" />
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
@@ -14,13 +14,12 @@
 		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/magnifier.css" />
    	</head>
    	<body>
-   
-		<include file="./Apps/Home/View/default/header.html" />
+		<include file="./Apps/Home/View/default/header_common.html" />
 	    <div>
 			<div class="wst-street-ad-box">
 				<volist name="ads" id="vo" key='i'>
 					<if condition="$i eq 1">
-				   <a href="__ROOT__/index.php/Home/Index/access/?id={$vo['adId']}&url={$vo['adURL']}" target="_blank">
+				   <a href="{:U('Home/Index/access/',array('url'=>$vo['adURL']))}" target="_blank">
 						<img src="__ROOT__/{$vo['adFile']}" width='1210' height="350" title="{$vo['adName']}"/>
 				   </a>
 				   </if>
@@ -65,7 +64,7 @@
 					</div>
 					<div class="wst-street-sch-bx2">
 						<div class="wst-street-scp-dp">
-							<input id="shopName" class="wst-street-scp-sn" placeholder="搜索 店铺" autocomplete="off">
+							<input id="shopName" class="wst-street-scp-sn" placeholder="搜索 店铺" autocomplete="off" value='{$keyWords}'>
 							<div class="wst-street-scp-sk" onclick="getDistrictsShops();">搜&nbsp;索</div>
 						</div>				
 					</div>
@@ -79,20 +78,7 @@
 		<div class="wst-container">
 			
 			<div class="wst-shadow">
-				<div class="wst-shop-address-box wst-shadow" >
-					<if condition="count($dsplist) gt 0">
-					<volist name="dsplist" key='key' id="vo">
-						<volist name="vo['ctlist']" key='key2' id="vo2">
-						<li class="wst-shop-address" data="{$vo2['communityId']}">
-							<div style="padding:4px;">{$vo2["communityName"]}</div>
-							<div style="padding:4px;">附近共有 <span style="font-weight:bold;color:red;">{$vo2["spcnt"]}</span> 家店铺入驻并提供服务</div>
-						</li>
-						</volist>
-					</volist>
-					<else/>
-					<div class="wst-street-scp-nsk">没有查找到相关店铺</div>
-					</if>
-				</div>
+				<div class="wst-shop-address-box wst-shadow" ></div>
 				<div class="wst-shop-container">
 					<div class="wst-shop-list">
 						<div>附近没有相关商铺</div>

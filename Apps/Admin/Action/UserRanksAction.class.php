@@ -38,7 +38,7 @@ class UserRanksAction extends BaseAction{
     		$rs = $m->edit();
     	}else{
     		$this->checkAjaxPrivelege('hydj_01');
-    		$rs = $m->add();
+    		$rs = $m->insert();
     	}
     	$this->ajaxReturn($rs);
 	}

@@ -8,12 +8,11 @@
  * ============================================================================
  * 银行服务类
  */
-use Think\Model;
 class BanksModel extends BaseModel {
     /**
 	  * 新增
 	  */
-	 public function add(){
+	 public function insert(){
 	 	$rd = array('status'=>-1);
 		$data = array();
 		$data["bankName"] = I("bankName");

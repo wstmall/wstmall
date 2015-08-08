@@ -32,13 +32,14 @@ class UserAddressAction extends BaseAction{
 	 * 新增/修改操作
 	 */
 	public function edit(){
+		
 		$this->isUserAjaxLogin();
 		$m = D('Home/UserAddress');
     	$rs = array();
     	if(I('id',0)>0){
     		$rs = $m->edit();
     	}else{
-    		$rs = $m->add();
+    		$rs = $m->insert();
     	}
     	$this->ajaxReturn($rs);
 	}
@@ -67,7 +68,7 @@ class UserAddressAction extends BaseAction{
 	 * 获取用户地址
 	 */
 	public function getUserAddress(){
-		$this->isLogin();
+		$this->isUserAjaxLogin();
 		$m = D('Home/UserAddress');
 		$address = $m->getUserAddressInfo();	
 		$addressInfo = array();

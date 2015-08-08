@@ -14,7 +14,6 @@ class MessagesAction extends BaseAction{
 	 */
 	public function queryByPage(){
 		$this->isLogin();
-		self::getBaseInfo();
 		$USER = session('WST_USER');
 		$m = D('Home/Messages');
     	$page = $m->queryByPage();
@@ -33,7 +32,6 @@ class MessagesAction extends BaseAction{
      * 显示详情页面
      */
     public function showMessage(){
-    	self::getBaseInfo();
         $info = D('Home/Messages')->get();
         $USER = session('WST_USER');
         $this->assign('info',$info);

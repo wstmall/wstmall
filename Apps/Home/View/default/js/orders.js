@@ -1,6 +1,7 @@
 function toEditAddress(){
 	$("#consignee1").hide();
 	$("#consignee2").show();
+	changeAddress();
 }
 function changeAddress(){
 	var addressId = $('input:radio[name="seladdress"]:checked').val();		
@@ -33,7 +34,7 @@ function loadCommunitys(obj){
 		return;
 	}
 	
-	jQuery.post(domainURL +"/index.php/Home/Communitys/getByDistrict" ,{areaId3:districtId},function(rsp){
+	jQuery.post(Think.U('Home/Communitys/getByDistrict') ,{areaId3:districtId},function(rsp){
 		var json = WST.toJson(rsp);
 		var html = new Array();
 		$("#consignee_add_CommunityId").empty();
@@ -49,7 +50,7 @@ function loadCommunitys(obj){
 
 function loadAddress(addressId){
 	$("#address_form").show();	
-	jQuery.post(domainURL +"/index.php/Home/UserAddress/getUserAddress" ,{addressId:addressId},function(rsp) {
+	jQuery.post(Think.U('Home/UserAddress/getUserAddress') ,{addressId:addressId},function(rsp) {
 		var rs = WST.toJson(rsp);
 		if(rs.status>0){
 			var addressInfo = rs.address;
@@ -154,7 +155,7 @@ function saveAddress(){
 		WST.msg("邮编格式不正确", {icon: 5});
 		return;
 	}
-	jQuery.post(domainURL +"/index.php/Home/UserAddress/edit" ,params,function(data,textStatus){	
+	jQuery.post(Think.U('Home/UserAddress/edit') ,params,function(data,textStatus){	
 		var json = WST.toJson(data);
 		
 		if(json.status>0){
@@ -231,7 +232,7 @@ function addHour(hour){
 function delAddress(addressId){
 	layer.confirm('您确定删除该地址吗？',{icon: 3, title:'系统提示'}, function(tips){
 		var ll = layer.msg('数据处理中，请稍候...', {icon: 16,shade: [0.5, '#B3B3B3']});
-		jQuery.post(domainURL +"/index.php/Home/UserAddress/del" ,{id:addressId},function(rsp) {
+		jQuery.post(Think.U('Home/UserAddress/del') ,{id:addressId},function(rsp) {
 			layer.close(ll);
 	    	layer.close(tips);
 			if(rsp){
@@ -257,7 +258,7 @@ function submitOrder(){
 		return;
 	}
 	var ll = layer.msg('正在保存数据，请稍候...', {icon: 16,shade: [0.5, '#B3B3B3']});
-	jQuery.post(domainURL +"/index.php/Home/Goods/checkGoodsStock" ,{},function(data) {
+	jQuery.post(Think.U('Home/Goods/checkGoodsStock') ,{},function(data) {
 		var goodsInfo = WST.toJson(data);	
 		layer.close(ll);
 		var flag = true;
@@ -304,11 +305,10 @@ function submitOrder(){
 				WST.msg("您选的商品不在配送区域内！", {icon: 5});
 				return ;
 			}
-			var url=domainURL +"/index.php/Home/Orders/submitOrder/?consigneeId="+consigneeId+"&payway="+payway+"&isself="+isself+"&invoiceClient="+invoiceClient+"&needreceipt="+needreceipt+"&remarks="+remarks;
-			url += "&requireTime="+requireTime;
-			url += "&invoiceClient="+invoiceClient;
-			url += "&orderunique="+new Date().getTime();
-			location.href= url;
+			
+			
+			var orderunique = new Date().getTime();
+			location.href= Think.U('Home/Orders/submitOrder','consigneeId='+consigneeId+"&payway="+payway+"&isself="+isself+"&invoiceClient="+invoiceClient+"&needreceipt="+needreceipt+"&remarks="+remarks+"&requireTime="+requireTime+"&orderunique="+orderunique);
 		}else{
 			if(goods.isSale<1){
 				WST.msg('商品'+goods.goodsName+'已下架，请返回重新选购!', {icon: 5});
@@ -322,18 +322,33 @@ function submitOrder(){
 	
 }
 
-function confrimOrder(){
-	var orderNos = $("#orderNos").val();
-	var orderIds = $("#orderIds").val();
-	var totalMoney = $("#totalMoney").val();
-	var payway = $('input:radio[name="payway"]:checked').val();
-	var url="?c=goods&a=toCompletePay&orderNos="+orderNos+"&orderIds="+orderIds+"&totalMoney="+totalMoney+"&payway="+payway+"&rnd="+new Date().getTime();;
-
-	return location.href= url;
-}
 
 function getOrderInfo(orderId){
-	window.location = domainURL  + '/index.php/Home/orders/getOrderInfo/?orderId=' + orderId;
+	window.location = Think.U('Home/orders/getOrderInfo','orderId='+orderId);
+}
+
+function getPayUrl(){
+	
+	var params = {};
+	params.orderIds = $.trim($("#orderIds").val());
+	params.payCode = $.trim($("#payCode").val());
+	params.needPay = $.trim($("#needPay").val());
+	if(params.payCode==""){
+		WST.msg('请先选择支付方式', {icon: 5});
+		return;
+	}
+	jQuery.post(Think.U('Home/Payments/get'+params.payCode+"URL") ,params,function(data) {
+		var json = WST.toJson(data);
+		if(json.status==1){
+			window.open(json.url);
+		}else{
+			WST.msg('您的订单已支付!', {icon: 5});
+			setTimeout(function(){
+				
+				window.location = Think.U('Home/orders/queryDeliveryByPage');
+			},1500);
+		}
+	});
 }
 
 $(function() {
@@ -344,6 +359,18 @@ $(function() {
 			$("#invoiceClientdiv").hide();
 		}		
 	});
+	
+	$("#wst-order-details").click(function(){
+		$("#wst-orders-box"). toggle(100);
+	});
+	
+	
+	$(".wst-payCode").click(function(){
+		$(".wst-payCode-curr").removeClass().addClass("wst-payCode");
+		$(this).removeClass().addClass("wst-payCode-curr");
+		$("#payCode").val($(this).attr("data"));
+	});
+	
 	
 	$('input:radio[name="isself"]').click(function(){
 		if($(this).val()==0){//送货上门
@@ -369,3 +396,6 @@ $(function() {
 	});
 	
 });
+
+
+

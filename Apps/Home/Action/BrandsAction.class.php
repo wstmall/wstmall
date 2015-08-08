@@ -14,7 +14,6 @@ class BrandsAction extends BaseAction{
 	 * 列表查询
 	 */
     public function index(){
-    	self::getBaseInfo();
     	$areas= D('Home/Areas');
     	$areaId2 = $this->getDefaultCity();
    		$areaList = $areas->getDistricts($areaId2);
@@ -32,7 +31,6 @@ class BrandsAction extends BaseAction{
    		$ads = $ads->getAds($areaId2,-2);
    		$this->assign('ads',$ads);
 		$m = D('Home/Brands');
-		$this->assign('nvg_mk',"brands");
 		$brandslist = $m->queryBrandsByDistrict();
 		$this->assign('brandslist',$brandslist);
 		$this->display("default/brands_list");

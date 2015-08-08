@@ -51,11 +51,11 @@
 .wst-chkod-cg-yb{float: left; width: 100px; text-align: right;}
 .wst-chkod-sbx{padding-left:100px;margin:15px;cursor:pointer;}
 
-.wst-chkod-pay{padding: 10px; border-bottom: 1px solid #E9E9E9; line-height: 30px;}
+.wst-chkod-pay{padding: 10px; border-bottom: 1px solid #E9E9E9;border-top: 1px solid #E9E9E9; line-height: 30px;}
 .wst-chkod-pay-tt{font-size: 15px; font-weight: bold;}
 #newaddress{padding-left: 40px;}
 
-.wst-chkod-sh-tips{padding-left: 100px; color: #999999}
+.wst-chkod-sh-tips{color: #999999}
 .wst-chkod-dp-box{padding: 10px; border-bottom: 1px solid #E9E9E9; line-height: 30px;}
 .wst-chkod-dp-hds{font-size: 15px; font-weight: bold;}
 
@@ -63,10 +63,10 @@
 .wst-chkod-dp-pb2{background-color: #FFE8E8;margin-top: 6px;margin-bottom: 6px;padding:6px;text-align: center;color:#CC0000;border: 1px solid #DB9A9A;}
 
 .wst-chkod-dp-pb3{padding-top:6px;padding-bottom:6px;border-bottom: 1px solid #E9E9E9;}
-.wst-chkod-dp-pb4{float: left; width: 496px; padding-left: 4px;}
+.wst-chkod-dp-pb4{float: left; width: 566px; padding-left: 4px;}
 .wst-chkod-dp-pb5{padding-left: 40px; background-color: #F7F7F7; border-bottom: 2px solid #C0C0C4;}
 
-.wst-chkod-od-crt1{float: left; width: 220px; text-align: center;}
+.wst-chkod-od-crt1{float: left; width: 150px; text-align: center;}
 .wst-chkod-od-crt2{float: left; width: 120px; text-align: center;}
 .wst-chkod-od-crt3{float: left; width: 140px; text-align: center;}
 .wst-chkod-od-crt4{float: left; width: 200px; text-align: center;}
@@ -75,8 +75,8 @@
 
 .wst-chkod-dp-box .selgoods{border-bottom: 1px dotted #E9E9E9;padding-bottom: 4px;}
 
-.wst-chkod-glist-tt1{float: left; width: 500px; text-align: left;}
-.wst-chkod-glist-tt2{float: left; width: 220px; text-align: center;}
+.wst-chkod-glist-tt1{float: left; width: 570px; text-align: left;}
+.wst-chkod-glist-tt2{float: left; width: 150px; text-align: center;}
 .wst-chkod-glist-tt3{float: left; width: 120px; text-align: center;}
 .wst-chkod-glist-tt4{float: left; width: 140px; text-align: center;}
 .wst-chkod-glist-tt5{float: left; width: 200px; text-align: center;}

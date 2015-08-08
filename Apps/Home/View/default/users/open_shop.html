@@ -15,10 +15,46 @@ dl.areaSelect dd{float: left;cursor: pointer;}
 <script src="__PUBLIC__/plugins/kindeditor/kindeditor.js"></script>
 <script src="__PUBLIC__/plugins/kindeditor/lang/zh_CN.js"></script>
    <script>
-   var relateCommunity = "{$object['relateCommunity']}".split(',');
-   var relateArea = "{$object['relateArea']}".split(',');
-   var userProtocolUrl = "{:U('Home/Index/toUserProtocol')}";
-   </script>
+   	var relateCommunity = "{$object['relateCommunity']}".split(',');
+   	var relateArea = "{$object['relateArea']}".split(',');
+   	$(function () {
+  	 	//展开按钮
+   		$("#expendAll").click(function(){
+   			if ($(this).prop('checked')==true) {$("dl.areaSelect dd").removeClass('Hide')}
+   			else{$("dl.areaSelect dd").addClass('Hide')}
+   		})
+	   $.formValidator.initConfig({
+		   theme:'Default',mode:'AutoTip',formID:"myshop",debug:true,submitOnce:true,onSuccess:function(){
+			   openShop();
+			   return false;
+			},onError:function(msg){
+		}});
+	    $("#shopName").formValidator({onShow:"",onFocus:"店铺名称不能超过20个字符",onCorrect:"输入正确"}).inputValidator({min:1,max:20,onError:"店铺名称不符合要求,请确认"});
+		$("#userName").formValidator({onShow:"",onFocus:"请输入店主姓名",onCorrect:"输入正确"}).inputValidator({min:1,max:20,onError:"店主姓名不能为空,请确认"});
+		$("#shopCompany").formValidator({onShow:"",onFocus:"请输入公司名称",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"公司名称不能为空,请确认"});
+		$("#shopAddress").formValidator({onShow:"",onFocus:"请输入店铺地址",onCorrect:"输入正确"}).inputValidator({min:1,max:120,onError:"店铺地址不能为空,请确认"});
+		$("#areaId3").formValidator({onFocus:"请选择所属地区"}).inputValidator({min:1,onError: "请选择所属地区"});
+		$("#goodsCatId1").formValidator({onFocus:"请选择所属行业"}).inputValidator({min:1,onError: "请选择所属行业"});
+		$("#bankId").formValidator({onFocus:"请选择所属银行"}).inputValidator({min:1,onError: "请选择所属银行"});
+		$("#bankNo").formValidator({onShow:"",onFocus:"请输入银行卡号",onCorrect:"输入正确"}).inputValidator({min:16,max:19,onError:"银行卡号格式错误,请确认"}) .functionValidator({fun:luhmCheck,onError:"请输入正确的银行卡号！"});;
+		$("#shopImgUpload").uploadify({
+		    formData      : {'dir':'shops','width':150,'height':150},
+		    buttonText    : '选择图标',
+		    fileTypeDesc  : 'Image Files',
+	        fileTypeExts  : '*.gif; *.jpg; *.png',
+	        swf           : publicurl+'/plugins/uploadify/uploadify.swf',
+	        uploader      : Think.U('Home/shops/uploadPic'),
+	        onUploadSuccess : function(file, data, response) {
+	        	var json = WST.toJson(data);
+	        	$('#preview').attr('src',domainURL +'/'+json.Filedata.savepath+json.Filedata.savethumbname).show();
+	        	$('#shopImg').val(json.Filedata.savepath+json.Filedata.savethumbname);
+           }
+	    });
+		initTime('serviceStartTime','8');
+		initTime('serviceEndTime','20');
+		getVerify();
+  });
+   </script>	
    <div class="wst-body"> 
        <div class='wst-page-header'>买家中心 > 我要开店</div>
        <div class='wst-page-content'>
@@ -59,7 +95,7 @@ dl.areaSelect dd{float: left;cursor: pointer;}
                <option value='{$vo['areaId']}'>{$vo['areaName']}</option>
                </volist>
              </select>
-             <select id='areaId2' onchange='javascript:getAreaList("areaId3",this.value,1);getCommunitys()'>
+             <select id='areaId2' onchange='javascript:getAreaListForOpen("areaId3",this.value,1);getCommunitysForOpen()'>
                <option value=''>请选择</option>
              </select>
              <select id='areaId3'>
@@ -180,5 +216,4 @@ dl.areaSelect dd{float: left;cursor: pointer;}
        </form>
        </div>
    </div>
-   <script src="__ROOT__/Apps/Home/View/default/js/users/open_shop.js" type="text/javascript"></script> 
 </block>  

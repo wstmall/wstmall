@@ -1,20 +1,20 @@
-﻿<!doctype html>
+<!doctype html>
 <html>
 	<head>
   		<meta charset="utf-8">
       	<meta http-equiv="X-UA-Compatible" content="IE=edge">
       	<meta http-equiv="cache-control" content="no-cache">
       	<meta name="viewport" content="width=device-width, initial-scale=1">
-      	<title>订单信息 - {$CONF['shopTitle']['fieldValue']}</title>
-      	<meta name="keywords" content="{$CONF['shopKeywords']['fieldValue']},订单信息" />
-      	<meta name="description" content="{$CONF['shopTitle']['fieldValue']},订单信息" />
+      	<title>订单信息 - {$CONF['mallTitle']}</title>
+      	<meta name="keywords" content="{$CONF['mallKeywords']},订单信息" />
+      	<meta name="description" content="{$CONF['mallDesc']},订单信息" />
       	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/checkorderinfo.css" />
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
 		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />
    	</head>
    	<body>
-	<include file="./Apps/Home/View/default/header.html" />
+	<include file="./Apps/Home/View/default/header_common.html" />
 	<div class="w">
         <div style=""><br/>
         	<div class="wst-odetal-box">
@@ -128,10 +128,13 @@
 	        		<volist name="orderInfo['goodsList']" id="goods" key='key1'>
 	        		<tr>
 	        			<td class="wst-align-left">
-	        			<a href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$goods['goodsId']}" target="_blank">
+	        			<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}" target="_blank">
 	        			   <img style='margin:5px;' src="__ROOT__/{$goods['goodsThums']}" width='50' height='50'/>
 	        			</a>
-	        			<a href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$goods['goodsId']}" target="_blank">{$goods["goodsName"]}</a>
+	        			<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}" target="_blank">
+	        			{$goods["goodsName"]}
+	        			<if condition="$goods['goodsAttrName'] neq ''">【{$goods['goodsAttrName']}】</if>
+	        			</a>
 	        			</td>
 	        			<td class="wst-align-center">￥{$goods["shopPrice"]}</td>
 	        			<td class="wst-align-center">{$goods["goodsNums"]}</td>
@@ -143,7 +146,7 @@
         		   <td colspan='4' class='wst-cart-total-money'>
         		  商品总金额： ￥{$orderInfo["order"]["totalMoney"]}  <br/>
         		   + 运费：￥{$orderInfo["order"]["deliverMoney"]}<br/> 
-        		   <span class='wst-cart-order-txt'>订单总金额：</span><span class='wst-cart-order-money'>￥{$orderInfo["order"]["totalMoney"]}</span></td>
+        		   <span class='wst-cart-order-txt'>订单总金额：</span><span class='wst-cart-order-money'>￥{$orderInfo["order"]["totalMoney"]+$orderInfo["order"]["deliverMoney"]}</span></td>
         		</tr>
         	</table>
         	</div>

@@ -8,12 +8,11 @@
  * ============================================================================
  * 角色服务类
  */
-use Think\Model;
 class RolesModel extends BaseModel {
     /**
 	  * 新增
 	  */
-	 public function add(){
+	 public function insert(){
 	 	$rd = array('status'=>-1);
 	 	$id = I("id",0);
 		$data = array();
@@ -44,7 +43,11 @@ class RolesModel extends BaseModel {
 			if(false !== $rs){
 				$rd['status']= 1;
 				//实时更新当前用户权限
-				if(session('WST_STAFF.staffRoleId')==$id)session('WST_STAFF.grant',explode(',',I("grant")));
+				if(session('WST_STAFF.staffRoleId')==$id){
+					$WST_STAFF = session('WST_STAFF');
+					$WST_STAFF['grant'] = explode(',',I("grant"));
+					session('WST_STAFF',$WST_STAFF);
+				}
 			}
 		}
 		return $rd;

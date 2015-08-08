@@ -4,19 +4,18 @@
   		<meta charset="utf-8">
       	<meta http-equiv="X-UA-Compatible" content="IE=edge">
       	<meta name="viewport" content="width=device-width, initial-scale=1">
-      	<title>{$goodsDetails["goodsName"]} - {$CONF['shopTitle']['fieldValue']}</title>
+      	<title>{$goodsDetails["goodsName"]} - {$CONF['mallTitle']}</title>
       	<meta name="keywords" content="{$goodsDetails['goodsName']}" />
-      	<meta name="description" content="{$CONF['shopTitle']['fieldValue']},{$goodsDetails['goodsName']}" />
+      	<meta name="description" content="{$CONF['mallDesc']},{$goodsDetails['goodsName']}" />
       	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/goodsdetails.css" />
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
 		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />
 
      	<script src="__PUBLIC__/js/jquery.min.js"></script>
- 
    	</head>
    	<body>
-		<include file="./Apps/Home/View/default/header.html" />
+		<include file="./Apps/Home/View/default/header_common.html" />
 	
 		<input id="goodsId" type="hidden" value="{$goodsDetails['goodsId']}"/>
 		<!----加载商品楼层start----->

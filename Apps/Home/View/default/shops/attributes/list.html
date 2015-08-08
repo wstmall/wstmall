@@ -1,0 +1,61 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+    <div class="wst-body"> 
+       <div class='wst-page-header'>卖家中心 > {$cat['catName']} > 商品属性</div>
+       <div class='wst-page-content'>
+        <div class='wst-tbar-group'>
+           <div style='float:left;margin-top:8px;margin-left:5px;'>
+                                 商品类型：
+           <select id="catId" onchange='javascript:getAttrsForAttr(this.value)' dataNo="{$List|count}">
+             <volist name="catList" id="vo">
+             <option value='{$vo["catId"]}' <if condition="$cat['catId'] ==$vo['catId']">selected</if>>{$vo["catName"]}</option>
+             </volist>
+           </select>
+           </div>
+           <a style='float:right;margin-right:5px;' href='javascript:toAddAttr()'><span class='add btn'></span>新增</a>&nbsp;
+        </div>
+        <table class='wst-list'>
+           <thead>
+             <tr>
+               <th width='20'>&nbsp;</th>
+               <th width='120'>商品属性</th>
+               <th width='80'>价格属性</th>
+               <th width='80'>属性类型</th>
+               <th>属性选项(以,号分割)</th>
+               <th width='50'>排序号</th>
+               <th width='100'>操作</th>
+             </tr>
+           </thead>
+           <tbody id='tbody'>
+            <volist name="List" id="vo" key='i'>
+             <tr id='tr_{$i}' dataId='{$vo['attrId']}'>
+               <td>{$i}</td>
+               <td><input type='text' id='attrName_{$i}' value="{$vo['attrName']}"/></td>
+               <td><input type='radio' name='isPriceAttr' id='isPriceAttr_{$i}' <if condition="$vo['isPriceAttr'] ==1">checked</if> onclick='javascript:chkPriceAttrForAttr()' id='isPriceAttr_{$i}'></td>
+               <td>
+               <select id='attrType_{$i}' onchange='javascript:changeAttrTypeForAttr({$i})' <if condition="$vo['isPriceAttr'] ==1">style='display:none'</if>>
+	               <option value='0' <if condition="$vo['attrType'] ==0">selected</if>>输入框</option/>
+	               <option value='1' <if condition="$vo['attrType'] ==1">selected</if>>多选项</option/>
+	               <option value='2' <if condition="$vo['attrType'] ==2">selected</if>>下拉项</option/>
+               </select>
+               </td>
+               <td><input type='text' id='attrContent_{$i}' value="{$vo['attrContent']}" style='width:300px;<if condition="$vo['attrType'] ==0 or $vo['isPriceAttr']==1">display:none</if>'/></td>
+               <td><input type='text' id='attrSort_{$i}' value="{$vo['attrSort']}"/></td>
+               <td>
+               <a href="javascript:delAttrs({$i},{$vo['attrId']})" class='btn del' title='删除'></a>
+               &nbsp;
+               </td>
+             </tr>
+             </volist>
+             <tfoot>
+             </tfoot>
+           </tbody>
+        </table>
+        <div class='wst-tbar-group'>
+           <button class='wst-btn-query' style='<if condition=" count($List) eq 0">display:none;</if>margin-top:5px;margin-left:400px;' type="button" onclick='javascript:editAttrs()'>保&nbsp;存</button>
+           <button class='wst-btn-query' style='<if condition=" count($List) eq 0">display:none;</if>margin-top:5px;margin-left:5px;' type="button" onclick='javascript:getAttrsForAttr()'>取&nbsp;消</button>
+           <a style='float:right;margin-right:5px;' href='javascript:toAddAttr()'><span class='add btn'></span>新增</a>&nbsp;
+        </div>
+        </div>
+    </div>
+</block> 

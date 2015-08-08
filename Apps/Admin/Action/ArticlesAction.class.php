@@ -40,7 +40,7 @@ class ArticlesAction extends BaseAction{
     		$rs = $m->edit();
     	}else{
     		$this->checkAjaxPrivelege('wzlb_01');
-    		$rs = $m->add();
+    		$rs = $m->insert();
     	}
     	$this->ajaxReturn($rs);
 	}

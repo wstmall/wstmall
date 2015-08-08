@@ -35,7 +35,7 @@ class ShopsAction extends BaseAction{
     	}
     	
     	$this->assign('object',$object);
-    	$this->assign('src',I('src'));
+    	$this->assign('src',I('src','index'));
 		$this->view->display('/shops/edit');
 	}
 	/**
@@ -54,7 +54,7 @@ class ShopsAction extends BaseAction{
     		}
     	}else{
     		$this->checkAjaxPrivelege('ppgl_01');
-    		$rs = $m->add();
+    		$rs = $m->insert();
     	}
     	$this->ajaxReturn($rs);
 	}

@@ -11,7 +11,7 @@ $(function () {
   		}).ajaxValidator({
   			dataType : "json",
   			async : true,
-  			url : domainURL +"/index.php/Home/Users/checkLoginKey/",
+  			url : Think.U('Home/Users/checkLoginKey'),
   			success : function(data){
   				var json = WST.toJson(data);
   	            if( json.status == "1" ) {
@@ -36,7 +36,7 @@ $(function () {
   		}).ajaxValidator({
   			dataType : "json",
   			async : true,
-  			url : domainURL +"/index.php/Home/Users/checkLoginKey/",
+  			url : Think.U('Home/Users/checkLoginKey'),
   			success : function(data){
   				var json = WST.toJson(data);
   	            if( json.status == "1" ) {
@@ -62,7 +62,7 @@ $(function () {
   		    fileTypeDesc  : 'Image Files',
   	        fileTypeExts  : '*.gif; *.jpg; *.png',
   	        swf           : publicurl+'/plugins/uploadify/uploadify.swf',
-  	        uploader      : domainURL +'/index.php/Admin/shops/uploadPic',
+  	        uploader      : Think.U('Home/shops/uploadPic'),
   	        onUploadSuccess : function(file, data, response) {
   	        	var json = WST.toJson(data);
   	        	var url = domainURL +'/'+json.Filedata.savepath+json.Filedata.savethumbname;
@@ -77,7 +77,7 @@ $(function () {
   		    fileTypeDesc  : 'Image Files',
   	        fileTypeExts  : '*.gif; *.jpg; *.png',
   	        swf           : publicurl+'/plugins/uploadify/uploadify.swf',
-  	        uploader      : domainURL +'/index.php/Admin/shops/uploadPic',
+  	        uploader      : Think.U('Home/shops/uploadPic'),
   	        onUploadSuccess : function(file, data, response) {
   	        	var json = WST.toJson(data);
   	        	var url = domainURL +'/'+json.Filedata.savepath+json.Filedata.savethumbname;
@@ -92,7 +92,7 @@ $(function () {
 		    fileTypeDesc  : 'Image Files',
 	        fileTypeExts  : '*.gif; *.jpg; *.png',
 	        swf           : publicurl+'/plugins/uploadify/uploadify.swf',
-	        uploader      : domainURL +'/index.php/Home/shops/uploadPic',
+	        uploader      : Think.U('Home/shops/uploadPic'),
 	        onUploadSuccess : function(file, data, response) {
 	        	var json = WST.toJson(data);
 	        	var url = domainURL +'/'+json.Filedata.savepath+json.Filedata.savethumbname;
@@ -111,7 +111,7 @@ $(function () {
 		   $('#areaId3').html('<option value="">请选择</option>');
 	   }
 	   var html = [];
-	   $.post(domainURL +"/index.php/Home/Areas/queryByList",params,function(data,textStatus){
+	   $.post(Think.U('Home/Areas/queryByList'),params,function(data,textStatus){
 		    html.push('<option value="">请选择</option>');
 			var json = WST.toJson(data);
 			if(json.status=='1' && json.list && json.list.length>0){
@@ -133,7 +133,7 @@ $(function () {
  		   $('#goodsCatId3').html('<option value="">请选择</option>');
  	   }
  	   var html = [];
- 	   $.post(domainURL +"/index.php/Home/goodsCats/queryByList",params,function(data,textStatus){
+ 	   $.post(Think.U('Home/goodsCats/queryByList'),params,function(data,textStatus){
  		    html.push('<option value="">请选择</option>');
  			var json = WST.toJson(data);
  			if(json.status=='1' && json.list){
@@ -153,7 +153,7 @@ $(function () {
 		    shadeClose: true,
 		    shade: 0.8,
 		    area: ['1000px', ($(window).height() - 50) +'px'],
-		    content: [userProtocolUrl],
+		    content: [Think.U('Home/Index/toUserProtocol')],
 		    btn: ['同意并注册'],
 		    yes: function(index, layero){
 		    	layer.close(index);
@@ -174,7 +174,7 @@ $(function () {
    		isSend = true;
    		var params = {};
    		params.userPhone = $.trim($("#userPhone").val());
-   		$.post(domainURL +"/index.php/Home/Users/getPhoneVerifyCode/",params,function(data,textStatus){
+   		$.post(Think.U('Home/Users/getPhoneVerifyCode'),params,function(data,textStatus){
    			var json = WST.toJson(data);
    			if(json.status==-1){
    				alert('手机号码格式错误!');
@@ -245,7 +245,7 @@ $(function () {
 	   	params.mobileCode = $.trim($('#mobileCode').val());
 	   	params.verify = $.trim($('#authcode').val());
 	   	params.protocol = document.getElementById("protocol").checked?1:0;	
-	   	$.post(domainURL +"/index.php/Home/Shops/openShop/",params,function(data,textStatus){
+	   	$.post(Think.U('Home/Shops/openShop'),params,function(data,textStatus){
 	   		var json = WST.toJson(data);
 	   		if(json.status>0){
 	   			WST.msg('您的开店申请已提交，请等候商城管理员审核!', {icon: 1}, function(){

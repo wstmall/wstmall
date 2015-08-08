@@ -4,7 +4,7 @@
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>{$CONF['shopTitle']['fieldValue']}后台管理中心</title>
+      <title>{$CONF['mallTitle']}后台管理中心</title>
       <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
       <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
       <!--[if lt IE 9]>
@@ -18,16 +18,9 @@
       <script src="__PUBLIC__/plugins/plugins/plugins.js"></script>
    </head>
    <script>
-   function query(){
-	   var q = [];
-	   q.push('loginName='+$('#loginName2').val());
-	   q.push('userStatus='+$('#userStatus').val());
-	   q.push('userType='+$('#userType').val());
-	   location.href="__ROOT__/index.php/Admin/Users/queryAccountByPage/?"+q.join('&');
-   }
    function toggleStatus(t,v){
 	   Plugins.waitTips({title:'信息提示',content:'正在操作，请稍后...'});
-	   $.post("__ROOT__/index.php/Admin/Users/editUserStatus",{id:v,userStatus:t},function(data,textStatus){
+	   $.post("{:U('Admin/Users/editUserStatus')}",{id:v,userStatus:t},function(data,textStatus){
 			var json = WST.toJson(data);
 			if(json.status=='1'){
 				Plugins.setWaitTipsMsg({content:'操作成功',timeout:1000,callback:function(){
@@ -40,24 +33,27 @@
 	   });
    }
    function toEdit(id){
-	   Plugins.Modal({url:'__ROOT__/index.php/Admin/Users/toEditAccount/?id='+id,title:'编辑账号信息',width:500});
+	   var url = "{:U('Admin/Users/toEditAccount',array('id'=>'__0'))}".replace('__0',id);
+	   Plugins.Modal({url:url,title:'编辑账号信息',width:500});
    }
    </script>
    <body class='wst-page'>
+     <form method='post' action='{:U("Admin/Users/queryAccountByPage")}'>
        <div class='wst-tbar'>
        会员账号：<input type='text' id='loginName2' name='loginName2' class='form-control wst-ipt-10' value='{$loginName}'/>
-       会员类型：<select id='userType' class="form-control wst-ipt-10">
+       会员类型：<select id='userType' name='userType' class="form-control wst-ipt-10">
            <option value='-1' <if condition=" $userType eq -1 ">selected</if>>全部</option>
            <option value='0' <if condition=" $userType eq 0 ">selected</if>>普通会员</option>
            <option value='1' <if condition=" $userType eq 1 ">selected</if>>商家会员</option>
        </select>  
-         账号状态：<select id='userStatus' class="form-control wst-ipt-10">
+         账号状态：<select id='userStatus' name='userStatus' class="form-control wst-ipt-10">
            <option value='-1' <if condition=" $userStatus eq -1 ">selected</if>>全部</option>
            <option value='1' <if condition=" $userStatus eq 1 ">selected</if>>启用</option>
            <option value='0' <if condition=" $userStatus eq 0 ">selected</if>>停用</option>
        </select>   
-  <button type="button" class="btn btn-primary glyphicon glyphicon-search" onclick='javascript:query()'>查询</button> 
+  <button type="submit" class="btn btn-primary glyphicon glyphicon-search">查询</button> 
        </div>
+       </form>
        <div class="wst-body">
         <table class="table table-hover table-striped table-bordered wst-list">
            <thead>
@@ -106,7 +102,7 @@
                </td>
                <td>
                <php>if(in_array('hyzh_04',$WST_STAFF['grant'])){</php>
-               <button type="button" class="btn btn-default glyphicon glyphicon-pencil" onclick="javascript:toEdit({$vo['userId']})"">修改</button>&nbsp;
+               <a class="btn btn-default glyphicon glyphicon-pencil" href="javascript:toEdit({$vo['userId']})">修改</a>&nbsp;
                <php>}</php>
                </td>
              </tr>

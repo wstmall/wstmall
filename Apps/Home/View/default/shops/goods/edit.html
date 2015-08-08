@@ -93,11 +93,14 @@ function delImg(obj){
        <div id='tab' class="wst-tab-box">
 		<ul class="wst-tab-nav">
 	    	<li>商品信息</li>
+	    	<li>属性</li>
 	        <li>商品相册</li>
 	    </ul>
     	<div class="wst-tab-content" style='width:99%;margin-bottom: 10px;'>
+    	<form name="myform" method="post" id="myform">
+    	<!-- 商品基础信息 -->
     	<div class='wst-tab-item'>
-	        <form name="myform" method="post" id="myform">
+	        
 	        <input type='hidden' id='id' value='{$object.goodsId}'/>
 	        <input type='hidden' id='goodsImg' value='{$object.goodsImg}'/>
 	        <input type='hidden' id='goodsThumbs' value='{$object.goodsThums}'/>
@@ -117,23 +120,23 @@ function delImg(obj){
 	             <td><input type='text' id='goodsName' name='goodsName' class="form-control wst-ipt" value='{$object.goodsName}' maxLength='40'/></td>
 	           </tr>
 	            <tr>
-	             <th width='120'>市场价<font color='red'>*</font>：</th>
-	             <td><input type='text' id='marketPrice' name='marketPrice' class="form-control wst-ipt" value='{$object.marketPrice}' onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='25'/></td>
+	             <th width='120'>市场价格<font color='red'>*</font>：</th>
+	             <td><input type='text' id='marketPrice' name='marketPrice' class="form-control wst-ipt" value='{$object.marketPrice}' onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='10'/></td>
 	           </tr>
 	            <tr>
 	             <th width='120'>店铺价格<font color='red'>*</font>：</th>
-	             <td><input type='text' id='shopPrice' name='shopPrice' class="form-control wst-ipt" value='{$object.shopPrice}' onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='25'/></td>
+	             <td><input type='text' id='shopPrice' name='shopPrice' class="form-control wst-ipt" value='{$object.shopPrice}' onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='10'/></td>
 	           </tr>
 	            <tr>
-	             <th width='120'>市场库存<font color='red'>*</font>：</th>
-	             <td><input type='text' id='goodsStock' name='goodsStock' class="form-control wst-ipt" value='{$object.goodsStock}' onkeypress="return WST.isNumberKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='25'/></td>
+	             <th width='120'>商品库存<font color='red'>*</font>：</th>
+	             <td><input type='text' id='goodsStock' name='goodsStock' class="form-control wst-ipt" value='{$object.goodsStock}' onkeypress="return WST.isNumberKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='25' <if condition="count($object['priceAttrs']) gt 0 ">disabled</if> /></td>
 	           </tr>
-	            <tr>
+	           <tr>
 	             <th width='120'>单位<font color='red'>*</font>：</th>
 	             <td><input type='text' id='goodsUnit' name='goodsUnit' class="form-control wst-ipt" value='{$object.goodsUnit}'  maxLength='25'/></td>
 	           </tr>
 	           <tr>
-	             <th width='120'>规格：</th>
+	             <th width='120'>商品信息：</th>
 	             <td colspan='3'>
 	             <textarea rows="2" style="width:788px" id='goodsSpec' name='goodsSpec'>{$object.goodsSpec}</textarea>
 	             </td>
@@ -220,11 +223,83 @@ function delImg(obj){
 	             </td>
 	           </tr>
 	        </table>
-	       </form>
+	       
 	      </div>
+	      
+	      <div class='wst-tab-item'>
+	      商品类型：<select id='attrCatId' onchange='javascript:getAttrList(this.value)'>
+	         <option value='0'>请选择</option>
+	         <volist name="attributeCatsCatsList" id="vo">
+	         <option value='{$vo["catId"]}' <if condition="$object['attrCatId'] == $vo['catId'] ">selected</if>>{$vo["catName"]}</option>
+	         </volist>
+	      </select>
+	      <div>
+	        <fieldset id='priceContainer' class='wst-goods-fieldset' <if condition="count($object['priceAttrs']) gt 0">style='display:block'</if>>
+			    <legend>价格类型</legend>
+			    <input type='hidden' class="hiddenPriceAttr" dataId='{$object["priceAttrId"]}' dataNo="{$object['priceAttrs']|count}" value='{$object["priceAttrName"]}'/>
+			    <table class="wst-form wst-goods-price-table">
+	             <thead><tr><th>属性</th><th>规格</th><th>价格</th><th>推荐</th><th>库存</th><th>操作</th></tr></thead>
+	             <tbody id="priceConent">
+	             <volist name="object['priceAttrs']" id="vo" key='i'>
+	               <tr>
+		              <td style="text-align:right">{$vo['attrName']}：</td>
+		              <td><input type="text" id="price_name_{$vo['attrId']}_{$i}" value="{$vo['attrVal']}"/></td>
+		              <td><input type="text" id="price_price_{$vo['attrId']}_{$i}" value="{$vo['attrPrice']}" onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength="10"/></td>
+		              <td><input type="radio" id="price_isRecomm_{$vo['attrId']}_{$i}" name="price_isRecomm" <if condition="$vo['isRecomm'] eq 1">checked</if>/></td>
+		              <td><input type="text" id="price_stock_{$vo['attrId']}_{$i}" value="{$vo['attrStock']}" onblur="javascript:statGoodsStaock()" onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength="10"/></td>
+		              <td>
+		              <if condition="$i == 1">
+		              <a title="新增" class="add btn" href="javascript:addPriceAttr()"></a>
+		              <else/>
+		              <a title="删除" class="del btn" href="javascript:delPriceAttr({$i})"></a>
+		              </if>
+		              </td>
+		           </tr>
+	             </volist>
+	             </tbody>
+	            </table>
+			</fieldset>
+			<fieldset id='attrContainer' class='wst-goods-fieldset' <if condition="count($object['attrs']) gt 0">style='display:block'</if>>
+			    <legend>属性类型</legend>
+			    <table class="wst-form" style='width:100%'>
+	              <tbody id='attrConent'>
+	              <volist name="object['attrs']" id="vo" key='i'>
+		             <tr>
+		              <td style="width:80px;text-align:right" nowrap>{$vo['attrName']}：</td>
+		              <td>
+		              <PHP>if($vo['attrType']==0){</PHP>
+		              <input type="text" style='width:70%;' class="attrList" id="attr_name_{$vo['attrId']}_{$i}" value="{$vo['attrVal']}" dataId="{$vo['attrId']}"/>
+		              <PHP>}else if($vo['attrType']==2){</PHP>
+		              <select class="attrList" id="attr_name_{$vo['attrId']}_{$i}" dataId="{$vo['attrId']}">
+		              <volist name="vo['opts']['txt']" id="attrvo">
+		              <option value='{$attrvo}' <if condition="$attrvo == $vo['attrVal']">selected</if> >{$attrvo}</option>
+		              </volist>
+		              </select>
+		              <PHP>
+		              }else if($vo['attrType']==1){</PHP>
+		              <input type='hidden' class="attrList" dataId='{$vo['attrId']}' dataType="1"/>
+		              <volist name="vo['opts']['txt']" id="attrvo">
+		              <label><input type='checkbox' name="attrTxtChk_{$vo['attrId']}" value="{$attrvo}" <if condition="$vo['opts']['val'][$attrvo] == 1">checked</if>/>{$attrvo}</label>&nbsp;&nbsp;
+		              </volist>
+		              <PHP>}</PHP>
+		              </td>
+		             </tr>
+		          </volist>
+	              </tbody>
+	            </table>
+			</fieldset>
+			<div style='width:100%;text-align:center;'>
+			<button class='wst-btn-query' type="submit">保&nbsp;存</button>
+	        <if condition="$umark !='toEdit' ">
+	             <button class='wst-btn-query' type="button" onclick='javascript:location.href="__ROOT__/index.php/Home/Goods/{$umark}"'>返&nbsp;回</button>
+	        </if>
+			</div>
+	      </div>
+	      </div>
+	      
+	      <!-- 相册 -->
 	      <div class='wst-tab-item'>
 	       <div><input type='text' id='galleryImgUpload'/></div>
-	       
 	       <div id='galleryImgs' class='wst-gallery-imgs'>
 	           <volist name="object['gallery']" id="vo" key='i'>
 		       <div class="wst-gallery-img" onmouseover="imgmouseover(this);" onmouseout="imgmouseout(this);">
@@ -235,6 +310,7 @@ function delImg(obj){
 	       </div>
 	       <div style='clear:both;'></div>
 	      </div>
+	      </form>
        </div>
        </div>
        

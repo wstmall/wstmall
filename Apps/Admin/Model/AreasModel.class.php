@@ -12,7 +12,7 @@ class AreasModel extends BaseModel {
     /**
 	  * 新增
 	  */
-	 public function add(){
+	 public function insert(){
 	 	$areaType = 0;
 	 	if(I("parentId",0)>0){
 		 	$prs = $this->get(I("parentId",0));

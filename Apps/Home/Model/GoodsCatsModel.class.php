@@ -20,8 +20,8 @@ class GoodsCatsModel extends BaseModel {
     /**
      * 获取商品分类及商品
      */
-	public function getGoodsCats($areaId2){
-		$cats = S("WST_CACHE_GOODS_CAT_".$areaId2);
+	public function getGoodsCatsAndGoodsForIndex($areaId2){
+		$cats = S("WST_CACHE_GOODS_CAT_GOODS_WEB_".$areaId2);
 		if(!$cats){
 			$sql = "select catId,catName from __PREFIX__goods_cats WHERE parentId = 0 AND isShow =1 AND catFlag = 1 order by catSort asc limit 6";
 			$rs1 = $this->query($sql);
@@ -43,32 +43,32 @@ class GoodsCatsModel extends BaseModel {
 					$rs2[$j]["catChildren"] = $cats3;
 			
 					//查询二级分类下的商品
-					$sql = "SELECT sp.shopName, SUM(og.goodsNums) totalnum, sp.shopId , g.goodsId , g.goodsName,g.goodsImg, g.goodsThums,g.shopPrice, g.goodsSn
-						FROM __PREFIX__goods g
-						LEFT JOIN __PREFIX__order_goods og ON g.goodsId = og.goodsId,
-						__PREFIX__shops sp
-									WHERE g.shopId = sp.shopId AND sp.shopStatus = 1 AND g.goodsFlag = 1 AND g.isSale = 1 AND g.goodsStatus = 1 AND g.goodsCatId2 = $cat2Id AND sp.areaId2=$areaId2
-									GROUP BY g.goodsId ORDER BY SUM(og.goodsNums) desc limit 8";
-			
+					$sql = "SELECT sp.shopName, g.saleCount , sp.shopId , g.goodsId , g.goodsName,g.goodsImg, g.goodsThums,g.shopPrice, g.goodsSn,ga.id goodsAttrId,ga.attrPrice
+							FROM __PREFIX__goods g left join __PREFIX__goods_attributes ga on g.goodsId=ga.goodsId and ga.isRecomm=1, __PREFIX__shops sp
+							WHERE g.shopId = sp.shopId AND sp.shopStatus = 1 AND g.goodsFlag = 1 AND g.isSale = 1 AND g.goodsStatus = 1 AND g.goodsCatId2 = $cat2Id AND sp.areaId2=$areaId2
+							ORDER BY g.saleCount desc limit 8";
 					$grs = $this->query($sql);
+					foreach ($grs as $gkey => $v){
+						if(intval($v['goodsAttrId'])>0)$grs[$gkey]['shopPrice'] = $v['attrPrice'];
+					}
 					$rs2[$j]["goods"] = $grs;
 					$cats2[] = $rs2[$j];
 				}
 			
 				//查询二级分类下的商品
-				$sql = "SELECT sp.shopName, SUM(og.goodsNums) totalnum, sp.shopId , g.goodsId , g.goodsName,g.goodsImg, g.goodsThums,g.shopPrice, g.goodsSn
-						FROM __PREFIX__goods g
-						LEFT JOIN __PREFIX__order_goods og ON g.goodsId = og.goodsId,
-						__PREFIX__shops sp
-									WHERE g.shopId = sp.shopId AND sp.shopStatus = 1 AND g.goodsFlag = 1 AND g.isAdminBest = 1 AND g.isSale = 1 AND g.goodsStatus = 1 AND g.goodsCatId1 = $cat1Id AND sp.areaId2=$areaId2
-									GROUP BY g.goodsId ORDER BY SUM(og.goodsNums) desc limit 8";
-					
+				$sql = "SELECT sp.shopName, g.saleCount , sp.shopId , g.goodsId , g.goodsName,g.goodsImg, g.goodsThums,g.shopPrice, g.goodsSn,ga.id goodsAttrId,ga.attrPrice
+						FROM __PREFIX__goods g left join __PREFIX__goods_attributes ga on g.goodsId=ga.goodsId and ga.isRecomm=1, __PREFIX__shops sp
+						WHERE g.shopId = sp.shopId AND sp.shopStatus = 1 AND g.goodsFlag = 1 AND g.isAdminBest = 1 AND g.isSale = 1 AND g.goodsStatus = 1 AND g.goodsCatId1 = $cat1Id AND sp.areaId2=$areaId2
+						ORDER BY g.saleCount desc limit 8";
 				$jgrs = $this->query($sql);
+			    foreach ($jgrs as $gkey => $v){
+					if(intval($v['goodsAttrId'])>0)$jgrs[$gkey]['shopPrice'] = $v['attrPrice'];
+				}
 				$rs1[$i]["jpgoods"] = $jgrs;
 				$rs1[$i]["catChildren"] = $cats2;
 				$cats[] = $rs1[$i];
 			}
-			S("WST_CACHE_GOODS_CAT_".$areaId2,$cats,31536000);
+			S("WST_CACHE_GOODS_CAT_GOODS_WEB_".$areaId2,$cats,31536000);
 		}
 		//获取每个分类推荐的店铺
 		if($cats){

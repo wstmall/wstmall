@@ -41,7 +41,6 @@ class MessagesModel extends BaseModel {
         $info = $this->where($map)->find();
         if (!empty($info)) {
             if ($info['msgStatus'] == 0) {
-            	echo "111";
                 $this->where("id=".$id." and receiveUserId=".(int)session('WST_USER.userId'))->save(array('msgStatus'=>1));
             }
         }

@@ -4,19 +4,17 @@
   		<meta charset="utf-8">
       	<meta http-equiv="X-UA-Compatible" content="IE=edge">
       	<meta name="viewport" content="width=device-width, initial-scale=1">
-      	<title>{$carticle["articleTitle"]} - {$CONF['shopTitle']['fieldValue']}</title>
-      	<meta name="keywords" content="{$CONF['shopKeywords']['fieldValue']},{$carticle["articleKey"]}" />
-      	<meta name="description" content="{$CONF['shopTitle']['fieldValue']},{$carticle["articleKey"]}" />
+      	<title>{$carticle["articleTitle"]} - {$CONF['mallTitle']}</title>
+      	<meta name="keywords" content="{$CONF['mallKeywords']},{$carticle["articleKey"]}" />
+      	<meta name="description" content="{$CONF['mallDesc']},{$carticle["articleKey"]}" />
       	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/goodslist.css" />
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
 		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />
-	
-      	
    	</head>
    	<body>
    
-	<include file="./Apps/Home/View/default/header.html" />
+	<include file="./Apps/Home/View/default/header_common.html" />
 	<div class="wst-container">
 		<div class='wst-article-menu'>
 			<dl class="fore1">
@@ -28,9 +26,9 @@
 				<volist name="articles['articlecats']" key="key2" id="article">
 				<div class='sub-item'>
 					<if condition="$article.articleId eq $carticle.articleId">
-					<img src="__ROOT__/Apps/Home/View/default/images/helpcenter_icon2.gif"/>&nbsp;&nbsp;<a style="color: red" href="?articleId={$article.articleId}" rel="nofollow">{$article.articleTitle}</a>
+					<img src="__ROOT__/Apps/Home/View/default/images/helpcenter_icon2.gif"/>&nbsp;&nbsp;<a style="color: red" href="{:U('Home/Articles/index/',array('articleId'=>$article['articleId']))}" rel="nofollow">{$article.articleTitle}</a>
 					<else/>
-					<img src="__ROOT__/Apps/Home/View/default/images/helpcenter_icon1.gif"/>&nbsp;&nbsp;<a href="?articleId={$article.articleId}" rel="nofollow">{$article.articleTitle}</a>
+					<img src="__ROOT__/Apps/Home/View/default/images/helpcenter_icon1.gif"/>&nbsp;&nbsp;<a href="{:U('Home/Articles/index/',array('articleId'=>$article['articleId']))}" rel="nofollow">{$article.articleTitle}</a>
 					</if>
 				</div>
 				</volist>

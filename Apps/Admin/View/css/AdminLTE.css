@@ -3581,7 +3581,8 @@ label{display:inline;}
 .wst-tab-pane{padding:5px;}
 .wst-tbar{margin-bottom:5px;height:auto;}
 .form-control{height:25px;padding:3px;display :inline-block;}
-.btn{padding:2px 8px;margin-right:0px;font-weight:bold;}
-
-.wstmall-version-tips{display:none;border:1px solid #C40F0F; box-shadow: 0 0 3px #C40F0F;background:#F49537;color:#ffffff;font-weight:bold;margin:5px;padding:5px;}
+.btn{padding:2px 8px;margin-right:0px;font-weight:bold;vertical-align:top;}
+.wstmall-version-tips{border-bottom:1px solid #ddd; box-shadow: 0 1px 3px #ddd;display:none;background:url('../img/ico_5.png') no-repeat;font-weight:bold;height:25px;line-height:23px;padding-left:30px;}
+.wstmall-login-tips{line-height:30px;padding-left:10px;border-bottom:1px solid #dddddd;box-shadow: 0 1px 3px #ddd;}
+.wstmall-login-tips p{margin:0px;}
 

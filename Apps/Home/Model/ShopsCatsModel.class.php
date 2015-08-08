@@ -12,7 +12,7 @@ class ShopsCatsModel extends BaseModel {
     /**
 	  * 新增
 	  */
-	 public function add(){
+	 public function insert(){
 	 	$rd = array('status'=>-1);
 	 	$id = I("id",0);
 		$data = array();
@@ -37,14 +37,21 @@ class ShopsCatsModel extends BaseModel {
 	  */
 	 public function edit(){
 	 	$rd = array('status'=>-1);
-	 	$id = I("id",0);
+	 	$id = (int)I("id",0);
 		$data = array();
-		$data["isShow"] = I("isShow",0);
+		$data["isShow"] = (int)I("isShow",0);
 		$data["catName"] = I("catName");
-		$data["catSort"] = I("catSort",0);
+		$data["catSort"] = (int)I("catSort",0);
 		$shopId = (int)session('WST_USER.shopId');
+		$m = M('shops_cats');
 		if($this->checkEmpty($data,true)){	
-			$m = M('shops_cats');
+			if($data["isShow"]!=1){
+				//把相关的商品下架了
+				$sql = "update __PREFIX__goods set isSale=0 where shopId=".$shopId." and shopCatId1 = ".$id;
+				$m->query($sql);
+				$sql = "update __PREFIX__goods set isSale=0 where shopId=".$shopId." and shopCatId2 = ".$id;
+				$m->query($sql);
+			}
 			$rs = $m->where("catId=".I('id')." and shopId=".$shopId)->save($data);
 			if(false !== $rs){
 				$rd['status']= 1;
@@ -127,10 +134,18 @@ class ShopsCatsModel extends BaseModel {
 	 public function del(){
 	 	$rd = array('status'=>-1);
 	 	$m = M('shops_cats');
-	 	$data = array();
-		$data["catFlag"] = -1;
+	 	$id = (int)I('id');
+	 	if($id==0)return $rd;
 		$shopId = (int)session('WST_USER.shopId');
-	 	$rs = $m->where("catId=".I('id')." and shopId=".$shopId)->save($data);
+		//把相关的商品下架了
+		$sql = "update __PREFIX__goods set isSale=0 where shopId=".$shopId." and shopCatId1 = ".$id;
+		$m->query($sql);
+		$sql = "update __PREFIX__goods set isSale=0 where shopId=".$shopId." and shopCatId2 = ".$id;
+		$m->query($sql);
+		//删除商品分类
+		$data = array();
+		$data["catFlag"] = -1;
+	 	$rs = $m->where("(catId=".I('id')." or parentId=".I('id').") and shopId=".$shopId)->save($data);
 	    if(false !== $rs){
 			$rd['status']= 1;
 			S("WST_CACHE_SHOP_CAT_".session('WST_USER.shopId'),null);
@@ -142,8 +157,8 @@ class ShopsCatsModel extends BaseModel {
 	/**
 	  * 获取门店商品分类列表
 	*/
-    public function getShopCateList(){
-		$shopId = I("shopId",0);
+    public function getShopCateList($shopId = 0){
+		$shopId = ($shopId>0)?$shopId:(int)I("shopId");
 		$data = S("WST_CACHE_SHOP_CAT_".$shopId);
 		if(!$data){
 			$m = M('shops_cats');

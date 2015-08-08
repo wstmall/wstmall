@@ -39,7 +39,7 @@ class ArticleCatsAction extends BaseAction{
     		$rs = $m->edit();
     	}else{
     		$this->checkAjaxPrivelege('wzfl_01');
-    		$rs = $m->add();
+    		$rs = $m->insert();
     	}
     	$this->ajaxReturn($rs);
 	}

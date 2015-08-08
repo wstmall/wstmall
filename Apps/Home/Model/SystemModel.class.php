@@ -14,15 +14,19 @@ class SystemModel extends BaseModel {
      * 获取商城配置文件
      */
 	public function loadConfigs(){
-		$sql = "select * from __PREFIX__sys_configs order by parentId asc,fieldSort asc";
-		$rs = $this->query($sql);
-		$configs = array();
-		if(count($rs)>0){
-			foreach ($rs as $key=>$v){
-				$configs[$v['fieldCode']] = $v;
+		$configs = WSTDataFile('mall_config');
+		if(!$configs){
+			$sql = "select fieldCode,fieldValue from __PREFIX__sys_configs order by parentId asc,fieldSort asc";
+			$rs = $this->query($sql);
+			$configs = array();
+			if(count($rs)>0){
+				foreach ($rs as $key=>$v){
+					$configs[$v['fieldCode']] = $v['fieldValue'];
+				}
 			}
+			unset($rs);
+			WSTDataFile('mall_config','',$configs);
 		}
-		unset($rs);
 		return $configs;
 	}
 	/**

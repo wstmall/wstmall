@@ -13,19 +13,19 @@
 	   params.content = $.trim($('#content').val());
 	   params.id = $('#id').val();
 	   Plugins.waitTips({title:'信息提示',content:'正在提交数据，请稍后...'});
-	   $.post("__ROOT__/index.php/Admin/Orders/refund",params,function(data,textStatus){
+	   $.post("{:U('Admin/Orders/refund')}",params,function(data,textStatus){
 			var json = WST.toJson(data);
 			if(json.status=='1'){
-				Plugins.setWaitTipsMsg({content:'操作成功',timeout:1000,callback:function(){
-					   location.href='__ROOT__/index.php/Admin/Orders/queryRefundByPage';
+				Plugins.setWaitTipsMsg({ content:'操作成功',timeout:1000,callback:function(){
+					   location.href="{:U('Admin/Orders/queryRefundByPage')}";
 				}});
 			}else if(json.status=='-2'){
 				Plugins.setWaitTipsMsg({content:'操作失败，订单早已经退款！',timeout:1000,callback:function(){
-					location.href='__ROOT__/index.php/Admin/Orders/queryRefundByPage';
+					location.href="{:U('Admin/Orders/queryRefundByPage')}";
 				}});
 			}else{
 				Plugins.setWaitTipsMsg({content:'操作失败！',timeout:1000,callback:function(){
-					location.href='__ROOT__/index.php/Admin/Orders/queryRefundByPage';
+					location.href="{:U('Admin/Orders/queryRefundByPage')}";
 				}});
 			}
 		});

@@ -11,8 +11,7 @@ $(function () {
 			},onError:function(msg){
 		}});
 	   
-	   //$("#shopTitle").formValidator({onShow:"",onFocus:"请输入店铺SEO标题",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"店铺SEO标题不能为空,请确认"});
-	   $("#shopKeywords").formValidator({onShow:"",onFocus:"请输入店铺SEO关键字",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"店铺SEO关键字不能为空,请确认"});
+	    $("#shopKeywords").formValidator({onShow:"",onFocus:"请输入店铺SEO关键字",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"店铺SEO关键字不能为空,请确认"});
 		$("#shopImgUpload").uploadify({
 		    formData      : {'dir':'shopads','width':1400,'height':120},
 		    buttonText    : '选择图标',

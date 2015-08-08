@@ -8,7 +8,7 @@
  * 广告控制器
  */
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
-@set_time_limit(1000);
+@set_time_limit(0);
 @set_magic_quotes_runtime(0);
 define('IN_WSTMALL', TRUE);
 define('INSTALL_ROOT', dirname(dirname(dirname(__FILE__))));

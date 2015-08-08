@@ -4,9 +4,9 @@
   		<meta charset="utf-8">
       	<meta http-equiv="X-UA-Compatible" content="IE=edge">
       	<meta name="viewport" content="width=device-width, initial-scale=1">
-      	<title>{$goodsDetails["goodsName"]} - {$CONF['shopTitle']['fieldValue']}</title>
+      	<title>{$goodsDetails["goodsName"]} - {$CONF['mallTitle']}</title>
       	<meta name="keywords" content="{$goodsDetails['goodsName']}" />
-      	<meta name="description" content="{$CONF['shopTitle']['fieldValue']},{$goodsDetails['goodsName']}" />
+      	<meta name="description" content="{$CONF['mallDesc']},{$goodsDetails['goodsName']}" />
       	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/goodsdetails.css" />
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
@@ -18,23 +18,23 @@
      	<script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
    	</head>
    	<body>
-		<include file="./Apps/Home/View/default/header.html" />
+		<include file="./Apps/Home/View/default/header_common.html" />
 	
 		<input id="goodsId" type="hidden" value="{$goodsDetails['goodsId']}"/>
 		<!----加载商品楼层start----->
 		<div class="wst-container">
 			<div class="wst-nvg-title">
-				<a href="__ROOT__/index.php/Home/goods/getGoodsList/?c1Id={$goodsNav[0]['catId']}">{$goodsNav[0]["catName"]}</a>&nbsp;>&nbsp;
-				<a href="__ROOT__/index.php/Home/goods/getGoodsList/?c1Id={$goodsNav[0]['catId']}&c2Id={$goodsNav[1]['catId']}"><a href="">{$goodsNav[1]["catName"]}</a>&nbsp;>&nbsp;
-				<a href="__ROOT__/index.php/Home/goods/getGoodsList/?c1Id={$goodsNav[0]['catId']}&c2Id={$goodsNav[1]['catId']}&c3Id={$goodsNav[2]['catId']}"><a href="">{$goodsNav[2]["catName"]}</a>
+				<a href="{:U('Home/Goods/getGoodsList/',array('c1Id'=>$goodsNav[0]['catId']))}">{$goodsNav[0]["catName"]}</a>&nbsp;>&nbsp;
+				<a href="{:U('Home/Goods/getGoodsList/',array('c1Id'=>$goodsNav[0]['catId'],'c2Id'=>$goodsNav[1]['catId']))}">{$goodsNav[1]["catName"]}</a>&nbsp;>&nbsp;
+				<a href="{:U('Home/Goods/getGoodsList/',array('c1Id'=>$goodsNav[0]['catId'],'c2Id'=>$goodsNav[1]['catId'],'c3Id'=>$goodsNav[2]['catId']))}">{$goodsNav[2]["catName"]}</a>
 			</div>
 			<div class="wst-goods-details">
-				<div class="details-left" style="">
-					<div class="goods-img-box" style= " ">
+				<div class="details-left">
+					<div class="goods-img-box">
 						 <!--产品参数开始-->
 						  <div>
 						    <div id="preview" class="spec-preview"> 
-							    <span class="jqzoom" style="">
+							    <span class="jqzoom">
 							    	<img jqimg="__ROOT__/{$goodsDetails['goodsImg']}" src="__ROOT__/{$goodsDetails['goodsImg']}" height="350" width="350"/>
 							    </span> 
 						    </div>
@@ -53,7 +53,7 @@
 						  </div>
 						  <!--产品参数结束-->
 					</div>
-					<div class="goods-des-box" style="">
+					<div class="goods-des-box">
 						<table class="goods-des-tab">
 							<tbody>
 								<tr>
@@ -68,7 +68,7 @@
 								<tr>
 									<td colspan="2">
 										<div class="des-chux">
-											促销：<span>￥{$goodsDetails["shopPrice"]}</span>
+											价格：<span id='shopGoodsPrice_{$goodsDetails["goodsId"]}' dataId='{$goodsDetails["goodsAttrId"]}'>￥{$goodsDetails["shopPrice"]}</span>
 										</div>
 									</td>
 								</tr>
@@ -77,7 +77,7 @@
 									<td>{$goodsDetails["goodsSn"]}</td>
 								</tr>
 								<tr>
-									<td width="70"><span class="des-title-span">配&nbsp;&nbsp;送&nbsp;&nbsp;至：</span></td>
+									<td width="70"><span class="des-title-span">配送至：</span></td>
 									<td>
 										<li id="summary-stock">
 											<div class="dd">
@@ -91,28 +91,44 @@
 													<strong></strong>
 												</div><!--store-prompt end--->
 											</div>
-										</li>有货
+										</li>
 										<div class="wst-clear"></div>
 									</td>
 								</tr>
 								<tr>
-									<td width="70"><span class="des-title-span">运&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;费：</span></td>
+									<td width="70"><span class="des-title-span">运费：</span></td>
 									<td>{$goodsDetails["deliveryStartMoney"]}元起，配送费{$goodsDetails["deliveryMoney"]}元，{$goodsDetails["deliveryFreeMoney"]}元起免配送费</td>
 								</tr>
 								<tr>
-									<td width="70"><span class="des-title-span">服&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;务：</span></td>
-									<td>由<if condition="$goodsDetails['deliveryType'] eq 0">WST商城<else/><a href="__ROOT__/index.php/Home/Shops/toShopHome/?shopId={$goodsDetails['shopId']}">{$goodsDetails['shopName']}</a></if>配送，并提供售后服务</td>
+									<td width="70"><span class="des-title-span">服务：</span></td>
+									<td>由<if condition="$goodsDetails['deliveryType'] eq 0">WST商城<else/><a href="{:U('Home/Shops/toShopHome/',array('shopId'=>$goodsDetails['shopId']))}">{$goodsDetails['shopName']}</a></if>配送，并提供售后服务</td>
 								</tr>
-								
+								<if condition=" count($goodsAttrs['priceAttrs']) gt 0">
+								<tr style='height:15px;border-top:1px dashed #ddd;'>
+								   <td colspan='2'></td>
+								</tr>
+								<tr>
+									<td width="70"><span class="des-title-span">{$goodsAttrs["priceAttrName"]}：</span></td>
+									<td>
+									 <volist name="goodsAttrs['priceAttrs']" id="avo">
+									 <span class='wst-goods-attrs <if condition=" $goodsDetails['goodsAttrId'] eq $avo['id']">wst-goods-attrs-on</if>' dataId='{$avo["id"]}' onclick='javascript:checkStock(this)'>{$avo['attrVal']}</span>
+									 </volist>
+									</td>
+								</tr>
+								</if>
+								<tr>
+								    <td></td>
+								    <td></td>
+								</tr>
 								<if condition="$goodsDetails['shopServiceStatus'] eq 1">
 								<tr>
 									<td width="70"><span style="display:inline-block;width:70px;">购买数量：</span></td>
 									<td>
 										<div id="haveGoodsToBuy" <if condition="$goodsDetails['goodsStock'] elt 0">style="display:none;"</if>>
 											<div class="goods-buy-cnt">
-												<div class="buy-cnt-plus" onclick="changebuynum({$goodsDetails['goodsId']},1)"></div>
-												<input id="buy-num" type="text" class="buy-cnt-txt" value="1" maxlength="3" onkeypress="return WST.isNumberKey(event);" onkeyup="changebuynum({$goodsDetails['goodsId']},0);"/>
-												<div class="buy-cnt-add" onclick="changebuynum({$goodsDetails['goodsId']},2)"></div>
+												<div class="buy-cnt-plus" onclick="changebuynum(1)"></div>
+												<input id="buy-num" type="text" class="buy-cnt-txt" value="1" maxVal="{$goodsDetails['goodsStock']}" maxlength="3" onkeypress="return WST.isNumberKey(event);" onkeyup="changebuynum(0);"/>
+												<div class="buy-cnt-add" onclick="changebuynum(2)"></div>
 											</div>
 										</div>
 										<div id="noGoodsToBuy" <if condition="$goodsDetails['goodsStock'] gt 0">style="display:none;"</if>>
@@ -150,7 +166,7 @@
 											<if condition="$goodsDetails['shopServiceStatus'] eq 1">
 												<a href="javascript:addCart({$goodsDetails['goodsId']},0,'{$goodsDetails['goodsThums']}')" class="btnCart"><img src="__ROOT__/Apps/Home/View/default/images/btn_buy_01_hover.png" width="112" height="38"/></a>
 												&nbsp;&nbsp;
-												<a href="javascript:addCart({$goodsDetails['goodsId']},1)">
+												<a href="javascript:addCart({$goodsDetails['goodsId']},1)" class="btn2Cart">
 													<img src="__ROOT__/Apps/Home/View/default/images/btn_buy_02.png" width="112" height="38"/>
 												</a>
 											</if>
@@ -209,7 +225,7 @@
 							<tr>
 								<td colspan="2" class="wst-shop-eval">
 									<div class="shop-eval-box" style="width:214px;margin:0 auto;">
-										<a href="__ROOT__/index.php/Home/Shops/toShopHome/?shopId={$goodsDetails['shopId']}"><img src="__ROOT__/Apps/Home/View/default/images/btn_into.png" width="112" height="38"/></a>
+										<a href="{:U('Home/Shops/toShopHome/',array('shopId'=>$goodsDetails['shopId']))}"><img src="__ROOT__/Apps/Home/View/default/images/btn_into.png" width="112" height="38"/></a>
 									</div>
 								</td>
 							</tr>
@@ -229,7 +245,7 @@
 								<img data-original="__ROOT__/{$vo['goodsThums']}" width="65" height="65" />
 							</div>
 							<div class="hotsale-goods-title">
-								<a href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$vo['goodsId']}">{$vo['goodsName']}</a>
+								<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo['goodsId']))}">{$vo['goodsName']}</a>
 								<div><span class="span1">￥{$vo['shopPrice']}</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="span2">￥{$vo['marketPrice']}</span></div>
 							</div>
 							<div class="wst-clear"></div>
@@ -242,7 +258,12 @@
 					<div class="goods-nvg">
 						<ul class="tab">
 							<li onclick="tabs('#wst-goods-pdetails-right',0)" class="curr">商品介绍</li>
+							<if condition=" count($goodsAttrs['attrs']) gt 0">
+							<li onclick="tabs('#wst-goods-pdetails-right',1)">商品属性</li>
+							<li onclick="tabs('#wst-goods-pdetails-right',2)">商品评价</li>
+							<else/>
 							<li onclick="tabs('#wst-goods-pdetails-right',1)">商品评价</li>
+							</if>
 						</ul>
 						<div class="wst-clear"></div>
 					</div>
@@ -251,6 +272,20 @@
 						{$goodsDetails["goodsDesc"]}
 						</div>
 					</div>
+					<if condition=" count($goodsAttrs['attrs']) gt 0">
+					<div class="tabcon" style="display:none;">
+						<table class='wst-attrs-list'>
+						  <volist name="goodsAttrs['attrs']" id="vo">
+						  <if condition="$vo['attrContent'] !='' ">
+						  <tr>
+						    <th nowrap>{$vo['attrName']}：</th>
+						    <td>{$vo['attrContent']}</td>
+						  </tr>
+						  </if>
+						  </volist>
+						</table>
+					</div>
+					</if>
 					<div class="tabcon"  style="display:none;">						
 						<table id="appraiseTab" width="100%">
 							<tr>
@@ -294,7 +329,7 @@ $(function(){
 	params.goodsId = goodsId;	
 	
 	//加载商品评价
-	jQuery.post(domainURL +"/index.php/Home/Goods/getGoodsappraises/" ,params,function(data) {
+	jQuery.post("{:U('Home/Goods/getGoodsappraises/')}" ,params,function(data) {
 		var json = WST.toJson(data);
 			
 		var html = new Array();		    	
@@ -336,7 +371,7 @@ $(function(){
 	        pageCount:json.totalPage,
 	        current:json.currPage,
 	        backFn:function(p){
-	        	getPage(p);
+	        	getAppraisesPage(p);
 	        }
 	    });
 		

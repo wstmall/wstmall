@@ -54,20 +54,25 @@ jQuery(function($){
 				$(".quick_links_panel").animate({"right":"280px"},100);
 				fn.content = "<div class='ibar_plugin_content' style='height:100%;padding-top:100%;padding-left:80px;'><img src='"+domainURL +"/Apps/Home/View/default/images/loading.gif' width='20'/>数据加载中...</div>";
 				quickPop.html(ds.tmpl(popTmpl, fn));
-				jQuery.post(domainURL +"/index.php/Home/Cart/getCartInfo/" ,{"axm":1},function(data) {
+				jQuery.post(Think.U('Home/Cart/getCartInfo') ,{"axm":1},function(data) {
 					var cart = WST.toJson(data);	
 					var html = new Array();
-					var totalmoney = 0;
+					var totalmoney = 0, goodsnum = 0;
 					html.push('<div class="ibar_plugin_content"><div class="ibar_cart_group ibar_cart_product"><ul style="height:80%;overflow:auto;">');
-					for(var i=0;i<cart.cartgoods.length;i++){
-						var goods = cart.cartgoods[i];
-						totalmoney = totalmoney + parseFloat(goods.shopPrice * goods.cnt);
-						html.push(  "<li class='cart_item'>" +
+					//for(var i=0;i<cart.cartgoods.length;i++){
+					for(var shopId in cart.cartgoods){
+						var shop = cart.cartgoods[shopId];
+						for(var goodsId in shop.shopgoods){
+							var goods = shop.shopgoods[goodsId];
+							goodsnum++;
+							totalmoney = totalmoney + parseFloat(goods.shopPrice * goods.cnt);
+							var url = Think.U("Home/Goods/getGoodsDetails","goodsId="+goods.goodsId);
+							html.push(  "<li class='cart_item'>" +
 										"<div class='cart_item_pic'>" +
-											"<!--input type='checkbox' class='cart-goods-check'-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='"+domainURL +"/index.php/Home/Goods/getGoodsDetails/?goodsId="+goods.goodsId+"'><img src='"+domainURL +"/"+goods.goodsThums+"' /></a>" +
+											"<!--input type='checkbox' class='cart-goods-check'-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='"+url+"'><img src='"+domainURL +"/"+goods.goodsThums+"' /></a>" +
 										"</div>" +
 										"<div class='cart_item_desc'>" +
-											"<a href='"+domainURL +"/index.php/Home/Goods/getGoodsDetails/?goodsId="+goods.goodsId+"' class='cart_item_name'>"+goods.goodsName+"</a>" +
+											"<a href='"+url+"' class='cart_item_name'>"+goods.goodsName+"</a>" +
 											"<div class='cart_item_price'><span class='cart_price'>￥"+goods.shopPrice+"</span></div>" +
 											"<div class='cart-close-box' style=''>" +
 											"<span class='cart-colse'>x</span></div>	" +
@@ -80,9 +85,9 @@ jQuery(function($){
 										"<div class='wst-clear'></div>	" +
 									"</li>"
 								);
-						
+						}
 					}
-					html.push('</ul></div><div class="cart_handler"><div class="cart_handler_header"><span class="cart_handler_left">共<span class="cart_price">'+cart.cartgoods.length+'</span>件商品</span><span class="cart_handler_right">￥'+totalmoney+'</span></div><div style="width:260px;"><a href="javascript:topay();" class="cart_go_btn" >去购物车结算</a></div></div></div>');
+					html.push('</ul></div><div class="cart_handler"><div class="cart_handler_header"><span class="cart_handler_left">共<span class="cart_price">'+goodsnum+'</span>件商品</span><span class="cart_handler_right">￥'+totalmoney+'</span></div><div style="width:260px;"><a href="javascript:topay();" class="cart_go_btn" >去购物车结算</a></div></div></div>');
 					fn.content = html.join("");
 					quickPop.html(ds.tmpl(popTmpl, fn));
 					fn.init.call(this, fn);

@@ -45,14 +45,13 @@ timezone_set();
 			
 			<p style='margin-top:10px;'>用户须知：</p>
 			
-			<p style='margin-top:10px;text-indent: 2em'>感谢您选择WSTMall，WSTMall由广州市晴暖信息科技有限公司基于ThinkPHP3.2开发并开源发布。本协议是您与广州晴暖信息科技有限公司之间关于您使用WSTMall电子商务系统的法律协议。无论您是个人或组织 、盈利与否、用途如何（包括以学习和研究为目的），均需仔细阅读本协议。</p>
+			<p style='margin-top:10px;text-indent: 2em'>感谢您选择WSTMall，WSTMall由广州市晴暖信息科技有限公司基于ThinkPHP 3.2开发并开源发布。本协议是您与广州晴暖信息科技有限公司之间关于您使用WSTMall电子商务系统的法律协议。无论您是个人或组织 、盈利与否、用途如何（包括以学习和研究为目的），均需仔细阅读本协议。</p>
 			
-			<p style='margin-top:10px;text-indent: 2em'>1. 您可以在遵守本协议的基础上，免费获得WSTMall的授权并将本系统应用于商业用途或者非商业用途(包括个人用户：不具备法人资格的自然人，以个人名义从事电子商务开设网店的；非盈利性用途：从事非盈利活动的商业机构及非盈利性组织，将 WSTMall产品用且仅用于产品演示、展示及发布，或者用来买卖及盈利的运营活动)。</p>
-			<p style='text-indent: 2em'>2. 您可以在协议规定的约束和限制范围内二次开发 WSTMall功能、插件或者风格，以适应您的网站运营要求。</p>
-			<p style='text-indent: 2em'>3. 您可免费将本软件用于多用户O2O电子商务网站搭建(包括但不限于个人、企业搭建电子商务网站)。</p>
-			<p style='text-indent: 2em'>4. WSTMall开源商城，保留WSTMall版权可二次开发并进行使用。无论用途如何、是否经过修改或美化、修改程度如何，只要使用 WSTMall的整体或任何部分，未经书面许可，网站顶部的 WSTMall名称和WSTMall的版权需保留，而不能清除或修改，或者拨打客服电话<strong>020-29806661</strong>进行咨询。</p>
-			<p style='text-indent: 2em'>5. 禁止在 WSTMall的整体或任何部分基础上以发展任何派生版本、修改版本或第三方版本用于重新分发。 </p>
-			<p style='text-indent: 2em'>本协议一旦发生变更,广州晴暖信息科技有限公司将在WSTMall官方网站（<a target='_blank' href='http://www.wstmall.com'>http://www.wstmall.com</a>）上公布修改内容。修改后的服务条款将有效代替原来的服务条款。</p>
+			<p style='margin-top:10px;text-indent: 2em'>1. 使用本软件必须保留WSTMall软件页面页脚处的版权标识（Powered by WSTMall）和广州市晴暖信息科技有限公司下属网站（<a href='http://www.wstmall.com' target='_blank'>http://www.wstmall.com</a>） 的链接，您可以在遵守本协议的基础上，获得WSTMall授权应用于商业用途。</p>
+			<p style='text-indent: 2em'>2. 无论如何，即无论用途如何、是否经过修改或美化、修改程度如何，只要使用本软件的整体或任何部分，未经晴暖信息科技官方书面授权许可，软件首页顶部及页脚处的版权标识（Powered by WSTMall）和广州市晴暖信息科技有限公司下属网站（<a href='http://www.wstmall.com' target='_blank'>http://www.wstmall.com</a>） 的链接都必须保留，不能清除或修改。</p>
+			<p style='text-indent: 2em'>3. 私自去除WSTMall版权属于侵权行为，如确实因为运营需要，需要将WSTMall系统版权去除的企业或个人，需支付授权费用，如有疑问可致电020-29806661咨询；</p>
+			<p style='text-indent: 2em'>4. 禁止在 WSTMall的整体或任何部分基础上以发展任何派生版本、修改版本或第三方版本用于重新分发。</p>
+			<p style='text-indent: 2em'>本协议一旦发生变更,广州晴暖信息科技有限公司将在WSTMall官方网站 （<a href='http://www.wstmall.com' target='_blank'>http://www.wstmall.com</a>） 上公布修改内容。修改后的服务条款将有效代替原来的服务条款。 </p>
         </div>
         <div class='bottom'>
         <input type='button' class='btn' value='我同意' onclick='showStep(1)'/>
@@ -205,7 +204,7 @@ timezone_set();
         <div style="margin-top: 200px;">
         <span style="display:inline-block;margin-top:10px;">
            <span style="font-weight: bold;font-size:18px;"> 恭喜</span>，WSTMall已安装成功&nbsp;!<br /><br />
-            安装成功后，建议删除Insatall目录
+            安装成功后，建议删除Install目录
         </span><br /><br />
         <a href="../index.php" target="_blank" title="跳到WSTMALL首页">跳到WSTMall首页</a>&nbsp;&nbsp;
         <a href="../index.php/Admin/index" target="_blank" title="跳到WSTMALL后台">跳到WSTMall后台</a>

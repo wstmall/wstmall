@@ -60,5 +60,5 @@ function gpanelOver(obj){
 	
 	$("div[id^="+preid+"_]").hide();
 	$("#"+sid+"_pl").show();
-	$("#"+sid+"_pl img").lazyload({effect: "fadeIn",failurelimit : 1000,threshold: 200,placeholder:domainURL +'/Apps/Home/View/default/images/store_default_signlist.png'});
+	$("#"+sid+"_pl img").lazyload({effect: "fadeIn",failurelimit : 1000,threshold: 200,placeholder:currDefaultImg});
 }

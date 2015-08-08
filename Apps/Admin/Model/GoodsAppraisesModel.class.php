@@ -8,7 +8,6 @@
  * ============================================================================
  * 商品评价服务类
  */
-use Think\Model;
 class GoodsAppraisesModel extends BaseModel {
      /**
 	  * 修改

@@ -8,7 +8,6 @@
  * ============================================================================
  * 店铺服务类
  */
-use Think\Model;
 class ShopsModel extends BaseModel {
      /**
 	  * 查询登录关键字
@@ -25,7 +24,7 @@ class ShopsModel extends BaseModel {
     /**
 	  * 新增
 	  */
-	 public function add(){
+	 public function insert(){
 	 	$rd = array('status'=>-1);
 	 	//先建立账号
 	 	$hasLoginName = self::checkLoginKey(I("loginName"));
@@ -271,6 +270,11 @@ class ShopsModel extends BaseModel {
 	 	if($this->checkEmpty($data,true)){
 		 	$rs = $m->where("shopId=".$shopId)->save($data);
 			if(false !== $rs){
+				//如果[已通过的店铺]被改为停止或者拒绝的话也要停止了该店铺的商品
+				if($data['shopStatus']!=1){
+					$sql = "update __PREFIX__goods set isSale=0 where shopId=".$shopId;
+		 	        $m->query($sql);
+				}
 				$yj_data = array(
 					'msgType' => 0,
 					'sendUserId' => session('WST_STAFF.staffId'),

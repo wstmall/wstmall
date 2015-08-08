@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{$CONF['shopTitle']['fieldValue']} - Powered By WSTMall</title>
-<meta name="keywords" content="{$CONF['shopKeywords']['fieldValue']}" />
-<meta name="description" content="{$CONF['shopDesc']['fieldValue']}" />
+<title>首页 - {$CONF['mallTitle']}</title>
+<meta name="keywords" content="{$CONF['mallKeywords']}" />
+<meta name="description" content="{$CONF['mallDesc']}" />
 <link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
 <link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/index.css" />
 <link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
@@ -20,7 +20,7 @@
 			<ul class="wst-slide-items">
 				<volist name="indexAds" id="vo" key="k">
 				<li style="z-index: 1;"><a target="_blank"
-					href="__ROOT__/index.php/Home/Index/access/?id={$vo['adId']}&url={$vo['adURL']}">
+					href="{:U('Home/Index/access/',array('id'=>$vo['adId'],'url'=>$vo['adURL']))}">
 						<img src="__ROOT__/{$vo['adFile']}" height="360" width="100%" title="{$vo['adName']}" />
 				</a></li>
 				</volist>
@@ -36,24 +36,27 @@
 			<div class="wst-fl-left wst-fl{$k1}" style="position: relative;">
 				<div
 					style="position: absolute; top: 40px; width: 210px; height: 275px;">
-					<volist name="catAds[$vo1['catId']]" id="vo" key="kv"> <a
-						href="__ROOT__/index.php/Home/Index/access/?id={$vo['adId']}&url={$vo['adURL']}"
-						target="_blank"> <img data-original="__ROOT__/{$vo['adFile']}"
-						height="275" width="210" title="{$vo['adName']}" />
-					</a> </volist>
+					<volist name="catAds[$vo1['catId']]" id="vo" key="kv"> 
+					<a href="{:U('Home/Index/access/',array('id'=>$vo['adId'],'url'=>$vo['adURL']))}" target="_blank"> 
+						<img data-original="__ROOT__/{$vo['adFile']}" height="275" width="210" title="{$vo['adName']}" />
+					</a> 
+					</volist>
 				</div>
 				<div
 					style="position: absolute; top: 0px; left: 0px; width: 99%; height: 40px; padding-left: 10px; color: #ffffff; line-height: 38px; font-weight: bolder; background: url(__ROOT__/Apps/Home/View/default/images/{$k1}fhd.png) no-repeat 100% 100%;">
 					<a
-						href="__ROOT__/index.php/Home/goods/getGoodsList/?c1Id={$vo1['catId']}">
-						<span style="font-size: 18px;">F{$k1}</span> {$vo1["catName"]}
+						href="{:U('Home/Goods/getGoodsList/',array('c1Id'=>$vo1['catId']))}">
+						<span style="font-size: 18px;">F{$k1}</span>{$vo1["catName"]}
 					</a>
 				</div>
 				<div class='wst-cat' style="height: 220px; overflow: hidden;">
-					<volist name="vo1['catChildren']" key="k2" id="vo2"> <volist
-						name="vo2['catChildren']" key="k3" id="vo3"> <a
-						href="__ROOT__/index.php/Home/goods/getGoodsList/?c1Id={$vo1['catId']}&c2Id={$vo2['catId']}&c3Id={$vo3['catId']}"><li
-						class="wst-cat-left">{$vo3["catName"]}</li></a> </volist> </volist>
+					<volist name="vo1['catChildren']" key="k2" id="vo2"> 
+						<volist name="vo2['catChildren']" key="k3" id="vo3"> 
+							<a href="{:U('Home/Goods/getGoodsList/',array('c1Id'=>$vo1['catId'],'c2Id'=>$vo2['catId'],'c3Id'=>$vo3['catId']))}">
+							<li class="wst-cat-left">{$vo3["catName"]}</li>
+							</a> 
+						</volist> 
+					</volist>
 
 				</div>
 			</div>
@@ -75,20 +78,19 @@
 						<li class="wst-goodsbox">
 							<div class="wst-goods-thumb">
 								<a
-									href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$vo2['goodsId']}">
+									href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo2['goodsId']))}">
 									<img data-original="__ROOT__/{$vo2['goodsThums']}" width="180" />
 								</a>
 							</div>
 							<div class="wst-goods-thumb-des">
 								<div class="goodsname">
 								<a class="wst-goods-name"
-									href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$vo2['goodsId']}">{$k2}{$vo2['goodsName']}</a>
+									href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo2['goodsId']))}">{$k2}{$vo2['goodsName']}</a>
 								</div>
 								<div>
-									<em class="wst-left wst-goods-price">￥{$vo2['shopPrice']|number_format=2}</em>
-									<a href="javascript:addCart({$vo2['goodsId']},0,'{$vo2['goodsThums']}')" class="wst-right btnCart"> <img
-										data-original="__ROOT__/Apps/Home/View/default/images/btn_addcart.png"
-										width="85" />
+									<em class="wst-left wst-goods-price" id='shopGoodsPrice_{$vo2["goodsId"]}' dataId='{$vo2["goodsAttrId"]}'>￥{$vo2['shopPrice']|number_format=2}</em>
+									<a href="javascript:addCart({$vo2['goodsId']},0,'{$vo2['goodsThums']}')" class="wst-right btnCart"> 
+									<img data-original="__ROOT__/Apps/Home/View/default/images/btn_addcart.png" width="85" />
 									</a>
 									<div class='wst-clear'></div>
 								</div>
@@ -106,19 +108,18 @@
 						<li class="wst-goodsbox">
 							<div class="wst-goods-thumb">
 								<a
-									href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$vo3['goodsId']}">
+									href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo3[goodsId]))}">
 									<img data-original="__ROOT__/{$vo3['goodsThums']}" width="180" />
 								</a>
 							</div>
 							<div class="wst-goods-thumb-des">
 								<div class="goodsname">
 									<a class="wst-goods-name"
-										href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$vo3['goodsId']}">{$vo3['goodsName']}</a>
+										href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo3[goodsId]))}">{$vo3['goodsName']}</a>
 								</div>
 								<div>
-									<em class="wst-left wst-goods-price">￥{$vo3['shopPrice']|number_format=2}</em>
-									<a href="javascript:addCart({$vo3['goodsId']},0,'{$vo3['goodsThums']}')"
-										class="wst-right btnCart"> <img
+									<em class="wst-left wst-goods-price" id='shopGoodsPrice_{$vo3["goodsId"]}' dataId='{$vo3["goodsAttrId"]}'>￥{$vo3['shopPrice']|number_format=2}</em>
+									<a href="javascript:addCart({$vo3['goodsId']},0,'{$vo3['goodsThums']}')" class="wst-right btnCart" > <img
 										data-original="__ROOT__/Apps/Home/View/default/images/btn_addcart.png"
 										width="85" />
 									</a>
@@ -136,7 +137,7 @@
 						<div style="width: 180px; margin-top: 10px;">
 							<div style="width: 180px;">
 								<a
-									href="__ROOT__/index.php/Home/Shops/toShopHome/?shopId={$vo2['shopId']}">
+									href="{:U('Home/Shops/toShopHome/',array('shopId'=>$vo2['shopId']))}">
 									<img  data-original="__ROOT__/{$vo2['shopImg']}" height="120" width="180" />
 								</a>
 							</div>

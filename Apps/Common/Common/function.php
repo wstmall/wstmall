@@ -13,15 +13,15 @@ function WSTSendMail($to, $subject, $content) {
     // 装配邮件服务器
     $mail->IsSMTP();
     $mail->SMTPDebug = 0;
-    $mail->Host = $GLOBALS['CONFIG']['mailSmtp']['fieldValue'];
-    $mail->SMTPAuth = $GLOBALS['CONFIG']['mailAuth']['fieldValue'];
-    $mail->Username = $GLOBALS['CONFIG']['mailUserName']['fieldValue'];
-    $mail->Password = $GLOBALS['CONFIG']['mailPassword']['fieldValue'];
+    $mail->Host = $GLOBALS['CONFIG']['mailSmtp'];
+    $mail->SMTPAuth = $GLOBALS['CONFIG']['mailAuth'];
+    $mail->Username = $GLOBALS['CONFIG']['mailUserName'];
+    $mail->Password = $GLOBALS['CONFIG']['mailPassword'];
     $mail->CharSet = 'utf-8';
     // 装配邮件头信息
-    $mail->From = $GLOBALS['CONFIG']['mailUserName']['fieldValue'];
+    $mail->From = $GLOBALS['CONFIG']['mailUserName'];
     $mail->AddAddress($to);
-    $mail->FromName = $GLOBALS['CONFIG']['mailSendTitle']['fieldValue'];
+    $mail->FromName = $GLOBALS['CONFIG']['mailSendTitle'];
     $mail->IsHTML(true);
     // 装配邮件正文信息
     $mail->Subject = $subject;
@@ -111,9 +111,17 @@ function WSTDelDir($dirpath){
  * 获取网站域名
  */
 function WSTDomain(){
-	$server = $_SERVER['SERVER_NAME'];
+	$server = $_SERVER['HTTP_HOST'];
 	$http = is_ssl()?'https://':'http://';
 	return $http.$server.__ROOT__;
+}
+/**
+ * 获取网站根域名
+ */
+function WSTRootDomain(){
+	$server = $_SERVER['HTTP_HOST'];
+	$http = is_ssl()?'https://':'http://';
+	return $http.$server;
 }
 /**
  * 设置当前页面对象
@@ -123,4 +131,33 @@ function WSTLoginTarget($target = 0){
 	$WST_USER = session('WST_USER');
 	$WST_USER['loginTarget'] = $target;
 	session('WST_USER',$WST_USER);
+}
+
+/**
+ * 生成缓存文件
+ */
+function WSTDataFile($name, $path = '',$data=array()){
+	$key = C('DATA_CACHE_KEY');
+	$name = md5($key.$name);
+	if(is_array($data) && !empty($data)){
+		if($data['mallLicense']==''){
+			if(stripos($data['mallTitle'],'Powered By WSTMall')===false)$data['mallTitle'] = $data['mallTitle']." - Powered By WSTMall";
+		}
+		$configStr="<?php \n return array(\n";
+	    foreach($data as $key=>$v){
+	        $configStr.="\t'".$key."'=>'".$v."',\n";
+	    }
+	    $configStr.=");\n?>\n";
+	    if(DATA_PATH.$path)mkdir(DATA_PATH.$path,0777,true);
+	    file_put_contents(DATA_PATH.$path.$name.".php",$configStr);
+	    clearstatcache();
+	}else if(is_null($data)){
+	    unlink(DATA_PATH.$path.$name.".php");
+	}else{
+		if(file_exists(DATA_PATH.$path.$name.'.php')){
+			return include DATA_PATH.$path.$name.'.php';
+		}else{
+		    return null;
+		}
+	}
 }

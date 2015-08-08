@@ -48,11 +48,11 @@
 		   return;
 	   }
 	   Plugins.waitTips({title:'信息提示',content:'正在提交数据，请稍后...'});
-		$.post("__ROOT__/index.php/Admin/Roles/edit",params,function(data,textStatus){
+		$.post("{:U('Admin/Roles/edit')}",params,function(data,textStatus){
 			var json = WST.toJson(data);
 			if(json.status=='1'){
-				Plugins.setWaitTipsMsg({content:'操作成功',timeout:1000,callback:function(){
-				   location.href='__ROOT__/index.php/Admin/Roles/';
+				Plugins.setWaitTipsMsg({ content:'操作成功',timeout:1000,callback:function(){
+				   location.href="{:U('Admin/Roles/index')}";
 				}});
 			}else{
 				Plugins.closeWindow();
@@ -260,7 +260,7 @@
                    </td>
                 </tr>
                  <tr style='border-top:1px solid #dddddd'>
-                   <td rowspan='5' valign='top' width='100'><label><input type='checkbox' class='chk scsz' value='scsz' onclick='javascript:checkModel(this)'/>商城设置</label></td>
+                   <td rowspan='7' valign='top' width='100'><label><input type='checkbox' class='chk scsz' value='scsz' onclick='javascript:checkModel(this)'/>商城设置</label></td>
                    <td width='90' colspan='2'><label><input type='checkbox' class='chk grant scsz' id='scsz_00' value='scsz_00' onclick='javascript:checkModel(this)'/>查看商城设置栏目</label></td>                   
                 </tr>
                 <tr>
@@ -268,6 +268,15 @@
                    <td>
                    <label><input type='checkbox' class='chk grant scsz scxx' id='scxx_00' value='scxx_00'/>商城信息</label>
                    <label><input type='checkbox' class='chk grant scsz scxx' id='scxx_02' value='scxx_02'/>商城信息修改</label>
+                   </td>
+                </tr>
+                <tr>
+                   <td ><label><input type='checkbox' class='chk scsz' value='dhgl' onclick='javascript:checkModel(this)'/>导航管理</label></td>
+                   <td>
+                   <label><input type='checkbox' class='chk grant scsz dhgl' id='dhgl_00' value='dhgl_00'/>导航列表</label>
+                   <label><input type='checkbox' class='chk grant scsz dhgl' id='dhgl_01' value='dhgl_01'/>新增导航</label>
+                   <label><input type='checkbox' class='chk grant scsz dhgl' id='dhgl_02' value='dhgl_02'/>修改导航</label>
+                   <label><input type='checkbox' class='chk grant scsz dhgl' id='dhgl_03' value='dhgl_03'/>删除导航</label>
                    </td>
                 </tr>
                 <tr>
@@ -297,13 +306,22 @@
                    <label><input type='checkbox' class='chk grant scsz yhgl' id='yhgl_03' value='yhgl_03'/>删除银行</label>
                    </td>
                 </tr>
+                <tr>
+                   <td ><label><input type='checkbox' class='chk scsz' value='zfgl' onclick='javascript:checkModel(this)'/>支付管理</label></td>
+                   <td>
+                   <label><input type='checkbox' class='chk grant scsz zfgl' id='zfgl_00' value='zfgl_00'/>支付列表</label>
+                   <label><input type='checkbox' class='chk grant scsz zfgl' id='zfgl_01' value='zfgl_01'/>安装支付</label>
+                   <label><input type='checkbox' class='chk grant scsz zfgl' id='zfgl_02' value='zfgl_02'/>编辑支付</label>
+                   <label><input type='checkbox' class='chk grant scsz zfgl' id='zfgl_03' value='zfgl_03'/>卸载支付</label>
+                   </td>
+                </tr>
              </table>
              </td>
            </tr>
            <tr>
              <td colspan='2' style='padding-left:250px;'>
                  <button type="submit" class="btn btn-success">保&nbsp;存</button>
-                 <button type="button" class="btn btn-primary" onclick='javascript:location.href="__ROOT__/index.php/Admin/Roles/"'>返&nbsp;回</button>
+                 <button type="button" class="btn btn-primary" onclick='javascript:location.href="{:U('Admin/Roles/index')}"'>返&nbsp;回</button>
              </td>
            </tr>
         </table>

@@ -20,7 +20,7 @@ class AdsModel extends BaseModel {
 			$sql = "select parentId from __PREFIX__areas where areaId=".$areaId2;
 			$areaId1 = $this->queryRow($sql);
 			$areaId1 = (int)$areaId1['parentId'];
-			$sql = "select adId,adName,adURL,adFile from __PREFIX__ads WHERE (areaId2 = $areaId2 or areaId1 = 0 or areaId1=".$areaId1.")
+			$sql = "select adId,adName,adURL,adFile from __PREFIX__ads WHERE (areaId2 = $areaId2 or areaId1 = 0 or (areaId1=".$areaId1." and areaId2=0))
 						AND adStartDate<='$today' AND adEndDate >='$today' and adPositionId=".$adType." order by adSort asc";
 			$data = $this->query($sql);
 			S('WST_CACHE_ADS_'.$areaId2."_".$adType,$data,86400);

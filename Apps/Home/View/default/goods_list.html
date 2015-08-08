@@ -4,16 +4,16 @@
   		<meta charset="utf-8">
       	<meta http-equiv="X-UA-Compatible" content="IE=edge">
       	<meta name="viewport" content="width=device-width, initial-scale=1">
-      	<title>商品列表 - {$CONF['shopTitle']['fieldValue']}</title>
-      	<meta name="keywords" content="{$CONF['shopKeywords']['fieldValue']}" />
-      	<meta name="description" content="{$CONF['shopTitle']['fieldValue']},商品分类展示,搜索" />
+      	<title>商品列表 - {$CONF['mallTitle']}</title>
+      	<meta name="keywords" content="{$CONF['mallKeywords']}" />
+      	<meta name="description" content="{$CONF['mallDesc']},商品分类展示,搜索" />
       	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/goodslist.css" />
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
 		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />	
    	</head>
    	<body>
-		<include file="./Apps/Home/View/default/header.html" />
+		<include file="./Apps/Home/View/default/header_common.html" />
 		<input id="c1Id" type="hidden" value="{$c1Id}"/>
 		<input id="c2Id" type="hidden" value="{$c2Id}"/>
 		<input id="c3Id" type="hidden" value="{$c3Id}"/>
@@ -25,12 +25,12 @@
 		<!----加载商品楼层start----->
 		<div class="wst-container">
 			<div class="wst-nvg-title">
-				<a href="__ROOT__/index.php/Home/goods/getGoodsList/?c1Id={$goodsNav[0]['catId']}">{$goodsNav[0]["catName"]}</a>
+				<a href="{:U('Home/Goods/getGoodsList/',array('c1Id'=>$goodsNav[0]['catId']))}">{$goodsNav[0]["catName"]}</a>
 				<if condition="$goodsNav[1]['catId'] gt 0">
-				&nbsp;>&nbsp;<a href="__ROOT__/index.php/Home/goods/getGoodsList/?c1Id={$goodsNav[0]['catId']}&c2Id={$goodsNav[1]['catId']}"><a href="">{$goodsNav[1]["catName"]}</a>
+				&nbsp;>&nbsp;<a href="{:U('Home/Goods/getGoodsList/',array('c1Id'=>$goodsNav[0]['catId'],'c2Id'=>$goodsNav[1]['catId']))}">{$goodsNav[1]["catName"]}</a>
 				</if>
 				<if condition="$goodsNav[2]['catId'] gt 0">
-				&nbsp;>&nbsp;<a href="__ROOT__/index.php/Home/goods/getGoodsList/?c1Id={$goodsNav[0]['catId']}&c2Id={$goodsNav[1]['catId']}&c3Id={$goodsNav[2]['catId']}"><a href="">{$goodsNav[2]["catName"]}</a>
+				&nbsp;>&nbsp;<a href="{:U('Home/Goods/getGoodsList/',array('c1Id'=>$goodsNav[0]['catId'],'c2Id'=>$goodsNav[1]['catId'],'c3Id'=>$goodsNav[2]['catId']))}">{$goodsNav[2]["catName"]}</a>
 				</if>
 			</div>
 			<!-------------商品筛选栏---------------->
@@ -123,15 +123,15 @@
 					<volist name="pages['root']" key="key" id="goods">
 					<li class="wst-goods-item">
 						<div class="goods-img">
-							<a href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$goods['goodsId']}">
+							<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}">
 							<img data-original="__ROOT__/{$goods['goodsThums']}" width="180" />
 							</a>
 						</div>
 						<div class="goods-des">
 							<div class="goods-title">
-								<a href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$goods['goodsId']}">{$goods['goodsName']}</a>
+								<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}">{$goods['goodsName']}</a>
 							</div>
-							<div class="goods-price"><span class="span1">￥{$goods['shopPrice']}</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="span2">￥{$goods['marketPrice']}</span></div>
+							<div class="goods-price"><span class="span1" id="shopGoodsPrice_{$goods['goodsId']}" dataId="{$goods['goodsAttrId']}">￥{$goods['shopPrice']}</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="span2">￥{$goods['marketPrice']}</span></div>
 							<div class="goods-buy">
 								<div class="goods-left">
 									<span style="color:green;font-weight:bolder;margin-left:2px;">{$goods["saleCount"]}</span>人已购买

@@ -132,12 +132,14 @@
 	        		<tr>
 	        			<td class="wst-align-center" style="vertical-align: middle;">
 		        			<div style="float:left;width:50px;">
-			        			<a href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$goods['goodsId']}" target="_blank">
+			        			<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}" target="_blank">
 			        			   <img style='margin:2px;' src="__ROOT__/{$goods['goodsThums']}" width='50' height='50'/>
 			        			</a>
 		        			</div>
 		        			<div style="float:left;width:360px;text-align: left;vertical-align: middle;margin-left: 8px;line-height: 20px;padding-top:15px;">
-		        				<a href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$goods['goodsId']}" target="_blank">{$goods["goodsName"]}</a>
+		        				<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$goods['goodsId']}" target="_blank">
+		        				{$goods["goodsName"]}<if condition="$goods['goodsAttrName'] neq ''">【{$goods['goodsAttrName']}】</if>
+		        				</a>
 		        			</div>
 		        			<div class="wst-clear"></div>
 	        			</td>
@@ -151,7 +153,7 @@
         		   <td colspan='4' style='border-left:0px;border-right:0px;border-bottom:0px;text-align:right;padding-right:5px;'>
         		  商品总金额： ￥{$orderInfo["order"]["totalMoney"]}  <br/>
         		   + 运费：￥{$orderInfo["order"]["deliverMoney"]}<br/> 
-        		   <span style='font-weight:bold;font-size:20px;'>订单总金额：</span><span style='font-weight:bold;font-size:20px;color:red;'>￥{$orderInfo["order"]["totalMoney"]}</span></td>
+        		   <span style='font-weight:bold;font-size:20px;'>订单总金额：</span><span style='font-weight:bold;font-size:20px;color:red;'>￥{$orderInfo["order"]["totalMoney"]+$orderInfo["order"]["deliverMoney"]}</span></td>
         		</tr>
         	</table>
         	</div>

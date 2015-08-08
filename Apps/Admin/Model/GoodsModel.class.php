@@ -8,8 +8,7 @@
  * ============================================================================
  * 商品服务类
  */
-use Think\Model;
-class GoodsModel extends Model {
+class GoodsModel extends BaseModel {
     
 	/**
 	 * 获取商品信息

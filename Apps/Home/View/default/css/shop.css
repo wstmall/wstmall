@@ -4,7 +4,24 @@ body {
 	margin: 0px auto;
 	background: #F5F5F5
 }
-
+input,textarea {
+	background-color: white;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-shadow: 2px 2px 2px #f0f0f0 inset;
+	font-family: inherit;
+	font-size: 100%;
+	margin: 3px;
+	padding: 5px;
+	vertical-align: middle;
+}
+select{
+	box-shadow: 2px 2px 2px #f0f0f0 inset;
+	font-family: inherit;
+	font-size: 100%;
+	padding: 2px;
+	vertical-align: middle;
+}
 .wst-wrap {
 	margin: 0px auto
 }
@@ -481,3 +498,7 @@ text-decoration
 .wst-shophome-nav .header{height:36px;background-color:#f5f5f5;line-height:36px;padding-left:10px;font-weight:bolder;}
 .wst-shophome-nav .main{height:66px;background-color:#feffd4;line-height:30px;padding-left:10px;margin:10px;}
 .wst-shophome-nav .current{padding-left:20px;padding-bottom:10px;color:#000000;}
+.wst-goods-price-table{width:100%;border:0px;border-collapse: collapse;}
+.wst-goods-price-table tr th{border:0px;text-align:left;background:#eee;padding-left:5px}
+.wst-goods-fieldset{border:2px double #ddd;padding:5px;display:none;}
+.wst-goods-fieldset legend{margin-left:10px;}

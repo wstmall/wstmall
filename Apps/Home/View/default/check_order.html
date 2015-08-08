@@ -1,13 +1,13 @@
-﻿<!doctype html>
+<!doctype html>
 <html>
 	<head>
   		<meta charset="utf-8">
       	<meta http-equiv="X-UA-Compatible" content="IE=edge">
       	<meta http-equiv="cache-control" content="no-cache">
       	<meta name="viewport" content="width=device-width, initial-scale=1">
-      	<title>填写核对订单信息 - {$CONF['shopTitle']['fieldValue']}</title>
-      	<meta name="keywords" content="{$CONF['shopKeywords']['fieldValue']},填写核对订单信息" />
-      	<meta name="description" content="{$CONF['shopTitle']['fieldValue']},填写核对订单信息" />
+      	<title>填写核对订单信息 - {$CONF['mallTitle']}</title>
+      	<meta name="keywords" content="{$CONF['mallKeywords']},填写核对订单信息" />
+      	<meta name="description" content="{$CONF['mallDesc']},填写核对订单信息" />
       	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/checkorderinfo.css" />
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
@@ -19,7 +19,7 @@
       	</style>
    	</head>
    	<body>
-	<include file="./Apps/Home/View/default/header.html" />
+	<include file="./Apps/Home/View/default/header_common.html" />
 	<div class="w">
         <div>
             <div>
@@ -161,20 +161,39 @@
                             <span class="wst-chkod-pay-tt">支付方式 </span>
                         </div>
                         <div id="newaddress">
+                        	<if condition="count($payments['unlines']) gt 0">
                             <div>
-                                <label>
-                                    <input id="pay_hd" name="payway" checked="checked" type="radio" value="0" />货到付款
-                                </label>
-                                <span class="wst-chkod-sh-tips">送货上门后再收款，支持现金</span>
+                                <div style="width:200px;float:left;">
+                                	<label>
+                                    	<input id="pay_hd" name="payway" checked="checked" type="radio" value="0" />货到付款
+                                    </label>
+                                </div>
+                                <div style="width:800px;float:left;">
+                                	<span class="wst-chkod-sh-tips">送货上门后再收款，支持现金</span>
+                                </div>
+                                <div style="clear:both;"></div>
                             </div>
-                            <!--  
+                            </if>
+                            <if condition="count($payments['onlines']) gt 0">
                             <div>
-                                <label>
-                                    <input id="pay_ali" name="payway" type="radio" value="1" />在线支付
-                                </label>
-                                <span class="wst-chkod-sh-tips">支持支付宝</span>
+                                <div style="width:200px;float:left;">
+                                	<label>
+                                    	<input id="pay_ali" name="payway" type="radio" value="1" />在线支付
+                                    </label>
+                                </div>
+                                <div style="width:800px;float:left;">
+                                	
+                                	<div><span class="wst-chkod-sh-tips">可在提交订单后选择，支持：</span></div>
+                                	<volist name="payments['onlines']" key="key" id="payment">
+                                		<if condition="$payment['isOnline'] eq 1">
+                                		<div style="float:left;width:165px;"><img src="__ROOT__/{$payment['payIcon']}" width="120" height="45"/></div>
+                                		</if>
+                                	</volist>
+                                	<div style="clear:both;"></div>
+                                </div>
+                                <div style="clear:both;"></div>
                             </div>
-                            -->
+                            </if>
                         </div>
                     </div>
                     <div class="wst-chkod-dp-box">
@@ -267,11 +286,13 @@
                                     <div class="wst-chkod-dp-pb4">
                                         <div>
                                             <div class="wst-cart-goods-img">
-                                                <a href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$goods['goodsId']}" target="_blank">
+                                                <a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}" target="_blank">
                                                     <img src="__ROOT__/{$goods['goodsThums']}" width="60" height="60" /></a>
                                             </div>
                                             <div class="wst-cart-goods-name">
-                                                <a target="_blank" href="__ROOT__/index.php/Home/Goods/getGoodsDetails/?goodsId={$goods['goodsId']}" target="_blank">{$goods["goodsName"]}</a>
+                                                <a target="_blank" href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}" target="_blank">
+                                                {$goods["goodsName"]}<if condition="$goods['attrVal'] neq ''">【{$goods['attrName']}:{$goods['attrVal']}】</if>
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
@@ -450,8 +471,8 @@
 		$("#requesttime").html(html.join(""));
 	}
 		
-		 function backCart(){
-		location.href=domainURL +'/index.php/Home/Cart/getCartInfo/?rnd='+Math.random();
+	function backCart(){
+		location.href="{:U('Home/Cart/getCartInfo/',array('rnd'=>rand(100000000,999999999)))}";
 	}
 	
 	var times = ["00:00","00:15","00:30","00:45",
@@ -484,7 +505,10 @@ function addDate(days){
     var m=d.getMonth()+1;
     return d.getFullYear()+'-'+(m>=10?m:'0'+m)+'-'+(d.getDate()>=10?d.getDate():"0"+d.getDate());
 } 
-
+$(document).ready(function(){
+	var addressId = $('input:radio[name="seladdress"]:checked').val();	
+	$('#seladdress_'+addressId).click();
+});
 </script>
 <script src="__PUBLIC__/js/common.js"></script>
 <script src="__ROOT__/Apps/Home/View/default/js/index.js"></script>

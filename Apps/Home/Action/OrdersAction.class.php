@@ -116,7 +116,6 @@ class OrdersAction extends BaseAction {
 	 */
 	public function getOrderInfo(){
 		$this->isUserLogin();
-		self::getBaseInfo();
 		$USER = session('WST_USER');
 		$morders = D('Home/Orders');
 		$obj["userId"] = (int)$USER['userId'];
@@ -159,7 +158,6 @@ class OrdersAction extends BaseAction {
 	 */
 	public function checkOrderInfo(){
 		$this->isUserLogin();
-		self::getBaseInfo();
 		$mareas = D('Home/Areas');
 		$morders = D('Home/Orders');
 		$mgoods = D('Home/Goods');
@@ -178,31 +176,39 @@ class OrdersAction extends BaseAction {
 			$this->display('default/order_fail');
 			exit();
 		}
-		foreach($shopcat as $key=>$cgoods){		
-			$obj["goodsId"] = $key;	
-			$goods = $mgoods->getGoodsDetails($obj);
-			if($goods["isBook"]==1){
-				$goods["goodsStock"] = $goods["goodsStock"]+$goods["bookQuantity"];
+		$paygoods = array();
+		foreach($shopcat as $key=>$cgoods){
+			$obj = array();
+			$temp = explode('_',$key);		
+			$obj["goodsId"] = (int)$temp[0];
+			$obj["goodsAttrId"] = (int)$temp[1];	
+			if($cgoods["ischk"]==1){
+				$paygoods[] = $obj["goodsId"];
+				$goods = $mgoods->getGoodsForCheck($obj);
+				if($goods["isBook"]==1){
+					$goods["goodsStock"] = $goods["goodsStock"]+$goods["bookQuantity"];
+				}
+				$goods["ischk"] = $cgoods["ischk"];
+				$goods["cnt"] = $cgoods["cnt"];
+				$totalCnt += $cgoods["cnt"];
+				$totalMoney += $goods["cnt"]*$goods["shopPrice"];
+				$gtotalMoney += $goods["cnt"]*$goods["shopPrice"];
+				$ommunitysId = $maddress->getShopCommunitysId($goods["shopId"]);
+				$shopColleges[$goods["shopId"]] = $ommunitysId;			
+				if($startTime<$goods["startTime"]){
+					$startTime = $goods["startTime"];
+				}
+				if($endTime>$goods["endTime"]){
+					$endTime = $goods["endTime"];
+				}
+	
+				$catgoods[$goods["shopId"]]["shopgoods"][] = $goods;
+				$catgoods[$goods["shopId"]]["deliveryFreeMoney"] = $goods["deliveryFreeMoney"];//门店免运费最低金额
+				$catgoods[$goods["shopId"]]["deliveryMoney"] = $goods["deliveryMoney"];//门店配送费
+				$catgoods[$goods["shopId"]]["deliveryStartMoney"] = $goods["deliveryStartMoney"];//门店配送费
+				$catgoods[$goods["shopId"]]["totalCnt"] = $catgoods[$goods["shopId"]]["totalCnt"]+$cgoods["cnt"];
+				$catgoods[$goods["shopId"]]["totalMoney"] = $catgoods[$goods["shopId"]]["totalMoney"]+($goods["cnt"]*$goods["shopPrice"]);
 			}
-			$goods["cnt"] = $cgoods["cnt"];
-			$totalCnt += $cgoods["cnt"];
-			$totalMoney += $goods["cnt"]*$goods["shopPrice"];
-			$gtotalMoney += $goods["cnt"]*$goods["shopPrice"];
-			$ommunitysId = $maddress->getShopCommunitysId($goods["shopId"]);
-			$shopColleges[$goods["shopId"]] = $ommunitysId;			
-			if($startTime<$goods["startTime"]){
-				$startTime = $goods["startTime"];
-			}
-			if($endTime>$goods["endTime"]){
-				$endTime = $goods["endTime"];
-			}
-
-			$catgoods[$goods["shopId"]]["shopgoods"][] = $goods;
-			$catgoods[$goods["shopId"]]["deliveryFreeMoney"] = $goods["deliveryFreeMoney"];//门店免运费最低金额
-			$catgoods[$goods["shopId"]]["deliveryMoney"] = $goods["deliveryMoney"];//门店配送费
-			$catgoods[$goods["shopId"]]["deliveryStartMoney"] = $goods["deliveryStartMoney"];//门店配送费
-			$catgoods[$goods["shopId"]]["totalCnt"] = $catgoods[$goods["shopId"]]["totalCnt"]+$cgoods["cnt"];
-			$catgoods[$goods["shopId"]]["totalMoney"] = $catgoods[$goods["shopId"]]["totalMoney"]+($goods["cnt"]*$goods["shopPrice"]);
 		}
 		
 		foreach($catgoods as $key=> $cshop){
@@ -210,12 +216,18 @@ class OrdersAction extends BaseAction {
 				$totalMoney = $totalMoney + $cshop["deliveryMoney"];
 			}
 		}
+		session('WST_PAY_GOODS',$paygoods);
 		$USER = session('WST_USER');
 		//获取地址列表
         $areaId2 = $this->getDefaultCity();
 		$addressList = $maddress->queryByUserAndCity($USER['userId'],$areaId2);
 		$this->assign("addressList",$addressList);
 		$this->assign("areaId2",$areaId2);
+		//支付方式
+		$pm = D('Home/Payments');
+		$payments = $pm->getList();
+		$this->assign("payments",$payments);
+		
 		//获取当前市的县区
 		$m = D('Home/Areas');
 		$areaList2 = $m->getDistricts($areaId2);
@@ -249,8 +261,8 @@ class OrdersAction extends BaseAction {
 	 * 
 	 */
 	public function submitOrder(){	
+		
 		$this->isUserLogin();
-		self::getBaseInfo();
 		$USER = session('WST_USER');
 		$goodsmodel = D('Home/Goods');
 		$morders = D('Home/Orders');
@@ -272,27 +284,38 @@ class OrdersAction extends BaseAction {
 				$this->display('default/order_success');
 			}else{
 				//整理及核对购物车数据
+				$paygoods = session('WST_PAY_GOODS');
 				foreach($shopcat as $key=>$cgoods){
-					$goods = $goodsmodel->getGoodsSimpInfo($key);
-					//核对商品是否符合购买要求
-					if($goods['goodsStock']<=0){
-						$this->assign("fail_msg",'对不起，商品'.$goods['goodsName'].'库存不足!');
-						$this->display('default/order_fail');
-						exit();
+					$temp = explode('_',$key);
+					$goodsId = (int)$temp[0];
+					$goodsAttrId = (int)$temp[1];
+					if(in_array($goodsId, $paygoods)){
+						$goods = $goodsmodel->getGoodsSimpInfo($goodsId,$goodsAttrId);
+						//核对商品是否符合购买要求
+						if(empty($goods)){
+							$this->assign("fail_msg",'对不起，该商品不存在!');
+							$this->display('default/order_fail');
+							exit();
+						}
+						if($goods['goodsStock']<=0){
+							$this->assign("fail_msg",'对不起，商品'.$goods['goodsName'].'库存不足!');
+							$this->display('default/order_fail');
+							exit();
+						}
+						if($goods['isSale']!=1){
+							$this->assign("fail_msg",'对不起，商品库'.$goods['goodsName'].'已下架!');
+							$this->display('default/order_fail');
+							exit();
+						}
+						$goods["cnt"] = $cgoods["cnt"];
+						$totalCnt += $cgoods["cnt"];
+						$totalMoney += $goods["cnt"]*$goods["shopPrice"];
+						$catgoods[$goods["shopId"]]["shopgoods"][] = $goods;
+						$catgoods[$goods["shopId"]]["deliveryFreeMoney"] = $goods["deliveryFreeMoney"];//门店免运费最低金额
+						$catgoods[$goods["shopId"]]["deliveryMoney"] = $goods["deliveryMoney"];//门店免运费最低金额
+						$catgoods[$goods["shopId"]]["totalCnt"] = $catgoods[$goods["shopId"]]["totalCnt"]+$cgoods["cnt"];
+						$catgoods[$goods["shopId"]]["totalMoney"] = $catgoods[$goods["shopId"]]["totalMoney"]+($goods["cnt"]*$goods["shopPrice"]);
 					}
-					if($goods['isSale']!=1){
-						$this->assign("fail_msg",'对不起，商品库'.$goods['goodsName'].'已下架!');
-						$this->display('default/order_fail');
-						exit();
-					}
-					$goods["cnt"] = $cgoods["cnt"];
-					$totalCnt += $cgoods["cnt"];
-					$totalMoney += $goods["cnt"]*$goods["shopPrice"];
-					$catgoods[$goods["shopId"]]["shopgoods"][] = $goods;
-					$catgoods[$goods["shopId"]]["deliveryFreeMoney"] = $goods["deliveryFreeMoney"];//门店免运费最低金额
-					$catgoods[$goods["shopId"]]["deliveryMoney"] = $goods["deliveryMoney"];//门店免运费最低金额
-					$catgoods[$goods["shopId"]]["totalCnt"] = $catgoods[$goods["shopId"]]["totalCnt"]+$cgoods["cnt"];
-					$catgoods[$goods["shopId"]]["totalMoney"] = $catgoods[$goods["shopId"]]["totalMoney"]+($goods["cnt"]*$goods["shopPrice"]);
 					
 				}
 				foreach($catgoods as $key=> $cshop){
@@ -304,23 +327,45 @@ class OrdersAction extends BaseAction {
 				}
 				
 				$ordersInfo = $morders->addOrders($userId,$consigneeId,$payway,$needreceipt,$catgoods,$orderunique,$isself);
-				session("WST_CART",null);
+				$newcart = array();
+				foreach($shopcat as $key=>$cgoods){
+					if(!in_array($key, $paygoods)){
+						$newcart[$key] = $cgoods;
+					}
+				}
+				
+				session("WST_CART",empty($newcart)?null:$newcart);
 				$orderNos = $ordersInfo["orderNos"];
 				$this->assign("torderIds",implode(",",$ordersInfo["orderIds"]));
 				$this->assign("orderInfos",$ordersInfo["orderInfos"]);
 				$this->assign("isMoreOrder",(count($ordersInfo["orderInfos"])>0)?1:0);
 				$this->assign("orderNos",implode(",",$orderNos));
 				$this->assign("totalMoney",$totalMoney);
-				//if($payway==0){
+				if($payway==0){
 					$this->display('default/order_success');	
-				//}else{
-					//$this->display('default/paystep1');	
-				//}
+				}else{
+					$orderIds = $ordersInfo["orderIds"];
+					
+					$this->redirect("Payments/toPay",array("orderIds"=>implode(",",$orderIds))); //直接跳转，不带计时后跳转
+				}
 			}
 		}else{
 			$this->display('default/check_order');		
 		}		
 	}
+	
+	/**
+	 * 检查是否已支付
+	 */
+	public function checkOrderPay(){
+		$morders = D('Home/Orders');
+		$USER = session('WST_USER');
+		$obj["userId"] = (int)$USER['userId'];
+		$obj["orderIds"] = I("orderIds");
+		$rs = $morders->checkOrderPay($obj);
+		$this->ajaxReturn($rs);
+	}
+	
 	
 	/**
 	 * 订单詳情
@@ -428,6 +473,20 @@ class OrdersAction extends BaseAction {
     	$obj["shopId"] = (int)$USER['shopId'];
     	$obj["orderId"] = I("orderId");
 		$rs = $morders->shopOrderRefund($obj);
+		$this->ajaxReturn($rs);
+	}
+	
+	/**
+	 * 商家同意取消
+	 */
+	public function shopOrderCancel(){
+		$this->isShopAjaxLogin();
+		$USER = session('WST_USER');
+		$morders = D('Home/Orders');
+		$obj["userId"] = (int)$USER['userId'];
+		$obj["shopId"] = (int)$USER['shopId'];
+		$obj["orderId"] = I("orderId");
+		$rs = $morders->shopOrderCancel($obj);
 		$this->ajaxReturn($rs);
 	}
 }

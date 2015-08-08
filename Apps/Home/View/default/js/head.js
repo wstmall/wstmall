@@ -16,16 +16,13 @@ $(function () {
     $("#btnsch").click(function () {
     	var searchType = $("#wst-search-type").val();
     	if(searchType==2){
-    		window.location = domainURL  + '/index.php/Home/Shops/toShopStreet/?searchType='+searchType+'&keyWords=' + encodeURIComponent($.trim($("#keyword").val()));
+    		window.location = Think.U('Home/Shops/toShopStreet','searchType='+searchType+"&keyWords="+$.trim($("#keyword").val()));
     	}else{
-    		window.location = domainURL  + '/index.php/Home/goods/getGoodsList/?searchType='+searchType+'&keyWords=' + encodeURIComponent($.trim($("#keyword").val()));
+    		window.location = Think.U('Home/goods/getGoodsList','searchType='+searchType+"&keyWords="+$.trim($("#keyword").val()));;
     	}
         
     });
 
-    //读取购物车数量
-    var dd = new Date();
-    $("#head_cart_no").load("/ajax/head/shoppingcart.htm?act=getcount&d=" + escape(dd));
 
     //head 弹出菜单部分
     var cateMenu = function () {
@@ -67,32 +64,7 @@ $(function () {
 
     } ();
 
-    var miniMenu = function () {
-        /*购物列表*/
-        $(".miniMenu").find(".m1").hover(
-			function () {
-			    $(this).addClass("on");
-			    $(this).find(".mini-cart").show();
-			    var dd = new Date();
-			    $("#head_cart").load("/ajax/head/shoppingcart.htm?act=getitems&d=" + escape(dd));
-			},
-			function () {
-			    $(this).removeClass("on");
-			    $(this).find(".mini-cart").hide();
-			}
-		)
-        /*用户中心*/
-        $(".miniMenu").find(".m3").hover(
-			function () {
-			    $(this).addClass("cur");
-			    $(this).find(".miniMenu-child").show();
-			},
-			function () {
-			    $(this).removeClass("cur");
-			    $(this).find(".miniMenu-child").hide();
-			}
-		)
-    } ();
+    
 })
 
 

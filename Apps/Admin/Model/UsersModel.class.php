@@ -8,12 +8,11 @@
  * ============================================================================
  * 会员服务类
  */
-use Think\Model;
 class UsersModel extends BaseModel {
     /**
 	  * 新增
 	  */
-	 public function add(){
+	 public function insert(){
 	 	$rd = array('status'=>-1);
 	 	//检测账号
 	 	$hasLoginName = self::checkLoginKey(I("loginName"));

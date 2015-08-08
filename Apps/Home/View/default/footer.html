@@ -22,7 +22,7 @@
 					<span class="wst-footer-wz-pn">{$vo1["catName"]}</span>
 					<div style='margin-left:30px;'>
 						<volist name="vo1['articlecats']" key="k2" id="vo2">
-						<a href="__ROOT__/index.php/Home/Articles/index/?articleId={$vo2['articleId']}">{$vo2['articleTitle']}</a><br/>
+						<a href="{:U('Home/Articles/index/',array('articleId'=>$vo2['articleId']))}">{$vo2['articleTitle']}</a><br/>
 						</volist>
 					</div>
 				</div>
@@ -34,7 +34,7 @@
 				    <img src="__ROOT__/Apps/Home/View/default/images/a6.jpg" height="18" width="18"/>
 					<span class="wst-footer-wz-kf">联系客服</span>
 					<div style='margin-left:30px;'>
-						<a href="#">订购热线</a><br/>
+						<a href="#">联系电话</a><br/>
 						<span class="wst-footer-pno">020-29806661</span><br/>
 						<a href="#">在线客服</a><br/>
 						<a href="#" class="wst-footer-wz-ent">点击这里进入</a><br/>
@@ -52,25 +52,33 @@
 			<span class="wst-footer-frd">货到付款</span>400城市送货上门
 		</div>
 	    <div class="wst-footer-hp-ck3">
-	        <div class="links">       	 	 	
-		        <a rel="nofollow" target="_blank" href="#">关于我们</a>&nbsp;|&nbsp;
-		        <a rel="nofollow" target="_blank" href="#">WST百科</a>&nbsp;|&nbsp;
-		        <a rel="nofollow" target="_blank" href="#">帮助中心</a>&nbsp;|&nbsp;
-		        <a rel="nofollow" target="_blank" href="#">交易条款</a>&nbsp;|&nbsp;
-		        <a rel="nofollow" target="_blank" href="#">诚征英才</a>&nbsp;|&nbsp;
-		        <a href="#" target="_blank">网站地图</a>&nbsp;|&nbsp;
-		        <a target="_blank" href="#">友情链接</a>&nbsp;|&nbsp;
-		        <a href="__ROOT__/shop.php" target="_blank">店铺管理</a>&nbsp;&nbsp;
+	        <div class="links"> 
+	            <volist name=":WSTNavigation(1)" id="vo" >
+	            <a rel="nofollow" <if condition="$vo['isOpen'] eq 1">target="_blank"</if> href="{$vo['navUrl']}">{$vo['navTitle']}</a>&nbsp;<if condition="$vo['end'] eq 0">|&nbsp;</if>
+		       	</volist>
 	        </div>
-	        <div class="copyright">Copyright&#169;2015&nbsp;&nbsp;Guangzhou Qingnuan Information Technology Co., Ltd. All rights Reserved 粤ICP备12082267号</div>
-	    	<div style=" text-align: center;">
-	        	 <span style="font-weight:bolder;">广州晴暖信息科技有限公司</span>版权所有 并保留所有权利 
-	        	 <php>
-	        if($CONF['visitStatistics']!=''){
-	             echo htmlspecialchars_decode($CONF['visitStatistics']['fieldValue']);
-	        }
+	        
+	        <div class="copyright">
+	         
+	         <php>
+	        	if($CONF['mallFooter']!=''){
+	         		echo htmlspecialchars_decode($CONF['mallFooter']);
+	        	}
 	        </php>
+	      	<php>
+				if($CONF['visitStatistics']!=''){
+					echo htmlspecialchars_decode($CONF['visitStatistics'])."<br/>";
+			    }
+			</php>
+	        <if condition="$CONF['mallLicense'] ==''">
+	        <div>
+				Copyright©2015 Powered By <a target="_blank" href="http://www.wstmall.com">WSTMall</a>
+			</div>
+	        </if>
 	        </div>
+	    	
+	        	 
+	     
 	    </div>
 	</div>
 </div>

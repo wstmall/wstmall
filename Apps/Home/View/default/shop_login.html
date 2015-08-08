@@ -4,9 +4,9 @@
   		<meta charset="utf-8">
       	<meta http-equiv="X-UA-Compatible" content="IE=edge">
       	<meta name="viewport" content="width=device-width, initial-scale=1">
-      	<title>卖家登录 - {$CONF['shopTitle']['fieldValue']}</title>
-      	<meta name="keywords" content="{$CONF['shopKeywords']['fieldValue']}" />
-      	<meta name="description" content="{$CONF['shopTitle']['fieldValue']},卖家登录" />
+      	<title>卖家登录 - {$CONF['mallTitle']}</title>
+      	<meta name="keywords" content="{$CONF['mallKeywords']}" />
+      	<meta name="description" content="{$CONF['mallDesc']},卖家登录" />
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css">
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/login.css">
    	</head>
@@ -16,10 +16,10 @@
       	<script src="__PUBLIC__/js/html5shiv.min.js"></script>
       	<script src="__PUBLIC__/js/respond.min.js"></script>
       	<![endif]-->
-   		<div style="margin: 0 auto;width: 890px;">
+   		<div class='wst-login'>
    			<div style="margin: 0 auto;width: 890px;padding-left:60px;">
-   				<a href="__ROOT__/index.php">
-   					<img src="__ROOT__/Apps/Home/View/default/images/logo.png"/>
+   				<a href="{:WSTDomain()}">
+   					<img width='240' src="{:WSTDomain()}/{$CONF['mallLogo']}"/>
    				</a>
    			</div>
 		    <div class=" w1" id="entry">       
@@ -70,9 +70,10 @@
 		        </div>
 		    </div>
 		</div>
+		<include file="./Apps/Home/View/default/footer.html" />
    	</body>
    	<script src="__PUBLIC__/js/common.js"></script>
     <script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
-   	<script src="__ROOT__/Apps/Home/View/default/js/shop_login.js"></script>
+   	<script src="__ROOT__/Apps/Home/View/default/js/login.js"></script>
    	
 </html> 

@@ -26,7 +26,7 @@ class AdsAction extends BaseAction{
     		$this->checkPrivelege('gggl_02');
     		$object = $m->get();
     	}else{
-    		$this->checkPrivelege('gggl_03');
+    		$this->checkPrivelege('gggl_01');
     		$object = $m->getModel();
     		$object['adStartDate'] = date('Y-m-d');
     		$object['adEndDate'] = date('Y-m-d');
@@ -46,7 +46,7 @@ class AdsAction extends BaseAction{
     		$rs = $m->edit();
     	}else{
     		$this->checkAjaxPrivelege('gggl_01');
-    		$rs = $m->add();
+    		$rs = $m->insert();
     	}
     	$this->ajaxReturn($rs);
 	}

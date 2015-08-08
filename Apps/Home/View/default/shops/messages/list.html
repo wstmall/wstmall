@@ -10,42 +10,12 @@ $(document).ready(function(){
     getShopCatListForGoods('{$shopCatId1}','{$shopCatId2}');
     </notempty>
 });
-function checkAll(item){
-  $('input[type="checkbox"].chk').prop('checked',item.checked);
-}
-function getChks(){
-  var arr = [];
-  $('input[type="checkbox"].chk').each(function(){
-    if ($(this).prop('checked') == true && $(this).val()!='') {
-      arr.push($(this).val());
-    };
-  });
-  return arr;
-}
-function batchDel(){
-  layer.confirm("您确定要删改这些消息？",function(){
-        var ids = getChks();
-        layer.load('正在处理，请稍后...', 3);
-        var params = {};
-        params.ids = ids;
-        $.post(domainURL+"index.php/Home/Messages/batchDel",params,function(data,textStatus){
-          var json = WST.toJson(data);
-          if(json.status=='1'){
-        	  WST.msg('操作成功！', {icon: 1},function(){
-              location.reload();
-            });
-          }else{
-        	  WST.msg('操作失败', {icon: 5});
-          }
-       });
-  });
-}
 </script>
     <div class="wst-body"> 
        <div class='wst-page-header'>卖家中心 > 商城消息</div>
        <div class='wst-page-content'>        
         <div class='wst-tbar-group'>
-           <a href='javascript:batchDel()' class='del btn'>删除</a>           
+           <a href='javascript:batchMessageDel()' class='del btn'>删除</a>           
         </div>
         <table class='wst-list'>
            <thead>
@@ -82,7 +52,7 @@ function batchDel(){
            </tbody>
         </table>
         <div class='wst-tbar-group'>
-           <a href='javascript:batchDel()' class='del btn'>删除</a>
+           <a href='javascript:batchMessageDel()' class='del btn'>删除</a>
         </div>
         </div>
     </div>

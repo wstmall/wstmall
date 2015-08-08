@@ -38,7 +38,7 @@ class BanksAction extends BaseAction{
     		$rs = $m->edit();
     	}else{
     		$this->checkAjaxPrivelege('yhgl_01');
-    		$rs = $m->add();
+    		$rs = $m->insert();
     	}
     	$this->ajaxReturn($rs);
 	}
@@ -64,7 +64,7 @@ class BanksAction extends BaseAction{
     	$pager = new \Think\Page($page['total'],$page['pageSize']);
     	$page['pager'] = $pager->show();
     	$this->assign('Page',$page);
-        $this->display("list");
+        $this->display("/banks/list");
 	}
 	/**
 	 * 列表查询

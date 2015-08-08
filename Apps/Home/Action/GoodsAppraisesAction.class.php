@@ -42,22 +42,6 @@ class GoodsAppraisesAction extends BaseAction{
     	
         $this->display("default/shops/goodsappraises/appraise");
 	}
-	
-	/**
-	 * 获取指定商品评价
-	 */
-	public function editAppraise(){
-		$this->isLogin();
-	
-		$m = D('Home/Goods_appraises');
-    	$data = $m->editAppraise();
-    	$this->ajaxReturn($data);
-	}
-	
-
-	
-	
-	
 	/******************************************************************
 	 *                         会员操作
 	 ******************************************************************/
@@ -69,7 +53,7 @@ class GoodsAppraisesAction extends BaseAction{
     	$USER = session('WST_USER');
     	$morders = D('Home/Goods_appraises');
     	$obj["userId"] = $USER['userId'];
-    	$obj["orderId"] = I("orderId");
+    	$obj["orderId"] = (int)I("orderId");
 		$rs = $morders->getOrderAppraises($obj);
 		$this->assign("orderInfo",$rs);
 		$this->display("default/users/orders/appraise");
@@ -82,8 +66,10 @@ class GoodsAppraisesAction extends BaseAction{
     	$USER = session('WST_USER');
     	$morders = D('Home/Goods_appraises');
     	$obj["userId"] = $USER['userId'];
-    	$obj["orderId"] = I("orderId");
+    	$obj["orderId"] = (int)I("orderId");
+    	$obj["goodsId"] = (int)I("goodsId");
 		$rs = $morders->addGoodsAppraises($obj);
+		$data = array();
 		$data["status"] = $rs;
 		$this->ajaxReturn($data);
 	}	

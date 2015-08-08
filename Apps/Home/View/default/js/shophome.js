@@ -15,21 +15,7 @@ $(function() {
 	
 });
 
-/**
- * 加入购物车
- */
-/*function addCart(goodsId,type){
-	jQuery.post(domainURL +"/index.php/Home/Cart/addToCartAjax/?goodsId="+goodsId+'&gcount=1&rnd='+Math.random() ,{goodsId:goodsId},function(data) {
-		if(type==1){
-			location.href=domainURL +'/index.php/Home/Cart/toCart';
-		}else{
-			layer.msg("添加成功!",3000,30);
-		}
-	});
-}*/
-
 function searchShopsGoods(obj){
-	
 	if(obj==4){
 		var sj = $("#sj").val();
 		if(sj==2){
@@ -52,12 +38,12 @@ function searchShopsGoods(obj){
 	params.push("ct1=" + $("#ct1").val());
 	params.push("ct2=" + $("#ct2").val());
 	params.push("goodsName=" + $("#goodsName").val());
-	document.location.href = domainURL +"/index.php/Home/Shops/toShopHome/?"+params.join("&");
+	document.location.href = Think.U('Home/Shops/toShopHome',params.join('&'));
 
 }
 
 function searchwst(){
 	var goodsName = $.trim($("#goodsName").val());
-	window.location = domainURL  + '/index.php/Home/goods/getGoodsList/?searchType=2&keyWords=' + encodeURIComponent(goodsName);
+	window.location = Think.U('Home/goods/getGoodsList','searchType=2&keyWords='+encodeURIComponent(goodsName));
 	
 }

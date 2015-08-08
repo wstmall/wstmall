@@ -1,11 +1,10 @@
 <extend name="./Apps/Home/View/default/users/layout.html" />
 <block name="content">
-
     <div class="wst-body"> 
        <div class='wst-page-header'>买家中心 > 收货地址</div>
        <div class='wst-page-content'>
         <div class='wst-tbar-query'>
-           <input class='wst-btn-query' type='button' value='新增' onclick='javascript:toEdit(0)'>
+           <input class='wst-btn-query' type='button' value='新增' onclick='javascript:toEditAddress(0)'>
         </div>
         <table class='wst-list'>
            <tbody>
@@ -20,8 +19,8 @@
                <td>&nbsp;</td>
                <td>
                {$vo['userName']}&nbsp;{$vo['userTel']}&nbsp;{$vo['userPhone']}
-               <a href="javascript:toEdit({$vo['addressId']})" class='btn edit'>修改</a>
-               <a href="javascript:del({$vo['addressId']})" class='btn del'>删除</a>
+               <a href="javascript:toEditAddress({$vo['addressId']})" class='btn edit'>修改</a>
+               <a href="javascript:delAddress({$vo['addressId']})" class='btn del'>删除</a>
                &nbsp;
                </td>
              </tr>
@@ -30,5 +29,4 @@
         </table>
         </div>
     </div>
-    <script src="__ROOT__/Apps/Home/View/default/js/users/address.js" type="text/javascript"></script> 
 </block> 

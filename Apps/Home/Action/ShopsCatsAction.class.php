@@ -43,7 +43,7 @@ class ShopsCatsAction extends BaseAction{
     	if(I('id',0)>0){
     		$rs = $m->edit();
     	}else{
-    		$rs = $m->add();
+    		$rs = $m->insert();
     	}
     	$this->ajaxReturn($rs);
 	}

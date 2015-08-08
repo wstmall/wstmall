@@ -101,10 +101,8 @@ class AreasModel extends BaseModel {
 	   * 定位所在城市
 	   */
 	  public function getDefaultCity(){
-	  	$areaId2 = I('city',0);
-	  	if($areaId2>0){
-	  		session('areaId2',$areaId2);
-	  	}else{
+	  	$areaId2 = (int)I('city',0);
+	  	if($areaId2==0){
 	  		$areaId2 = (int)session('areaId2');
 	  	}
 
@@ -135,6 +133,7 @@ class AreasModel extends BaseModel {
 	  			$areaId2 = C(DEFAULT_CITY);
 	  		}
 	  	}
+	  	session('areaId2',$areaId2);
 	  	setcookie("areaId2", $areaId2, time()+3600*24*90);
 	  	return $areaId2;
 	  
