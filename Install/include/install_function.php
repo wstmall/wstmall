@@ -93,12 +93,6 @@ function initConfig($db_host,$db_user,$db_pass,$db_prefix,$db_name){
 	)";
 	$code = "<?php\n ".$code.";\n?>";
     file_put_contents(INSTALL_ROOT."/Apps/Common/Conf/config.php", $code);
-    $code = "return array(
-	    'WST_VERSION' => '1.1.1_150711',
-	    'WST_MD5' => 'ec738518a0711ac3a6a1f56fa150e489'
-	)";
-	$code = "<?php\n ".$code.";\n?>";
-    file_put_contents(INSTALL_ROOT."/Apps/Common/Conf/wst_config.php", $code);
     clearstatcache();
 }
 function check_func($func_items){
