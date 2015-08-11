@@ -96,7 +96,9 @@ $(function() {
 		}
 	}
 	view.bind('scroll', resizeHandler);
-	onloadright();
+	if($("#wst-mallLicense").attr("data")!='1'){
+		onloadright();
+	}
 });
 
 
