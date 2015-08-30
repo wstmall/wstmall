@@ -420,9 +420,9 @@ function addPriceAttr(){
 	var html = [];
 	html.push('<tr id="attr_'+goodsPriceNo+'"><td style="text-align:right">'+obj.attrName+'：</td>');
 	html.push('<td><input type="text" id="price_name_'+obj.attrId+'_'+goodsPriceNo+'" /></td>');
-	html.push('<td><input type="text" id="price_price_'+obj.attrId+'_'+goodsPriceNo+'" value="0" onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength="10"/></td>');
-	html.push('<td><input type="radio" id="price_isRecomm_'+obj.attrId+'_'+goodsPriceNo+'" name="price_isRecomm"/></td>');
-	html.push('<td><input type="text" id="price_stock_'+obj.attrId+'_'+goodsPriceNo+'" value="100" onkeypress="return WST.isNumberKey(event)" onblur="javascript:statGoodsStaock()" onkeyup="javascript:WST.isChinese(this,1)" maxLength="25"/></td>');
+	html.push('<td><input type="text" id="price_price_'+obj.attrId+'_'+goodsPriceNo+'" value="0" onblur="checkAttPrice('+obj.attrId+','+goodsPriceNo+');" onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength="10"/></td>');
+	html.push('<td><input type="radio" onclick="checkAttPrice('+obj.attrId+','+goodsPriceNo+');" id="price_isRecomm_'+obj.attrId+'_'+goodsPriceNo+'" name="price_isRecomm"/></td>');
+	html.push('<td><input type="text" id="price_stock_'+obj.attrId+'_'+goodsPriceNo+'" onblur="getTstock();" value="100" onkeypress="return WST.isNumberKey(event)" onblur="javascript:statGoodsStaock()" onkeyup="javascript:WST.isChinese(this,1)" maxLength="25"/></td>');
 	if(goodsPriceNo==1){
 		html.push('<td><a title="新增" class="add btn" href="javascript:addPriceAttr()"></a></td>');
 	}else{
@@ -431,11 +431,29 @@ function addPriceAttr(){
 	$('.hiddenPriceAttr').attr('dataNo',goodsPriceNo);
 	$('#priceConent').append(html.join(''));
 	statGoodsStaock();
+	getTstock();
 }
+
+function checkAttPrice(attrId,goodsPriceNo){
+	if($("#price_isRecomm_"+attrId+"_"+goodsPriceNo).is(":checked")){
+		$("#shopPrice").val($.trim($("#price_price_"+attrId+"_"+goodsPriceNo).val()));
+	}
+}
+
 function delPriceAttr(v){
 	$('#attr_'+v).remove();
 	statGoodsStaock();
+	getTstock();
 }
+
+function getTstock(){
+	var tstock = 0;
+	$("input[id^=price_stock_]").each(function(){
+		tstock = tstock+parseInt($(this).val());
+	});
+	$("#goodsStock").val(tstock);
+}
+
 function statGoodsStaock(){
 	var goodsPriceNo = $('.hiddenPriceAttr').attr('dataNo');
 	var attrId = $('.hiddenPriceAttr').attr('dataId');
@@ -1057,7 +1075,8 @@ function editAttrs(){
 	for(var i=0;i<=attrNoForAttr;i++){
 		if(!document.getElementById('tr_'+i))continue;
 		params['id_'+i] = $('#tr_'+i).attr('dataId');
-		params['isPriceAttr_'+i] = $('#isPriceAttr_'+i)[0].checked?1:0;
+		var isPriceAttr = $('#isPriceAttr_'+i)[0].checked?1:0;
+		params['isPriceAttr_'+i] = isPriceAttr;
 		params['attrName_'+i] = $.trim($('#attrName_'+i).val());
 		if(params['attrName_'+i]==''){
 			WST.msg('请输入属性名称!', {icon: 5});
@@ -1066,7 +1085,7 @@ function editAttrs(){
 		}
 		params['attrType_'+i] = $('#attrType_'+i).val();
 		params['attrContent_'+i] = $.trim($('#attrContent_'+i).val());
-		if((params['attrType_'+i]==1 || params['attrType_'+i]==2) && params['attrContent_'+i]==''){
+		if((params['attrType_'+i]==1 || params['attrType_'+i]==2) && isPriceAttr==0  && params['attrContent_'+i]==''){
 			WST.msg('请输入属性选项值!', {icon: 5});
 			$('#attrContent_'+i).focus();
 			return;
@@ -1126,3 +1145,51 @@ function batchMessageDel(){
 	       });
 	  });
 	}
+
+function toEditStock(goodsId,flag){
+	if(flag==1){
+		WST.msg('该商品存在商品属性，不能直接修改库存，请进入编辑页修改', {icon: 5});
+		return;
+	}else{
+		$("#ipt_"+goodsId).show();
+		$("#span_"+goodsId).hide();
+		$("#ipt_"+goodsId).focus();
+		$("#ipt_"+goodsId).val($("#span_"+goodsId).html());
+	}
+	
+}
+
+function endEditStock(goodsId){
+	$('#span_'+goodsId).html($('#ipt_'+goodsId).val());
+	$('#span_'+goodsId).show();
+    $('#ipt_'+goodsId).hide();
+}
+
+function editStock(goodsId){
+	var stock = $('#ipt_'+goodsId).val();
+	if($.trim(stock)==''){
+		WST.msg('库存不能为空', {icon: 5});
+        return;
+	}
+	jQuery.post(Think.U('Home/Goods/editStock'),{goodsId:goodsId,stock:stock},function(data,textStatus){
+		var json = WST.toJson(data);
+		if(json.status>0){
+			$('#img_'+goodsId).fadeTo("fast",100);
+			endEditStock(goodsId);
+			$('#img_'+goodsId).fadeTo("slow",0);
+		}else{
+			WST.msg('修改失败!', {icon: 5}); 
+		}
+	});
+}
+
+function ChangeCatStatus(isShow,id,pid){
+	var params = {};
+	params.id = id;
+	params.isShow = isShow;
+	params.pid = pid;
+	$.post(Think.U('Home/ShopsCats/ChangeCatStatus'),params,function(data,textStatus){
+		location.reload();  
+	});
+	
+}

@@ -143,21 +143,43 @@ function WSTDataFile($name, $path = '',$data=array()){
 		if($data['mallLicense']==''){
 			if(stripos($data['mallTitle'],'Powered By WSTMall')===false)$data['mallTitle'] = $data['mallTitle']." - Powered By WSTMall";
 		}
-		$configStr="<?php \n return array(\n";
-	    foreach($data as $key=>$v){
-	        $configStr.="\t'".$key."'=>'".$v."',\n";
-	    }
-	    $configStr.=");\n?>\n";
-	    if(DATA_PATH.$path)mkdir(DATA_PATH.$path,0777,true);
-	    file_put_contents(DATA_PATH.$path.$name.".php",$configStr);
+	    $data   =   serialize($data);
+        if( C('DATA_CACHE_COMPRESS') && function_exists('gzcompress')) {
+            //数据压缩
+            $data   =   gzcompress($data,3);
+        }
+        if(C('DATA_CACHE_CHECK')) {//开启数据校验
+            $check  =  md5($data);
+        }else {
+            $check  =  '';
+        }
+        $data    = "<?php\n//".sprintf('%012d',$expire).$check.$data."\n?>";
+        $result  =   file_put_contents(DATA_PATH.$path.$name.".php",$data);
 	    clearstatcache();
 	}else if(is_null($data)){
 	    unlink(DATA_PATH.$path.$name.".php");
 	}else{
 		if(file_exists(DATA_PATH.$path.$name.'.php')){
-			return include DATA_PATH.$path.$name.'.php';
-		}else{
-		    return null;
+		    $content    =   file_get_contents(DATA_PATH.$path.$name.'.php');
+            if( false !== $content) {
+	            $expire  =  (int)substr($content,8, 12);
+	            if(C('DATA_CACHE_CHECK')) {//开启数据校验
+	                $check  =  substr($content,20, 32);
+	                $content   =  substr($content,52, -3);
+	                if($check != md5($content)) {//校验错误
+	                    return null;
+	                }
+	            }else {
+	            	$content   =  substr($content,20, -3);
+	            }
+	            if(C('DATA_CACHE_COMPRESS') && function_exists('gzcompress')) {
+	                //启用数据压缩
+	                $content   =   gzuncompress($content);
+	            }
+	            $content    =   unserialize($content);
+	            return $content;
+	        }
 		}
+		return null;
 	}
 }

@@ -4,7 +4,7 @@ $.browser.webkit = /webkit/.test(navigator.userAgent.toLowerCase());
 $.browser.opera = /opera/.test(navigator.userAgent.toLowerCase()); 
 $.browser.msie = /msie/.test(navigator.userAgent.toLowerCase());
 var WST = {};
-WST.v = '1.2.1';
+WST.v = '1.2.2';
 WST.pageHeight = function(){
 	if($.browser.msie){ 
 		return document.compatMode == "CSS1Compat"? document.documentElement.clientHeight : 

@@ -88,7 +88,6 @@ class OrdersModel extends BaseModel {
 		foreach ($rslist as $key => $order) {
 			$orders[$order["orderNo"]][] = $order;
 		}
-		
 		$sql = "SELECT SUM(needPay) needPay FROM __PREFIX__orders WHERE orderId IN ($orderIds) AND isPay=0 AND payType=1 AND needPay>0 AND orderStatus = -2 AND orderFlag =1";
 		$payInfo = self::queryRow($sql);
 		$data["orders"] = $orders;
@@ -142,7 +141,7 @@ class OrdersModel extends BaseModel {
 			$data["userAddress"] = $addressInfo["paddress"]." ".$addressInfo["address"];
 			$data["userTel"] = $addressInfo["userTel"];
 			$data["userPhone"] = $addressInfo["userPhone"];
-			$data["userPostCode"] = $addressInfo["postCode"];
+			
 			$data['orderScore'] = round($data["totalMoney"]+$data["deliverMoney"],0);
 			$data["isInvoice"] = $needreceipt;		
 			$data["orderRemarks"] = $remarks;
@@ -150,10 +149,9 @@ class OrdersModel extends BaseModel {
 			$data["invoiceClient"] = I("invoiceClient");
 			$data["isAppraises"] = 0;
 			$data["isSelf"] = $isself;
-			$data["needPay"] = $shopgoods["totalMoney"];
-			
+			$data["needPay"] = $shopgoods["totalMoney"]+$deliverMoney;
+
 			$data["createTime"] = date("Y-m-d H:i:s");
-			
 			$payMoney = $shopgoods["totalMoney"]+$deliverMoney;
 			
 			
@@ -184,6 +182,10 @@ class OrdersModel extends BaseModel {
 					if($sgoods["attrVal"]!='')$data["goodsAttrName"] = $sgoods["attrName"].":".$sgoods["attrVal"];
 					$data["goodsNums"] = $sgoods["cnt"];
 					$data["goodsPrice"] = $sgoods["shopPrice"];
+					
+					$data["goodsName"] = $sgoods["goodsName"];
+					$data["goodsThums"] = $sgoods["goodsThums"];
+					
 					$mog->add($data);
 					
 				}
@@ -216,11 +218,12 @@ class OrdersModel extends BaseModel {
 					}
 					
 					//修改库存
-					foreach ($pshopgoods as $key=> $sgoods){				
+					foreach ($pshopgoods as $key=> $sgoods){
 						$sql="update __PREFIX__goods set goodsStock=goodsStock-".$sgoods['cnt']." where goodsId=".$sgoods["goodsId"];
 						$this->query($sql);
 						if((int)$sgoods["goodsAttrId"]>0){
 							$sql="update __PREFIX__goods_attributes set attrStock=attrStock-".$sgoods['cnt']." where id=".$sgoods["goodsAttrId"];
+							$this->execute($sql);
 						}
 					}
 				}else{
@@ -264,8 +267,8 @@ class OrdersModel extends BaseModel {
 				$orderIds[] = $order["orderId"];
 			}
 			//获取涉及的商品
-	        $sql = "SELECT g.goodsId,g.goodsName,g.goodsThums,g.goodsImg,og.orderId FROM __PREFIX__goods g,__PREFIX__order_goods og
-					WHERE og.goodsId= g.goodsId and og.orderId in (".implode(',',$orderIds).")";	
+	        $sql = "SELECT og.goodsId,og.goodsName,og.goodsThums,og.orderId FROM __PREFIX__order_goods og
+					WHERE og.orderId in (".implode(',',$orderIds).")";	
 	        $glist = $this->query($sql);
 			$goodslist = array();
 			for($i=0;$i<count($glist);$i++){
@@ -287,10 +290,33 @@ class OrdersModel extends BaseModel {
 	 */
 	public function queryPayByPage($obj){
 		$userId = $obj["userId"];
+		$orderNo = I("orderNo");
+		$orderStatus = I("orderStatus",0);
+		$goodsName = I("goodsName");
+		$shopName = I("shopName");
+		$userName = I("userName");
+		$sdate = I("sdate");
+		$edate = I("edate");
 		$pcurr = I("pcurr",0);
 		$pageSize = 20;
-		$sql = "SELECT o.* FROM __PREFIX__orders o
-				WHERE userId = $userId AND orderStatus =-2 AND payType = 1 order by orderId desc";	
+		
+		$sql = "SELECT o.*,sp.shopId,sp.shopName FROM __PREFIX__orders o,__PREFIX__shops sp WHERE o.userId = $userId AND o.orderStatus =-2 AND o.payType = 1 AND o.shopId=sp.shopId ";
+		if($orderNo!=""){
+			$sql .= " AND o.orderNo like '%$orderNo%'";
+		}
+		if($userName!=""){
+			$sql .= " AND o.userName like '%$userName%'";
+		}
+		if($shopName!=""){
+			$sql .= " AND sp.shopName like '%$shopName%'";
+		}
+		if($sdate!=""){
+			$sql .= " AND o.createTime >= $sdate";
+		}
+		if($edate!=""){
+			$sql .= " AND o.createTime <= $edate";
+		}
+		$sql .= " order by o.orderId desc";
 		$pages = $this->pageQuery($sql,$pcurr,$pageSize);	
 		$orderList = $pages["root"];
 		if(count($orderList)>0){
@@ -300,8 +326,8 @@ class OrdersModel extends BaseModel {
 				$orderIds[] = $order["orderId"];
 			}
 			//获取涉及的商品
-	        $sql = "SELECT g.goodsId,g.goodsName,g.goodsThums,g.goodsImg,og.orderId FROM __PREFIX__goods g,__PREFIX__order_goods og
-					WHERE og.goodsId= g.goodsId and og.orderId in (".implode(',',$orderIds).")";	
+	        $sql = "SELECT og.goodsId,og.goodsName,og.goodsThums,og.orderId FROM __PREFIX__order_goods og
+					WHERE og.orderId in (".implode(',',$orderIds).")";	
 			$glist = $this->query($sql);
 			$goodslist = array();
 			for($i=0;$i<count($glist);$i++){
@@ -325,10 +351,33 @@ class OrdersModel extends BaseModel {
 	 */
 	public function queryReceiveByPage($obj){
 		$userId = $obj["userId"];
+		$orderNo = I("orderNo");
+		$orderStatus = I("orderStatus",0);
+		$goodsName = I("goodsName");
+		$shopName = I("shopName");
+		$userName = I("userName");
+		$sdate = I("sdate");
+		$edate = I("edate");
 		$pcurr = I("pcurr",0);
 		$pageSize = 20;
-		$sql = "SELECT * FROM __PREFIX__orders 
-				WHERE userId = $userId AND orderStatus in ( 3 ) order by orderId desc";	
+
+		$sql = "SELECT o.*,sp.shopId,sp.shopName FROM __PREFIX__orders o,__PREFIX__shops sp WHERE o.userId = $userId AND o.orderStatus =3 AND o.shopId=sp.shopId ";
+		if($orderNo!=""){
+			$sql .= " AND o.orderNo like '%$orderNo%'";
+		}
+		if($userName!=""){
+			$sql .= " AND o.userName like '%$userName%'";
+		}
+		if($shopName!=""){
+			$sql .= " AND sp.shopName like '%$shopName%'";
+		}
+		if($sdate!=""){
+			$sql .= " AND o.createTime >= $sdate";
+		}
+		if($edate!=""){
+			$sql .= " AND o.createTime <= $edate";
+		}
+		$sql .= " order by o.orderId desc";
 		$pages = $this->pageQuery($sql,$pcurr,$pageSize);	
 		$orderList = $pages["root"];
 		if(count($orderList)>0){
@@ -338,8 +387,8 @@ class OrdersModel extends BaseModel {
 				$orderIds[] = $order["orderId"];
 			}
 			//获取涉及的商品
-	        $sql = "SELECT g.goodsId,g.goodsName,g.goodsThums,g.goodsImg,og.orderId FROM __PREFIX__goods g,__PREFIX__order_goods og
-					WHERE og.goodsId= g.goodsId and og.orderId in (".implode(',',$orderIds).")";	
+	        $sql = "SELECT og.goodsId,og.goodsName,og.goodsThums,og.orderId FROM __PREFIX__order_goods og
+					WHERE og.orderId in (".implode(',',$orderIds).")";	
 			$glist = $this->query($sql);
 			$goodslist = array();
 			for($i=0;$i<count($glist);$i++){
@@ -360,10 +409,33 @@ class OrdersModel extends BaseModel {
 	 */
 	public function queryDeliveryByPage($obj){
 		$userId = $obj["userId"];
+		$orderNo = I("orderNo");
+		$orderStatus = I("orderStatus",0);
+		$goodsName = I("goodsName");
+		$shopName = I("shopName");
+		$userName = I("userName");
+		$sdate = I("sdate");
+		$edate = I("edate");
 		$pcurr = I("pcurr",0);
 		$pageSize = 20;
-		$sql = "SELECT * FROM __PREFIX__orders 
-				WHERE userId = $userId AND orderStatus in ( 0,1,2 ) order by orderId desc";	
+
+		$sql = "SELECT o.*,sp.shopId,sp.shopName FROM __PREFIX__orders o,__PREFIX__shops sp WHERE o.userId = $userId AND o.orderStatus in ( 0,1,2 ) AND o.shopId=sp.shopId ";
+		if($orderNo!=""){
+			$sql .= " AND o.orderNo like '%$orderNo%'";
+		}
+		if($userName!=""){
+			$sql .= " AND o.userName like '%$userName%'";
+		}
+		if($shopName!=""){
+			$sql .= " AND sp.shopName like '%$shopName%'";
+		}
+		if($sdate!=""){
+			$sql .= " AND o.createTime >= $sdate";
+		}
+		if($edate!=""){
+			$sql .= " AND o.createTime <= $edate";
+		}
+		$sql .= " order by o.orderId desc";
 		$pages = $this->pageQuery($sql,$pcurr,$pageSize);	
 		$orderList = $pages["root"];
 		if(count($orderList)>0){
@@ -373,8 +445,8 @@ class OrdersModel extends BaseModel {
 				$orderIds[] = $order["orderId"];
 			}
 			//获取涉及的商品
-	        $sql = "SELECT g.goodsId,g.goodsName,g.goodsThums,g.goodsImg,og.orderId FROM __PREFIX__goods g,__PREFIX__order_goods og
-					WHERE og.goodsId= g.goodsId and og.orderId in (".implode(',',$orderIds).")";	
+	        $sql = "SELECT og.goodsId,og.goodsName,og.goodsThums,og.orderId FROM __PREFIX__order_goods og
+					WHERE og.orderId in (".implode(',',$orderIds).")";	
 			$glist = $this->query($sql);
 			$goodslist = array();
 			for($i=0;$i<count($glist);$i++){
@@ -395,12 +467,35 @@ class OrdersModel extends BaseModel {
 	 */
 	public function queryRefundByPage($obj){
 		$userId = $obj["userId"];
+		$orderNo = I("orderNo");
+		$orderStatus = I("orderStatus",0);
+		$goodsName = I("goodsName");
+		$shopName = I("shopName");
+		$userName = I("userName");
+		$sdate = I("sdate");
+		$edate = I("edate");
 		$pcurr = I("pcurr",0);
 		$pageSize = 20;
 		//必须是在线支付的才允许退款
-		$sql = "SELECT * FROM __PREFIX__orders 
-				WHERE userId = $userId AND orderStatus in (-1,-3,-4) and payType =1 order by orderId desc";
 
+		$sql = "SELECT o.*,sp.shopId,sp.shopName FROM __PREFIX__orders o,__PREFIX__shops sp WHERE o.userId = $userId AND (o.orderStatus in (-3,-4) or (o.orderStatus =-1 and payType =1 AND o.isPay =1)) AND o.shopId=sp.shopId ";
+		if($orderNo!=""){
+			$sql .= " AND o.orderNo like '%$orderNo%'";
+		}
+		if($userName!=""){
+			$sql .= " AND o.userName like '%$userName%'";
+		}
+		if($shopName!=""){
+			$sql .= " AND sp.shopName like '%$shopName%'";
+		}
+		if($sdate!=""){
+			$sql .= " AND o.createTime >= $sdate";
+		}
+		if($edate!=""){
+			$sql .= " AND o.createTime <= $edate";
+		}
+		$sql .= " order by o.orderId desc";
+		
 		$pages = $this->pageQuery($sql,$pcurr,$pageSize);	
 		$orderList = $pages["root"];
 		if(count($orderList)>0){
@@ -410,8 +505,8 @@ class OrdersModel extends BaseModel {
 				$orderIds[] = $order["orderId"];
 			}
 			//获取涉及的商品
-	        $sql = "SELECT g.goodsId,g.goodsName,g.goodsThums,g.goodsImg,og.orderId FROM __PREFIX__goods g,__PREFIX__order_goods og
-					WHERE og.goodsId= g.goodsId and og.orderId in (".implode(',',$orderIds).")";	
+	        $sql = "SELECT og.goodsId,og.goodsName,og.goodsThums,og.orderId FROM __PREFIX__order_goods og
+					WHERE og.orderId in (".implode(',',$orderIds).")";	
 			$glist = $this->query($sql);
 			$goodslist = array();
 			for($i=0;$i<count($glist);$i++){
@@ -433,10 +528,33 @@ class OrdersModel extends BaseModel {
 	 */
 	public function queryCancelOrders($obj){
 		$userId = $obj["userId"];
+		$orderNo = I("orderNo");
+		$orderStatus = I("orderStatus",0);
+		$goodsName = I("goodsName");
+		$shopName = I("shopName");
+		$userName = I("userName");
+		$sdate = I("sdate");
+		$edate = I("edate");
 		$pcurr = I("pcurr",0);
 		$pageSize = 20;
-		$sql = "SELECT * FROM __PREFIX__orders 
-				WHERE userId = $userId AND orderStatus in (-1,-5) order by orderId desc";	
+
+		$sql = "SELECT o.*,sp.shopId,sp.shopName FROM __PREFIX__orders o,__PREFIX__shops sp WHERE o.userId = $userId AND o.orderStatus in (-1,-5) AND o.shopId=sp.shopId ";
+		if($orderNo!=""){
+			$sql .= " AND o.orderNo like '%$orderNo%'";
+		}
+		if($userName!=""){
+			$sql .= " AND o.userName like '%$userName%'";
+		}
+		if($shopName!=""){
+			$sql .= " AND sp.shopName like '%$shopName%'";
+		}
+		if($sdate!=""){
+			$sql .= " AND o.createTime >= $sdate";
+		}
+		if($edate!=""){
+			$sql .= " AND o.createTime <= $edate";
+		}
+		$sql .= " order by o.orderId desc";
 		$pages = $this->pageQuery($sql,$pcurr,$pageSize);	
 		$orderList = $pages["root"];
 		if(count($orderList)>0){
@@ -446,8 +564,8 @@ class OrdersModel extends BaseModel {
 				$orderIds[] = $order["orderId"];
 			}
 			//获取涉及的商品
-	        $sql = "SELECT g.goodsId,g.goodsName,g.goodsThums,g.goodsImg,og.orderId FROM __PREFIX__goods g,__PREFIX__order_goods og
-					WHERE og.goodsId= g.goodsId and og.orderId in (".implode(',',$orderIds).")";	
+	        $sql = "SELECT og.goodsId,og.goodsName,og.goodsThums,og.orderId FROM __PREFIX__order_goods og
+					WHERE og.orderId in (".implode(',',$orderIds).")";	
 			$glist = $this->query($sql);
 			$goodslist = array();
 			for($i=0;$i<count($glist);$i++){
@@ -469,10 +587,37 @@ class OrdersModel extends BaseModel {
 	 */
 	public function queryAppraiseByPage($obj){
 		$userId = $obj["userId"];
+		$orderNo = I("orderNo");
+		$orderStatus = I("orderStatus",0);
+		$goodsName = I("goodsName");
+		$shopName = I("shopName");
+		$userName = I("userName");
+		$sdate = I("sdate");
+		$edate = I("edate");
 		$pcurr = I("pcurr",0);
 		$pageSize = 20;
-		$sql = "SELECT * FROM __PREFIX__orders 
-				WHERE userId = $userId AND orderStatus in (4,5) order by orderId desc";	
+		$sql = "SELECT o.*,sp.shopId,sp.shopName FROM __PREFIX__orders o,__PREFIX__shops sp WHERE o.userId = $userId AND o.shopId=sp.shopId ";	
+		if($orderNo!=""){
+			$sql .= " AND o.orderNo like '%$orderNo%'";
+		}
+		if($userName!=""){
+			$sql .= " AND o.userName like '%$userName%'";
+		}
+		if($shopName!=""){
+			$sql .= " AND sp.shopName like '%$shopName%'";
+		}
+		if($sdate!=""){
+			$sql .= " AND o.createTime >= $sdate";
+		}
+		if($edate!=""){
+			$sql .= " AND o.createTime <= $edate";
+		}
+		if($orderStatus==0){
+			$sql .= " AND o.orderStatus in (4,5)";
+		}else{
+			$sql .= " AND o.orderStatus =$orderStatus";
+		}
+		$sql .= " order by o.orderId desc";
 		$pages = $this->pageQuery($sql,$pcurr,$pageSize);	
 		$orderList = $pages["root"];
 		if(count($orderList)>0){
@@ -482,8 +627,8 @@ class OrdersModel extends BaseModel {
 				$orderIds[] = $order["orderId"];
 			}
 			//获取涉及的商品
-	        $sql = "SELECT g.goodsId,g.goodsName,g.goodsThums,g.goodsImg,og.orderId FROM __PREFIX__goods g,__PREFIX__order_goods og
-					WHERE og.goodsId= g.goodsId and og.orderId in (".implode(',',$orderIds).")";	
+	        $sql = "SELECT og.goodsId,og.goodsName,og.goodsThums,og.orderId FROM __PREFIX__order_goods og
+					WHERE og.orderId in (".implode(',',$orderIds).")";	
 			$glist = $this->query($sql);
 			$goodslist = array();
 			for($i=0;$i<count($glist);$i++){
@@ -598,7 +743,7 @@ class OrdersModel extends BaseModel {
 		if(empty($order))return $data;
 		$data["order"] = $order;
 
-		$sql = "select og.orderId, og.goodsId ,g.goodsSn, og.goodsNums, g.goodsName , og.goodsPrice shopPrice,g.goodsThums,og.goodsAttrName,og.goodsAttrName 
+		$sql = "select og.orderId, og.goodsId ,g.goodsSn, og.goodsNums, og.goodsName , og.goodsPrice shopPrice,og.goodsThums,og.goodsAttrName,og.goodsAttrName 
 				from __PREFIX__goods g , __PREFIX__order_goods og 
 				WHERE g.goodsId = og.goodsId AND og.orderId = $orderId";
 		$goods = $this->query($sql);
@@ -657,7 +802,7 @@ class OrdersModel extends BaseModel {
 		$userId = $obj["userId"];
 		$shopId = $obj["shopId"];
 		$pcurr = I("pcurr",0);
-		$pageSize = 20;
+		$pageSize = 10;
 		$orderStatus = I("statusMark");
 		
 		$orderNo = I("orderNo");
@@ -665,11 +810,10 @@ class OrdersModel extends BaseModel {
 		$userAddress = I("userAddress");
 		$rsdata = array();
 		if($orderStatus==6){
-			$sql = "SELECT * FROM __PREFIX__orders WHERE shopId = $shopId AND orderStatus in (-1,-3,-4,-5)";
+			$sql = "SELECT * FROM __PREFIX__orders WHERE shopId = $shopId AND (orderStatus in (-3,-4,-5) OR (orderStatus =-1 AND ((payType=1 AND isPay=1) OR payType=0)))";
 		}else{
 			$sql = "SELECT * FROM __PREFIX__orders WHERE shopId = $shopId AND orderStatus = $orderStatus ";	
 		}
-			
 		if($orderNo!=""){
 			$sql .= " AND orderNo like '%$orderNo%'";
 		}
@@ -821,7 +965,23 @@ class OrdersModel extends BaseModel {
 		}
 
 		$sql = "UPDATE __PREFIX__orders set orderStatus = -4 WHERE orderId = $orderId and shopId=".$shopId;		
-		$rs = $this->query($sql);		
+		$rs = $this->execute($sql);
+		//加回库存
+		if($rs>0){
+			$sql = "SELECT goodsId,goodsNums,goodsAttrId from __PREFIX__order_goods WHERE orderId = $orderId";
+			$oglist = $this->query($sql);
+			foreach ($oglist as $key => $ogoods) {
+				$goodsId = $ogoods["goodsId"];
+				$goodsNums = $ogoods["goodsNums"];
+				$goodsAttrId = $ogoods["goodsAttrId"];
+				$sql = "UPDATE __PREFIX__goods set goodsStock = goodsStock+$goodsNums WHERE goodsId = $goodsId";
+				$this->execute($sql);
+				if($goodsAttrId>0){
+					$sql = "UPDATE __PREFIX__goods_attributes set attrStock = attrStock+$goodsNums WHERE id = $goodsAttrId";
+					$this->execute($sql);
+				}
+			}
+		}	
 
 		$data = array();
 		$m = M('log_orders');
@@ -873,10 +1033,39 @@ class OrdersModel extends BaseModel {
 		$orderIds = $obj["orderIds"];
 		$sql = "SELECT count(orderId) counts FROM __PREFIX__orders WHERE userId = $userId AND orderId in ($orderIds) AND orderFlag = 1 AND orderStatus = -2 AND isPay = 0 AND payType = 1";
 		$rsv = $this->query($sql);
-		$ocnt = $rsv[0]['counts'];
+		$ocnt = count(explode(",",$orderIds));
 		$data = array();
-		if(count($rsv)==$ocnt){
-			$data["status"] = 1;
+		
+		if($ocnt==$rsv[0]['counts']){
+			
+			$sql = "SELECT og.goodsId,og.goodsName,g.goodsStock,og.goodsNums, og.goodsAttrId, ga.attrStock FROM  __PREFIX__goods g ,__PREFIX__order_goods og
+					left join __PREFIX__goods_attributes ga on ga.goodsId=og.goodsId and og.goodsAttrId=ga.id
+					WHERE og.goodsId = g.goodsId and og.orderId in($orderIds)";
+			$glist = $this->query($sql);
+			if(count($glist)>0){
+				$rlist = array();
+				foreach ($glist as $goods) {
+					if($goods["goodsAttrId"]>0){
+						if($goods["attrStock"]<$goods["goodsNums"]){
+							$rlist[] = $goods;
+						}
+					}else{
+						if($goods["goodsStock"]<$goods["goodsNums"]){
+							$rlist[] = $goods;
+						}
+					}
+				}
+				if(count($rlist)>0){
+					$data["status"] = -2;
+					$data["rlist"] = $rlist;
+				}else{
+					$data["status"] = 1;
+				}
+			}else{
+				$data["status"] = 1;
+			}
+			
+			
 		}else{
 			$data["status"] = -1;
 		}

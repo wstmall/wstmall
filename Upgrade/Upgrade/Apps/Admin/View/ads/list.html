@@ -36,9 +36,31 @@
    }
    </script>
    <body class='wst-page'>
-       <div class='wst-tbar' style='text-align:right;height:25px;'>
-         <a type="button" class="btn btn-success glyphicon glyphicon-plus" href='{:U("Admin/Ads/toEdit")}' style='float:right'>新增</a>
+   	<div style="padding-top: 6px;">
+       <div class='wst-tbar' style='height:25px;'>
+       <form method='post' action='{:U("Admin/Ads/index")}' autocomplete="off">
+   		<div style="float:left;width:950px;">      
+		  广告位置：<select name="adPositionId">
+                <option value=''>请选择</option>
+                <option value='-1' <if condition="$params['adPositionId'] == -1 ">selected</if>>首页主广告</option>
+                <option value='-2' <if condition="$params['adPositionId'] == -2 ">selected</if>>品牌汇广告</option>
+                <option value='-3' <if condition="$params['adPositionId'] == -3 ">selected</if>>店铺街广告</option>
+                <volist name="goodsCatList" id="vo">
+                <option value='{$vo['catId']}' <if condition="$params['adPositionId'] == $vo['catId'] ">selected</if>>(商品分类){$vo['catName']}</option>
+                </volist>
+             </select>
+                      广告标题：<input type='text' name='adName' value='{$params[adName]}' autocomplete="off"/>  
+  		<button type="submit" class="btn btn-primary glyphicon glyphicon-search">查询</button> 
+		  </form>
+       	</div>
+		   <div class='wst-tbar' style='text-align:right;height:25px;'>
+	       <php>if(in_array('ppgl_01',$WST_STAFF['grant'])){</php>
+	       <a type="button" class="btn btn-success glyphicon glyphicon-plus" href='{:U("Admin/Ads/toEdit")}' style='float:right'>新增</a>
+	       <php>}</php>
+	       </div>
+	       <div style="clear:both;"></div>
        </div>
+      
        <div class="wst-body"> 
         <table class="table table-hover table-striped table-bordered wst-list">
            <thead>

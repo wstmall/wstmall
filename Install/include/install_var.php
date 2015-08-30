@@ -25,9 +25,9 @@ $env_items = array
 $dir_items = array
 (
   'Install' => array('path' => '/Install'),
-  'Apps' => array('path' => '/Apps'),
+  'Apps' => array('path' => '/Apps/Runtime'),
   'Upload' => array('path' => '/Upload'),
-  'Conf' => array('path' => '/Apps/Common/Conf/')
+  'Conf' => array('path' => '/Apps/Common/Conf')
 );
 $func_items = array(
   'mysql_connect'=>array(),

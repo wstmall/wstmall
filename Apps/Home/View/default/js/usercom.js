@@ -23,7 +23,6 @@ function editAddress(){
 	   params.areaId2 = $('#areaId2').val();
 	   params.areaId3 = $('#areaId3').val();
 	   params.communityId = $('#communityId').val();
-	   params.postCode = $('#postCode').val();
 	   params.address = $('#address').val();
 	   params.userName = $('#userName').val();
 	   params.userPhone = $('#userPhone').val();
@@ -67,10 +66,6 @@ function editAddress(){
 			WST.msg("固定电话格式错误", {icon: 5});
 			return ;		
 		}	
-		if(params.postCode!="" && params.postCode.length!=6){
-			WST.msg("邮编格式不正确", {icon: 5});
-			return;
-		}
 	   
 	   $.post(Think.U('Home/UserAddress/edit'),params,function(data,textStatus){
 			var json = WST.toJson(data);
@@ -214,6 +209,13 @@ function toPay(id){
 		var json = WST.toJson(data);
 		if(json.status==1){
 			location.href=Think.U('Home/Payments/toPay','orderIds='+params.orderIds);
+		}else if(json.status==-2){
+			var rlist = json.rlist;
+			var garr = new Array();
+			for(var i=0;i<rlist.length;i++){
+				garr.push(rlist[i].goodsName);
+			}
+			WST.msg('订单中商品【'+garr.join("，")+'】库存不足，不能进行支付。', {icon: 5});
 		}else{
 			WST.msg('您的订单已支付!', {icon: 5});
 			setTimeout(function(){
@@ -292,23 +294,21 @@ function addGoodsAppraises(shopId,goodsId,orderId){
 		return;
 	}
 	
-	layer.confirm('您确定要提交该评价吗？',{icon: 3, title:'系统提示'}, function(tips){
+	//layer.confirm('您确定要提交该评价吗？',{icon: 3, title:'系统提示'}, function(tips){
 	    var ll = layer.load('数据处理中，请稍候...');
 		$.post(Think.U('Home/GoodsAppraises/addGoodsAppraises'),{shopId:shopId, goodsId:goodsId, orderId:orderId, goodsScore:goodsScore, timeScore:timeScore, serviceScore:serviceScore, content:content },function(data,textStatus){
-			layer.close(tips);
+			//layer.close(tips);
 			layer.close(ll);
 			var json = WST.toJson(data);
 			if(json.status==1){
-				WST.msg('评价成功!', {icon: 1}, function(){
-					$('#'+goodsId+'_appraise').slideUp();
-					$('#'+goodsId+'_appraise').empty();
-					$('#'+goodsId+'_status').html('已评价');
-				});
+				$('#'+goodsId+'_appraise').slideUp();
+				$('#'+goodsId+'_appraise').empty();
+				$('#'+goodsId+'_status').html('评价成功');
 			}else{
 				WST.msg('评价失败，请刷新后再重试 !', {icon: 5});
 			}
 		});
-	});
+	//});
 }
 
 function orderConfirm(id,type){
@@ -350,7 +350,7 @@ function getAreaListForOpen(objId,parentId,t,id){
 				}
 			}
 			$('#'+objId).html(html.join(''));
-			if(t==0)getCommunitys();
+			if(t==0)getCommunitysForOpen();
 	   });
 }
 
@@ -480,6 +480,7 @@ function openShop(){
 				WST.msg('操作您的开店申请失败，请联系商城管理员!', {icon: 5});
 				getVerify();
 			}
+			layer.close(ll);
 		});
 }
 
@@ -499,7 +500,7 @@ function isInvoce(v){
 function showXiey(id){
 		layer.open({
 		    type: 2,
-		    title: 'WST用户注册协议',
+		    title: '店铺用户注册协议',
 		    shadeClose: true,
 		    shade: 0.8,
 		    area: ['1000px', ($(window).height() - 50) +'px'],
@@ -510,3 +511,57 @@ function showXiey(id){
 		    }
 		});
 	}	
+
+
+
+
+
+function getOrdersList(type){
+	var params = {};
+	var orderNo = $.trim($('#orderNo').val());
+	var userName = $.trim($('#userName').val());
+	var shopName = $.trim($('#shopName').val());
+	var sdate = $.trim($('#sdate').val());
+	var edate = $.trim($('#edate').val());
+	var orderStatus = $.trim($('#orderStatus').val());
+	if(orderNo!=""){
+		params.orderNo = $.trim($('#orderNo').val());
+	}
+	if(userName!=""){
+		params.userName = $.trim($('#userName').val());
+	}
+	if(shopName!=""){
+		params.shopName = $.trim($('#shopName').val());
+	}
+	if(sdate!=""){
+		params.sdate = $.trim($('#sdate').val());
+	}
+	if(edate!=""){
+		params.edate = $.trim($('#edate').val());
+	}
+	if(orderStatus!=""){
+		params.orderStatus = $.trim($('#orderStatus').val());
+	}
+	
+	//type->1:待付款订单;2:待发货订单;3:待确认收货;4:待评价交易;5:已取消订单;6:拒收/退款
+	if(type==1){
+		location.href=Think.U('Home/Orders/queryPayByPage',params);
+	}else if(type==2){
+		location.href=Think.U('Home/Orders/queryDeliveryByPage',params);
+	}else if(type==3){
+		location.href=Think.U('Home/Orders/queryReceiveByPage',params);
+	}else if(type==4){
+		location.href=Think.U('Home/Orders/queryAppraiseByPage',params);
+	}else if(type==5){
+		location.href=Think.U('Home/Orders/queryCancelOrders',params);
+	}else if(type==6){
+		location.href=Think.U('Home/Orders/queryRefundByPage',params);
+	}
+	
+}
+
+
+
+
+
+

@@ -35,9 +35,15 @@
 					<span class="wst-footer-wz-kf">联系客服</span>
 					<div style='margin-left:30px;'>
 						<a href="#">联系电话</a><br/>
-						<span class="wst-footer-pno">020-29806661</span><br/>
-						<a href="#">在线客服</a><br/>
-						<a href="#" class="wst-footer-wz-ent">点击这里进入</a><br/>
+						<if condition="$CONF['phoneNo'] neq ''">
+						<span class="wst-footer-pno">{$CONF['phoneNo']}</span><br/>
+						</if>
+						<if condition="$CONF['qqNo'] neq ''">
+						<a href="tencent://message/?uin={$CONF['qqNo']}&Site=QQ交谈&Menu=yes">
+						<img border="0" src="http://wpa.qq.com/pa?p=1:{$CONF['qqNo']}:7" alt="QQ交谈" width="71" height="24" />
+						</a><br/>
+						</if>
+						
 					</div>
 				</div>
 			</div>

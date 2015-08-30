@@ -155,13 +155,17 @@ function checkCart(){
 					html.push("<div style='border-bottom:1px dotted #E13335'>");
 				//}else{
 					//html.push("<div>");
-				//}
+				//}【{$goods['attrName']}:{$goods['attrVal']}】
 				var url = Think.U('Home/Goods/getGoodsDetails','goodsId='+goods.goodsId);
 				html.push(  "<div style='float:left;'>" +
 									"<a href='"+url+"'><img src='"+domainURL +"/"+goods.goodsThums+"' width='65' height='65'/></a>" +
 									"</div>" +
-							"<div style='float:left;width:280px;padding:4px;'>" +
-									"<a target='_blank' href='"+url+"'>"+goods.goodsName+"</a><br/>￥"+goods.shopPrice+"元<br/>数量："+goods.cnt+"" +
+							"<div style='float:left;width:280px;padding:4px;'>");
+				html.push(  "<a target='_blank' href='"+url+"'>"+goods.goodsName+"</a><br/>");
+				if(goods.attrName){
+					html.push(  goods.attrName+"："+goods.attrVal+"<br/>");
+				}
+				html.push( "￥"+goods.shopPrice+"元&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数量："+goods.cnt+
 							"</div><div style='clear:both;'></div>" +
 							"</div>"
 						);
@@ -207,6 +211,91 @@ function addToFavorite(){
 	document.all?window.external.AddFavorite(a,b):window.sidebar&&window.sidebar.addPanel?window.sidebar.addPanel(b,a,""):alert("\u5bf9\u4e0d\u8d77\uff0c\u60a8\u7684\u6d4f\u89c8\u5668\u4e0d\u652f\u6301\u6b64\u64cd\u4f5c!\n\u8bf7\u60a8\u4f7f\u7528\u83dc\u5355\u680f\u6216Ctrl+D\u6536\u85cf\u672c\u7ad9\u3002"),createCookie("_fv","1",30,"/;domain=http://localhost/wstmall/")
 }
 
+
+function getSearchInfo(obj,event){
+	var keywords = $.trim($(obj).val());
+	var vdata = $(obj).attr("data");
+	var lsobjId= vdata+"_list"
+		
+	if(event.which == 38 || event.which == 40) {
+		var len = $("."+vdata+"_op").length;
+		if(len>0){
+			var currobj = null;
+			var currIdx = $("."+vdata+"_op_curr").index();
+			if(currIdx>=0){//有當前選擇項
+				if(event.which == 40){//下
+					$("."+vdata+"_op_curr").removeClass().addClass(vdata+"_op").css({"background-color":"#ffffff"});
+					currobj = $("."+vdata+"_op")[currIdx+1];
+					$(currobj).removeClass().addClass(vdata+"_op_curr").css({"background-color":"#E9E5E1"});
+				}else{//上						
+					$("."+vdata+"_op_curr").removeClass().addClass(vdata+"_op").css({"background-color":"#ffffff"});
+					currobj = $("."+vdata+"_op")[currIdx-1];
+					$(currobj).removeClass().addClass(vdata+"_op_curr").css({"background-color":"#E9E5E1"});
+				}
+			}else{//當前沒有選擇項
+				currobj = $("."+vdata+"_op")[0];
+				$(currobj).removeClass().addClass(vdata+"_op_curr").css({"background-color":"#E9E5E1"});
+			}
+			$(obj).val($(currobj).html());
+		}	
+	}else if(event.which == 13){			
+		var params = {};
+		params.keywords = keywords;		
+		$("#"+vdata+"_box").append("<div style='position:relative;border:1px solid #E9E5E1;margin-top:2px;'><div class='"+vdata+"_op_record'>"+keywords+"</div><span onClick='removeOpt(this);' style='cursor:pointer;position:absolute;top:-5px;font-size:10px;right:2px;'>x</span></div>");
+		$(obj).val("");
+		$("#"+lsobjId).hide();
+		$("#"+lsobjId).html("");
+		if(params.keywords!=""){				
+			
+		}
+	}else{			
+		var params = {};
+		params.keywords = keywords;
+		if(keywords.length<1){		
+			$("#"+lsobjId).hide();
+			$("#"+lsobjId).html("");
+			return;
+		}
+		var searchType = $("#wst-search-type").val();
+		var surl = Think.U('Home/Goods/getKeyList');
+    	if(searchType==2){
+    		surl = Think.U('Home/Shops/getShopList');
+    	}
+		$.post(surl,params,function(rsp){
+			var json = WST.toJson(rsp);
+			if(json.length>0){
+				var html = new Array();
+				for(var i=0;i<json.length;i++){		
+					html.push("<div style='cursor:pointer;line-height:30px;padding-left:4px;' class='"+vdata+"_op' data='"+vdata+"' onmouseover='optOver(this);' onclick='optSelect(this)'>"+json[i].searchKey+"</div>");
+					$("#"+lsobjId).show();
+					$("#"+lsobjId).html(html.join(""));
+				}
+			}else{
+				$("#"+lsobjId).hide();
+				$("#"+lsobjId).html("");
+				return;
+			}			
+		});	
+	}
+}
+
+function removeOpt(obj){
+	$(obj).parent().remove();
+}
+
+function optOver(obj){	
+	var vdata = $(obj).attr("data");
+	$("."+vdata+"_op_curr").removeClass().addClass(vdata+"_op").css({"background-color":"#ffffff"});
+	$(obj).removeClass().addClass(vdata+"_op_curr").css({"background-color":"#E9E5E1"});
+	$("#keyword").val($(obj).html());
+}
+
+function optSelect(obj){
+	$("#btnsch").click();
+}
+
+
+
 /*************************************用户操作*****************************************/
 function login(){
 	return location.href= Think.U('Home/Users/login');
@@ -251,4 +340,11 @@ function createCookie(a,b,c,d){
 		var f="";
 	}		
 	document.cookie=a+"="+b+f+"; path="+d
+}
+
+//添加广告访问量
+function addAccess(aid){
+	$.post(Think.U('Home/Index/access'),{id:aid},function(data,textStatus){
+		
+	});
 }

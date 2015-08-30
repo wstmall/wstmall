@@ -214,10 +214,10 @@ class GoodsModel extends BaseModel {
 		$attrCatId = $obj["attrCatId"];
 		$goods = array();
 		//获取规格属性
-		$sql = "select ga.id,ga.attrVal,ga.attrPrice,ga.attrStock,a.attrId,a.attrName,a.isPriceAttr,a.attrType,a.attrContent
+		$sql = "select ga.id,ga.attrVal,ga.attrPrice,ga.attrStock,a.attrId,a.attrName,a.isPriceAttr
 		            from __PREFIX__attributes a 
 		            left join __PREFIX__goods_attributes ga on ga.attrId=a.attrId and ga.goodsId=".$id." where  
-					a.attrFlag=1 and a.catId=".$attrCatId." and a.shopId=".$shopId;
+					a.attrFlag=1 and a.catId=".$attrCatId." and a.shopId=".$shopId." order by a.attrSort, a.attrId";
 		$attrRs = $this->query($sql);
 		if(!empty($attrRs)){
 			$priceAttr = array();
@@ -228,6 +228,7 @@ class GoodsModel extends BaseModel {
 					$goods['priceAttrName'] = $v['attrName'];
 					$priceAttr[] = $v;
 				}else{
+					$v['attrContent'] = $v['attrVal'];
 					$attrs[] = $v;
 				}
 			}
@@ -270,12 +271,15 @@ class GoodsModel extends BaseModel {
 		$shopCatId1 = I('shopCatId1',0);
 		$shopCatId2 = I('shopCatId2',0);
 		$goodsName = I('goodsName');
-		$sql = "select goodsId,goodsSn,goodsName,goodsImg,goodsThums,shopPrice,goodsStock,isSale,isRecomm,isHot,isBest,isNew from __PREFIX__goods where goodsFlag=1 
-		     and shopId=".$shopId." and goodsStatus=1 and isSale=1 ";
-		if($shopCatId1>0)$sql.=" and shopCatId1=".$shopCatId1;
-		if($shopCatId2>0)$sql.=" and shopCatId2=".$shopCatId2;
-		if($goodsName!='')$sql.=" and (goodsName like '%".$goodsName."%' or goodsSn like '%".$goodsName."%') ";
-		$sql.=" order by goodsId desc";
+		$sql = "select g.goodsId,g.goodsSn,g.goodsName,g.goodsImg,g.goodsThums,g.shopPrice,g.goodsStock,g.saleCount,g.isSale,g.isRecomm,g.isHot,g.isBest,g.isNew,ga.isRecomm as attIsRecomm from __PREFIX__goods g
+				left join __PREFIX__goods_attributes ga on g.goodsId = ga.goodsId and ga.isRecomm = 1
+				where g.goodsFlag=1 
+		     and g.shopId=".$shopId." and g.goodsStatus=1 and g.isSale=1 ";
+		if($shopCatId1>0)$sql.=" and g.shopCatId1=".$shopCatId1;
+		if($shopCatId2>0)$sql.=" and g.shopCatId2=".$shopCatId2;
+		if($goodsName!='')$sql.=" and (g.goodsName like '%".$goodsName."%' or g.goodsSn like '%".$goodsName."%') ";
+		$sql.=" order by g.goodsId desc";
+		
 		return $this->pageQuery($sql);
 	}
     /**
@@ -286,12 +290,14 @@ class GoodsModel extends BaseModel {
 		$shopCatId1 = I('shopCatId1',0);
 		$shopCatId2 = I('shopCatId2',0);
 		$goodsName = I('goodsName');
-		$sql = "select goodsId,goodsSn,goodsName,goodsImg,goodsThums,shopPrice,goodsStock,isSale,isRecomm,isHot,isBest,isNew from __PREFIX__goods where goodsFlag=1 
-		      and shopId=".$shopId." and isSale=0 ";
-		if($shopCatId1>0)$sql.=" and shopCatId1=".$shopCatId1;
-		if($shopCatId2>0)$sql.=" and shopCatId2=".$shopCatId2;
-		if($goodsName!='')$sql.=" and (goodsName like '%".$goodsName."%' or goodsSn like '%".$goodsName."%') ";
-		$sql.=" order by goodsId desc";
+		$sql = "select g.goodsId,g.goodsSn,g.goodsName,g.goodsImg,g.goodsThums,g.shopPrice,g.goodsStock,g.saleCount,g.isSale,g.isRecomm,g.isHot,g.isBest,g.isNew,ga.isRecomm as attIsRecomm from __PREFIX__goods  g
+				left join __PREFIX__goods_attributes ga on g.goodsId = ga.goodsId and ga.isRecomm = 1
+				where g.goodsFlag=1 
+		      and g.shopId=".$shopId." and g.isSale=0 ";
+		if($shopCatId1>0)$sql.=" and g.shopCatId1=".$shopCatId1;
+		if($shopCatId2>0)$sql.=" and g.shopCatId2=".$shopCatId2;
+		if($goodsName!='')$sql.=" and (g.goodsName like '%".$goodsName."%' or g.goodsSn like '%".$goodsName."%') ";
+		$sql.=" order by g.goodsId desc";
 		return $this->pageQuery($sql);
 	}
     /**
@@ -302,12 +308,14 @@ class GoodsModel extends BaseModel {
 		$shopCatId1 = I('shopCatId1',0);
 		$shopCatId2 = I('shopCatId2',0);
 		$goodsName = I('goodsName');
-		$sql = "select goodsId,goodsSn,goodsName,goodsImg,goodsThums,shopPrice,goodsStock,isSale,isRecomm,isHot,isBest,isNew from __PREFIX__goods where goodsFlag=1 
-		     and shopId=".$shopId." and goodsStatus=0 and isSale=1 ";
-		if($shopCatId1>0)$sql.=" and shopCatId1=".$shopCatId1;
-		if($shopCatId2>0)$sql.=" and shopCatId2=".$shopCatId2;
-		if($goodsName!='')$sql.=" and (goodsName like '%".$goodsName."%' or goodsSn like '%".$goodsName."%') ";
-		$sql.=" order by goodsId desc";
+		$sql = "select g.goodsId,g.goodsSn,g.goodsName,g.goodsImg,g.goodsThums,g.shopPrice,g.goodsStock,g.saleCount,g.isSale,g.isRecomm,g.isHot,g.isBest,g.isNew,ga.isRecomm as attIsRecomm from __PREFIX__goods g
+				left join __PREFIX__goods_attributes ga on g.goodsId = ga.goodsId and ga.isRecomm = 1
+				where g.goodsFlag=1 
+		     and g.shopId=".$shopId." and g.goodsStatus=0 and isSale=1 ";
+		if($shopCatId1>0)$sql.=" and g.shopCatId1=".$shopCatId1;
+		if($shopCatId2>0)$sql.=" and g.shopCatId2=".$shopCatId2;
+		if($goodsName!='')$sql.=" and (g.goodsName like '%".$goodsName."%' or g.goodsSn like '%".$goodsName."%') ";
+		$sql.=" order by g.goodsId desc";
 		return $this->pageQuery($sql);
 	}
 	/**
@@ -507,6 +515,7 @@ class GoodsModel extends BaseModel {
 					$attrRs = $m->query($sql);
 					if(!empty($attrRs)){
 						$priceAttrId = 0;
+						$recommPrice = 0;
 						foreach ($attrRs as $key =>$v){
 							if($v['isPriceAttr']==1){
 								$priceAttrId = $v['attrId'];
@@ -527,6 +536,7 @@ class GoodsModel extends BaseModel {
 							$no = (int)I('goodsPriceNo');
 							$no = $no>50?50:$no;
 							$totalStock = 0;
+							
 							for ($i=0;$i<=$no;$i++){
 								$name = trim(I('price_name_'.$priceAttrId."_".$i));
 								if($name=='')continue;
@@ -537,12 +547,19 @@ class GoodsModel extends BaseModel {
 								$attr['attrVal'] = $name;
 								$attr['attrPrice'] = (float)I('price_price_'.$priceAttrId."_".$i);
 								$attr['isRecomm'] = (int)I('price_isRecomm_'.$priceAttrId."_".$i);
+								if($attr['isRecomm']==1){
+									$recommPrice = $attr['attrPrice'];
+								}
 								$attr['attrStock'] = (int)I('price_stock_'.$priceAttrId."_".$i);
 								$totalStock = $totalStock + (int)$attr['attrStock'];
 								$m->add($attr);
 							}
 							//更新商品总库存
-							$sql = "update __PREFIX__goods set goodsStock=".$totalStock." where goodsId=".$goodsId;
+							$sql = "update __PREFIX__goods set goodsStock=".$totalStock;
+							if($recommPrice>0){
+								$sql .= ",shopPrice=".$recommPrice;
+							}
+							$sql .= " where goodsId=".$goodsId;
 							$m->query($sql);
 						}
 					}
@@ -583,7 +600,7 @@ class GoodsModel extends BaseModel {
 		$m = M('goods_gallerys');
 		$goods['gallery'] = $m->where('goodsId='.$id)->select();
 		//获取规格属性
-		$sql = "select ga.attrVal,ga.attrPrice,ga.attrStock,a.attrId,a.attrName,a.isPriceAttr,a.attrType,a.attrContent
+		$sql = "select ga.attrVal,ga.attrPrice,ga.attrStock,ga.isRecomm,a.attrId,a.attrName,a.isPriceAttr,a.attrType,a.attrContent
 		            ,ga.isRecomm from __PREFIX__attributes a 
 		            left join __PREFIX__goods_attributes ga on ga.attrId=a.attrId and ga.goodsId=".$id." where  
 					a.attrFlag=1 and a.catId=".$goods['attrCatId']." and a.shopId=".$shopId;
@@ -593,6 +610,9 @@ class GoodsModel extends BaseModel {
 			$attrs = array();
 			foreach ($attrRs as $key =>$v){
 				if($v['isPriceAttr']==1){
+					if($v['isRecomm']==1){
+						$goods['recommPrice'] = $v['attrPrice'];
+					}
 					$goods['priceAttrId'] = $v['attrId'];
 					$goods['priceAttrName'] = $v['attrName'];
 					$priceAttr[] = $v;
@@ -897,5 +917,28 @@ class GoodsModel extends BaseModel {
 		$sql = "select id,attrPrice,attrStock from  __PREFIX__goods_attributes where goodsId=".$goodsId." and id=".$id;
 		$rs = $this->query($sql);
 		return $rs[0];
+	}
+	
+	/**
+	 * 修改商品库存
+	 */
+	public function editStock(){
+		$rdata= array("status"=>-1);
+		$goodsId = (int)I("goodsId");
+		$stock = (int)I("stock");
+		$data = array();
+		$data["goodsStock"] = $stock;
+		
+		M('goods')->where("goodsId=$goodsId")->save($data);
+		$rdata["status"] = 1;
+		return $rdata;
+	}
+	
+	public function getKeyList(){
+		$keywords = I("keywords");
+		$m = M('goods');
+		$sql="select DISTINCT goodsName as searchKey from __PREFIX__goods where goodsStatus=1 and goodsFlag=1 and goodsName like '%$keywords%' Order by saleCount desc, goodsName asc limit 10";
+		$rs = $this->query($sql);
+		return $rs;
 	}
 }

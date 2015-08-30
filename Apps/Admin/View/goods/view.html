@@ -47,53 +47,9 @@
 				afterBlur: function(){ this.sync(); }
 			});
 		});
-	   <if condition="$object['goodsId'] !=0 ">
-	   getCatList("goodsCatId2",{$object.goodsCatId1},0,{$object.goodsCatId2});
-	   getCatList("goodsCatId3",{$object.goodsCatId2},1,{$object.goodsCatId3});
-	   getShopCatList({$object.shopCatId1},{$object.shopCatId2});
-	</if>
    });
-   function getCatList(objId,parentId,t,id){
-	   var params = {};
-	   params.id = parentId;
-	   $('#'+objId).empty();
-	   if(t<1){
-		   $('#goodsCatId3').empty();
-		   $('#goodsCatId3').html('<option value="">请选择</option>');
-	   }
-	   var html = [];
-	   $.post("{:U('Admin/goodsCats/queryByList')}",params,function(data,textStatus){
-		    html.push('<option value="">请选择</option>');
-			var json = WST.toJson(data);
-			if(json.status=='1' && json.list){
-				var opts = null;
-				for(var i=0;i<json.list.length;i++){
-					opts = json.list[i];
-					html.push('<option value="'+opts.catId+'" '+((id==opts.catId)?'selected':'')+'>'+opts.catName+'</option>');
-				}
-			}
-			$('#'+objId).html(html.join(''));
-	   });
-   }
-   function getShopCatList(v,id){
-	   var params = {};
-	   params.id = v;
-	   params.shopId = $('#shopId').val();
-	   $('#shopCatId2').empty();
-	   var html = [];
-	   $.post("{:U('Admin/ShopsCats/queryByList')}",params,function(data,textStatus){
-		    html.push('<option value="">请选择</option>');
-			var json = WST.toJson(data);
-			if(json.status=='1' && json.list){
-				var opts = null;
-				for(var i=0;i<json.list.length;i++){
-					opts = json.list[i];
-					html.push('<option value="'+opts.catId+'" '+((id==opts.catId)?'selected':'')+'>'+opts.catName+'</option>');
-				}
-			}
-			$('#shopCatId2').html(html.join(''));
-	   });
-   }
+   
+   
    function changeStatus(id,v){
 	   Plugins.waitTips({title:'信息提示',content:'正在操作，请稍后...'});
 	   $.post("{:U('Admin/Goods/changeGoodsStatus')}",{id:id,status:v},function(data,textStatus){
@@ -115,6 +71,7 @@
        <div id='tab' class="wst-tab-box">
 		<ul class="wst-tab-nav">
 	    	<li>商品信息</li>
+	    	<li>商品属性</li>
 	        <li>商品相册</li>
 	    </ul>
     	<div class="wst-tab-content" style='width:98%;'>
@@ -126,7 +83,7 @@
 	           <tr>
 	             <th width='120'>商品编号：</th>
 	             <td width='300'>
-	             <input type='text' id='goodsSn' name='goodsSn' class="form-control wst-ipt" value='{$object.goodsSn}' maxLength='25'/>
+	             {$object.goodsSn}
 	             </td>
 	             <td rowspan='6' style='padding:5px;'>
 	             <img id='goodsImgPreview' src='<if condition="$object['goodsImg'] =='' ">__ROOT__/Apps/Home/View/default/img/store_default_sign.png<else/>__ROOT__/{$object['goodsImg']}</if>' width='160' height='160'/><br/>
@@ -134,76 +91,49 @@
 	           </tr>
 	           <tr>
 	             <th width='120'>商品名称<font color='red'>*</font>：</th>
-	             <td><input type='text' id='goodsName' name='goodsName' class="form-control wst-ipt" value='{$object.goodsName}' maxLength='25'/></td>
+	             <td>{$object.goodsName}</td>
 	           </tr>
 	            <tr>
 	             <th width='120'>市场价<font color='red'>*</font>：</th>
-	             <td><input type='text' id='marketPrice' name='marketPrice' class="form-control wst-ipt" value='{$object.marketPrice}' maxLength='25'/></td>
+	             <td>{$object.marketPrice}</td>
 	           </tr>
 	            <tr>
 	             <th width='120'>门店价格<font color='red'>*</font>：</th>
-	             <td><input type='text' id='shopPrice' name='shopPrice' class="form-control wst-ipt" value='{$object.shopPrice}' maxLength='25'/></td>
+	             <td>{$object.shopPrice}</td>
 	           </tr>
 	            <tr>
 	             <th width='120'>商品库存<font color='red'>*</font>：</th>
-	             <td><input type='text' id='goodsStock' name='goodsStock' class="form-control wst-ipt" value='{$object.goodsStock}' maxLength='25'/></td>
+	             <td>{$object.goodsStock}</td>
 	           </tr>
 	            <tr>
 	             <th width='120'>单位<font color='red'>*</font>：</th>
-	             <td><input type='text' id='goodsUnit' name='goodsUnit' class="form-control wst-ipt" value='{$object.goodsUnit}' maxLength='25'/></td>
+	             <td>{$object.goodsUnit}</td>
 	           </tr>
 	           <tr>
 	             <th width='120'>商品信息：</th>
 	             <td colspan='3'>
-	             <textarea rows="2" cols="50" id='goodsSpec' name='goodsSpec'>{$object.goodsSpec}</textarea>
+	             {$object.goodsSpec}
 	             </td>
 	           </tr>
 	           <tr>
 	             <th width='120'>商品状态<font color='red'>*</font>：</th>
 	             <td colspan='3'>
-	             <label>
-	             <input type='radio' id='isSale1' name='isSale' <if condition="$object['isSale'] ==1 ">checked</if> value='1'/>上架
-	             </label>
-	             <label>
-	             <input type='radio' id='isSale0' name='isSale' <if condition="$object['isSale'] ==0 ">checked</if> value='0'/>下架
-	             </label>
+	             <if condition="$object['isSale'] ==1 ">上架</if>
+	             <if condition="$object['isSale'] ==0 ">下架</if>
 	             </td>
 	           </tr>
 	           <tr>
 	             <th width='120'>所属分类<font color='red'>*</font>：</th>
-	             <td colspan='3'>
-	             <select id='goodsCatId1' onchange='javascript:getCatList("goodsCatId2",this.value,0)'>
-	                <option value=''>请选择</option>
-	                <volist name="goodsCatsList" id="vo">
-	                <option value='{$vo['catId']}' <if condition="$object['goodsCatId1'] == $vo['catId'] ">selected</if>>{$vo['catName']}</option>
-	                </volist>
-	             </select>
-	             <select id='goodsCatId2' onchange='javascript:getCatList("goodsCatId3",this.value,1);'>
-	                <option value=''>请选择</option>
-	             </select>
-	             <select id='goodsCatId3'>
-	                <option value=''>请选择</option>
-	             </select>
-	             </td>
+	             <td colspan='3'>{$object.goodsCats.goodsName1}->{$object.goodsCats.goodsName2}->{$object.goodsCats.goodsName3}</td>
 	           </tr>
 	           <tr>
 	             <th width='120'>门店分类<font color='red'>*</font>：</th>
-	             <td colspan='3'>
-	             <select id='shopCatId1' onchange='javascript:getShopCatList(this.value,"{$object['shopCatId2']}")'>
-	                <option value='0'>请选择</option>
-	                <volist name="shopCatsList" id="vo">
-	                <option value='{$vo['catId']}' <if condition="$object['shopCatId1'] == $vo['catId'] ">selected</if>>{$vo['catName']}</option>
-	                </volist>
-	             </select>
-	             <select id='shopCatId2'>
-	                <option value='0'>请选择</option>
-	             </select>
-	             </td>
+	             <td colspan='3'>{$object.shopCats.goodsName1}->{$object.shopCats.goodsName2}</td>
 	           </tr>
 	           <tr>
 	             <th width='120'>商品描述<font color='red'>*</font>：</th>
 	             <td colspan='3'>
-	             <textarea rows="2" cols="50" id='goodsDesc' name='goodsDesc'>{$object.goodsDesc}</textarea>
+	             {$object.goodsDesc|htmlspecialchars_decode}
 	             </td>
 	           </tr>
 	           <tr>
@@ -214,6 +144,58 @@
 	           </tr>
 	        </table>
 	       </form>
+	      </div>
+	      <div class='wst-tab-item'>
+	        <table class="table table-hover table-striped table-bordered wst-form">
+	           <tr>
+	             <th width='120'>商品分类：</th>
+	             <td>{$object.attrCatName}&nbsp;</td>
+	           </tr>
+	           <tr>
+	             <th width='120'>价格属性：</th>
+	             <td style='margin:0px;'>
+	             <if condition=" count($object.priceAttrs) gt 0">
+					<table class="table wst-list" style='margin:0px;border-top:1px solid #ddd;'>
+					<thead>
+					<tr>
+					  <th style='background:#f5f5f5'>属性</th>
+					  <th style='background:#f5f5f5'>规格</th>
+					  <th style='background:#f5f5f5'>价格</th>
+					  <th style='background:#f5f5f5'>推荐</th>
+					  <th style='background:#f5f5f5'>库存</th>
+					</tr>
+					</thead>
+					<volist name="object.priceAttrs" id="vo">
+					<tr style='margin:0px;'>
+						<td nowrap width='100px'>{$object.priceAttrName}</td>
+						<td>{$vo['attrVal']}</td>
+						<td>{$vo['attrPrice']}</td>
+						<td><if condition="$vo.isRecomm eq 1">是</if></td>
+						<td>{$vo['attrStock']}</td>
+					</tr>
+					</volist>
+					</table>
+				 </if>
+	             </td>
+	           </tr>
+	           <tr>
+	             <th width='120' valign='top'>展示属性：</th>
+	             <td style='margin:0px;'>
+	             <if condition=" count($object.attrs) gt 0">
+					<table class="table  wst-form" style='margin:0px;'>
+					<volist name="object.attrs" id="vo">
+					<if condition="$vo['attrContent'] !='' ">
+					<tr style='margin:0px;border:0px;'>
+						<th nowrap width='100px'>{$vo['attrName']}：</th>
+						<td>{$vo['attrContent']}</td>
+					</tr>
+					</if>
+					</volist>
+					</table>
+				 </if>
+	             </td>
+	           </tr>
+	        </table>
 	      </div>
 	      <div class='wst-tab-item'>
 	       <div id='galleryImgs' class='wst-gallery-imgs'>

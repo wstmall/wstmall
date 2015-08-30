@@ -60,7 +60,7 @@
 									</volist>
 								</div>
 								 待付金额：<span class="wst-ods-success-ti">￥{$needPay}</span> 元
-								 <div style="margin-top: 15px;border:1px dotted #dddddd;padding:10px;">
+								 <div style="border:1px dotted #dddddd;padding:10px;">
 								 	<div style="width:80px;float:left;">支付方式：</div>
 								 	<div style="width:700px;float:left;">
 								 	<volist name="payments" key="key" id="payment">
@@ -77,8 +77,7 @@
 								 </div>
 	   							<else/>
 	   								<div class="wst-ods-success-tj">
-	   								购物袋空空如也，<br/>
-									快去抢购心仪商品吧~
+	   								您的订单已支付!
 									</div>
 	   							</if>
 	   						</div>							
@@ -105,9 +104,11 @@
 	<include file="./Apps/Home/View/default/footer.html" />
 	
 	<script src="__PUBLIC__/js/common.js"></script>
+	<script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
   	<script src="__ROOT__/Apps/Home/View/default/js/index.js"></script>      	
  	<script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
 	<script src="__ROOT__/Apps/Home/View/default/js/orders.js"></script>
+	
 	<script type="text/javascript">
 	$(document).ready(function(){
 		if($(".wst-payCode")[0])$(".wst-payCode")[0].click();

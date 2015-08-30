@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50520
 File Encoding         : 65001
 
-Date: 2015-08-11 14:10:03
+Date: 2015-08-28 23:21:59
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -4262,6 +4262,8 @@ CREATE TABLE `wst_order_goods` (
   `goodsPrice` float(11,1) NOT NULL DEFAULT '0.0',
   `goodsAttrId` int(11) DEFAULT '0',
   `goodsAttrName` varchar(255) DEFAULT '',
+  `goodsName` varchar(50) DEFAULT NULL,
+  `goodsThums` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `goodsId` (`goodsId`),
   KEY `orderId` (`orderId`)
@@ -4440,10 +4442,10 @@ CREATE TABLE `wst_shops` (
   `shopImg` varchar(150) NOT NULL,
   `shopTel` varchar(20) DEFAULT NULL,
   `shopAddress` varchar(255) NOT NULL,
-  `avgeCostMoney` float NOT NULL DEFAULT '0',
-  `deliveryStartMoney` float NOT NULL DEFAULT '0',
-  `deliveryMoney` float NOT NULL DEFAULT '0',
-  `deliveryFreeMoney` float NOT NULL DEFAULT '0',
+  `avgeCostMoney` float(11,1) DEFAULT '0.0',
+  `deliveryStartMoney` float(11,1) DEFAULT '0.0',
+  `deliveryMoney` float(11,1) DEFAULT '0.0',
+  `deliveryFreeMoney` float(11,1) DEFAULT '0.0',
   `deliveryCostTime` int(11) NOT NULL DEFAULT '0',
   `deliveryTime` varchar(255) NOT NULL,
   `deliveryType` tinyint(4) NOT NULL DEFAULT '0',
@@ -4458,6 +4460,9 @@ CREATE TABLE `wst_shops` (
   `shopAtive` tinyint(4) NOT NULL DEFAULT '1',
   `shopFlag` tinyint(4) NOT NULL DEFAULT '1',
   `createTime` datetime NOT NULL,
+  `latitude` char(30) DEFAULT '0',
+  `longitude` char(30) DEFAULT '0',
+  `mapLevel` int(11) DEFAULT '13',
   PRIMARY KEY (`shopId`),
   KEY `areaId1` (`areaId2`) USING BTREE,
   KEY `shopStatus` (`shopStatus`,`shopFlag`) USING BTREE
@@ -4551,12 +4556,12 @@ CREATE TABLE `wst_sys_configs` (
   `fieldType` char(10) DEFAULT NULL COMMENT '字段类型',
   `valueRangeTxt` varchar(255) DEFAULT NULL COMMENT '范围值名称',
   `valueRange` varchar(255) DEFAULT NULL COMMENT '范围值',
-  `fieldValue` varchar(255) DEFAULT NULL COMMENT '字段值',
+  `fieldValue` text,
   `fieldTips` varchar(255) DEFAULT NULL COMMENT '字段提示',
   `fieldSort` int(11) DEFAULT '0' COMMENT '字段排序',
   PRIMARY KEY (`configId`),
   KEY `parentId` (`parentId`)
-) ENGINE=MyISAM AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of wst_sys_configs
@@ -4586,6 +4591,8 @@ INSERT INTO `wst_sys_configs` VALUES ('25', '0', '授权码', 'mallLicense', 'hi
 INSERT INTO `wst_sys_configs` VALUES ('26', '0', '商城Logo', 'mallLogo', 'upload', null, null, 'Apps/Home/View/default/images/logo.png', '(建议为240x132)<br/>', '7');
 INSERT INTO `wst_sys_configs` VALUES ('27', '0', '默认图片', 'goodsImg', 'upload', null, null, 'Apps/Home/View/default/images/item-pic.jpg', '', '8');
 INSERT INTO `wst_sys_configs` VALUES ('28', '0', '底部设置', 'mallFooter', 'textarea', null, null, 'CROPYRIGHT 2013-2015 广州晴暖信息科技有限公司 版权所有  电话：020-29806661&lt;br/&gt;公司邮箱：wasonteam@163.com  客服QQ:707563272  粤ICP备13014375号&lt;br/&gt;我们愿与更多中小企业一起努力，一起成功 We Success together', null, '9');
+INSERT INTO `wst_sys_configs` VALUES ('29', '0', '联系电话', 'phoneNo', 'text', null, null, '020-29806661', null, '10');
+INSERT INTO `wst_sys_configs` VALUES ('30', '0', 'QQ', 'qqNo', 'text', null, null, '707563272', null, '11');
 
 -- ----------------------------
 -- Table structure for `wst_user_address`
