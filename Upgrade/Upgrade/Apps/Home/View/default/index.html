@@ -37,7 +37,7 @@
 					style="position: absolute; top: 40px; width: 210px; height: 275px;">
 					<volist name="catAds[$vo1['catId']]" id="vo" key="kv"> 
 					<a onclick="addAccess({$vo['adId']})" href="{$vo['adURL']}" target="_blank"> 
-						<img data-original="__ROOT__/{$vo['adFile']}" height="275" width="210" title="{$vo['adName']}" />
+						<img class='lazyImg' data-original="__ROOT__/{$vo['adFile']}" height="275" width="210" title="{$vo['adName']}" />
 					</a> 
 					</volist>
 				</div>
@@ -78,7 +78,7 @@
 							<div class="wst-goods-thumb">
 								<a
 									href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo2['goodsId']))}">
-									<img data-original="__ROOT__/{$vo2['goodsThums']}" width="180" />
+									<img class='lazyImg' data-original="__ROOT__/{$vo2['goodsThums']}" width="180" />
 								</a>
 							</div>
 							<div class="wst-goods-thumb-des">
@@ -108,7 +108,7 @@
 							<div class="wst-goods-thumb">
 								<a
 									href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo3[goodsId]))}">
-									<img data-original="__ROOT__/{$vo3['goodsThums']}" width="180" />
+									<img class='lazyImg' data-original="__ROOT__/{$vo3['goodsThums']}" width="180" />
 								</a>
 							</div>
 							<div class="wst-goods-thumb-des">
@@ -137,7 +137,7 @@
 							<div style="width: 180px;">
 								<a
 									href="{:U('Home/Shops/toShopHome/',array('shopId'=>$vo2['shopId']))}">
-									<img  data-original="__ROOT__/{$vo2['shopImg']}" height="120" width="180" />
+									<img class='lazyImg' data-original="__ROOT__/{$vo2['shopImg']}" height="120" width="180" />
 								</a>
 							</div>
 						</div>

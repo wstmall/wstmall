@@ -4,7 +4,7 @@ $.browser.webkit = /webkit/.test(navigator.userAgent.toLowerCase());
 $.browser.opera = /opera/.test(navigator.userAgent.toLowerCase()); 
 $.browser.msie = /msie/.test(navigator.userAgent.toLowerCase());
 var WST = {};
-WST.v = '1.3.0';
+WST.v = '1.3.1';
 WST.pageHeight = function(){
 	if($.browser.msie){ 
 		return document.compatMode == "CSS1Compat"? document.documentElement.clientHeight : 
@@ -162,7 +162,7 @@ WST.getWSTMAllVersion = function(url){
  	var srcElement = e.srcElement || e.target;	
  	var charCode = (evt.which) ? evt.which : event.keyCode;
 
- 	if((charCode>=48 && charCode<=57) || (charCode>=65 && charCode<=90) || (charCode>=97 && charCode<=122) || charCode==8 || charCode ==46){
+ 	if((charCode>=48 && charCode<=57) || (charCode>=65 && charCode<=90) || (charCode>=97 && charCode<=122) || charCode==8){
  		return true;
  	}else{		
  		return false;
@@ -180,6 +180,18 @@ WST.isChinese = function(obj,isReplace){
  
  Number.prototype.toFixed = function(exponent){ 
       return parseInt(this * Math.pow(10, exponent)+0.5 )/Math.pow(10,exponent);
+ }
+ 
+//用户名判断 （可输入"_",".","@", 数字，字母）
+ WST.isUserName = function(evt){
+ 	var e = evt || window.event; 
+ 	var srcElement = e.srcElement || e.target;	
+ 	var charCode = (evt.which) ? evt.which : event.keyCode;
+ 	if((charCode==95 || charCode==46 || charCode==64) || (charCode>=48 && charCode<=57) || (charCode>=65 && charCode<=90) || (charCode>=97 && charCode<=122) || charCode==8){
+ 		return true;
+ 	}else{		
+ 		return false;
+ 	}
  }
  
 WST.isEmail =function(v){
@@ -427,4 +439,25 @@ WST.replaceURL = function(url,ar){
 	}else{
 		return url.replace('__0',ar);
 	}
+}
+/**
+ * 截取字符串
+ */
+WST.cutStr = function (str,len)
+{
+	if(!str || str=='')return '';
+	var strlen = 0;
+	var s = "";
+	for(var i = 0;i < str.length;i++)
+	{
+		if(strlen >= len){
+			return s + "...";
+		}
+		if(str.charCodeAt(i) > 128)
+			strlen += 2;
+		else
+			strlen++;
+		s += str.charAt(i);
+	}
+	return s;
 }

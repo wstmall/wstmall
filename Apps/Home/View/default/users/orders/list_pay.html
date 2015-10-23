@@ -57,11 +57,11 @@
                	<td width='130' style="line-height:20px;">
                		<a href="javascript:;" onclick="toPay({$order['orderId']})">支付</a> |
 					<a href="javascript:;" onclick="showOrder({$order['orderId']})">查看</a> | 
-					<a href="javascript:;" onclick="orderCancel({$order['orderId']})">取消订单</a>
+					<a href="javascript:;" onclick="orderCancel({$order['orderId']},-2)">取消订单</a>
 				</td>
              </tr>
              </volist>
-             <if condition="$receiveOrders['totalPage'] gt 1">
+             <if condition="$payOrders['totalPage'] gt 1">
              <tfoot>
              <tr>
                 <td colspan='8' align='center' style="height:30px;border-bottom: 0px;">
@@ -76,13 +76,13 @@
            </tbody>
         </table>
         </div>
-    </div>
+    </div>{$receiveOrders['totalPage']}
     <script>
-    <if condition="$receiveOrders['totalPage'] gt 1">
+    <if condition="$payOrders['totalPage'] gt 1">
     $(document).ready(function(){
 		laypage({
 		    cont: 'wst-page-items',
-		    pages: {$receiveOrders['totalPage']}, //总页数
+		    pages: {$payOrders['totalPage']}, //总页数
 		    skip: true, //是否开启跳页
 		    skin: '#e23e3d',
 		    groups: 3, //连续显示分页数

@@ -3,7 +3,7 @@
 						<volist name="hotgoods" key="k" id="vo">
 						<div class="hotsale-goods-box">
 							<div class="hotsale-goods-img">
-								<img data-original="__ROOT__/{$vo['goodsThums']}" width="65" height="65" />
+								<img class='lazyImg' data-original="__ROOT__/{$vo['goodsThums']}" width="65" height="65" />
 							</div>
 							<div class="hotsale-goods-title">
 								<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo['goodsId']))}">{$vo['goodsName']}</a>

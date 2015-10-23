@@ -106,6 +106,7 @@ class ShopsModel extends BaseModel {
 		$sdata["isInvoice"] = (int)I("isInvoice",0);
 		$sdata["serviceStartTime"] = I("serviceStartTime");
 		$sdata["serviceEndTime"] = I("serviceEndTime");
+		$sdata["shopTel"] = I("shopTel");
 		if($this->checkEmpty($data,true) && $this->checkEmpty($sdata,true)){ 
 			$data["userStatus"] = 1;
 			$data["userType"] = 0;
@@ -120,12 +121,12 @@ class ShopsModel extends BaseModel {
 		        $sdata["deliveryMoney"] = (float)I("deliveryMoney",0);
 		        $sdata["avgeCostMoney"] = (float)I("avgeCostMoney",0);
 		        $sdata["invoiceRemarks"] = I("invoiceRemarks");
-		        $sdata["shopTel"] = I("shopTel");
+		        $sdata["qqNo"] = I("qqNo");
 				$sdata["shopStatus"] = 0;
 				$sdata["shopAtive"] = I("shopAtive",1);
 				$sdata["shopFlag"] = 1;
 				$sdata["createTime"] = date('Y-m-d H:i:s');
-			    $sdata["shopTel"] = I("shopTel");
+			   
 				$m = M('shops');
 				$shopId = $m->add($sdata);
 				if(false !== $shopId){
@@ -227,8 +228,9 @@ class ShopsModel extends BaseModel {
 		        $data["longitude"] = I("longitude");
 		        $data["mapLevel"] = (int)I("mapLevel",13);
 				$data["createTime"] = date('Y-m-d H:i:s');
+				$data["shopTel"] = I("shopTel");
 			    if($this->checkEmpty($data,true)){
-			    	$data["shopTel"] = I("shopTel");
+			    	$data["qqNo"] = I("qqNo");
 			    	$data["invoiceRemarks"] = I("invoiceRemarks");
 					$m = M('shops');
 					$shopId = $m->add($data);
@@ -304,9 +306,12 @@ class ShopsModel extends BaseModel {
 		$data["serviceStartTime"] = I("serviceStartTime");
 		$data["serviceEndTime"] = I("serviceEndTime");
 		$data["shopAtive"] = I("shopAtive",1);
+		$data["shopTel"] = I("shopTel");
+		$data["bankId"] = I("bankId");
+		$data["bankNo"] = I("bankNo");
 		
 		if($this->checkEmpty($data,true)){
-			$data["shopTel"] = I("shopTel");
+			$data["qqNo"] = I("qqNo");
 			$data["invoiceRemarks"] = I("invoiceRemarks");
 			$rs = $m->where("shopId=".$shopId)->save($data);
 		    if(false !== $rs){
@@ -556,6 +561,7 @@ class ShopsModel extends BaseModel {
 		$communityId = $obj["communityId"];
 		$shopName = $obj["shopName"];
 		$keyWords = I("keyWords");
+		$pcurr = I("curr");
 		$deliveryStartMoney = $obj["deliveryStartMoney"];
 		if($deliveryStartMoney != -1){
 			$deliverys = explode("-",$deliveryStartMoney);
@@ -603,7 +609,7 @@ class ShopsModel extends BaseModel {
 		if($shopAtive!="" && $shopAtive >=0){
 			$sql .= " AND shopAtive = $shopAtive";
 		}
-		$dslist = $this->query($sql);
+		$dslist = $this->pageQuery($sql,$pcurr);
 		
 		return $dslist;
 	}
@@ -651,13 +657,13 @@ class ShopsModel extends BaseModel {
 		$data["waitSendOrderCnt"] = $orders["cnt"];
 		
 		//待结束
-		$sql = "SELECT count(*) cnt FROM __PREFIX__orders WHERE shopId = $shopId AND orderStatus = 4 and orderFlag=1";
+		$sql = "SELECT count(*) cnt FROM __PREFIX__orders WHERE shopId = $shopId AND orderStatus in (3,-3) and orderFlag=1";
 		$appOrders = $this->queryRow($sql);
 		$data["appraisesOrderCnt"] = $appOrders["cnt"];
 		
 		//周订单量
 		$wdate=date("Y-m-d",mktime(0,0,0,date("m"),date("d")-7,date("Y")));
-		$sql = "SELECT count(*) cnt, sum(totalMoney) totalMoney FROM __PREFIX__orders WHERE shopId = $shopId AND createTime >='$wdate' and orderFlag=1 ";
+		$sql = "SELECT count(*) cnt, sum(totalMoney) totalMoney FROM __PREFIX__orders WHERE shopId = $shopId AND createTime >='$wdate' and orderFlag=1 and orderStatus>=0 ";
 		$orders = $this->queryRow($sql);
 		$data["weekOrderCnt"] = $orders["cnt"];
 		$data["weekOrderMoney"] = $orders["totalMoney"]?$orders["totalMoney"]:0;
@@ -665,7 +671,7 @@ class ShopsModel extends BaseModel {
 		
 		//一个月订单量
 		$mdate=date("Y-m-d",mktime(0,0,0,date("m")-1,date("d"),date("Y")));
-		$sql = "SELECT count(*) cnt, sum(totalMoney) totalMoney FROM __PREFIX__orders WHERE shopId = $shopId AND createTime >='$mdate' and orderFlag=1 ";
+		$sql = "SELECT count(*) cnt, sum(totalMoney) totalMoney FROM __PREFIX__orders WHERE shopId = $shopId AND createTime >='$mdate' and orderFlag=1 and orderStatus>=0 ";
 		$orders = $this->queryRow($sql);
 		$data["monthOrderCnt"] = $orders["cnt"];
 		$data["monthOrderMoney"] = $orders["totalMoney"]?$orders["totalMoney"]:0;

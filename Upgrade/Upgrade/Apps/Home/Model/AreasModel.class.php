@@ -68,6 +68,7 @@ class AreasModel extends BaseModel {
 	   * 获取省份列表
 	   */
 	  public function getProvinceList(){
+	  	$rs = array();
 	  	$rslist = $this->cache('WST_CACHE_CITY_001',31536000)->where('isShow=1 AND areaFlag = 1 AND areaType=0')->field('areaId,areaName')->order('parentId, areaSort')->select();
 	  	foreach ($rslist as $key =>$row){
 	  		$rs[$row["areaId"]] = $row;
@@ -79,6 +80,7 @@ class AreasModel extends BaseModel {
 	   * 获取所有城市-根据字母分类
 	   */
 	  public function getCityGroupByKey(){
+	  	$rs = array();
 	  	$rslist = $this->cache('WST_CACHE_CITY_000',31536000)->where('isShow=1 AND areaFlag = 1 AND areaType=1')->field('areaId,areaName,areaKey')->order('areaKey, areaSort')->select();
 	  	foreach ($rslist as $key =>$row){
 	  		$rs[$row["areaKey"]][] = $row;
@@ -90,6 +92,7 @@ class AreasModel extends BaseModel {
 	   * 通过省份获取城市列表
 	   */
 	  public function getCityListByProvince($provinceId = 0){
+	  	$rs = array();
 	  	$rslist = $this->cache('WST_CACHE_CITY_002_'.$provinceId,31536000)->where('isShow=1 AND areaFlag = 1 AND areaType=1 AND parentId='.$provinceId)->field('areaId,areaName')->order('parentId, areaSort')->select();
 	  	foreach ($rslist as $key =>$row){
 	  		$rs[] = $row;
@@ -127,10 +130,10 @@ class AreasModel extends BaseModel {
 	  			if($rs[0]["areaId"]>0){
 	  				$areaId2 = $rs[0]["areaId"];
 	  			}else{
-	  				$areaId2 = C(DEFAULT_CITY);
+	  				$areaId2 = $GLOBALS['CONFIG']['defaultCity'];
 	  			}
 	  		}else{
-	  			$areaId2 = C(DEFAULT_CITY);
+	  			$areaId2 = $GLOBALS['CONFIG']['defaultCity'];
 	  		}
 	  	}
 	  	session('areaId2',$areaId2);

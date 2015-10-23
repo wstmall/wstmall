@@ -23,12 +23,34 @@
    var ThinkPHP = window.Think = {
 	        "ROOT"   : "__ROOT__"
 	}
+   function getAreaList(parentId){
+	   var params = {};
+	   params.parentId = parentId;
+	   var id = $('#defaultCity_hidden').val();
+	   $('#defaultCity').empty();
+	   var html = [];
+	   $.post("{:U('Admin/Areas/queryByList')}",params,function(data,textStatus){
+		    html.push('<option value="">请选择</option>');
+			var json = WST.toJson(data);
+			if(json.status=='1' && json.list.length>0){
+				var opts = null;
+				for(var i=0;i<json.list.length;i++){
+					opts = json.list[i];
+					html.push('<option value="'+opts.areaId+'" '+((id==opts.areaId)?'selected':'')+'>'+opts.areaName+'</option>');
+				}
+			}
+			$('#defaultCity').html(html.join(''));
+	   });
+   }
    var filetypes = ["gif","jpg","png","jpeg"];
       $(function(){
     	  $('#myTab a').click(function (e) {
     		  e.preventDefault();
     		  $(this).tab('show');
     	  });
+    	  <PHP>if($areaId1!=0){</PHP>
+     	   getAreaList('{$areaId1}');
+     	  <PHP>}</PHP>  
     	  <PHP>if($CONF['mallLicense']==''){</PHP>
     	  //$('#mallCopyright').attr('disabled',true);
     	  <PHP>}</PHP>
@@ -51,6 +73,10 @@
     		<php>}else{</php>
     			params.{$vo['fieldCode']} = $.trim($('#{$vo['fieldCode']}').val());
     		<php>}}}</php>
+    		if(params.defaultCity==''){
+    			Plugins.Tips({title:'信息提示',icon:'error',content:'请选择商城的默认城市!',timeout:1000});
+    			return;
+    		}
     		Plugins.waitTips({title:'信息提示',content:'正在提交数据，请稍后...'});
     		$.post("{:U('Admin/index/saveMallConfig')}",params,function(data,textStatus){
     			var json = WST.toJson(data);
@@ -100,9 +126,20 @@
 			         </php>{$v['fieldTips']}
                      <php>}else if($v['fieldType']=='textarea'){</php>
                      <textarea id='{$v["fieldCode"]}' autocomplete="off" name='{$vo["fieldCode"]}' style='width:400px;height:100px;'>{$v['fieldValue']}</textarea>{$v['fieldTips']}
+                     <php>}else if($v['fieldType']=='other'){</php>
+                     <php>if($v['fieldCode']=='defaultCity'){</php>
+                     <select name='areaId1' id='areaId1' onchange='javascript:getAreaList(this.value)'>
+			             <option value=''>请选择</option>
+			             <volist name="areaList" id="vo">
+			             <option value='{$vo['areaId']}' <if condition="$areaId1 == $vo['areaId'] ">selected</if>>{$vo['areaName']}</option>
+			             </volist>
+			         </select>
+			         <select name='defaultCity' id='defaultCity'>
+			             <option value=''>请选择</option>
+			          </select>
+			          <input id='defaultCity_hidden' type='hidden' value='{$v['fieldValue']}'/>
+                     <php>}</php>
                      <php>}else if($v['fieldType']=='upload'){</php>
-                     
-                     
                        	<form id="uploadform_{$v['fieldCode']}p" autocomplete="off" enctype="multipart/form-data" method="POST" target="upload" action="{:U('Home/Shops/uploadPic')}" >
 							<div style="position:relative;">
 							<input id="{$v['fieldCode']}"  name="{$v['fieldCode']}" class="form-control wst-ipt" type="text" value="{$v['fieldValue']}" readonly style="margin-right:4px;float:left;margin-left:8px;width:250px;"/>

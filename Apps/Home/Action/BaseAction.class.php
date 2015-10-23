@@ -181,7 +181,7 @@ class BaseAction extends Controller {
 		$rs = $upload->upload($_FILES);
 		$Filedata = key($_FILES);
 		if(!$rs){
-			$this->error($upload->getErrorMsg());
+			$this->error($upload->getError());
 		}else{
 			$images = new \Think\Image();
 			$images->open('./Upload/'.$rs[$Filedata]['savepath'].$rs[$Filedata]['savename']);

@@ -566,9 +566,14 @@ a:hover {
 .wst-star p{position:absolute;top:20px;width:159px;height:60px;display:none;background:url(../../../View/default/images/icon.gif) no-repeat;padding:7px 10px 0;}
 .wst-star p em{color:#f60;display:block;font-style:normal;}
 
-.wst-btn-query{border:1px solid #ffffff;height:30px;width:60px;background-color:#e23e3d;color:#ffffff;cursor: pointer;margin:2px;}
+.wst-btn-query{border: 1px solid #ff0080;height:30px;width:60px;background-color:#e23e3d;color:#ffffff;border-radius: 2px;cursor: pointer;margin:2px;}
 .wst-state_yes{display:block;width:13px;height:13px;background-image: url("../../../View/default/images/icon_state_yes.png");}
 .wst-state_no{display:block;width:13px;height:13px;background-image: url("../../../View/default/images/icon_state_no.png");}
+
+button:hover{
+	background: none repeat scroll 0 0 #ff0000;
+    border: 1px solid #ff0080;
+}
 
 .wst-footer{
 	text-align:center;line-height:25px;width:1210px;margin:0 auto;
@@ -990,7 +995,9 @@ b, strong {
 .wst-article-main{width: 975px;float: right;border: 1px solid #40CCF5;padding: 4px;}
 .wst-article-main .title{padding-left:4px;font-size: 15px;font-weight: bold;line-height: 30px;background-color:#F7F7F7}
 .wst-article-main .content{padding-left:4}
-
+#wst-hotsearch-keys{line-height:28px;padding-left:20px;color:#6C6C6C;}
+#wst-hotsearch-keys a{color:#6C6C6C;}
+#wst-hotsearch-keys a:hover{color:red;font-weight:bold;text-decoration: none;}
 
 /*************************************footer***********************************************/
 .wst-footer-fl-box{text-align:center;margin-top:45px;}
@@ -1062,17 +1069,18 @@ b, strong {
     width: 152px;
 }
 .div1{ 
-	background: #eeecdb none repeat scroll 0 0;
-    border: 1px solid #003c74;
+	background: #E23E3D none repeat scroll 0 0;
+    border: 1px solid #ff0080;
     border-radius: 2px;
+    color:#ffffff;
     float: left;
     height: 25px;
     position: relative;
     top: 3px;
     width: 45px; }
 .div1:hover{
-	background: none repeat scroll 0 0 #dfefef;
-    border: 1px solid #003C74;
+	background: none repeat scroll 0 0 #ff0000;
+    border: 1px solid #ff0080;
     border-radius: 2px;
     float: left;
     height: 25px;
@@ -1096,5 +1104,32 @@ b, strong {
     width: 45px;
 }
 .statusBar{padding-left:10px;}
-
+.wst-msg-tips-box {
+    background-color: #f0a869;
+    border-radius: 12px;
+    color: white;
+    cursor: pointer;
+    display: inline-block;
+    height: 24px;
+    left: 30px;
+    line-height: 24px;
+    position: relative;
+    text-align: center;
+    top: 0;
+    width: 24px;
+}
+.wst-order-tips-box {
+    background-color: #f0a869;
+    border-radius: 12px;
+    color: white;
+    cursor: pointer;
+    display: inline-block;
+    height: 24px;
+    left: 30px;
+    line-height: 24px;
+    margin-left: 2px;
+    text-align: center;
+    top: 0;
+    width: 24px;
+}
 

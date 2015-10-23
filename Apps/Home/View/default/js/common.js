@@ -1,7 +1,7 @@
 
 
 $(function() {
-	checkCart();
+	
 	//head 弹出菜单部分
     var cateMenu2 = function () {
         var cateLiNum = $(".cateMenu2 li").length;
@@ -40,6 +40,15 @@ $(function() {
 		})
 
     } ();
+    
+    $("#wst-nvg-cat-box").hover(function() {
+    	$(".wst-nvg-cat-gt6").show();
+    	$(".wst-nvg-cat-dw").hide();
+	}, function() {
+		$(".wst-nvg-cat-gt6").hide();
+		$(".wst-nvg-cat-dw").show();
+	});
+    
 	$("#wst-nvg-cart").mouseover(function(){
 		checkCart();
 	});
@@ -79,6 +88,7 @@ $(function() {
 		if(view.scrollTop()>500){
 			if(!$("#mainsearchbox").hasClass("wst-fixedsearch")){
 				$("#wst-search-type-box").hide();
+				$("#wst-hotsearch-keys").hide();
 				$("#wst-logo").height(60);
 				$("#wst-searchbox").css({"margin-top":"10px"});
 				$("#wst-search-des-container .des-box").css({"margin-top":"10px"});
@@ -88,6 +98,7 @@ $(function() {
 			if($("#wst-logo").height()<132){
 				//$("#mainsearchbox").removeClass("wst-fixedsearch").animate({height:0},1000);
 				$("#wst-search-type-box").show();
+				$("#wst-hotsearch-keys").show();
 				$("#wst-logo").height(132);
 				$("#wst-searchbox").css({"margin-top":"60px"});
 				$("#wst-search-des-container .des-box").css({"margin-top":"50px"});
@@ -243,16 +254,8 @@ function getSearchInfo(obj,event){
 			}
 			$(obj).val($(currobj).html());
 		}	
-	}else if(event.which == 13){			
-		var params = {};
-		params.keywords = keywords;		
-		$("#"+vdata+"_box").append("<div style='position:relative;border:1px solid #E9E5E1;margin-top:2px;'><div class='"+vdata+"_op_record'>"+keywords+"</div><span onClick='removeOpt(this);' style='cursor:pointer;position:absolute;top:-5px;font-size:10px;right:2px;'>x</span></div>");
-		$(obj).val("");
-		$("#"+lsobjId).hide();
-		$("#"+lsobjId).html("");
-		if(params.keywords!=""){				
-			
-		}
+	}else if(event.which == 13){		
+		optSelect();
 	}else{			
 		var params = {};
 		params.keywords = keywords;

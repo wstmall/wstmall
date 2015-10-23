@@ -76,12 +76,10 @@ dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
 			}).inputValidator({
 				min:5,max:50,onError:"登录密码长度应该为5-20位之间"
 			});
-		$("#userPhone").inputValidator({min:0,max:11,onError:"你输入的手机号码非法,请确认"}).regexValidator({
-			regExp:"mobile",dataType:"enum",onError:"手机号码格式错误"
-		}).ajaxValidator({
+		$("#userPhone").inputValidator({min:11,max:11,onError:"你输入的手机号码非法,请确认"}).ajaxValidator({
 			dataType : "json",
 			async : true,
-			url : "{:U('Admin/Users/checkLoginKey',array('id'=>$object.userId))}",
+			url : "{:U('Admin/Users/checkLoginKey',array('id'=>$object['userId']))}",
 			success : function(data){
 				var json = WST.toJson(data);
 	            if( json.status == "1" ) {
@@ -99,11 +97,12 @@ dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
 		$("#shopName").formValidator({onShow:"",onFocus:"店铺名称不能超过20个字符",onCorrect:"输入正确"}).inputValidator({min:1,max:20,onError:"店铺名称不符合要求,请确认"});
 		$("#userName").formValidator({onShow:"",onFocus:"请输入店主姓名",onCorrect:"输入正确"}).inputValidator({min:1,max:20,onError:"店主姓名不能为空,请确认"});
 		$("#shopCompany").formValidator({onShow:"",onFocus:"请输入公司名称",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"公司名称不能为空,请确认"});
+		$("#shopTel").formValidator({onShow:"",onFocus:"请输入店铺电话",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"店铺电话不能为空,请确认"});
 		$("#shopAddress").formValidator({onShow:"",onFocus:"请输入店铺地址",onCorrect:"输入正确"}).inputValidator({min:1,max:120,onError:"店铺地址不能为空,请确认"});
 		$("#areaId3").formValidator({onFocus:"请选择所属地区"}).inputValidator({min:1,onError: "请选择所属地区"});
 		$("#goodsCatId1").formValidator({onFocus:"请选择所属行业"}).inputValidator({min:1,onError: "请选择所属行业"});
 		$("#bankId").formValidator({onFocus:"请选择所属银行"}).inputValidator({min:1,onError: "请选择所属银行"});
-		$("#bankNo").formValidator({onShow:"",onFocus:"请输入银行卡号",onCorrect:"输入正确"}).inputValidator({min:16,max:19,onError:"银行卡号格式错误,请确认"}) .functionValidator({fun:luhmCheck,onError:"请输入正确的银行卡号！"});;
+		$("#bankNo").formValidator({onShow:"",onFocus:"请输入银行卡号",onCorrect:"输入正确"}).inputValidator({min:16,max:19,onError:"银行卡号格式错误,请确认"});
 	
 		$("#serviceStartTime").formValidator({onShow:"",onFocus:"请选择营业时间"}).inputValidator({min:1,max:50,onError:"请选择营业时间"});
 		$("#serviceEndTime").formValidator({onShow:"",onFocus:"请选择营业时间"}).inputValidator({min:1,max:50,onError:"请选择营业时间"});
@@ -193,9 +192,10 @@ dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
 	   }
 	   shopMap.plugin(["AMap.ToolBar"],function(){		
 			toolBar = new AMap.ToolBar();
-			shopMap.addControl(toolBar);		
+			shopMap.addControl(toolBar);	
+			toolBar.show();
 	   });
-	   toolBar.show();
+	   
 	   AMap.event.addListener(shopMap,'click',function(e){
 			shopMap.clearMap();
 			$('#longitude').val(e.lnglat.getLng());
@@ -322,6 +322,7 @@ dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
 		   return;
 	   }
 	   params.shopTel = $('#shopTel').val();
+	   params.qqNo = $('#qqNo').val();
 	   params.shopAddress = $('#shopAddress').val();
 	   params.deliveryFreeMoney = $('#deliveryFreeMoney').val();
 	   params.deliveryMoney = $('#deliveryMoney').val();
@@ -475,8 +476,12 @@ dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
              </td>
            </tr>
            <tr>
-             <th align='right'>店铺电话：</th>
+             <th align='right'>店铺电话<font color='red'>*</font>：</th>
              <td><input type='text' id='shopTel' class="form-control wst-ipt" value='{$object.shopTel}' maxLength='25'/></td>
+           </tr>
+           <tr>
+             <th align='right'>QQ：</th>
+             <td><input type='text' id='qqNo' class="form-control wst-ipt" value='{$object.qqNo}' maxLength='25'/></td>
            </tr>
             <tr>
              <th align='right'>所属地区<font color='red'>*</font>：</th>

@@ -16,7 +16,6 @@
 }	
 .quick_links_panel a{ 
 	display: block;
-	line-height: 200px;
 	width: 40px;
 	height: 38px;
 	text-decoration: none;
@@ -97,7 +96,7 @@
 	position: absolute;
 	top: 65%;
 	left: -40px;
-	margin-top: -190px;
+	margin-top: -230px;
 	*margin-top: -220px;	
 	background: #333333;
 	z-index: 2;
@@ -109,7 +108,7 @@
 	height: 133px;
 	background-position: -23px -225px;
 	color: #fff;
-	margin: 20px 0 10px;
+	margin: 5px 0 10px;
 	
 }
 .quick_links_min .quick_links_panel{ right:280px;}
@@ -616,7 +615,17 @@ background-position: 0 -253px;
 
 .cart-minus{display:none;border:1px solid #333333;font-weight:bold;text-align:center;border-radius: 17px;font-size: 14px;height: 20px;line-height: 20px;min-width: 17px;padding: 0 6px;cursor:pointer;}
 .cart-plus{display:none;border:1px solid #333333;font-weight:bold;text-align:center;border-radius: 17px;font-size: 14px;height: 20px;line-height: 20px;min-width: 17px;padding: 0 5px;cursor:pointer;}
-.cart-colse{border:1px solid #333333;font-weight:bold;text-align:center;border-radius: 17px;font-size: 14px;height: 20px;line-height: 20px;min-width: 17px;padding: 0 5px;cursor:pointer;}
-.cart-close-box{display:none;position:absolute;top:-10px;right:-16px;}
+
+.cart-colse{
+	background:url(../images/ibar_sprites.png);
+	background-position: 5px -267px;
+    height: 20px;
+    overflow: hidden;
+    padding: 5px;
+    position: absolute;
+    right: -13px;
+    top: 4px;
+    width: 20px;cursor:pointer;}
+.cart-close-box{position:absolute;top:-10px;right:-16px;}
 .cart-goods-check{margin-left:10px;margin-right:15px;}
 

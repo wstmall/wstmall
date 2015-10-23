@@ -16,7 +16,7 @@ var ThinkPHP = window.Think = {
     var currDefaultImg = "{:WSTDomain()}/{$CONF['goodsImg']}";
     var wstMallName = "{$CONF['mallName']}";
     $(function() {
-      $("img").lazyload({ effect: "fadeIn",failurelimit : 10,threshold: 200,placeholder:currDefaultImg});
+    	$('.lazyImg').lazyload({ effect: "fadeIn",failurelimit : 10,threshold: 200,placeholder:currDefaultImg});
     });
 </script>
 <script src="__PUBLIC__/js/think.js"></script>

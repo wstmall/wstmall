@@ -32,6 +32,26 @@ class PaymentsAction extends BaseAction{
 		
 	}
 	
+	
+	public function getWeixinURL(){
+		$this->isUserLogin();
+			
+		$morders = D('Home/Orders');
+		$USER = session('WST_USER');
+		$obj["userId"] = (int)$USER['userId'];
+		$obj["orderIds"] = I("orderIds");
+		$data = $morders->checkOrderPay($obj);
+	
+		if($data["status"]==1){
+			$m = D('Home/Payments');
+			$pkey = $obj["userId"]."@".$obj["orderIds"];
+			$data["url"] = U('Home/WxNative2/createQrcode',array("pkey"=>base64_encode($pkey)));
+		}
+	
+		$this->ajaxReturn($data);
+	
+	}
+	
 	/**
 	 * 支付
 	 */
@@ -52,7 +72,7 @@ class PaymentsAction extends BaseAction{
 		$this->assign("orders",$orders);
 		$this->assign("needPay",$needPay);
 		$this->assign("orderCnt",count($orders));
-		$this->display('default/order_pay');
+		$this->display('default/payment/order_pay');
 	}
 	
 	

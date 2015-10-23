@@ -169,52 +169,6 @@ function changebuynum(flag){
 	$("#buy-num").val(num);
 }
 
-function getAppraisesPage(pcurr){
-
-	var params = {}; 
-	var goodsId = $.trim($("#goodsId").val());
-	params.goodsId = goodsId;	
-	params.pcurr = pcurr;
-	//加载商品评价
-	jQuery.post( Think.U('Home/Goods/getGoodsappraises') ,params,function(data) {
-		var json = WST.toJson(data);
-		var html = new Array();		    	
-		for(var j=0;j<json.root.length;j++){
-		    var appraises = json.root[j];
-		    	
-		    html.push('<tr height="75" style="border:1px dotted #eeeeee;">');
-			    html.push('<td width="150" style="padding-left:6px;"><div>'+appraises.userName+'</div></td>');
-			    html.push('<td width="*"><div>'+appraises.content+'</div></td>');
-			    html.push('<td width="180">');
-			    html.push('<div>商品评分：');
-				for(var i=0;i<appraises.goodsScore;i++){
-					html.push('<img src="'+domainURL +'/Apps/Home/View/default/images/icon_score_yes.png"/>');
-				}
-				html.push('</div>');
-				html.push('<div>时效评分：');
-				for(var i=0;i<appraises.timeScore;i++){
-					html.push('<img src="'+domainURL +'/Apps/Home/View/default/images/icon_score_yes.png"/>');
-				}
-				html.push('</div>');
-				html.push('<div>服务评分：');
-				for(var i=0;i<appraises.serviceScore;i++){
-					html.push('<img src="'+domainURL +'/Apps/Home/View/default/images/icon_score_yes.png"/>');
-				}
-				html.push('</div>');
-				html.push('</td>');
-				
-		    html.push('</tr>');
-		    	
-		}
-		 
-		if(json.root.length>0){
-		    $("#appraiseTab").html(html.join(""));
-		}else{
-		 	$("#appraiseTab").html("<tr><td><div style='font-size:15px;text-align:center;'>没有评价信息</div></td></tr>");
-		}
-	});
-	
-}
 //获取属性价格
 function getPriceAttrInfo(id){
 	var goodsId = $("#goodsId").val();
@@ -235,6 +189,62 @@ function getPriceAttrInfo(id){
 function checkStock(obj){
 	$(obj).addClass('wst-goods-attrs-on').siblings().removeClass('wst-goods-attrs-on');
 	getPriceAttrInfo($(obj).attr('dataId'));
+}
+
+function getGoodsappraises(goodsId,p){
+	var params = {}; 
+	params.goodsId = goodsId;
+	params.p = p;
+	//加载商品评价
+	jQuery.post(Think.U("Home/GoodsAppraises/getGoodsappraises") ,params,function(data) {
+		var json = WST.toJson(data);
+		if(json.root && json.root.length){
+			var html = new Array();		    	
+			for(var j=0;j<json.root.length;j++){
+			    var appraises = json.root[j];	
+			    html.push('<tr height="75" style="border:1px dotted #eeeeee;">');
+				    html.push('<td width="150" style="padding-left:6px;"><div>'+(appraises.userName?appraises.userName:"匿名")+'</div></td>');
+				    html.push('<td width="*"><div>'+appraises.content+'</div></td>');
+				    html.push('<td width="180">');
+				    html.push('<div>商品评分：');
+					for(var i=0;i<appraises.goodsScore;i++){
+						html.push('<img src="'+domainURL +'/Apps/Home/View/default/images/icon_score_yes.png"/>');
+					}
+					html.push('</div>');
+					html.push('<div>时效评分：');
+					for(var i=0;i<appraises.timeScore;i++){
+						html.push('<img src="'+domainURL +'/Apps/Home/View/default/images/icon_score_yes.png"/>');
+					}
+					html.push('</div>');
+					html.push('<div>服务评分：');
+					for(var i=0;i<appraises.serviceScore;i++){
+						html.push('<img src="'+domainURL +'/Apps/Home/View/default/images/icon_score_yes.png"/>');
+					}
+					html.push('</div>');
+					html.push('</td>');
+					
+			    html.push('</tr>');	
+			}
+			$("#appraiseTab").html(html.join(""));
+			if(json.totalPage>1){
+				laypage({
+				    cont: 'wst-page-items',
+				    pages: json.totalPage,
+				    curr: json.currPage,
+				    skip: true,
+				    skin: '#e23e3d',
+				    groups: 3,
+				    jump: function(e, first){
+				        if(!first){
+				        	getGoodsappraises(goodsId,e.curr);
+				        }
+				    }
+				});
+			}
+		}else{
+			$("#appraiseTab").html("<tr><td><div style='font-size:15px;text-align:center;'>没有评价信息</div></td></tr>");
+		}	
+	});
 }
 
 

@@ -1,15 +1,7 @@
 <?php
-/**
- * 根据网页图片路径替换出手机版图片
- * @param string $picurl 网页版图片领
- * @wstmall_full
- */
-function WSTMoblieImg($imgurl){
-	return str_replace('.',C('WST_M_IMG_SUFFIX').'.',$imgurl);
-}
+
 /**
  * 判断是否手机访问
- * @wstmall_full
  */
 function WSTIsMobile() {
     $_SERVER['ALL_HTTP'] = isset($_SERVER['ALL_HTTP']) ? $_SERVER['ALL_HTTP'] : '';  
@@ -90,7 +82,7 @@ function WSTSendMail($to, $subject, $content) {
  * @param string $content     短信内容
  */
 function WSTSendSMS($phoneNumer,$content){
-	$url = 'http://utf8.sms.webchinese.cn/?Uid='.$GLOBALS['CONFIG']['smsKey'].'&Key='.$GLOBALS['CONFIG']['smsPass'].'&smsMob='.$phoneNumer.'&smsText='.$content;
+	$url = '短信接口';
 	$ch=curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//设置否输出到页面
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30 ); //设置连接等待时间

@@ -76,6 +76,23 @@
 			}
 	   });
    }
+   function changeFlink(obj){
+	   var flink = $(obj).val();
+
+	   if(flink==1){
+		   $("#articles").hide();
+		   //$("#navUrl").show();
+	   }else{
+		   $("#articles").show();
+		   //$("#navUrl").hide();
+	   }
+   }
+   
+   function changeArticles(obj){
+	   var url = $(obj).val();
+		
+	   $("#navUrl").val(url);
+   }
    </script>
    <body class="wst-page">
        <form name="myform" method="post" id="myform" autocomplete="off">
@@ -110,9 +127,23 @@
              <td><input type='text' id='navTitle' class="form-control wst-ipt" value='{$object.navTitle}' maxLength='50'/></td>
            </tr>
            <tr>
+             <th width='150' align='right'>链接来自：<font color='red'>*</font></th>
+             <td>
+             	<select id="linkfrom" onchange="changeFlink(this);">
+             		<option value="1">外部链接</option>
+             		<option value="2">系统文章</option>
+             	</select>
+             </td>
+           </tr>
+           <tr>
              <th align='right'>导航链接：</th>
              <td>
-             <input type='text' id='navUrl' class="form-control wst-ipt" value='{$object.navUrl}' maxLength='100'/>
+            	<select id="articles" style="display:none;" onchange="changeArticles(this)">
+             		<volist name="articles" id="vo" key="kv"> 
+             			<option value="{:WSTRootDomain()}{:U('Home/Articles/index/',array('articleId'=>$vo['articleId']))}">{$vo["articleTitle"]}</option>
+             		</volist>
+             	</select>
+             	<input type='text' id='navUrl' class="form-control wst-ipt" value='{$object.navUrl}' maxLength='100'/>
              </td>
            </tr>
            <tr>

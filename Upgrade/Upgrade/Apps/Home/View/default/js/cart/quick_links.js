@@ -66,6 +66,7 @@ jQuery(function($){
 							var goods = shop.shopgoods[goodsId];
 							goodsnum++;
 							totalmoney = totalmoney + parseFloat(goods.shopPrice * goods.cnt);
+							totalmoney = totalmoney.toFixed(1);
 							var url = Think.U("Home/Goods/getGoodsDetails","goodsId="+goods.goodsId);
 							html.push(  "<li class='cart_item'>" +
 										"<div class='cart_item_pic'>" +
@@ -78,7 +79,7 @@ jQuery(function($){
 							}
 							html.push(  "<div class='cart_item_price'><span class='cart_price'>￥"+goods.shopPrice+"</span></div>" +
 											"<div class='cart-close-box' style=''>" +
-											"<span class='cart-colse'>x</span></div>	" +
+											"<span class='cart-colse' onclick=removeCartGoods(this,'"+goods.goodsId+"')></span></div>	" +
 											"<div class='cart_goods_box' style='position:absolute;bottom:0px;right:6px;'>" +
 											
 											"<span class='cart-minus'>-</span>" +
@@ -193,8 +194,17 @@ jQuery(function($){
 	function hideReturnTop(){
 		quickPanel.removeClass('quick_links_allow_gotop');
 	}
+	
 	view.bind('scroll.go_top', resizeHandler).bind('resize.quick_links', scrollHandler);
 	quickLinkCollapsed && quickShell.addClass('quick_links_min');
 	resizeHandler();
 	scrollHandler();
 });
+function removeCartGoods(obj,goodsId){
+	jQuery.post(Think.U('Home/Cart/delCartGoods') ,{goodsId:goodsId},function(data) {
+		
+		var vd = WST.toJson(data);
+		$(obj).parent().parent().parent().remove();
+		
+	});	
+}

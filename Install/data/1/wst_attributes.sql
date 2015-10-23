@@ -1,18 +1,3 @@
-/*
-Navicat MySQL Data Transfer
-
-Source Server         : 127.0.0.1
-Source Server Version : 50520
-Source Host           : localhost:3306
-Source Database       : wstmall
-
-Target Server Type    : MYSQL
-Target Server Version : 50520
-File Encoding         : 65001
-
-Date: 2015-09-03 12:48:31
-*/
-
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
@@ -32,8 +17,15 @@ CREATE TABLE `wst_attributes` (
   `createTime` datetime NOT NULL,
   PRIMARY KEY (`attrId`),
   KEY `shopId` (`shopId`,`catId`,`attrFlag`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of wst_attributes
 -- ----------------------------
+INSERT INTO `wst_attributes` VALUES ('1', '4', '1', '等级', '0', '1', null, '1', '1', '2015-10-12 13:56:13'),
+('2', '4', '1', '产地', '2', '0', '国外,山东,四川,云南,广西,广东', '1', '2', '2015-10-12 13:56:13'),
+('3', '4', '1', '营养价值', '0', '0', null, '1', '3', '2015-10-12 13:56:13'),
+('4', '4', '2', '等级', '0', '1', null, '1', '1', '2015-10-12 13:57:49'),
+('5', '4', '2', '产地', '2', '0', '美国,英国,法国,澳大利亚,中国,台湾', '1', '2', '2015-10-12 13:57:49'),
+('6', '4', '2', '烹饪方式', '1', '0', '生食,蒸煮,烧烤,爆炒', '1', '3', '2015-10-12 13:57:49'),
+('7', '4', '2', '营养价值', '0', '0', null, '1', '4', '2015-10-12 13:57:49');

@@ -1,18 +1,3 @@
-/*
-Navicat MySQL Data Transfer
-
-Source Server         : 127.0.0.1
-Source Server Version : 50520
-Source Host           : localhost:3306
-Source Database       : wstmall
-
-Target Server Type    : MYSQL
-Target Server Version : 50520
-File Encoding         : 65001
-
-Date: 2015-09-03 12:48:28
-*/
-
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
@@ -27,8 +12,10 @@ CREATE TABLE `wst_attribute_cats` (
   `createTime` datetime NOT NULL,
   PRIMARY KEY (`catId`),
   KEY `shopId` (`shopId`,`catFlag`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of wst_attribute_cats
 -- ----------------------------
+INSERT INTO `wst_attribute_cats` VALUES ('1', '4', '水果', '1', '2015-10-12 13:54:29'),
+('2', '4', '海产', '1', '2015-10-12 13:54:38');

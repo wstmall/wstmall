@@ -1,0 +1,118 @@
+<!DOCTYPE>
+<html lang="zh-cn">
+<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>{$CONF['mallTitle']} - 在线支付</title>
+      	<meta name="keywords" content="{$CONF['mallKeywords']},在线支付" />
+      	<meta name="description" content="{$CONF['mallDesc']},在线支付" />
+	    <link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/ordersuccess.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/pslocation.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/magnifier.css" />
+		<style type="text/css">
+	
+		</style>
+</head>
+
+<body class="root61">
+	<include file="./Apps/Home/View/default/header_common.html" />
+	<div class="w">
+		<div>
+			<div>
+                <div id="succeed" class="wst-ods-success">
+                    <div class="success2" style="margin: 0 auto;">
+                        <div class="wst-ods-success-blank"></div>
+                        <div class="wst-ods-success-step">
+                            <img src="__ROOT__/Apps/Home/View/default/images/step1.png" alt="" /><br />
+                            <span class="wst-pay-success-step1 wst-pay-curr-step">1.在线支付</span>
+                            <span class="wst-pay-success-step2">2.收银台</span>
+                            <span class="wst-pay-success-step3">3.支付成功</span>
+                        </div>
+                        <div class="wst-clear"></div>
+                    </div>
+                </div>
+            </div>
+			<br/>
+			<div class="wst-ods-success-tb" style="margin-top: 40px;">
+				<form autocomplete="off" method="get">
+					<div class="wst-ods-success-tc"  style="background-color: #F8F8F8;">
+						<div class="wst-ods-success-td">
+							<if condition="count($orderInfos) gt 0">
+							<img src="__ROOT__/Apps/Home/View/default/images/icon-succ.png" alt="" />
+							</if>
+						</div>
+						<div class="wst-ods-success-tf">
+							<div class="wst-ods-success-l25">
+								<input type="hidden" id="orderIds" name="orderIds" value="{$orderIds}"/>
+								<input type="hidden" id="payCode" name="payCode" value="{$payCode}"/>
+								<input type="hidden" id="needPay" name="needPay" value="{$needPay}"/>
+								<if condition="count($orders) gt 0">					
+								<div class="wst-ods-success-tg">请你尽快支付，以便订单快速处理！</div>	
+								<div >共{$orderCnt}张订单， <span id="wst-order-details" style="color:#1D94D7;cursor:pointer;">订单详情</span>。 </div>				
+								<div id="wst-orders-box" style="margin-left: 75px;display:none;">
+									<volist name="orders" key="key" id="order">
+									    <div>订单：{$key}</div>
+									    <volist name="order" id="goods">
+									    	<div>{$goods["goodsName"]}&nbsp;&nbsp;{$goods["goodsAttrName"]}</div>
+									    </volist>
+									</volist>
+								</div>
+								 待付金额：<span class="wst-ods-success-ti">￥{$needPay}</span> 元
+								 <div style="border:1px dotted #dddddd;padding:10px;">
+								 	<div style="width:80px;float:left;">支付方式：</div>
+								 	<div style="width:700px;float:left;">
+								 	<volist name="payments" key="key" id="payment">
+                                		<if condition="$payment['isOnline'] eq 1">
+                                		<div class="wst-payCode" data="{$payment['payCode']}"><img src="__ROOT__/{$payment['payIcon']}" width="160" height="45"/></div>
+                                		</if>
+                                	</volist>
+                                	<div class="wst-clear"></div>
+								 	</div>
+								 	<div class="wst-clear"></div>
+								 </div>
+								 <div style="height:50px;line-height:50px;margin-top: 15px;">
+									<input type="button" onclick="getPayUrl();" style="width:120px;height:35px;font-size:16px;" value="前往支付"/>
+								 </div>
+	   							<else/>
+	   								<div class="wst-ods-success-tj">
+	   								您的订单已支付!
+									</div>
+	   							</if>
+	   						</div>							
+						</div>
+						<div class="wst-clear"></div>
+					</div>					
+					</form>
+					<div class="wst-clear"></div>
+					<div class="wst-ods-success-tk">			
+						<div id="checkout" class="wst-checkout" >							
+							<a class="btn-submit" href="__ROOT__/index.php">
+								<span id="saveConsigneeTitleDiv" class="wst_btn-continue"></span>
+							</a>
+							<div class="wst-clear"></div>
+						</div>
+					</div>				
+				</div>							
+			</div>			
+		</div>
+	
+	<div class="wst-clear"></div>
+    <div style="height: 20px;"></div>
+    
+	<include file="./Apps/Home/View/default/footer.html" />
+	
+	<script src="__PUBLIC__/js/common.js"></script>
+	<script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
+  	<script src="__ROOT__/Apps/Home/View/default/js/index.js"></script>      	
+ 	<script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
+	<script src="__ROOT__/Apps/Home/View/default/js/orders.js"></script>
+	
+	<script type="text/javascript">
+	$(document).ready(function(){
+		if($(".wst-payCode")[0])$(".wst-payCode")[0].click();
+	});
+	</script>
+</body>
+</html>

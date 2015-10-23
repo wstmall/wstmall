@@ -107,6 +107,7 @@
                <th width='180'>商品名称</th>
                <th width='60'>商品编号</th>
                <th width='40'>价格</th>
+               <th width='40'>店铺</th>
                <th width='100'>商城分类</th>
                <th width='80'>店铺分类</th>
                <th width='40'>销量</th>
@@ -123,6 +124,7 @@
                </td>
                <td>{$vo['goodsSn']}&nbsp;</td>
                <td>{$vo['shopPrice']}&nbsp;</td>
+               <td><a href="{:U('Home/Shops/toShopHome',array('shopId'=>$vo['shopId']))}" target='_blank'>{$vo['shopName']}</a>&nbsp;</td>
                <td>{$vo['catName']}&nbsp;</td>
                <td>{$vo['shopCatName']}&nbsp;</td>
                <td>{$vo['saleCount']}</td>
@@ -139,7 +141,7 @@
              </tr>
              </volist>
              <tr>
-                <td colspan='8' align='center'>{$Page['pager']}</td>
+                <td colspan='9' align='center'>{$Page['pager']}</td>
              </tr>
            </tbody>
         </table>

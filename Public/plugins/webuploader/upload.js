@@ -151,7 +151,7 @@
             swf: publicurl +'/plugins/webuploader/Uploader.swf',
             chunked: false,
             chunkSize: 512 * 1024,
-            server: domainURL + '/index.php/Home/shops/uploadPic',
+            server: domainURL  + Think.U('Home/shops/uploadPic'),
             // runtimeOrder: 'flash',
             fileVal:'Filedata',
              accept: {

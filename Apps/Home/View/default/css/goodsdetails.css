@@ -5,7 +5,7 @@
 .wst-goods-details .details-left {
 	float: left;
 	width: 980px;
-	height: 478px;
+	min-height: 478px;
 }
 
 .wst-goods-details .details-right {

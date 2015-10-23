@@ -35,11 +35,12 @@ dl.areaSelect dd{margin-left:20px;width:100%;}
 	    $("#shopName").formValidator({onShow:"",onFocus:"店铺名称不能超过20个字符",onCorrect:"输入正确"}).inputValidator({min:1,max:40,onError:"店铺名称不符合要求,请确认"});
 		$("#userName").formValidator({onShow:"",onFocus:"请输入店主姓名",onCorrect:"输入正确"}).inputValidator({min:1,max:20,onError:"店主姓名不能为空,请确认"});
 		$("#shopCompany").formValidator({onShow:"",onFocus:"请输入公司名称",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"公司名称不能为空,请确认"});
+		$("#shopTel").formValidator({onShow:"",onFocus:"请输入店铺电话",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"店铺电话不能为空,请确认"});
 		$("#shopAddress").formValidator({onShow:"",onFocus:"请输入店铺地址",onCorrect:"输入正确"}).inputValidator({min:1,max:120,onError:"店铺地址不能为空,请确认"});
 		$("#areaId3").formValidator({onFocus:"请选择所属地区"}).inputValidator({min:1,onError: "请选择所属地区"});
 		$("#goodsCatId1").formValidator({onFocus:"请选择所属行业"}).inputValidator({min:1,onError: "请选择所属行业"});
 		$("#bankId").formValidator({onFocus:"请选择所属银行"}).inputValidator({min:1,onError: "请选择所属银行"});
-		$("#bankNo").formValidator({onShow:"",onFocus:"请输入银行卡号",onCorrect:"输入正确"}).inputValidator({min:16,max:19,onError:"银行卡号格式错误,请确认"}) .functionValidator({fun:luhmCheck,onError:"请输入正确的银行卡号！"});;
+		$("#bankNo").formValidator({onShow:"",onFocus:"请输入银行卡号",onCorrect:"输入正确"}).inputValidator({min:16,max:19,onError:"银行卡号格式错误,请确认"});
 		
 		initTime('serviceStartTime','8');
 		initTime('serviceEndTime','20');
@@ -92,14 +93,18 @@ dl.areaSelect dd{margin-left:20px;width:100%;}
              <th width='120' align='right'>店铺图标<font color='red'>*</font>：</th>
              <td>
              <div id="preview_Filedata" style="margin-top: 70px;">
-             	<img id='preview' src='__ROOT__/Apps/Home/View/default/images/logo.jpg' height='150' />
+             	<img id='preview' src='__ROOT__/{$CONF['mallLogo']}' height='150' />
              </div>
              </td>
            </tr>
            
            <tr>
-             <th width='120' align='right'>店铺电话：</th>
-             <td><input type='text' id='shopTel' class="form-control wst-ipt" maxLength='25'/></td>
+             <th width='120' align='right'>店铺电话<font color='red'>*</font>：</th>
+             <td><input type='text' id='shopTel' class="form-control wst-ipt" maxLength='25' value="{$object['shopTel']}"/></td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>QQ：</th>
+             <td><input type='text' id='qqNo' value="{$object['qqNo']}" class="form-control wst-ipt" maxLength='25'/></td>
            </tr>
            <tr>
              <th width='120' align='right'>所属地区<font color='red'>*</font>：</th>

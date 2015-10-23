@@ -27,8 +27,8 @@ $(function () {
 	   $("#shopPrice").formValidator({onShow:"",onFocus:"",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"请输入店铺价格"});
 	   $("#goodsStock").formValidator({onShow:"",onFocus:"",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"请输入库存"});
 	   $("#goodsUnit").formValidator({onShow:"",onFocus:"",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"请输入商品单位"});
-	   $("#goodsCatId3").formValidator({onFocus:"请选择商品分类"}).inputValidator({min:1,onError: "请选择完整商品分类"});
-	   $("#shopCatId2").formValidator({onFocus:"请选择店铺分类"}).inputValidator({min:1,onError: "请选择完整店铺分类"});
+	   $("#goodsCatId3").formValidator({onFocus:"请选择商城分类"}).inputValidator({min:1,onError: "请选择完整商城分类"});
+	   $("#shopCatId2").formValidator({onFocus:"请选择本店分类"}).inputValidator({min:1,onError: "请选择完整本店分类"});
 	   
 	   KindEditor.ready(function(K) {
 			editor1 = K.create('textarea[name="goodsDesc"]', {
@@ -133,7 +133,7 @@ var filetypes = ["gif","jpg","png","jpeg"];
 	             </td>
 	             <td rowspan='7' valign='top'>
 	               <div id="preview_Filedata">
-		           <img id='goodsImgPreview' src='<if condition="$object['goodsImg'] =='' ">__ROOT__/Apps/Home/View/default/images/store_default_sign.png<else/>__ROOT__/{$object['goodsImg']}</if>' height='152'/><br/>
+		           <img id='goodsImgPreview' src='<if condition="$object['goodsImg'] =='' ">__ROOT__/{$CONF['mallLogo']}<else/>__ROOT__/{$object['goodsImg']}</if>' height='152'/><br/>
 	               </div>
 	             </td>
 	           </tr>
@@ -207,7 +207,7 @@ var filetypes = ["gif","jpg","png","jpeg"];
 	             </td>
 	           </tr>
 	           <tr>
-	             <th width='120'>所属分类<font color='red'>*</font>：</th>
+	             <th width='120'>商城分类<font color='red'>*</font>：</th>
 	             <td colspan='3'>
 	             <select id='goodsCatId1' onchange='javascript:getCatListForEdit("goodsCatId2",this.value,0)'>
 	                <option value=''>请选择</option>
@@ -224,7 +224,7 @@ var filetypes = ["gif","jpg","png","jpeg"];
 	             </td>
 	           </tr>
 	           <tr>
-	             <th width='120'>店铺分类<font color='red'>*</font>：</th>
+	             <th width='120'>本店分类<font color='red'>*</font>：</th>
 	             <td colspan='3'>
 	             <select id='shopCatId1' onchange='javascript:getShopCatListForEdit(this.value,"{$object['shopCatId2']}")'>
 	                <option value='0'>请选择</option>

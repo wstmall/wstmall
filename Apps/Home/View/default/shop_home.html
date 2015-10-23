@@ -26,7 +26,7 @@
 		<include file="./Apps/Home/View/default/header_common.html" />
 		<div>
 			<if condition="$shops['shopBanner'] neq ''">
-				<img data-original="__ROOT__/{$shops['shopBanner']}" width="100%" height="120"/>
+				<img class='lazyImg' data-original="__ROOT__/{$shops['shopBanner']}" width="100%" height="120"/>
 			</if>
 		</div>
 		<div class="wst-shophome-nav">
@@ -45,7 +45,7 @@
 					<volist name="shops['shopAds']" id="vo" key='i'>
 						<li>
 							<a target="_blank" onclick="addAccess({$vo['adId']})" href="{$vo['adURL']}" >
-								<img data-original="__ROOT__/{$vo.adImg}" width="100%" height="350"/>
+								<img class='lazyImg' data-original="__ROOT__/{$vo.adImg}" width="100%" height="350"/>
 							</a>
 						</li>
 					</volist>
@@ -95,6 +95,16 @@
 									<td class="title">店铺电话：</td>
 									<td>{$shops['shopTel']}</td>
 								</tr>
+								<if condition="$shops['qqNo'] neq ''">
+								<tr height="35">
+									<td class="title">QQ咨询：</td>
+									<td >
+										<a href="tencent://message/?uin={$shops['qqNo']}&Site=QQ交谈&Menu=yes">
+											<img border="0" src="http://wpa.qq.com/pa?p=1:{$shops['qqNo']}:7" alt="QQ交谈" width="71" height="24" />
+										</a>
+									</td>
+								</tr>
+								</if>
 								<tr>
 									<td ></td>
 									<td></td>
@@ -158,12 +168,12 @@
 							<div class="wst-clear"></div>
 						</div>
 						<div class="wst-goods-page">
-							<volist name="shopsgoods" key="k" id="vo">
+							<volist name="shopsgoods['root']" key="k" id="vo">
 							
 							<li class="wst-goods-item">
 								<div class="goods-img">
 									<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo['goodsId']))}">
-										<img data-original="__ROOT__/{$vo['goodsThums']}" width="180" />
+										<img class='lazyImg' data-original="__ROOT__/{$vo['goodsThums']}" width="180" />
 									</a>
 								</div>
 								<div class="goods-des">
@@ -189,6 +199,10 @@
 							</volist>
 							<div class="wst-clear"></div>
 						</div>
+						<div class="wst-page" style="text-align:center;;padding-bottom:10px;">
+						<div id="wst-page-items">
+						</div>
+					</div>
 					</div>
 				
 				</div>
@@ -217,6 +231,27 @@
 			isAnimate:true,
 			dir: 'x'
 		});
+		<if condition="$shopsgoods['totalPage'] gt 1">
+		laypage({
+			cont: 'wst-page-items',
+			pages: {$shopsgoods['totalPage']}, //总页数
+			skip: true, //是否开启跳页
+			skin: '#e23e3d',
+			groups: 3, //连续显示分页数
+			curr: {$shopsgoods['currPage']}, 
+			jump: function(e, first){ //触发分页后的回调
+			    if(!first){ //一定要加此判断，否则初始时会无限刷新
+			        var nuewurl = WST.splitURL("p");
+			        var ulist = nuewurl.split("?");
+			        if(ulist.length>1){
+			        	location.href = nuewurl+'&p='+e.curr;
+			        }else{
+			        	location.href = '?p='+e.curr;
+			        }     
+			    }
+			}
+		});
+		</if>
 	});
 	</script>
 </html> 

@@ -36,6 +36,14 @@ class IndexAction extends BaseAction {
     	$this->checkPrivelege('scxx_00');
     	$m = D('Admin/Index');
     	$this->assign('configs',$m->loadConfigsForParent());
+    	//获取地区信息
+		$m = D('Admin/Areas');
+		$this->assign('areaList',$m->queryShowByList(0));
+		$areaId2 = intval($GLOBALS['CONFIG']['defaultCity'])>0?$GLOBALS['CONFIG']['defaultCity']:(int)C('DEFAULT_CITY');
+		if($areaId2>0){
+			$area = $m->get($areaId2);
+			$this->assign('areaId1',$area['parentId']);
+		}
     	$this->display("/mall_config");
     }
     /**

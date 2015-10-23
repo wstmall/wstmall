@@ -163,7 +163,7 @@ class GoodsModel extends BaseModel {
 	public function getGoodsDetails($obj){		
 		$goodsId = $obj["goodsId"];
 		$sql = "SELECT sc.catName,sc2.catName as pCatName, g.*,shop.shopName,shop.deliveryType,ga.id goodsAttrId,ga.attrPrice,ga.attrStock,
-				shop.shopAtive,shop.shopTel,shop.shopAddress,shop.deliveryTime,shop.isInvoice, shop.deliveryStartMoney,g.goodsStock,shop.deliveryFreeMoney,
+				shop.shopAtive,shop.shopTel,shop.shopAddress,shop.deliveryTime,shop.isInvoice, shop.deliveryStartMoney,g.goodsStock,shop.deliveryFreeMoney,shop.qqNo,
 				shop.deliveryMoney ,g.goodsSn,shop.serviceStartTime,shop.serviceEndTime FROM __PREFIX__goods g left join __PREFIX__goods_attributes ga on g.goodsId=ga.goodsId and ga.isRecomm=1, __PREFIX__shops shop, __PREFIX__shops_cats sc 
 				LEFT JOIN __PREFIX__shops_cats sc2 ON sc.parentId = sc2.catId
 				WHERE g.goodsId = $goodsId AND shop.shopId=sc.shopId AND sc.catId=g.shopCatId1 AND g.shopId = shop.shopId AND g.goodsFlag = 1 ";		
@@ -789,7 +789,7 @@ class GoodsModel extends BaseModel {
 		}else if($msort==7){//上架时间
 			$sql .= " ORDER BY g.saleTime DESC ";
 		}
-		$rs = $this->query($sql);
+		$rs = $this->pageQuery($sql,I('p'),30);
 		return $rs;
 		
 	}
@@ -878,21 +878,6 @@ class GoodsModel extends BaseModel {
 		
 	}
 	
-
-	/**
-	 * 查询商品评价
-	 */
-	public function getGoodsAppraises(){		
-		$goodsId = I("goodsId");
-		$pcurr = I("pcurr",0);
-		$pageSize = 20;
-		$sql = "SELECT ga.*, u.userName,u.loginName, od.createTime as ocreateTIme 
-				FROM __PREFIX__goods_appraises ga , __PREFIX__orders od , __PREFIX__users u 
-				WHERE ga.userId = u.userId AND ga.orderId = od.orderId AND ga.goodsId = $goodsId AND ga.isShow =1";		
-		$data = $this->pageQuery($sql,$pcurr,$pageSize);	
-		return $data;
-
-	}
 	
 	/**
 	 * 获取商品类别导航
@@ -938,6 +923,29 @@ class GoodsModel extends BaseModel {
 		$data = array();
 		$data["goodsStock"] = $stock;
 		
+		M('goods')->where("goodsId=$goodsId")->save($data);
+		$rdata["status"] = 1;
+		return $rdata;
+	}
+	
+	/**
+	 * 修改商品库存,商品编号,价格
+	 */
+	public function editGoodsBase(){
+	
+		$rdata= array("status"=>-1);
+		$vfield = (int)I("vfield");
+		$goodsId = (int)I("goodsId");
+	
+		$data = array();
+		if($vfield==1){//商品编号
+			$data["goodsSn"] = I("vtext");
+		}else if($vfield==2){//商品价格
+			$data["shopPrice"] = I("vtext");
+		}else if($vfield==3){//商品庫存
+			$data["goodsStock"] = (int)I("vtext");
+		}
+	
 		M('goods')->where("goodsId=$goodsId")->save($data);
 		$rdata["status"] = 1;
 		return $rdata;

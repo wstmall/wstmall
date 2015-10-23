@@ -228,7 +228,7 @@ function getVerifyCode(){
 				time = 120;
 				$('#timeTips').css('width','100px');
 				$('#timeTips').html('获取验证码(120)');
-				$('#mobileCode').val(json.phoneVerifyCode);
+				//$('#mobileCode').val(json.phoneVerifyCode);
 				var task = setInterval(function(){
 					time--;
 					$('#timeTips').html('获取验证码('+time+")");

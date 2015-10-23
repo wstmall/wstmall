@@ -3,9 +3,11 @@
 <div class="wst-body"> 
 <div class='wst-page-header'>卖家中心 > 商品分类</div>
 <div class='wst-page-content'>
-   <div class='wst-tbar-group' style='text-align:left;'>
-   	 <span></span><a href='{:U("Home/ShopsCats/toEdit")}' style='margin-right:15px;'><span class='add btn'></span>新增</a>
+   <div class='wst-tbar-group' style='text-align:right;'>
+   	 <span></span>
+   	 <a href='javascript:addGoodsCat(1);' style='margin-right:15px;'><span class='add btn'></span>新增</a>
    </div>
+   <form autocomplete="off">
    <table id="cat_list_tab" class='wst-list wst-form'>
    <thead>
    <tr>
@@ -16,51 +18,50 @@
    </tr>
    </thead>
    <volist name="List" id="vo" key='i'>
-   <tr id='tr_0_{$i}' class="tr_0" isLoad='1'>
+   <tbody>
+   <tr id='tr_{$i}' isLoad='1'>
      <td>
-     <span class='wst-tree-open' onclick='javascript:loadGoodsCatChildTree(this,{$vo.catId},"tr_0_{$i}")'>&nbsp;</span>
+     <span class='wst-tree-open' onclick='javascript:loadGoodsCatChildTree(this,{$vo.catId},"tr_{$i}")'>&nbsp;</span>
      <input type='text' style='width:400px;height:22px;' value='{$vo['catName']}' dataId="{$vo.catId}" onchange='javascript:editGoodsCatName(this)'/>
      </td>
-     <td>{$vo['catSort']}</td>
-
+     <td><input class='catsort' type='text' style='width:35px;' value="{$vo['catSort']}" dataId="{$vo.catId}" onchange='javascript:editGoodsCatSort(this)' onkeyup="javascript:WST.isChinese(this,1)" onkeypress="return WST.isNumberKey(event)"/></td>
      <if condition="$vo['isShow']==0 ">
-	  <td style="cursor:pointer;" onclick="ChangeCatStatus(1,{$vo['catId']},0)"><span class='wst-state_no'></span></td>
+	  <td style="cursor:pointer;" ondblclick="changeCatStatus(1,{$vo['catId']},0)"><span class='wst-state_no'></span></td>
      <else/>
-      <td style="cursor:pointer;" onclick="ChangeCatStatus(0,{$vo['catId']},0)"><span class='wst-state_yes'></span></td>
+      <td style="cursor:pointer;" ondblclick="changeCatStatus(0,{$vo['catId']},0)"><span class='wst-state_yes'></span></td>
      </if>
-
      <td>
-     <a href='{:U("Home/ShopsCats/toEdit",array("parentId"=>$vo['catId']))}' href='javascript:editGoodsCat(this,2);' class='add btn' title='新增'></a>
-     <a href='{:U("Home/ShopsCats/toEdit",array("id"=>$vo['catId']))}' class='edit btn' title='编辑'>
-     <a href="javascript:delGoodsCat({$vo['catId']},0)" class='del btn' title='删除'></a>&nbsp;
+     <span onclick='javascript:addGoodsCat(this,{$vo["catId"]},{$i});' class='add btn' title='新增'></span>
+     <span onclick="javascript:delGoodsCat({$vo['catId']},0)" class='del btn' title='删除'></span>&nbsp;
      </td>
    </tr>
    <if condition="$vo['childNum'] gt 0 ">
       <volist name="vo['child']" id="vo2" key='i2'>
-	  <tr id='tr_0_{$i}_{$i2}' class="tr_0_{$i}" isLoad='1' datatype="{$vo2.catId}_2">
+	  <tr id='tr_{$i}_{$i2}' class="tr_{$i}" isLoad='1'>
 	     <td>
 	     <span class="wst-tree-second">&nbsp;</span>
 	     <input type='text' style='width:400px;height:22px;' value='{$vo2['catName']}' dataId="{$vo2.catId}" onchange='javascript:editGoodsCatName(this)'/>
 	     </td>
-	     <td>{$vo2['catSort']}</td>
-	     
+	     <td><input class='catsort' type='text' style='width:35px;' value="{$vo2['catSort']}" dataId="{$vo2.catId}" onchange='javascript:editGoodsCatSort(this)' onkeyup="javascript:WST.isChinese(this,1)" onkeypress="return WST.isNumberKey(event)"/></td>
 	     <if condition="$vo2['isShow']==0 ">
 		  <td style="cursor:pointer;" onclick="ChangeCatStatus(1,{$vo2['catId']},{$vo['catId']})"><span class='wst-state_no'></span></td>
 	     <else/>
 	      <td style="cursor:pointer;" onclick="ChangeCatStatus(0,{$vo2['catId']},{$vo['catId']})"><span class='wst-state_yes'></span></td>
 	     </if>
-	     
 	     <td>
-	     <a href='{:U("Home/ShopsCats/toEdit",array("id"=>$vo2['catId']))}' class='edit btn' title='编辑'>
 	     <a href="javascript:delGoodsCat({$vo2['catId']},0)" class='del btn' title='删除'></a>&nbsp;
 	     </td>
 	  </tr>
       </volist>
    </if>
+   </tbody>
    </volist>
 </table>
-<div class='wst-tbar-group' style='text-align:left;'>
-     <span></span><a href='{:U("Home/ShopsCats/toEdit")}' style='margin-right:15px;'><span class='add btn'></span>新增</a>
+</form>
+<div class='wst-tbar-group'>
+     <button class='wst-btn-query' style='display:none;margin-top:5px;margin-left:400px;' type="button" onclick='javascript:batchSaveShopCats()'>保&nbsp;存</button>
+     <button class='wst-btn-query' style='display:none;margin-top:5px;margin-left:5px;' type="button" onclick='javascript:location.reload()'>取&nbsp;消</button>
+     <a style='float:right;margin-right:5px;' href='javascript:addGoodsCat(1);'><span class='add btn'></span>新增</a>
 </div>
 </div>
 </div>

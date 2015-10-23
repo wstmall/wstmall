@@ -72,7 +72,40 @@ $(document).ready(function(){
            </tbody>
            <tfoot>
              <tr>
-                <td colspan='8' align='center'>{$Page['pager']}</td>
+                <td colspan='8' align='center'>
+                <div class="wst-page" style="float:right;padding-bottom:10px;">
+						<div id="wst-page-items"></div>
+				</div>
+                <script>
+			    <if condition="$Page['totalPage'] gt 1">
+			    $(document).ready(function(){
+					laypage({
+					    cont: 'wst-page-items',
+					    pages: {$Page['totalPage']}, //总页数
+					    skip: true, //是否开启跳页
+					    skin: '#e23e3d',
+					    groups: 3, //连续显示分页数
+					    curr: function(){ //通过url获取当前页，也可以同上（pages）方式获取
+					        var page = location.search.match(/p=(\d+)/);
+					        return page ? page[1] : 1;
+					    }(), 
+					    jump: function(e, first){ //触发分页后的回调
+					        if(!first){ //一定要加此判断，否则初始时会无限刷新
+					        	var nuewurl = WST.splitURL("p");
+					        	var ulist = nuewurl.split("?");
+					        	if(ulist.length>1){
+					        		location.href = nuewurl+'&p='+e.curr;
+					        	}else{
+					        		location.href = '?p='+e.curr;
+					        	}
+					            
+					        }
+					    }
+					});
+			    });
+				</if>
+				</script>
+                </td>
              </tr>
              </tfoot>
         </table>

@@ -53,13 +53,14 @@ $(function () {
   			onWait : "请稍候..."
   		});
   		$("#shopCompany").formValidator({onShow:"",onFocus:"请输入公司名称",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"公司名称不能为空,请确认"});
+  		$("#shopTel").formValidator({onShow:"",onFocus:"请输入店铺电话",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"店铺电话不能为空,请确认"});
   		$("#shopName").formValidator({onShow:"",onFocus:"店铺名称不能超过20个字符",onCorrect:"输入正确"}).inputValidator({min:1,max:40,onError:"店铺名称不符合要求,请确认"});
   		$("#userName").formValidator({onShow:"",onFocus:"请输入店主姓名",onCorrect:"输入正确"}).inputValidator({min:1,max:20,onError:"店主姓名不能为空,请确认"});
   		$("#shopAddress").formValidator({onShow:"",onFocus:"请输入店铺地址",onCorrect:"输入正确"}).inputValidator({min:1,max:120,onError:"店铺地址不能为空,请确认"});
   		$("#areaId3").formValidator({onFocus:"请选择所属地区"}).inputValidator({min:1,onError: "请选择所属地区"});
   		$("#goodsCatId3").formValidator({onFocus:"请选择所属行业"}).inputValidator({min:1,onError: "请选择所属行业"});
   		$("#bankId").formValidator({onFocus:"请选择所属银行"}).inputValidator({min:1,onError: "请选择所属银行"});
-		$("#bankNo").formValidator({onShow:"",onFocus:"请输入银行卡号",onCorrect:"输入正确"}).inputValidator({min:16,max:19,onError:"银行卡号格式错误,请确认"}) .functionValidator({fun:luhmCheck,onError:"请输入正确的银行卡号！"});
+		$("#bankNo").formValidator({onShow:"",onFocus:"请输入银行卡号",onCorrect:"输入正确"}).inputValidator({min:16,max:19,onError:"银行卡号格式错误,请确认"});
 		
 	    ShopMapInit({});
     })
@@ -191,7 +192,7 @@ function selectArea(v){
    var isUse = false;
    function getVerifyCode(){
    		if($.trim($("#userPhone").val())==''){
-   			alert('请输入手机号码!');
+   			WST.msg('请输入手机号码!', {icon: 5});
    			return;
    		}
    		if(isSend )return;
@@ -201,11 +202,11 @@ function selectArea(v){
    		$.post(Think.U('Home/Users/getPhoneVerifyCode'),params,function(data,textStatus){
    			var json = WST.toJson(data);
    			if(json.status==-1){
-   				alert('手机号码格式错误!');
+   				WST.msg('手机号码格式错误!', {icon: 5});
    				time = 0;
    				isSend = false;
    			}else if(json.status==-2){
-   				alert('该手机号码已注册!');
+   				WST.msg('该手机号码已注册!', {icon: 5});
    				time = 0;
    				isSend = false;
    			}else if(json.status==1){
@@ -229,21 +230,21 @@ function selectArea(v){
    function regist(){	
    	if($("#nameType").val()==3){
    		if($.trim($("#mobileCode").val())==""){		
-   			alert('请输入验证码!');
+   			WST.msg('请输入验证码!', {icon: 5});
    			$("#mobileCode").focus();
    			return;
    		}
    	}else{
    	
    		if($.trim($("#authcode").val())==""){		
-   			alert('请输入验证码!');
+   			WST.msg('请输入验证码!', {icon: 5});
    			$("#mobileCode").focus();
    			return;
    		}
    	}
 
    	if(!document.getElementById("protocol").checked){		
-   		alert('必须同意使用协议才允许注册!');
+   		WST.msg('必须同意使用协议才允许注册!', {icon: 5});
    		return;
    	}
      	var params = {};
@@ -261,6 +262,7 @@ function selectArea(v){
 	   	params.longitude = $('#longitude').val();
 	   	params.mapLevel = $('#mapLevel').val();
 		params.shopTel = $('#shopTel').val();
+		params.qqNo = $('#qqNo').val();
 	   	params.shopName = $('#shopName').val();
 	   	params.shopCompany = $('#shopCompany').val();
 	   	params.shopImg = $('#shopImg').val();
@@ -358,9 +360,10 @@ function selectArea(v){
 	   }
 	   shopMap.plugin(["AMap.ToolBar"],function(){		
 			toolBar = new AMap.ToolBar();
-			shopMap.addControl(toolBar);		
+			shopMap.addControl(toolBar);
+			toolBar.show();
 	   });
-	   toolBar.show();
+	   
 	   AMap.event.addListener(shopMap,'click',function(e){
 			shopMap.clearMap();
 			$('#longitude').val(e.lnglat.getLng());

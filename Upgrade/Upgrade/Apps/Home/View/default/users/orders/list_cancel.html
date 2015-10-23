@@ -45,19 +45,7 @@
                	<td width='100'>{$order["userName"]}</td>
                	<td width='70'>{$order["totalMoney"]}</td>
                	<td width='140'><div style="line-height:20px;">{$order["createTime"]}</div></td>
-               	<td width='100'>
-               		<if condition='$order["orderStatus"] eq -5'>店铺同意取消
-               		<elseif condition='$order["orderStatus"] eq -4'/>店铺同意拒收
-               		<elseif condition='$order["orderStatus"] eq -3'/>用户拒收
-               		<elseif condition='$order["orderStatus"] eq -2'/>未付款
-               		<elseif condition='$order["orderStatus"] eq -1'/>用户已取消
-               		<elseif condition='$order["orderStatus"] eq 0'/>未受理
-               		<elseif condition='$order["orderStatus"] eq 1'/>已受理
-               		<elseif condition='$order["orderStatus"] eq 2'/>打包中
-               		<elseif condition='$order["orderStatus"] eq 3'/>配送中
-               		<elseif condition='$order["orderStatus"] eq 4'/>已到货
-               		<elseif condition='$order["orderStatus"] eq 5'/>确认收货
-               		</if>
+               	<td width='100'>用户已取消</if>
                	</td>
                	<td width='130' style="padding-top:10px;vertical-align:top;">
 					<a href="javascript:;" onclick="showOrder({$order['orderId']})">查看</a>
@@ -67,10 +55,9 @@
              <if condition="$receiveOrders['totalPage'] gt 1">
              <tfoot>
              <tr>
-                <td colspan='7' align='center' style="height:30px;border-bottom: 0px;">
+                <td colspan='8' align='center' style="height:30px;border-bottom: 0px;">
 					<div class="wst-page" style="float:right;padding-bottom:10px;">
-						<div id="wst-page-items">
-						</div>
+						<div id="wst-page-items"></div>
 					</div>
 				</td>
              </tr>

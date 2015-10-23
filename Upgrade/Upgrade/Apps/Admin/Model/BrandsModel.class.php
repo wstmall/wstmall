@@ -64,7 +64,7 @@ class BrandsModel extends BaseModel {
 	 	$sql = "select catId from __PREFIX__goods_cat_brands where brandId=".$id;
 		$catBrands = $this->query($sql);
 		foreach ($catBrands as $key =>$v){
-			if(!in_array($v,$ids))$filter[] = $v['catId'];
+			if(!in_array($v['catId'],$ids))$filter[] = $v['catId'];
 		}
 		//查询指定的分类下是否有品牌被引用了
 		if(count($filter)>0){

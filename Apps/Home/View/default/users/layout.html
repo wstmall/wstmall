@@ -4,7 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
          <title>买家中心 - {$CONF['mallTitle']}</title>
          <meta name="keywords" content="{$CONF['mallKeywords']}" />
-      	<meta name="description" content="{$CONF['mallDesc']},买家中心" />
+      	 <meta name="description" content="{$CONF['mallDesc']},买家中心" />
          <meta http-equiv="Expires" content="0">
 		 <meta http-equiv="Pragma" content="no-cache">
 		 <meta http-equiv="Cache-control" content="no-cache">
@@ -57,7 +57,7 @@
                <a href="{:U('Home/Orders/queryRefundByPage/')}"><li <if condition='$umark eq "queryRefundByPage"'> class='selected'</if>>拒收/退款</li></a>
                <a href="{:U('Home/UserAddress/queryByPage/')}"><li <if condition='$umark eq "addressQueryByPage"'> class='selected'</if>>收货地址</li></a>
                <a  href="{:U('Home/GoodsAppraises/getAppraisesList/')}"><li <if condition='$umark eq "getAppraisesList"'> class='selected'</if>>评价管理</li></a>
-               <a href="{:U('Home/Messages/queryByPage/')}"><li <if condition='$umark eq "queryMessageByPage"'> class='liselect'</if>>商城消息</li></a>
+               <a href="{:U('Home/Messages/queryByPage/')}"><li id='li_queryMessageByPage' <if condition='$umark eq "queryMessageByPage"'> class='liselect'</if>>商城消息<span style="display:none;" class="wst-msg-tips-box"></span></li></a>
                <a href="{:U('Home/Users/toEdit/')}"><li <if condition='$umark eq "toEditUser"'> class='selected'</if>>个人资料</li></a>
                <a href="{:U('Home/Users/toEditPass/')}"><li <if condition='$umark eq "toEditPass"'> class='selected'</if>>修改密码</li></a>
              <if condition='$WST_USER["userType"] eq 0'>
@@ -84,8 +84,6 @@
    	<script src="__ROOT__/Apps/Home/View/default/js/head.js"></script>
    	<script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
   	<script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
-   	<script src="__PUBLIC__/plugins/laypage/laypage.js"></script>
-
      <script type="text/javascript">
 		var publicurl = '__PUBLIC__/';
 		var shopId = '{$orderInfo["order"]["shopId"]}';

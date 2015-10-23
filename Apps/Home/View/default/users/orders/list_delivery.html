@@ -60,7 +60,7 @@
                	<td width='100'>
 					<a href="javascript:;" onclick="showOrder('{$order["orderId"]}')">查看</a>
 					<if condition='$order["orderStatus"] lt 4'>
-					| <a href="javascript:;" onclick="orderCancel({$order['orderId']})">取消订单</a>
+					| <a href="javascript:;" onclick="orderCancel({$order['orderId']},{$order["orderStatus"]})">取消订单</a>
 					</if>
 				</td>
              </tr>

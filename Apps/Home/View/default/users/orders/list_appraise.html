@@ -8,14 +8,6 @@
        		订单编号:<input id="orderNo" value="{$params['orderNo']}" style="width:80px;" autocomplete="off"/>
        		店铺名称:<input id="shopName" value="{$params['shopName']}" style="width:80px;" autocomplete="off"/>
        		收货人:<input id="userName" value="{$params['userName']}" style="width:80px;" autocomplete="off"/>
-       		<!--  
-       		下单日期:<input id="sdate" value="{$params['sdate']}" style="width:80px;"/>-<input id="edate" value="{$params['edate']}" style="width:80px;"/>
-       		-->
-       		状态:<select id="orderStatus" style="height:28px;">
-       				<option value="0">全部</option>
-       				<option value="4" <if condition='$params[orderStatus] eq 4'>selected</if>>已到货</option>
-       				<option value="5" <if condition='$params[orderStatus] eq 5'>selected</if>>确认收货</option>
-       			</select>
        		<button class="wst-btn-query" onclick="javascript:getOrdersList(4)">查询</button>
        	</div>
         <table class='wst-list' style="font-size:13px;">

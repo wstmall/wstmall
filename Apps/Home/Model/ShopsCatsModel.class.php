@@ -9,57 +9,59 @@
  * 店铺分类服务类
  */
 class ShopsCatsModel extends BaseModel {
-    /**
-	  * 新增
-	  */
-	 public function insert(){
-	 	$rd = array('status'=>-1);
-	 	$id = I("id",0);
-		$data = array();
-		$data["shopId"] = session('WST_USER.shopId');
-		$data["isShow"] = I("isShow",0);
-		$data["catName"] = I("catName");
-		$data["catSort"] = I("catSort",0);
-		$data["catFlag"] = 1;
-		if($this->checkEmpty($data,true)){	
-			$data["parentId"] = I("parentId",0);
-			$m = M('shops_cats');
-			$rs = $m->add($data);
-			if(false !== $rs){
-				$rd['status']= 1;
-				S("WST_CACHE_SHOP_CAT_".session('WST_USER.shopId'),null);
-			}
-		}
-		return $rd;
-	 } 
-     /**
-	  * 修改
-	  */
-	 public function edit(){
-	 	$rd = array('status'=>-1);
-	 	$id = (int)I("id",0);
-		$data = array();
-		$data["isShow"] = (int)I("isShow",0);
-		$data["catName"] = I("catName");
-		$data["catSort"] = (int)I("catSort",0);
+	/**
+	 * 批量保存商品分类
+	 */
+	public function batchSaveShopCats(){
+		$rd = array('status'=>-1);
 		$shopId = (int)session('WST_USER.shopId');
 		$m = M('shops_cats');
-		if($this->checkEmpty($data,true)){	
-			if($data["isShow"]!=1){
-				//把相关的商品下架了
-				$sql = "update __PREFIX__goods set isSale=0 where shopId=".$shopId." and shopCatId1 = ".$id;
-				$m->query($sql);
-				$sql = "update __PREFIX__goods set isSale=0 where shopId=".$shopId." and shopCatId2 = ".$id;
-				$m->query($sql);
-			}
-			$rs = $m->where("catId=".I('id')." and shopId=".$shopId)->save($data);
-			if(false !== $rs){
-				$rd['status']= 1;
-				S("WST_CACHE_SHOP_CAT_".session('WST_USER.shopId'),null);
+		//先保存了已经有父级的分类
+		$otherNo = (int)I('otherNo');
+		for($i=0;$i<$otherNo;$i++){
+			$data = array();
+			$data['catName'] = I('catName_o_'.$i);
+			if($data['catName']=='')continue;
+			$data['shopId'] = $shopId;
+			$data['parentId'] = (int)I('catId_o_'.$i);
+			$data['catSort'] = (int)I('catSort_o_'.$i);
+			$data['isShow'] = (int)I('catShow_o_'.$i);
+			$sql = "select catId from __PREFIX__shops_cats where catFlag=1 and shopId=".$shopId." and catId=".$data['parentId'];
+			$rs = $this->query($sql);
+			if(empty($rs))continue;
+			$m->add($data);
+		}
+		//保存没有父级分类的
+		$fristNo = (int)I('fristNo');
+	    for($i=0;$i<$fristNo;$i++){
+			$data = array();
+			$data['catName'] = I('catName_'.$i);
+			if($data['catName']=='')continue;
+			$data['parentId'] = 0;
+			$data['shopId'] = $shopId;
+			$data['catSort'] = (int)I('catSort_'.$i);
+			$data['isShow'] = (int)I('catShow_'.$i);
+			$parentId = $m->add($data);
+			if(false !== $parentId){
+				//新增子类
+				$catSecondNo = (int)I('catSecondNo_'.$i);
+		        for($j=0;$j<$catSecondNo;$j++){
+					$data = array();
+					$data['catName'] = I('catName_'.$i."_".$j);
+					if($data['catName']=='')continue;
+					$data['shopId'] = $shopId;
+					$data['parentId'] = $parentId;
+					$data['catSort'] = (int)I('catSort_'.$i."_".$j);
+					$data['isShow'] = (int)I('catShow_'.$i."_".$j);
+					
+					$m->add($data);
+			    }
 			}
 		}
+		$rd['status'] = 1;
 		return $rd;
-	 } 
+	}
+	
 	 /**
 	  * 修改名称
 	  */
@@ -76,6 +78,23 @@ class ShopsCatsModel extends BaseModel {
 				$rd['status']= 1;
 				S("WST_CACHE_SHOP_CAT_".session('WST_USER.shopId'),null);
 			}
+		}
+		return $rd;
+	 } 
+	 /**
+	  * 修改排序号
+	  */
+	 public function editSort(){
+	 	$rd = array('status'=>-1);
+	 	$id = I("id",0);
+		$data = array();
+		$data["catSort"] = (int)I("catSort");
+		$shopId = (int)session('WST_USER.shopId');
+		$m = M('shops_cats');
+		$rs = $m->where("catId=".I('id')." and shopId=".$shopId)->save($data);
+		if(false !== $rs){
+			$rd['status']= 1;
+			S("WST_CACHE_SHOP_CAT_".session('WST_USER.shopId'),null);
 		}
 		return $rd;
 	 } 
@@ -106,7 +125,7 @@ class ShopsCatsModel extends BaseModel {
 	 	 	foreach ($rs1 as $key => $v){
 	 	 		$ids[] = $v['catId'];
 	 	 	}
-	 	 	$rs2 = $m->where('shopId='.$shopId.' and catFlag=1 and parentId in('.implode(',',$ids).')')->order('catSort asc')->select();
+	 	 	$rs2 = $m->where('shopId='.$shopId.' and catFlag=1 and parentId in('.implode(',',$ids).')')->order('catSort asc,catId asc')->select();
 	 	 	if(count($rs2)>0){
 	 	 		$tmpArr = array();
 	 	 		foreach ($rs2 as $key => $v){

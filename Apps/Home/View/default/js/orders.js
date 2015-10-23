@@ -345,7 +345,11 @@ function getPayUrl(){
 	jQuery.post(Think.U('Home/Payments/get'+params.payCode+"URL") ,params,function(data) {
 		var json = WST.toJson(data);
 		if(json.status==1){
-			window.open(json.url);
+			if(params.payCode=="Weixin"){
+				location.href = json.url;
+			}else{
+				window.open(json.url);
+			}
 		}else if(json.status==-2){
 			var rlist = json.rlist;
 			var garr = new Array();
@@ -357,8 +361,7 @@ function getPayUrl(){
 			
 		}else{
 			WST.msg('您的订单已支付!', {icon: 5});
-			setTimeout(function(){
-				
+			setTimeout(function(){				
 				window.location = Think.U('Home/orders/queryDeliveryByPage');
 			},1500);
 		}

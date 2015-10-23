@@ -23,7 +23,7 @@ class OrdersAction extends BaseAction {
 		$morders = D('Home/Orders');
 		$obj["userId"] = (int)$USER['userId'];
 		$orderList = $morders->queryByPage($obj);
-		$statusList = $morders->getOrderStatusCount($obj);
+		$statusList = $morders->getUserOrderStatusCount($obj);
 		$this->assign("umark","queryByPage");
 		$this->assign("orderList",$orderList);
 		$this->assign("statusList",$statusList);
@@ -469,7 +469,7 @@ class OrdersAction extends BaseAction {
 	} 
 	
 	/**
-	 * 商家同意拒收
+	 * 商家同意拒收/不同意拒收
 	 */
 	public function shopOrderRefund(){
 		$this->isShopAjaxLogin();
@@ -483,30 +483,28 @@ class OrdersAction extends BaseAction {
 	}
 	
 	/**
-	 * 商家同意取消
-	 */
-	public function shopOrderCancel(){
-		$this->isShopAjaxLogin();
-		$USER = session('WST_USER');
-		$morders = D('Home/Orders');
-		$obj["userId"] = (int)$USER['userId'];
-		$obj["shopId"] = (int)$USER['shopId'];
-		$obj["orderId"] = I("orderId");
-		$rs = $morders->shopOrderCancel($obj);
-		$this->ajaxReturn($rs);
-	}
-	
-	/**
-	 * 获取用户消息提示
+	 * 获取用户订单消息提示
 	 */
 	public function getUserMsgTips(){
 		$this->isUserAjaxLogin();
 		$morders = D('Home/Orders');
 		$USER = session('WST_USER');
 		$obj["userId"] = (int)$USER['userId'];
-		$statusList = $morders->getOrderStatusCount($obj);
+		$statusList = $morders->getUserOrderStatusCount($obj);
 		$this->ajaxReturn($statusList);
 	}
 	
+	/**
+	 * 获取店铺订单消息提示
+	 */
+	public function getShopMsgTips(){
+		$this->isShopAjaxLogin();
+		$morders = D('Home/Orders');
+		$USER = session('WST_USER');
+		$obj["shopId"] = (int)$USER['shopId'];
+		$obj["userId"] = (int)$USER['userId'];
+		$statusList = $morders->getShopOrderStatusCount($obj);
+		$this->ajaxReturn($statusList);
+	}
 	
 }

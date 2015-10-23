@@ -106,7 +106,9 @@ class ShopsAction extends BaseAction {
    		$obj["deliveryMoney"] = I("deliveryMoney");
    		$obj["shopAtive"] = I("shopAtive");
    		$ctplist = $mshops->getShopByCommunitys($obj);
-   		$this->assign('ctplist',$ctplist);
+   		$pages = $rslist["pages"];
+
+   		$this->assign('ctplist',$pages);
        	$this->ajaxReturn($ctplist);
        	
 	}

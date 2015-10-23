@@ -1,18 +1,3 @@
-/*
-Navicat MySQL Data Transfer
-
-Source Server         : 127.0.0.1
-Source Server Version : 50520
-Source Host           : localhost:3306
-Source Database       : wstmall
-
-Target Server Type    : MYSQL
-Target Server Version : 50520
-File Encoding         : 65001
-
-Date: 2015-09-03 12:49:56
-*/
-
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
@@ -32,7 +17,7 @@ CREATE TABLE `wst_sys_configs` (
   `fieldSort` int(11) DEFAULT '0' COMMENT '字段排序',
   PRIMARY KEY (`configId`),
   KEY `parentId` (`parentId`)
-) ENGINE=MyISAM AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of wst_sys_configs
@@ -61,6 +46,8 @@ INSERT INTO `wst_sys_configs` VALUES ('1', '0', '商城名称', 'mallName', 'tex
  ('26', '0', '授权码', 'mallLicense', 'hidden', null, null, null, null, '0'),
  ('27', '0', '商城Logo', 'mallLogo', 'upload', null, null, 'Apps/Home/View/default/images/logo.png', '(建议为240x132)<br/>', '6'),
  ('28', '0', '默认图片', 'goodsImg', 'upload', null, null, 'Apps/Home/View/default/images/item-pic.jpg', '', '7'),
- ('29', '0', '底部设置', 'mallFooter', 'textarea', null, null, 'CROPYRIGHT 2013-2015 广州晴暖信息科技有限公司 版权所有  电话：020-29806661&lt;br/&gt;公司邮箱：wasonteam@163.com  客服QQ:707563272  粤ICP备13014375号&lt;br/&gt;我们愿与更多中小企业一起努力，一起成功 We Success together', null, '8'),
+ ('29', '0', '底部设置', 'mallFooter', 'textarea', null, null, 'CROPYRIGHT 2013-2015 广州商淘信息科技有限公司 版权所有  电话：020-29806661&lt;br/&gt;公司邮箱：wasonteam@163.com  客服QQ:707563272  粤ICP备13014375号&lt;br/&gt;我们愿与更多中小企业一起努力，一起成功 We Success together', null, '8'),
  ('30', '0', '联系电话', 'phoneNo', 'text', null, null, '020-29806661', null, '10'),
- ('31', '0', 'QQ', 'qqNo', 'text', null, null, '707563272', null, '11');
+ ('31', '0', 'QQ', 'qqNo', 'text', null, null, '707563272', null, '11'),
+ ('32', '0', '默认城市', 'defaultCity', 'other', null, null, '440100', null, '5'),
+ ('33', '0', '热搜索词', 'hotSearchs', 'text', null, null, 'WSTMall，O2O开源商城', '以，号分隔', '12');

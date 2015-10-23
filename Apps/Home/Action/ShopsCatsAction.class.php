@@ -10,45 +10,6 @@
  */
 class ShopsCatsAction extends BaseAction{
 	/**
-	 * 跳到新增/编辑页面
-	 */
-	public function toEdit(){
-		$this->isShopLogin();
-	    $m = D('Home/ShopsCats');
-    	$object = array();
-    	if(I('id',0)>0){
-    		$object = $m->get(I('id',0));
-    		
-    	}else{
-    	    if(I('parentId',0)>0){
-    		   $object = $m->get(I('parentId',0));
-    		   $object['parentId'] = $object['catId'];
-    		   $object['catName'] = '';
-    		   $object['catSort'] = 0;
-    		   $object['catId'] = 0;
-    		}else{
-    		   $object = $m->getModel();
-    		}
-    	}
-    	$this->assign('object',$object);
-		$this->view->display('default/shops/shopscats/edit');
-	}
-	/**
-	 * 新增/修改操作
-	 */
-	public function edit(){
-		$this->isShopLogin();
-		$m = D('Home/ShopsCats');
-    	$rs = array();
-    	if(I('id',0)>0){
-    		$rs = $m->edit();
-    	}else{
-    		$rs = $m->insert();
-    	}
-    	$this->ajaxReturn($rs);
-	}
-	
-	/**
 	 * 修改名称
 	 */
     public function editName(){
@@ -58,6 +19,27 @@ class ShopsCatsAction extends BaseAction{
     	if(I('id',0)>0){
     		$rs = $m->editName();
     	}
+    	$this->ajaxReturn($rs);
+	}
+    /**
+	 * 修改排序
+	 */
+    public function editSort(){
+    	$this->isShopLogin();
+		$m = D('Home/ShopsCats');
+    	$rs = array();
+    	if(I('id',0)>0){
+    		$rs = $m->editSort();
+    	}
+    	$this->ajaxReturn($rs);
+	}
+	/**
+	 * 批量保存商品分类
+	 */
+	public function batchSaveShopCats(){
+		$this->isShopAjaxLogin();
+		$m = D('Home/ShopsCats');
+		$rs = $m->batchSaveShopCats();
     	$this->ajaxReturn($rs);
 	}
 	/**
@@ -70,7 +52,7 @@ class ShopsCatsAction extends BaseAction{
     	$this->ajaxReturn($rs);
 	}
 	/**
-	 * 分页查询
+	 * 列表
 	 */
 	public function index(){
 		$this->isShopLogin();

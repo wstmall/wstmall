@@ -1,18 +1,3 @@
-/*
-Navicat MySQL Data Transfer
-
-Source Server         : 127.0.0.1
-Source Server Version : 50520
-Source Host           : localhost:3306
-Source Database       : wstmall
-
-Target Server Type    : MYSQL
-Target Server Version : 50520
-File Encoding         : 65001
-
-Date: 2015-09-03 12:46:48
-*/
-
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
@@ -56,6 +41,7 @@ CREATE TABLE `wst_shops` (
   `latitude` char(30) DEFAULT '0',
   `longitude` char(30) DEFAULT '0',
   `mapLevel` int(11) DEFAULT '13',
+  `qqNo` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`shopId`),
   KEY `areaId1` (`areaId2`) USING BTREE,
   KEY `shopStatus` (`shopStatus`,`shopFlag`) USING BTREE

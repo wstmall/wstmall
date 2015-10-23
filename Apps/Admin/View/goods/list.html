@@ -156,6 +156,7 @@
                <th width='180'>商品名称</th>
                <th width='60'>商品编号</th>
                <th width='40'>价格</th>
+               <th width='100'>店铺</th>
                <th width='100'>商城分类</th>
                <th width='80'>店铺分类</th>
                <th width='25'>推荐</th>
@@ -174,13 +175,14 @@
                </td>
                <td>{$vo['goodsSn']}&nbsp;</td>
                <td>{$vo['shopPrice']}&nbsp;</td>
+               <td><a href="{:U('Home/Shops/toShopHome',array('shopId'=>$vo['shopId']))}" target='_blank'>{$vo['shopName']}</a>&nbsp;</td>
                <td>{$vo['catName']}&nbsp;</td>
                <td>{$vo['shopCatName']}&nbsp;</td>
                <td>
-               <if condition="$vo['isAdminRecom']==1 ">推荐</if>
+               <if condition="$vo['isAdminRecom']==1 "><span class='label label-success'>推荐</span></if>
                </td>
                <td>
-               <if condition="$vo['isAdminBest']==1 ">精品</if>
+               <if condition="$vo['isAdminBest']==1 "><span class='label label-success'>精品</span></if>
                </td>
                <td>{$vo['saleCount']}</td>
                <td>
@@ -192,7 +194,7 @@
              </tr>
              </volist>
              <tr>
-                <td colspan='10' align='center'>{$Page['pager']}</td>
+                <td colspan='11' align='center'>{$Page['pager']}</td>
              </tr>
            </tbody>
         </table>

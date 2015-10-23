@@ -71,10 +71,10 @@ class GoodsModel extends BaseModel {
      	$goodsName = I('goodsName');
      	$areaId1 = I('areaId1',0);
      	$areaId2 = I('areaId2',0);
-	 	$sql = "select g.*,gc.catName,sc.catName shopCatName from __PREFIX__goods g 
+	 	$sql = "select g.*,gc.catName,sc.catName shopCatName,p.shopName from __PREFIX__goods g 
 	 	      left join __PREFIX__goods_cats gc on g.goodsCatId3=gc.catId 
 	 	      left join __PREFIX__shops_cats sc on sc.catId=g.shopCatId2,__PREFIX__shops p 
-	 	      where goodsStatus=0 and goodsFlag=1 and p.shopId=g.shopId ";
+	 	      where goodsStatus=0 and goodsFlag=1 and p.shopId=g.shopId and g.isSale=1";
 	 	if($areaId1>0)$sql.=" and p.areaId1=".$areaId1;
 	 	if($areaId2>0)$sql.=" and p.areaId2=".$areaId2;
 	 	if($shopName!='')$sql.=" and (p.shopName like '%".$shopName."%' or p.shopSn like '%'".$shopName."%')";
@@ -91,10 +91,10 @@ class GoodsModel extends BaseModel {
      	$goodsName = I('goodsName');
      	$areaId1 = I('areaId1',0);
      	$areaId2 = I('areaId2',0);
-	 	$sql = "select g.*,gc.catName,sc.catName shopCatName from __PREFIX__goods g 
+	 	$sql = "select g.*,gc.catName,sc.catName shopCatName,p.shopName from __PREFIX__goods g 
 	 	      left join __PREFIX__goods_cats gc on g.goodsCatId3=gc.catId 
 	 	      left join __PREFIX__shops_cats sc on sc.catId=g.shopCatId2,__PREFIX__shops p 
-	 	      where goodsStatus=1 and goodsFlag=1 and p.shopId=g.shopId ";
+	 	      where goodsStatus=1 and goodsFlag=1 and p.shopId=g.shopId and g.isSale=1";
 	 	if($areaId1>0)$sql.=" and p.areaId1=".$areaId1;
 	 	if($areaId2>0)$sql.=" and p.areaId2=".$areaId2;
 	 	if($shopName!='')$sql.=" and (p.shopName like '%".$shopName."%' or p.shopSn like '%".$shopName."%')";

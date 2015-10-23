@@ -25,16 +25,16 @@
              <td>
              <span style='font-weight:bold;'>订单号：{$object['orderNo']}</span>
              <span style='margin-left:100px;'>
-                                       状态：<if condition='$object["orderStatus"] eq -3'>会员拒收
-               <elseif condition='$object["orderStatus"] eq -4'>店铺确认拒收
+                                       状态：<if condition='$object["orderStatus"] eq -3'>用户拒收
+               <elseif condition='$object["orderStatus"] eq -5'/>店铺不同意拒收
+               <elseif condition='$object["orderStatus"] eq -4'/>店铺同意拒收
 			   <elseif condition='$object["orderStatus"] eq -2'/>未付款
-			   <elseif condition='$object["orderStatus"] eq -1'/>已取消
+			   <elseif condition='($object["orderStatus"] eq -6) OR ($vo["orderStatus"] eq -7)'/>用户取消
 			   <elseif condition='$object["orderStatus"] eq 0'/>未受理
 			   <elseif condition='$object["orderStatus"] eq 1'/>已受理
 			   <elseif condition='$object["orderStatus"] eq 2'/>打包中
 			   <elseif condition='$object["orderStatus"] eq 3'/>配送中
 			   <elseif condition='$object["orderStatus"] eq 4'/>已到货
-			   <elseif condition='$object["orderStatus"] eq 5'/>店铺确认到货
 			   </if>
              </span></td>
            </tr>
@@ -169,7 +169,7 @@
                 <volist name="object['goodslist']" id="goods">
                 <tr>
                   <td width='50'><img src='__ROOT__/{$goods["goodsThums"]}' style='margin:2px;' width='50' height='50'/></td>
-                  <td width='400'>{$goods["goodsName"]}【{$goods['goodsAttrName']}】</td>
+                  <td width='400'>{$goods["goodsName"]}<if condition="$goods['goodsAttrName'] neq ''">【{$goods['goodsAttrName']}】</if></td>
                   <td width='350'>￥{$goods["goodsPrice"]}</td>
                   <td width='130'>{$goods["goodsNums"]}</td>
                   <td width='130'>￥{$goods["goodsPrice"]*$goods["goodsNums"]}</td>

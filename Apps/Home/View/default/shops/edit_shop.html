@@ -35,7 +35,8 @@ $(function () {
 	    $("#shopName").formValidator({onShow:"",onFocus:"店铺名称不能超过20个字符",onCorrect:"输入正确"}).inputValidator({min:1,max:20,onError:"店铺名称不符合要求,请确认"});
 		$("#shopName").formValidator({onShow:"",onFocus:"店铺名称不能超过20个字符",onCorrect:"输入正确"}).inputValidator({min:1,max:20,onError:"店铺名称不符合要求,请确认"});
 		$("#userName").formValidator({onShow:"",onFocus:"请输入店主姓名",onCorrect:"输入正确"}).inputValidator({min:1,max:20,onError:"店主姓名不能为空,请确认"});
-		$("#shopCompany").formValidator({onShow:"",onFocus:"请输入公司名称",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"店铺关键字不能为空,请确认"});
+		$("#shopCompany").formValidator({onShow:"",onFocus:"请输入公司名称",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"公司名称不能为空,请确认"});
+		$("#shopTel").formValidator({onShow:"",onFocus:"请输入店铺电话",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"店铺电话不能为空,请确认"});
 		$("#shopAddress").formValidator({onShow:"",onFocus:"请输入公司地址",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"公司地址不能为空,请确认"});
 		$("#bankNo").formValidator({onShow:"",onFocus:"请输入银行卡号",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"银行卡号不能为空,请确认"});
 		$("#deliveryStartMoney").formValidator({onShow:"",onFocus:"请输入订单配送起步价",onCorrect:"输入正确"});
@@ -125,8 +126,12 @@ var filetypes = ["gif","jpg","png","jpeg"];
            </tr>
            
            <tr>
-             <th align='right'>店铺电话：</th>
+             <th align='right'>店铺电话<font color='red'>*</font>：</th>
              <td><input type='text' id='shopTel' class="form-control wst-ipt" value='{$object.shopTel}' maxLength='25'/></td>
+           </tr>
+           <tr>
+             <th align='right'>QQ：</th>
+             <td><input type='text' id='qqNo' class="form-control wst-ipt" value='{$object.qqNo}' maxLength='25'/></td>
            </tr>
            <tr>
              <th align='right'>店铺地址<font color='red'>*</font>：</th>
@@ -196,6 +201,21 @@ var filetypes = ["gif","jpg","png","jpeg"];
            <tr id='invoiceRemarkstr' <if condition="$object['isInvoice'] ==0 ">style='display:none'</if>>
              <th align='right'>发票说明：</th>
              <td><input type='text' id='invoiceRemarks' class="form-control wst-ipt" value='{$object.invoiceRemarks}' style='width:350px;' maxLength='100'/></td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>转账银行<font color='red'>*</font>：</th>
+             <td>
+             <select id='bankId'>
+                <option value=''>请选择</option>
+                <volist name="bankList" id="vo">
+                <option <if condition="$vo['bankId'] eq $object['bankId']">selected</if> value='{$vo['bankId']}'>{$vo['bankName']}</option>
+                </volist>
+             </select>
+             </td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>银行卡卡号<font color='red'>*</font>：</th>
+             <td><input type='text' id='bankNo' value='{$object.bankNo}' maxLength='25' size='50'/></td>
            </tr>
            <tr>
              <th align='right'>营业时间<font color='red'>*</font>：</th>

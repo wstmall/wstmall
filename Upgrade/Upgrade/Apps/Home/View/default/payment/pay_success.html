@@ -1,0 +1,84 @@
+<!DOCTYPE>
+<html lang="zh-cn">
+<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>{$CONF['mallTitle']} - 支付成功</title>
+      	<meta name="keywords" content="{$CONF['mallKeywords']},支付成功" />
+      	<meta name="description" content="{$CONF['mallDesc']},支付成功" />
+	    <link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/ordersuccess.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/pslocation.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/magnifier.css" />
+</head>
+
+<body class="root61">
+	<include file="./Apps/Home/View/default/header_common.html" />
+	<div class="w">
+		<div>
+			<div>
+                <div id="succeed" class="wst-ods-success">
+                    <div class="success2" style="margin: 0 auto;">
+                        <div class="wst-ods-success-blank"></div>
+                        <div class="wst-ods-success-step">
+                            <img src="__ROOT__/Apps/Home/View/default/images/step3.png" alt="" /><br />
+                            <span class="wst-pay-success-step1">1.在线支付</span>
+                            <span class="wst-pay-success-step2">2.收银台</span>
+                            <span class="wst-pay-success-step3 wst-pay-curr-step">3.支付成功</span>
+                        </div>
+                        <div class="wst-clear"></div>
+                    </div>
+                </div>
+            </div>
+<br/>
+			<div class="wst-ods-success-tb">
+					<div class="wst-ods-success-tc">
+						<div class="wst-ods-success-td">
+							<img src="__ROOT__/Apps/Home/View/default/images/icon-succ.png" alt="" />
+						</div>
+						<div class="wst-ods-success-tf">
+							<div class="wst-ods-success-l25">
+								<span class="wst-ods-success-tg">您的订单已支付成功！</span>
+	   						</div>							
+						</div>
+						<div class="wst-clear"></div>
+					</div>					
+					
+					<div class="wst-clear"></div>
+					<br/>
+					<div class="cart-button clearfix">
+		
+                    <li class="wst-btn-continue" onclick="javascript:toContinue();"></li>
+                    
+                   	<div class="wst-clear"></div>
+                </div>
+					
+					<div class="wst-ods-success-tk">			
+						<div id="checkout" class="wst-checkout" >							
+							<a class="btn-submit" href="__ROOT__/index.php">
+								<span id="saveConsigneeTitleDiv" class="wst_btn-continue"></span>
+							</a>
+							<div class="wst-clear"></div>
+						</div>
+					</div>				
+				</div>							
+			</div>			
+		</div>
+	
+	<div class="wst-clear"></div>
+    <div style="height: 20px;"></div>
+    
+	<include file="./Apps/Home/View/default/footer.html" />
+	
+	<script src="__PUBLIC__/js/common.js"></script>
+  	<script src="__ROOT__/Apps/Home/View/default/js/index.js"></script>      	
+ 	<script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
+ 	<script src="__ROOT__/Apps/Home/View/default/js/orders.js"></script>
+ 	<script>
+ 		function toContinue(){
+			location.href= domainURL ;
+		}	
+ 	</script>
+</body>
+</html>

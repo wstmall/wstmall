@@ -237,23 +237,54 @@ function showOrder(id){
 	    area: ['1020px', ($(window).height() - 50) +'px']
 	});
 }
-function orderCancel(id){
-	layer.confirm('您确定要取消该订单吗？',{icon: 3, title:'系统提示'}, function(tips){
-	    var ll = layer.load('数据处理中，请稍候...');
-	    $.post(Think.U('Home/Orders/orderCancel'),{orderId:id},function(data){
-	    	layer.close(ll);
-	    	layer.close(tips);
-	    	var json = WST.toJson(data);
-			if(json.status>0){
-				window.location.reload();
-			}else if(json.status==-1){
-				WST.msg('操作失，订单状态已发生改变，请刷新后再重试 !', {icon: 5});
-			}else{
-				WST.msg('操作失，请与商城管理员联系 !', {icon: 5});
-			}
-	   });
-	});
-	
+function orderCancel(id,type){
+	if(type==1 || type==2){
+		var w = layer.open({
+		    type: 1,
+		    title:"取消原因",
+		    shade: [0.6, '#000'],
+		    border: [0],
+		    content: '<textarea id="rejectionRemarks" rows="8" style="width:96%" maxLength="100"></textarea>',
+		    area: ['500px', '250px'],
+		    btn: ['提交', '关闭窗口'],
+	        yes: function(index, layero){
+	        	var rejectionRemarks = $.trim($('#rejectionRemarks').val());
+	        	if(rejectionRemarks==''){
+	        		WST.msg('请输入拒收原因 !', {icon: 5});
+	        		return;
+	        	}
+	        	var ll = layer.load('数据处理中，请稍候...');
+			    $.post(Think.U('Home/Orders/orderCancel'),{orderId:id,type:1,rejectionRemarks:rejectionRemarks},function(data){
+			    	layer.close(w);
+			    	layer.close(ll);
+			    	var json = WST.toJson(data);
+					if(json.status>0){
+						window.location.reload();
+					}else if(json.status==-1){
+						WST.msg('操作失败，订单状态已发生改变，请刷新后再重试 !', {icon: 5});
+					}else{
+						WST.msg('操作失败，请与商城管理员联系 !', {icon: 5});
+					}
+			   });
+	        }
+		});
+	}else{
+		layer.confirm('您确定要取消该订单吗？',{icon: 3, title:'系统提示'}, function(tips){
+		    var ll = layer.load('数据处理中，请稍候...');
+		    $.post(Think.U('Home/Orders/orderCancel'),{orderId:id},function(data){
+		    	layer.close(ll);
+		    	layer.close(tips);
+		    	var json = WST.toJson(data);
+				if(json.status>0){
+					window.location.reload();
+				}else if(json.status==-1){
+					WST.msg('操作失，订单状态已发生改变，请刷新后再重试 !', {icon: 5});
+				}else{
+					WST.msg('操作失，请与商城管理员联系 !', {icon: 5});
+				}
+		   });
+		});
+	}
 }
 
 function appraiseOrder(id){
@@ -313,22 +344,53 @@ function addGoodsAppraises(shopId,goodsId,orderId){
 }
 
 function orderConfirm(id,type){
-	var msg = (type==1)?'您确定已收货吗？':'您确认拒收货吗?';
-	layer.confirm(msg,{icon: 3, title:'系统提示'}, function(tips){
-	    var ll = layer.load('数据处理中，请稍候...');
-	    $.post(Think.U('Home/Orders/orderConfirm'),{orderId:id,type:type},function(data){
-	    	layer.close(tips);
-	    	layer.close(ll);
-	    	var json = WST.toJson(data);
-			if(json.status>0){
-				location.reload();
-			}else if(json.status==-1){
-				WST.msg('操作失败，订单状态已发生改变，请刷新后再重试 !', {icon: 5});
-			}else{
-				WST.msg('操作失败，请与商城管理员联系 !', {icon: 5});
-			}
-	   });
-	});
+	if(type==1){
+		layer.confirm('您确定已收货吗？',{icon: 3, title:'系统提示'}, function(tips){
+		    var ll = layer.load('数据处理中，请稍候...');
+		    $.post(Think.U('Home/Orders/orderConfirm'),{orderId:id,type:type},function(data){
+		    	layer.close(tips);
+		    	layer.close(ll);
+		    	var json = WST.toJson(data);
+				if(json.status>0){
+					location.reload();
+				}else if(json.status==-1){
+					WST.msg('操作失败，订单状态已发生改变，请刷新后再重试 !', {icon: 5});
+				}else{
+					WST.msg('操作失败，请与商城管理员联系 !', {icon: 5});
+				}
+		   });
+		});
+	}else{
+		var w = layer.open({
+		    type: 1,
+		    title:"拒收原因",
+		    shade: [0.6, '#000'],
+		    border: [0],
+		    content: '<textarea id="rejectionRemarks" rows="8" style="width:96%" maxLength="100"></textarea>',
+		    area: ['500px', '250px'],
+		    btn: ['拒收订单', '关闭窗口'],
+	        yes: function(index, layero){
+	        	var rejectionRemarks = $.trim($('#rejectionRemarks').val());
+	        	if(rejectionRemarks==''){
+	        		WST.msg('请输入拒收原因 !', {icon: 5});
+	        		return;
+	        	}
+	        	var ll = layer.load('数据处理中，请稍候...');
+			    $.post(Think.U('Home/Orders/orderConfirm'),{orderId:id,type:type,rejectionRemarks:rejectionRemarks},function(data){
+			    	layer.close(w);
+			    	layer.close(ll);
+			    	var json = WST.toJson(data);
+					if(json.status>0){
+						location.reload();
+					}else if(json.status==-1){
+						WST.msg('操作失败，订单状态已发生改变，请刷新后再重试 !', {icon: 5});
+					}else{
+						WST.msg('操作失败，请与商城管理员联系 !', {icon: 5});
+					}
+			   });
+	        }
+		});
+	}
 }
 function getAreaListForOpen(objId,parentId,t,id){
 	   var params = {};
@@ -417,6 +479,7 @@ function openShop(){
 	   params.shopCompany = $('#shopCompany').val();
 	   params.shopImg = $('#shopImg').val();
 	   params.shopTel = $('#shopTel').val();
+	   params.qqNo = $('#qqNo').val();
 	   params.areaId1 = $('#areaId1').val();
 	   params.areaId2 = $('#areaId2').val();
 	   params.areaId3 = $('#areaId3').val();
@@ -548,9 +611,10 @@ function ShopMapInit(option){
 	   }
 	   shopMap.plugin(["AMap.ToolBar"],function(){		
 			toolBar = new AMap.ToolBar();
-			shopMap.addControl(toolBar);		
+			shopMap.addControl(toolBar);
+			toolBar.show();
 	   });
-	   toolBar.show();
+	   
 	   AMap.event.addListener(shopMap,'click',function(e){
 			shopMap.clearMap();
 			$('#longitude').val(e.lnglat.getLng());
@@ -575,7 +639,6 @@ function getOrdersList(type){
 	var shopName = $.trim($('#shopName').val());
 	var sdate = $.trim($('#sdate').val());
 	var edate = $.trim($('#edate').val());
-	var orderStatus = $.trim($('#orderStatus').val());
 	if(orderNo!=""){
 		params.orderNo = $.trim($('#orderNo').val());
 	}
@@ -590,9 +653,6 @@ function getOrdersList(type){
 	}
 	if(edate!=""){
 		params.edate = $.trim($('#edate').val());
-	}
-	if(orderStatus!=""){
-		params.orderStatus = $.trim($('#orderStatus').val());
 	}
 	
 	//type->1:待付款订单;2:待发货订单;3:待确认收货;4:待评价交易;5:已取消订单;6:拒收/退款
@@ -648,6 +708,13 @@ function getUserMsgTips(){
 					$("#li_queryAppraiseByPage .wst-msg-tips-box").hide();
 				}
 				$("#li_queryAppraiseByPage .wst-msg-tips-box").html(json[i]);
+			}else if(i==100000){//商城消息
+				if(json[i]>0){
+					$("#li_queryMessageByPage .wst-msg-tips-box").show();
+				}else{
+					$("#li_queryMessageByPage .wst-msg-tips-box").hide();
+				}
+				$("#li_queryMessageByPage .wst-msg-tips-box").html(json[i]);
 			}
 		}
 	});

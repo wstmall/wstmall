@@ -345,12 +345,6 @@ class GoodsAction extends BaseAction {
 		$this->ajaxReturn($catgoods);
 	}
 	
-	public function getGoodsappraises(){	
-		$goods = D('Home/Goods');
-		$goodsAppraises = $goods->getGoodsAppraises();
-		$this->ajaxReturn($goodsAppraises);
-	}
-	
 	/**
 	 * 获取验证码
 	 */
@@ -377,6 +371,16 @@ class GoodsAction extends BaseAction {
     	$this->isShopLogin();
     	$m = D('Home/Goods');
     	$rs = $m->editStock();
+    	$this->ajaxReturn($rs);
+    }
+    
+    /**
+     * 修改商品库存,商品编号,价格
+     */
+    public function editGoodsBase(){
+    	$this->isShopLogin();
+    	$m = D('Home/Goods');
+    	$rs = $m->editGoodsBase();
     	$this->ajaxReturn($rs);
     }
     

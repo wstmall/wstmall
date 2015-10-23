@@ -53,7 +53,7 @@ function WSTGoodsCats(){
     $cats = S("WST_CACHE_GOODS_CAT_WEB");
 	if(!$cats){
 		$m = M();
-		$sql = "select catId,catName from __PREFIX__goods_cats WHERE parentId = 0 AND isShow =1 AND catFlag = 1 order by catSort asc limit 6";
+		$sql = "select catId,catName from __PREFIX__goods_cats WHERE parentId = 0 AND isShow =1 AND catFlag = 1 order by catSort asc";
 		$rs1 = $m->query($sql);
 		$cats = array();
 		for ($i = 0; $i < count($rs1); $i++) {

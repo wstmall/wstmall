@@ -12,8 +12,8 @@
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/passport.css">
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/footer.css">
      	<style>
-		.div1{ background: #eeecdb none repeat scroll 0 0;border: 1px solid #003c74;border-radius: 2px;float: left;height: 35px;position: relative;top: 0px;width: 45px; }
-		.div1:hover{background: none repeat scroll 0 0 #dfefef;border: 1px solid #003C74;border-radius: 2px;float: left;height: 35px;position: relative;top: 0px;width: 45px;}
+		.div1{ background: #E23C3D none repeat scroll 0 0;border: 1px solid red;border-radius: 2px;float: left;height: 35px;position: relative;top: 0px;width: 45px; }
+		.div1:hover{background: none repeat scroll 0 0 red;border: 1px solid red;border-radius: 2px;float: left;height: 35px;position: relative;top: 0px;width: 45px;}
 		.div2{font-size: 13px;line-height: 35px;text-align: center;}
 		.inputstyle{cursor: pointer;font-size: 13px;height: 35px;left: 0px;opacity: 0;outline: medium none;position: absolute;top: 0px;width: 45px;}
 		</style>
@@ -23,7 +23,7 @@
    	</head>
    	<body>
     <style>
-    .yj-select select{height:30px;font-size:17px;margin-right:5px;}
+    .yj-select select{height:30px;font-size:14px;margin-right:5px;}
     .ATRoot{padding:0px 5px;height:22px;line-height:22px;clear:both;}
     .ATNode{margin-right:5px;;line-height:22px;width:150px;float:left;}
     label{cursor:pointer;}
@@ -48,7 +48,7 @@
 	<div class="wst-regist" id="regist">	    
 	    <div class="mc" style="position:relative;">
 	    	<iframe name="upload" style="display:none"></iframe>
-			<form id="uploadform_Filedata" autocomplete="off" style="position:absolute;top:386px;left:193px;z-index:10;" enctype="multipart/form-data" method="POST" target="upload" action="{:U('Home/Shops/uploadPic')}" >
+			<form id="uploadform_Filedata" autocomplete="off" style="position:absolute;top:433px;left:193px;z-index:10;" enctype="multipart/form-data" method="POST" target="upload" action="{:U('Home/Shops/uploadPic')}" >
 				<div style="position:relative;">
 				<input id="shopImg" name="shopImg" class="text" type="text" value="{$object.shopImg}" readonly style="margin-right:4px;float:left;margin-left:8px;width:237px;"/>
 				<div class="div1">
@@ -72,7 +72,7 @@
 	                    <span class="label"><b class="ftx04">*</b>登录账户：</span>	
 	                    <div class="fl item-ifo">
 	                        <div class="o-intelligent-regName" style="position:relative;">	                       
-	                            <input id="loginName" name="loginName" class="text" tabindex="1" maxlength="30" type="text"/>
+	                            <input id="loginName" name="loginName" class="text" tabindex="1" maxlength="30" type="text" onkeypress="return WST.isNumberCharKey(event)"/>
 	                            <div id="loginNameTip" style="display: inline-block; "></div>
 	                        </div>	                        
 	                    </div>
@@ -117,6 +117,12 @@
 	                        <span class="label"><b class="ftx04">*</b>店铺电话：</span>	
 	                        <div class="fl item-ifo">
 	                            <input id="shopTel" name="shopTel" class="text" tabindex="3" autocomplete="off" style="" type="text"/>	                           	                           
+	                        </div>
+	                    </div>
+	                    <div class="item">
+	                        <span class="label">QQ：</span>	
+	                        <div class="fl item-ifo">
+	                            <input id="qqNo" name="qqNo" class="text" tabindex="3" autocomplete="off" style="" type="text"/>	                           	                           
 	                        </div>
 	                    </div>
 	                    <div class="item" style='height:auto;position:relative;'>

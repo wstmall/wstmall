@@ -4,6 +4,12 @@
     <div class="wst-body"> 
        <div class='wst-page-header'>买家中心 > 拒收/退款</div>
        <div class='wst-page-content'>
+        <div style="padding-bottom:4px;">
+       		订单编号:<input id="orderNo" value="{$params['orderNo']}" style="width:80px;" autocomplete="off"/>
+       		店铺名称:<input id="shopName" value="{$params['shopName']}" style="width:80px;" autocomplete="off"/>
+       		收货人:<input id="userName" value="{$params['userName']}" style="width:80px;" autocomplete="off"/>
+       		<button class="wst-btn-query" onclick="javascript:getOrdersList(6)">查询</button>
+       	</div>
         <table class='wst-list' style="font-size:13px;">
            <thead>
              <tr>
@@ -37,6 +43,17 @@
                	    用户拒收
                	    <PHP>}else if($order["orderStatus"]==-4){</PHP>
                	    商家确认拒收
+	               	    <PHP>if($order["payType"]==1){</PHP>
+	               	       <PHP>if($order["isRefund"]==1){</PHP>
+	               	       (已退款)
+	               	       <PHP>}else{</PHP>
+	               	       (未退款)
+	               	       <PHP>}</PHP>
+	               	    <PHP>}</PHP>
+               	    <PHP>}else if($order["orderStatus"]==-5){</PHP>
+               	    商家不同意拒收
+               	    <PHP>}else if($order["orderStatus"]==-6 || $order["orderStatus"]==-1 || $order["orderStatus"]==-7){</PHP>
+               	    用户取消
 	               	    <PHP>if($order["payType"]==1){</PHP>
 	               	       <PHP>if($order["isRefund"]==1){</PHP>
 	               	       (已退款)

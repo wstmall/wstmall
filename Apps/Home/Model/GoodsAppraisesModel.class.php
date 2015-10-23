@@ -18,7 +18,6 @@ class GoodsAppraisesModel extends BaseModel {
 		$shopCatId2 = I('shopCatId2',0);
 		$goodsName = I('goodsName');
         $pcurr = I("pcurr",0);
-		$pageSize = 20;
 	 	$sql = "select gp.*,g.goodsName,g.goodsThums,u.loginName from 
 	 	           __PREFIX__goods_appraises gp ,__PREFIX__goods g, __PREFIX__users u
 	 	           where gp.userId=u.userId and gp.goodsId=g.goodsId and gp.shopId=".$shopId."";
@@ -26,10 +25,22 @@ class GoodsAppraisesModel extends BaseModel {
 		if($shopCatId2>0)$sql.=" and shopCatId2=".$shopCatId2;
 		if($goodsName!='')$sql.=" and (goodsName like '%".$goodsName."%' or goodsSn like '%".$goodsName."%')";
 		$sql.=" order by id desc";
-	 	$pages = $this->pageQuery($sql,$pcurr,$pageSize);	
+	 	$pages = $this->pageQuery($sql,$pcurr);	
 		
 		return $pages;
 	 }
+	 
+	/**
+	 * 查询商品评价
+	 */
+	public function getGoodsAppraises(){		
+		$goodsId = (int)I("goodsId");
+		$sql = "SELECT ga.*, u.userName,u.loginName, od.createTime as ocreateTIme 
+				FROM __PREFIX__goods_appraises ga , __PREFIX__orders od , __PREFIX__users u 
+				WHERE ga.userId = u.userId AND ga.orderId = od.orderId AND ga.goodsId = $goodsId AND ga.isShow =1";		
+		$data = $this->pageQuery($sql);	
+		return $data;
+	}
 	 
  	/**
 	  * 获取指定商品评价
@@ -176,14 +187,13 @@ class GoodsAppraisesModel extends BaseModel {
 	public function getAppraisesList($obj){
 		$userId = $obj["userId"];
 		$pcurr = I("pcurr",0);
-		$pageSize = 20;
 		$data = array();
 
 		$sql = "SELECT ga.*,o.orderNo,g.goodsName,g.goodsThums
 				FROM __PREFIX__goods_appraises ga, __PREFIX__goods g, __PREFIX__orders o 
 				WHERE ga.userId=$userId AND ga.goodsId = g.goodsId AND ga.orderId = o.orderId
 				ORDER BY ga.createTime DESC";
-		$pages = $this->pageQuery($sql,$pcurr,$pageSize);	
+		$pages = $this->pageQuery($sql,$pcurr);	
 		return $pages;
 	}
 };

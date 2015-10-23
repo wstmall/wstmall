@@ -47,7 +47,7 @@ class OrdersModel extends BaseModel {
 	  */
 	 public function get(){
 	 	$m = M('orders');
-	 	return $m->where('isRefund=0 and orderFlag=1 and orderStatus=-4 and orderId='.I('id'))->find();
+	 	return $m->where('isRefund=0 and payType=1 and isPay=1 and orderFlag=1 and orderStatus in (-1,-4,-6,-7) and orderId='.(int)I('id'))->find();
 	 }
 	 /**
 	  * 订单分页列表
@@ -60,14 +60,15 @@ class OrdersModel extends BaseModel {
      	$areaId2 = I('areaId2',0);
      	$areaId3 = I('areaId3',0);
      	$orderStatus = I('orderStatus',-9999);
-	 	$sql = "select o.*,s.shopName from __PREFIX__orders o
+	 	$sql = "select o.orderId,o.orderNo,o.totalMoney,o.orderStatus,o.deliverMoney,o.payType,o.createTime,s.shopName,o.userName from __PREFIX__orders o
 	 	         left join __PREFIX__shops s on o.shopId=s.shopId  where o.orderFlag=1 ";
 	 	if($areaId1>0)$sql.=" and s.areaId1=".$areaId1;
 	 	if($areaId2>0)$sql.=" and s.areaId2=".$areaId2;
 	 	if($areaId3>0)$sql.=" and s.areaId3=".$areaId3;
 	 	if($shopName!='')$sql.=" and (s.shopName like '%".$shopName."%' or s.shopSn like '%".$shopName."%')";
 	 	if($orderNo!='')$sql.=" and o.orderNo like '%".$orderNo."%' ";
-	 	if($orderStatus!=-9999)$sql.=" and o.orderStatus=".$orderStatus;
+	 	if($orderStatus!=-9999 && $orderStatus!=-100)$sql.=" and o.orderStatus=".$orderStatus;
+	 	if($orderStatus==-100)$sql.=" and o.orderStatus in(-6,-7)";
 	 	$sql.=" order by orderId desc";   
 		$page = $m->pageQuery($sql);
 		//获取涉及的订单及商品
@@ -100,8 +101,8 @@ class OrdersModel extends BaseModel {
      	$areaId1 = I('areaId1',0);
      	$areaId2 = I('areaId2',0);
      	$areaId3 = I('areaId3',0);
-	 	$sql = "select o.*,s.shopName from __PREFIX__orders o
-	 	         left join __PREFIX__shops s on o.shopId=s.shopId  where o.orderFlag=1 and o.orderStatus in (-4,-5) and payType=1 and isPay=1 ";
+	 	$sql = "select o.orderId,o.orderNo,o.totalMoney,o.orderStatus,o.isRefund,o.deliverMoney,o.payType,o.createTime,s.shopName,o.userName from __PREFIX__orders o
+	 	         left join __PREFIX__shops s on o.shopId=s.shopId  where o.orderFlag=1 and o.orderStatus in (-1,-4,-6,-7) and payType=1 and isPay=1 ";
 	 	if($areaId1>0)$sql.=" and s.areaId1=".$areaId1;
 	 	if($areaId2>0)$sql.=" and s.areaId2=".$areaId2;
 	 	if($areaId3>0)$sql.=" and s.areaId3=".$areaId3;
@@ -135,7 +136,7 @@ class OrdersModel extends BaseModel {
 	 public function refund(){
 	 	$rd = array('status'=>-1);
 	 	$m = M('orders');
-	 	$rs = $m->where('isRefund=0 and orderFlag=1 and orderStatus=-4 and orderId='.I('id'))->find();
+	 	$rs = $m->where('isRefund=0 and orderFlag=1 and orderStatus in (-1,-4,-6,-7) and payType=1 and isPay=1 and orderId='.I('id'))->find();
 	 	if($rs['orderId']!=''){
 	 		$data = array();
 	 		$data['isRefund'] = 1;

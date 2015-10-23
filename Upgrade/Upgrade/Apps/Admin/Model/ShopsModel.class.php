@@ -55,6 +55,7 @@ class ShopsModel extends BaseModel {
 		$sdata["bankNo"] = I("bankNo");
 		$sdata["serviceStartTime"] = I("serviceStartTime");
 		$sdata["serviceEndTime"] = I("serviceEndTime");
+		$sdata["shopTel"] = I("shopTel");
 		if($this->checkEmpty($data,true) && $this->checkEmpty($sdata,true)){ 
 			$data["userStatus"] = I("userStatus",1);
 			$data["userType"] = I("userType",1);
@@ -88,7 +89,7 @@ class ShopsModel extends BaseModel {
 				$sdata["shopFlag"] = 1;
 				$sdata["createTime"] = date('Y-m-d H:i:s');
 			    $sdata['statusRemarks'] = I('statusRemarks');
-			    $sdata["shopTel"] = I("shopTel");
+			    $sdata['qqNo'] = I('qqNo');
 			    $sdata["invoiceRemarks"] = I("invoiceRemarks");
 				$m = M('shops');
 				$shopId = $m->add($sdata);
@@ -189,8 +190,9 @@ class ShopsModel extends BaseModel {
 		$data["serviceEndTime"] = I("serviceEndTime");
 		$data["shopStatus"] = I("shopStatus",0);
 		$data["shopAtive"] = I("shopAtive",1);
+		$data["shopTel"] = I("shopTel");
 		if($this->checkEmpty($data,true)){
-			$data["shopTel"] = I("shopTel");
+			$data['qqNo'] = I('qqNo');
 			$data["invoiceRemarks"] = I("invoiceRemarks");
 			$rs = $m->where("shopId=".$shopId)->save($data);
 		    if(false !== $rs){
@@ -224,6 +226,7 @@ class ShopsModel extends BaseModel {
 		    	$data = array();
 		    	$data["userName"] = I("userName");
 		        $data["userPhone"] = I("userPhone");
+		       
 		        //如果是普通用户则提升为店铺会员
 		        if($userType==0){
 		        	$data["userType"] = 1;

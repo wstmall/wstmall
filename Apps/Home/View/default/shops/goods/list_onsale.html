@@ -41,8 +41,8 @@ $(document).ready(function(){
              <tr>
                <th width='40'><input type='checkbox' onclick='javascript:checkAll(this)'/></th>
                <th>商品名称</th>
-               <th width="60">商品编号</th>
-               <th>价格</th>
+               <th width="100">商品编号</th>
+               <th width="80">价格</th>
                <th>推荐</th>
                <th>精品</th>
                <th>新品</th>
@@ -63,9 +63,17 @@ $(document).ready(function(){
                <img src="__ROOT__/{$vo['goodsThums']}" height="50" width="50"/>
                {$vo['goodsName']}
                </td>
-               <td>{$vo['goodsSn']}</td>
-               <td>{$vo['shopPrice']}</td>
-               <td style="cursor:pointer;" ondblclick="javascript:changSaleStatus({$vo['goodsId']},1)">
+               <td style="cursor:pointer;" title='双击修改' ondblclick="javascript:toEditGoodsBase(1,{$vo['goodsId']},0)">
+               		<input id="ipt_1_{$vo['goodsId']}" onblur="javascript:editGoodsBase(1,{$vo['goodsId']})" style="display:none;width:100%;border:1px solid red;width:40px;" maxlength="20"/>
+	               	<span id="span_1_{$vo['goodsId']}" style="display: inline;">{$vo['goodsSn']}</span>
+					<img id="img_1_{$vo['goodsId']}" style="opacity: 0;display:none;" src="__ROOT__/Apps/Home/View/default/images/action_check.gif">
+               </td>
+               <td style="cursor:pointer;" title='双击修改' ondblclick="javascript:toEditGoodsBase(2,{$vo['goodsId']},'{$vo[attIsRecomm]}')">               		
+               		<input id="ipt_2_{$vo['goodsId']}" onkeyup="javascript:WST.isChinese(this,1)" onkeypress="return WST.isNumberdoteKey(event)" onblur="javascript:editGoodsBase(2,{$vo['goodsId']})" style="display:none;width:100%;border:1px solid red;width:40px;" maxlength="10"/>
+	               	<span id="span_2_{$vo['goodsId']}" style="display: inline;">{$vo['shopPrice']}</span>
+					<img id="img_2_{$vo['goodsId']}" style="opacity: 0;display:none;" src="__ROOT__/Apps/Home/View/default/images/action_check.gif">
+               </td>
+               <td style="cursor:pointer;" title='双击修改' ondblclick="javascript:changSaleStatus({$vo['goodsId']},1)">
                <input id="isRecomm_{$vo['goodsId']}" type="hidden" value="{$vo[isRecomm]}"/>
                <div id="isRecomm_div_{$vo['goodsId']}">
 	               <if condition="$vo['isRecomm'] == 1 ">
@@ -75,7 +83,7 @@ $(document).ready(function(){
 	               </if>
                </div>
                </td>
-               <td style="cursor:pointer;" ondblclick="javascript:changSaleStatus({$vo['goodsId']},2)">
+               <td style="cursor:pointer;" title='双击修改' ondblclick="javascript:changSaleStatus({$vo['goodsId']},2)">
                <input id="isBest_{$vo['goodsId']}" type="hidden" value="{$vo[isBest]}"/>
                <div id="isBest_div_{$vo['goodsId']}">
 	               <if condition="$vo['isBest'] == 1 ">
@@ -85,7 +93,7 @@ $(document).ready(function(){
 	               </if>
                </div>
                </td>
-               <td style="cursor:pointer;" ondblclick="javascript:changSaleStatus({$vo['goodsId']},3)">
+               <td style="cursor:pointer;" title='双击修改' ondblclick="javascript:changSaleStatus({$vo['goodsId']},3)">
                <input id="isNew_{$vo['goodsId']}" type="hidden" value="{$vo[isNew]}"/>
                <div id="isNew_div_{$vo['goodsId']}">
 	               <if condition="$vo['isNew'] == 1 ">
@@ -95,7 +103,7 @@ $(document).ready(function(){
 	               </if>
                </div>
                </td>
-               <td style="cursor:pointer;" ondblclick="javascript:changSaleStatus({$vo['goodsId']},4)">
+               <td style="cursor:pointer;" title='双击修改' ondblclick="javascript:changSaleStatus({$vo['goodsId']},4)">
                <input id="isHot_{$vo['goodsId']}" type="hidden" value="{$vo[isHot]}"/>
                <div id="isHot_div_{$vo['goodsId']}">
 	               <if condition="$vo['isHot'] == 1 ">
@@ -105,7 +113,7 @@ $(document).ready(function(){
 	               </if>
                </div>
                </td>
-               <td style="cursor:pointer;" ondblclick="javascript:changSaleStatus({$vo['goodsId']},5)">
+               <td style="cursor:pointer;" title='双击修改' ondblclick="javascript:changSaleStatus({$vo['goodsId']},5)">
                <input id="isSale_{$vo['goodsId']}" type="hidden" value="{$vo[isSale]}"/>
                <div id="isSale_div_{$vo['goodsId']}">
 	               <if condition="$vo['isSale'] == 1 ">
@@ -116,10 +124,10 @@ $(document).ready(function(){
                </div>
                </td>
                <td>{$vo['saleCount']}</td>
-               <td style="cursor:pointer;" ondblclick="javascript:toEditStock({$vo['goodsId']},'{$vo[attIsRecomm]}')" >
-	               	<input id="ipt_{$vo['goodsId']}" onkeyup="javascript:WST.isChinese(this,1)" onkeypress="return WST.isNumberKey(event)" onblur="javascript:editStock({$vo['goodsId']})" style="display:none;width:100%;border:1px solid red;width:40px;" maxlength="6"/>
-	               	<span id="span_{$vo['goodsId']}" style="display: inline;">{$vo['goodsStock']}</span>
-					<img id="img_{$vo['goodsId']}" style="opacity: 0;display:none;" src="__ROOT__/Apps/Home/View/default/images/action_check.gif">
+               <td style="cursor:pointer;" title='双击修改' ondblclick="javascript:toEditGoodsBase(3,{$vo['goodsId']},'{$vo[attIsRecomm]}')" >
+	               	<input id="ipt_3_{$vo['goodsId']}" onkeyup="javascript:WST.isChinese(this,1)" onkeypress="return WST.isNumberKey(event)" onblur="javascript:editGoodsBase(3,{$vo['goodsId']})" style="display:none;width:100%;border:1px solid red;width:40px;" maxlength="6"/>
+	               	<span id="span_3_{$vo['goodsId']}" style="display: inline;">{$vo['goodsStock']}</span>
+					<img id="img_3_{$vo['goodsId']}" style="opacity: 0;display:none;" src="__ROOT__/Apps/Home/View/default/images/action_check.gif">
                </td>
                <td>
                <a href="javascript:toViewGoods({$vo['goodsId']})" class='btn view'></a>
@@ -131,7 +139,40 @@ $(document).ready(function(){
              </volist>
              <tfoot>
              <tr>
-                <td colspan='12' align='center'>{$Page['pager']}</td>
+                <td colspan='12'>
+                <div class="wst-page" style="float:right;padding-bottom:10px;">
+						<div id="wst-page-items"></div>
+				</div>
+                <script>
+			    <if condition="$Page['totalPage'] gt 1">
+			    $(document).ready(function(){
+					laypage({
+					    cont: 'wst-page-items',
+					    pages: {$Page['totalPage']}, //总页数
+					    skip: true, //是否开启跳页
+					    skin: '#e23e3d',
+					    groups: 3, //连续显示分页数
+					    curr: function(){ //通过url获取当前页，也可以同上（pages）方式获取
+					        var page = location.search.match(/p=(\d+)/);
+					        return page ? page[1] : 1;
+					    }(), 
+					    jump: function(e, first){ //触发分页后的回调
+					        if(!first){ //一定要加此判断，否则初始时会无限刷新
+					        	var nuewurl = WST.splitURL("p");
+					        	var ulist = nuewurl.split("?");
+					        	if(ulist.length>1){
+					        		location.href = nuewurl+'&p='+e.curr;
+					        	}else{
+					        		location.href = '?p='+e.curr;
+					        	}
+					            
+					        }
+					    }
+					});
+			    });
+				</if>
+				</script>
+                </td>
              </tr>
              </tfoot>
            </tbody>
