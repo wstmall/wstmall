@@ -224,6 +224,7 @@ function getPriceAttrInfo(id){
 			$('#shopGoodsPrice_'+goodsId).html("￥"+json.attrPrice);
 			var buyNum = parseInt($("#buy-num").val());
 			$("#buy-num").attr('maxVal',json.attrStock);
+			$("#goodsStock").html(json.attrStock);
 			if(buyNum>json.attrStock){
 				$("#buy-num").val(json.attrStock);
 			}

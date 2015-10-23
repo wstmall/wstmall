@@ -7,7 +7,8 @@
       <title>{$CONF['mallTitle']}后台管理中心</title>
       <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
       <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
-      <link rel="stylesheet" href="__PUBLIC__/plugins/uploadify/uploadify.css">
+      <link href="__ROOT__/Apps/Admin/View/css/upload.css" rel="stylesheet" type="text/css" />
+      
       <!--[if lt IE 9]>
       <script src="__PUBLIC__/js/html5shiv.min.js"></script>
       <script src="__PUBLIC__/js/respond.min.js"></script>
@@ -16,8 +17,13 @@
       <script src="__PUBLIC__/plugins/bootstrap/js/bootstrap.min.js"></script>
       <script src="__PUBLIC__/js/common.js"></script>
       <script src="__PUBLIC__/plugins/plugins/plugins.js"></script>
-      <script src="__PUBLIC__/plugins/uploadify/jquery.uploadify.min.js"></script>
-      <script>
+      <script type="text/javascript" src="__ROOT__/Apps/Admin/View/js/upload.js"></script>
+
+   <script>
+   var ThinkPHP = window.Think = {
+	        "ROOT"   : "__ROOT__"
+	}
+   var filetypes = ["gif","jpg","png","jpeg"];
       $(function(){
     	  $('#myTab a').click(function (e) {
     		  e.preventDefault();
@@ -31,20 +37,7 @@
   		  foreach($cf as $key =>$vo){
   			if($vo['fieldType']=='upload'){
   		  </php>
-    	  $("#{$vo["fieldCode"]}Upload").uploadify({
-  		    formData      : {'dir':'mall','width':240,'height':132},
-  		    buttonText    : '选择图标',
-  		    fileTypeDesc  : 'Image Files',
-  	        fileTypeExts  : '*.gif; *.jpg; *.png',
-  	        swf           : '__PUBLIC__/plugins/uploadify/uploadify.swf',
-  	        uploader      : '{:U("Admin/Index/uploadPic")}',
-  	        onUploadSuccess : function(file, data, response) {
-  	        	var json = WST.toJson(data);
-  	        	var url = '__ROOT__/'+json.Filedata.savepath+json.Filedata.savethumbname;
-  	        	$('#{$vo["fieldCode"]}').val(json.Filedata.savepath+json.Filedata.savename);
-  	        	$('#{$vo["fieldCode"]}Preview').attr('src',url);
-              }
-  	      });
+    	  
     	  <php>}}}</php>
       })
       function save(){
@@ -56,7 +49,7 @@
     	    </php>
     			params.{$vo['fieldCode']} = $("input:radio[name='{$vo['fieldCode']}']:checked").val();
     		<php>}else{</php>
-    			params.{$vo['fieldCode']} = $('#{$vo['fieldCode']}').val();
+    			params.{$vo['fieldCode']} = $.trim($('#{$vo['fieldCode']}').val());
     		<php>}}}</php>
     		Plugins.waitTips({title:'信息提示',content:'正在提交数据，请稍后...'});
     		$.post("{:U('Admin/index/saveMallConfig')}",params,function(data,textStatus){
@@ -78,9 +71,14 @@
 	      <li><a href="#tabc2" role="tab" data-toggle="tab">短信设置</a></li>
 	  </ul>
       <div class='tab-content wst-tab-content'>
+      	  <iframe name="upload" style="display:none"></iframe>
           <foreach name="configs"  item="vo" key="k">
           <div class='tab-pane <if condition="$k eq 0">active in</if> fade wst-tab-pane' id='tabc{$k}'>
-            <form class="form-horizontal" role="form" autocomplete="off">
+          <if condition="$k==0">
+          	
+			
+          </if>
+            
                <table class='table table-hover table-striped table-bordered wst-form'>
                <foreach name="vo"  item="v" key="key">
                <tr>
@@ -89,23 +87,46 @@
                      <php>
                      if($v['fieldType']=='text'){
                      </php>
-                     <input type='text' class="form-control wst-ipt" id='{$v["fieldCode"]}' name='{$v["code"]}' value="{$v['fieldValue']}" />{$v['fieldTips']}
+                     <input type='text' autocomplete="off" class="form-control wst-ipt" id='{$v["fieldCode"]}' name='{$v["code"]}' value="{$v['fieldValue']}" />{$v['fieldTips']}
                      <php>
                      }else if($v['fieldType']=='radio'){
                         foreach($v['txt'] as $kt => $vt){
                      </php>
                        <label>
-			           <input type='radio' id='{$v["val"][$kt]}_{$kt}' name='{$v["fieldCode"]}' value='{$v["val"][$kt]}' size='30' <php>if($v["fieldValue"]==$v["val"][$kt]){ echo "checked";}</php> />{$vt}&nbsp;&nbsp;
+			           <input type='radio' id='{$v["val"][$kt]}_{$kt}' autocomplete="off" name='{$v["fieldCode"]}' value='{$v["val"][$kt]}' size='30' <php>if($v["fieldValue"]==$v["val"][$kt]){ echo "checked";}</php> />{$vt}&nbsp;&nbsp;
 			           </label>
 			         <php>
 			            }
 			         </php>{$v['fieldTips']}
                      <php>}else if($v['fieldType']=='textarea'){</php>
-                     <textarea id='{$v["fieldCode"]}' name='{$vo["fieldCode"]}' style='width:400px;height:100px;'>{$v['fieldValue']}</textarea>{$v['fieldTips']}
+                     <textarea id='{$v["fieldCode"]}' autocomplete="off" name='{$vo["fieldCode"]}' style='width:400px;height:100px;'>{$v['fieldValue']}</textarea>{$v['fieldTips']}
                      <php>}else if($v['fieldType']=='upload'){</php>
-                     <input type='text' id='{$v["fieldCode"]}Upload' class="form-control wst-ipt"/>{$v['fieldTips']}
-                     <input type='hidden' id='{$v["fieldCode"]}' value='{$v['fieldValue']}'/>
-                     <img id='{$v["fieldCode"]}Preview' src='__ROOT__/{$v['fieldValue']}'/>
+                     
+                     
+                       	<form id="uploadform_{$v['fieldCode']}p" autocomplete="off" enctype="multipart/form-data" method="POST" target="upload" action="{:U('Home/Shops/uploadPic')}" >
+							<div style="position:relative;">
+							<input id="{$v['fieldCode']}"  name="{$v['fieldCode']}" class="form-control wst-ipt" type="text" value="{$v['fieldValue']}" readonly style="margin-right:4px;float:left;margin-left:8px;width:250px;"/>
+							<div class="div1">
+								<div class="div2">浏览</div>
+								<input type="file" class="inputstyle" id="{$v['fieldCode']}p" name="{$v['fieldCode']}p" onchange="updfile('{$v[fieldCode]}p');" >
+							</div>
+							<div style="clear:both;"></div>
+							<div >&nbsp;{$v['fieldTips']}</div>
+							<input type="hidden" name="dir" value="mall">
+							<input type="hidden" name="width" value="1400">
+							<input type="hidden" name="folder" value="Filedata">
+							<input type="hidden" name="sfilename" value="{$v['fieldCode']}">
+							<input type="hidden" name="fname" value="{$v['fieldCode']}">
+							<input type="hidden" id="s_{$v['fieldCode']}" name="s_{$v['fieldCode']}" value="">
+							
+							</div>
+						</form>
+                     <!-- 
+                     <input type='text'  id='{$v["fieldCode"]}Upload' class="form-control wst-ipt" autocomplete="off"/>{$v['fieldTips']}
+                     <input type='hidden' id='{$v["fieldCode"]}' value='{$v['fieldValue']}' autocomplete="off"/> -->
+                     <div id="preview_{$v['fieldCode']}">
+                     	<img id='{$v["fieldCode"]}Preview' src='__ROOT__/{$v['fieldValue']}' width="152" height="152"/>
+                     </div>
                      <php>}</php>
                   </td>
                </tr>
@@ -117,7 +138,7 @@
                  </td>
                </tr>
                </table>
-             </form>  
+            
           </div>
           </foreach>
       </div>

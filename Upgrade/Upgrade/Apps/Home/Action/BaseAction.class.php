@@ -176,19 +176,30 @@ class BaseAction extends Controller {
 		        'subName'       =>  array('date', 'Y-m'),
 		        'savePath'      =>  I('dir','uploads')."/"
 		);
+	    $folder = I("folder");
 		$upload = new \Think\Upload($config);
 		$rs = $upload->upload($_FILES);
+		$Filedata = key($_FILES);
 		if(!$rs){
 			$this->error($upload->getErrorMsg());
 		}else{
 			$images = new \Think\Image();
-			$images->open('./Upload/'.$rs['Filedata']['savepath'].$rs['Filedata']['savename']);
-			$newsavename = str_replace('.','_thumb.',$rs['Filedata']['savename']);
-			$vv = $images->thumb(I('width',100), I('height',100))->save('./Upload/'.$rs['Filedata']['savepath'].$newsavename);
-	        $rs['Filedata']['savepath'] = "Upload/".$rs['Filedata']['savepath'];
-			$rs['Filedata']['savethumbname'] = $newsavename;
+			$images->open('./Upload/'.$rs[$Filedata]['savepath'].$rs[$Filedata]['savename']);
+			$newsavename = str_replace('.','_thumb.',$rs[$Filedata]['savename']);
+			$vv = $images->thumb(I('width',100), I('height',100))->save('./Upload/'.$rs[$Filedata]['savepath'].$newsavename);
+	        $rs[$Filedata]['savepath'] = "Upload/".$rs[$Filedata]['savepath'];
+			$rs[$Filedata]['savethumbname'] = $newsavename;
 			$rs['status'] = 1;
-			echo json_encode($rs);
+			if($folder=="Filedata"){
+				$sfilename = I("sfilename");
+				$fname = I("fname");
+				$srcpath = $rs[$Filedata]['savepath'].$rs[$Filedata]['savename'];
+				$thumbpath = $rs[$Filedata]['savepath'].$rs[$Filedata]['savethumbname'];
+				echo "<script>parent.getUploadFilename('$sfilename','$srcpath','$thumbpath','$fname');</script>";
+			}else{
+				echo json_encode($rs);
+			}
+			
 		}	
     }
 	

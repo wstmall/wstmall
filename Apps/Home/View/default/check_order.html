@@ -46,6 +46,7 @@
 						<div id="consignee1">
 							<div>
 								<span class="wst-chkod-s1-title">收货人信息 </span>
+								<input type="hidden" id="paddressId" value="{$addressList[0]['addressId']}"/>
 								<span class="wst-chkod-s1-upd"><a href="javascript:toEditAddress({$addressList[0]['addressId']});">[修改]</a></span>
 							</div>
 							<volist name="addressList" key="k" id="address">
@@ -263,7 +264,7 @@
                             </div>
                             <if condition='$shopgoods["shopgoods"][0]["deliveryStartMoney"] gt $shopgoods["totalMoney"]'>
                             	<div id="showwarnmsg_{$key}" class="wst-chkod-dp-pb2">
-			                		抱歉，您的订单金额未达到该门店的配送订单起步价¥{$shopgoods["shopgoods"][0]["deliveryStartMoney"]}元，不能提交订单。
+			                		抱歉，您的订单金额未达到该店铺的配送订单起步价¥{$shopgoods["shopgoods"][0]["deliveryStartMoney"]}元，不能提交订单。
 			                	</div>
 			                	<input type="hidden" id="tst_{$key}"  class="tst" value="-1"/>
                             </if>                            
@@ -372,7 +373,7 @@
 			
 			if(idx==-1){
 				$("#areaOk").val("0");	
-				alert("门店“"+$("#sp_{$key-1}").html()+"”中的商品不在配送区域内！");
+				alert("店铺“"+$("#sp_{$key-1}").html()+"”中的商品不在配送区域内！");
 				return false;
 			}else{
 				$("#areaOk").val("1");
@@ -387,7 +388,7 @@
 			var idx = shopCollege.indexOf(","+communityId+",");
 			if(idx==-1){
 				$("#areaOk").val("0");
-				alert("门店“"+$("#sp_{$key-1}").html()+"”中的商品不在配送区域内！");
+				alert("店铺“"+$("#sp_{$key-1}").html()+"”中的商品不在配送区域内！");
 				return false;
 			}else{
 				$("#areaOk").val("1");

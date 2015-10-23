@@ -7,7 +7,8 @@
       <title>{$CONF['shopTitle']['fieldValue']}后台管理中心</title>
       <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
       <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
-      <link rel="stylesheet" href="__PUBLIC__/plugins/uploadify/uploadify.css">
+      <link href="__ROOT__/Apps/Admin/View/css/upload.css" rel="stylesheet" type="text/css" />
+      
       <!--[if lt IE 9]>
       <script src="__PUBLIC__/js/html5shiv.min.js"></script>
       <script src="__PUBLIC__/js/respond.min.js"></script>
@@ -16,10 +17,15 @@
       <script src="__PUBLIC__/plugins/bootstrap/js/bootstrap.min.js"></script>
       <script src="__PUBLIC__/js/common.js"></script>
       <script src="__PUBLIC__/plugins/plugins/plugins.js"></script>
+      
       <script src="__PUBLIC__/plugins/formValidator/formValidator-4.1.3.js"></script>
-      <script src="__PUBLIC__/plugins/uploadify/jquery.uploadify.min.js"></script>
+      <script type="text/javascript" src="__ROOT__/Apps/Admin/View/js/upload.js"></script>
+      
    </head>
    <script>
+   var ThinkPHP = window.Think = {
+	        "ROOT"   : "__ROOT__"
+	}
    $(function () {
 	   $.formValidator.initConfig({
 		   theme:'Default',mode:'AutoTip',formID:"myform",debug:true,submitOnce:true,onSuccess:function(){
@@ -92,7 +98,7 @@
 		$("#userQQ").formValidator({
 			empty:true,onShow:"",onFocus:"QQ号码只能是数字"
 			}).regexValidator({
-				regeXp:"num",dataType:"enum",onError:"QQ号码格式错误"
+				regExp:"num1",dataType:"enum",onError:"QQ号码格式错误"
 			});
 		
 		$("#userPhone").blur(function(){
@@ -131,21 +137,7 @@
 				    }
 				}
 			});
-		$("#userPhotoUpload").uploadify({
-		    formData      : {'dir':'users','width':200,'height':200},
-		    buttonText    : '上传会员头像',
-		    fileTypeDesc  : 'Image Files',
-	        fileTypeExts  : '*.gif; *.jpg; *.png',
-	        swf           : '__PUBLIC__/plugins/uploadify/uploadify.swf',
-	        uploader      : '{:U("Admin/Users/uploadPic")}',
-	        onUploadSuccess : function(file, data, response) {
-	        	var json = WST.toJson(data);
-	        	if(json.status && json.status==1){
-		        	$('#userPhotoPreview').attr('src','__ROOT__/'+json.Filedata.savepath+json.Filedata.savethumbname).show();
-		        	$('#userPhoto').val(json.Filedata.savepath+json.Filedata.savename);
-	        	}
-          }
-	    });
+		
    });
    function edit(){
 	   var params = {};
@@ -176,18 +168,39 @@
 			}
 		});
    }
+   var filetypes = ["gif","jpg","png","jpeg"];
    </script>
    <body class="wst-page">
+   			<iframe name="upload" style="display:none"></iframe>
+			<form id="uploadform_Filedata" autocomplete="off" style="position:absolute;top:305px;left:120px;z-index:10;" enctype="multipart/form-data" method="POST" target="upload" action="{:U('Home/Shops/uploadPic')}" >
+				<div style="position:relative;">
+				<input id="userPhoto" name="userPhoto" class="form-control wst-ipt" type="text" value="{$object.userPhoto}" readonly style="margin-right:4px;float:left;margin-left:8px;width:250px;"/>
+				<div class="div1">
+					<div class="div2">浏览</div>
+					<input type="file" class="inputstyle" id="Filedata" name="Filedata" onchange="updfile('Filedata');" >
+				</div>
+				<div style="clear:both;"></div>
+				<div >&nbsp;图片大小:150 x 120 (px)(格式为 gif, jpg, jpeg, png)</div>
+				<input type="hidden" name="dir" value="users">
+				<input type="hidden" name="width" value="150">
+				<input type="hidden" name="folder" value="Filedata">
+				<input type="hidden" name="sfilename" value="Filedata">
+				<input type="hidden" name="fname" value="userPhoto">
+				<input type="hidden" id="s_Filedata" name="s_Filedata" value="">
+				
+				</div>
+		</form>
        <form name="myform" method="post" id="myform" autocomplete="off">   
         <input type='hidden' id='id' value='{$object.userId}'/>
-        <input type='hidden' id='userPhoto' value='{$object.userPhoto}'/>
+       
         <table class="table table-hover table-striped table-bordered wst-form">
            <tr>
              <th width='120' align='right'>账号<font color='red'>*</font>：</th>
              <td><input type='text' id='loginName' name='loginName' class="form-control wst-ipt" value='{$object.loginName}' maxLength='20'/></td>
              <td rowspan='6'>
-                 <img id='userPhotoPreview' src='<if condition="$object['userPhoto'] =='' ">__ROOT__/Apps/Admin/View/img/staff.png<else/>__ROOT__/{$object['userPhoto']}</if>' width='160' height='160'/><br/>
-	             <input type='text' id='userPhotoUpload'/>
+             	<div id="preview_Filedata">
+                 <img id='userPhotoPreview' src='<if condition="$object['userPhoto'] =='' ">__ROOT__/Apps/Admin/View/img/staff.png<else/>__ROOT__/{$object['userPhoto']}</if>' height='152'/><br/>
+	             </div>
              </td>
            </tr>
            <tr>
@@ -246,6 +259,13 @@
              <input type='text' id='userQQ' class="form-control wst-ipt"  value='{$object.userQQ}' onkeypress="return WST.isNumberKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='15'/>
              </td>
            </tr>
+            <tr style="height:80px;">
+	             <th align='right'>用户头像：</th>
+	             <td>
+		          
+		             
+	             </td>
+	           </tr>
             <tr>
              <th align='right'>会员状态<font color='red'>*</font>：</th>
              <td colspan='2'>

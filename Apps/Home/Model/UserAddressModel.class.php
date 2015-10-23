@@ -190,7 +190,7 @@ class UserAddressModel extends BaseModel {
 	}	
 	
 	/**
-	 * 获取门店服务社区
+	 * 获取店铺服务社区
 	 * 
 	 * @param unknown_type $countryId
 	 * @param unknown_type $shopId
@@ -207,7 +207,7 @@ class UserAddressModel extends BaseModel {
 	}
 	
 	/**
-	 * 获取门店配送区
+	 * 获取店铺配送区
 	 * 
 	 * @param unknown_type $shopId
 	 */
@@ -225,7 +225,7 @@ class UserAddressModel extends BaseModel {
 	
 	public function getDistrictsOption($cityId){		
 		$m = M('areas'); 
-		$sql = "SELECT areaId as id,areaName as name FROM __PREFIX__areas WHERE parentId=$cityId  AND areaFlag = 1 AND areaType = 2 AND isShow =1";		
+		$sql = "SELECT areaId as id,areaName as name FROM __PREFIX__areas WHERE parentId=$cityId  AND areaFlag = 1 AND areaType = 2 AND isShow =1 ORDER BY areaSort";		
 		$rs = $m->query($sql);		
 		return $rs;
 		
@@ -238,6 +238,28 @@ class UserAddressModel extends BaseModel {
 		$rs = $m->query($sql);
 		return $rs;
 		
+	}
+	
+	
+	public function getShopDistricts($cityId,$shopId){
+		$m = M('areas');
+		$sql = "SELECT a.areaId as id,a.areaName as name FROM __PREFIX__areas a
+				WHERE a.parentId=$cityId AND a.areaId in (select sc.areaId3 from __PREFIX__shops_communitys sc where sc.shopId=$shopId AND sc.areaId2 = $cityId )  AND a.areaFlag = 1 AND a.areaType = 2 AND a.isShow =1 GROUP BY a.areaId ORDER BY a.areaSort";
+		$rs = $m->query($sql);
+		
+		return $rs;
+	
+	}
+	
+	public function getShopCommunitys($districtId,$shopId){
+		
+		$m = M('communitys');
+		$sql = "SELECT c.communityId as id,c.communityName as name FROM __PREFIX__communitys c
+				WHERE c.areaId3=$districtId AND c.communityId in (select sc.communityId from __PREFIX__shops_communitys sc where sc.shopId=$shopId AND sc.areaId3 = $districtId ) AND c.isShow =1 GROUP BY c.communityId ORDER BY communitySort";
+			$rs = $m->query($sql);
+		
+			return $rs;
+	
 	}
 	
 	/**

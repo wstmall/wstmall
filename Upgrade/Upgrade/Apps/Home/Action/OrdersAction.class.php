@@ -209,9 +209,9 @@ class OrdersAction extends BaseAction {
 				}
 	
 				$catgoods[$goods["shopId"]]["shopgoods"][] = $goods;
-				$catgoods[$goods["shopId"]]["deliveryFreeMoney"] = $goods["deliveryFreeMoney"];//门店免运费最低金额
-				$catgoods[$goods["shopId"]]["deliveryMoney"] = $goods["deliveryMoney"];//门店配送费
-				$catgoods[$goods["shopId"]]["deliveryStartMoney"] = $goods["deliveryStartMoney"];//门店配送费
+				$catgoods[$goods["shopId"]]["deliveryFreeMoney"] = $goods["deliveryFreeMoney"];//店铺免运费最低金额
+				$catgoods[$goods["shopId"]]["deliveryMoney"] = $goods["deliveryMoney"];//店铺配送费
+				$catgoods[$goods["shopId"]]["deliveryStartMoney"] = $goods["deliveryStartMoney"];//店铺配送费
 				$catgoods[$goods["shopId"]]["totalCnt"] = $catgoods[$goods["shopId"]]["totalCnt"]+$cgoods["cnt"];
 				$catgoods[$goods["shopId"]]["totalMoney"] = $catgoods[$goods["shopId"]]["totalMoney"]+($goods["cnt"]*$goods["shopPrice"]);
 			}
@@ -317,8 +317,8 @@ class OrdersAction extends BaseAction {
 						$totalCnt += $cgoods["cnt"];
 						$totalMoney += $goods["cnt"]*$goods["shopPrice"];
 						$catgoods[$goods["shopId"]]["shopgoods"][] = $goods;
-						$catgoods[$goods["shopId"]]["deliveryFreeMoney"] = $goods["deliveryFreeMoney"];//门店免运费最低金额
-						$catgoods[$goods["shopId"]]["deliveryMoney"] = $goods["deliveryMoney"];//门店免运费最低金额
+						$catgoods[$goods["shopId"]]["deliveryFreeMoney"] = $goods["deliveryFreeMoney"];//店铺免运费最低金额
+						$catgoods[$goods["shopId"]]["deliveryMoney"] = $goods["deliveryMoney"];//店铺免运费最低金额
 						$catgoods[$goods["shopId"]]["totalCnt"] = $catgoods[$goods["shopId"]]["totalCnt"]+$cgoods["cnt"];
 						$catgoods[$goods["shopId"]]["totalMoney"] = $catgoods[$goods["shopId"]]["totalMoney"]+($goods["cnt"]*$goods["shopPrice"]);
 					}
@@ -495,4 +495,18 @@ class OrdersAction extends BaseAction {
 		$rs = $morders->shopOrderCancel($obj);
 		$this->ajaxReturn($rs);
 	}
+	
+	/**
+	 * 获取用户消息提示
+	 */
+	public function getUserMsgTips(){
+		$this->isUserAjaxLogin();
+		$morders = D('Home/Orders');
+		$USER = session('WST_USER');
+		$obj["userId"] = (int)$USER['userId'];
+		$statusList = $morders->getOrderStatusCount($obj);
+		$this->ajaxReturn($statusList);
+	}
+	
+	
 }

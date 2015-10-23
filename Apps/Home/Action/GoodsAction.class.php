@@ -143,6 +143,15 @@ class GoodsAction extends BaseAction {
 			$this->assign("goodsNav",$goods->getGoodsNav());
 			$this->assign("goodsAttrs",$goods->getAttrs($obj));
 			$this->assign("goodsDetails",$goodsDetails);
+			
+			$viewGoods = cookie("viewGoods");
+			if(!in_array($goodsId,$viewGoods)){
+				$viewGoods[] = $goodsId;
+			}
+			if(!empty($viewGoods)){
+				cookie("viewGoods",$viewGoods,25920000);
+			}
+			
 			$this->display('default/goods_details');
 		}else{
 			$this->display('default/goods_notexist');
@@ -379,5 +388,16 @@ class GoodsAction extends BaseAction {
     	$rs = $m->getKeyList();
     	$this->ajaxReturn($rs);
     }
+    
+    /**
+     * 修改 推荐/精品/新品/热销/上架
+     */
+    public function changSaleStatus(){
+    	$m = D('Home/Goods');
+    	$rs = $m->changSaleStatus();
+    	$this->ajaxReturn($rs);
+    }
+    
+    
 	
 }

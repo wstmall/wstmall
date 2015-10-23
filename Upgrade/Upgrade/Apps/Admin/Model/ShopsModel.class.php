@@ -69,6 +69,11 @@ class ShopsModel extends BaseModel {
 			if(false !== $userId){
 				$sdata["userId"] = $userId;
 				$sdata["isSelf"] = I("isSelf",0);
+				if($sdata["isSelf"]==1){
+					$sdata["deliveryType"] = 1;
+				}else{
+					$sdata["deliveryType"] = 0;
+				}
 				$sdata["deliveryStartMoney"] = I("deliveryStartMoney",0);
 		        $sdata["deliveryCostTime"] = I("deliveryCostTime",0);
 				$sdata["deliveryFreeMoney"] = I("deliveryFreeMoney",0);
@@ -94,7 +99,7 @@ class ShopsModel extends BaseModel {
 				    $data['shopId'] = $shopId;
 				    $m = M('shop_scores');
 				    $m->add($data);
-					//建立门店和社区的关系
+					//建立店铺和社区的关系
 					$relateArea = I('relateAreaId');
 					$relateCommunity = I('relateCommunityId');
 					if($relateArea!=''){
@@ -160,6 +165,11 @@ class ShopsModel extends BaseModel {
 		$data["areaId3"] = I("areaId3");
 		$data["goodsCatId1"] = I("goodsCatId1");
 		$data["isSelf"] = I("isSelf",0);
+		if($data["isSelf"]==1){
+			$data["deliveryType"] = 1;
+		}else{
+			$data["deliveryType"] = 0;
+		}
 		$data["shopName"] = I("shopName");
 		$data["shopCompany"] = I("shopCompany");
 		$data["shopImg"] = I("shopImg");
@@ -221,7 +231,7 @@ class ShopsModel extends BaseModel {
 		        $urs = $m->where("userId=".$shops['userId'])->save($data);
 				$rd['status']= 1;
 				
-		        //建立门店和社区的关系
+		        //建立店铺和社区的关系
 				$relateArea = I('relateAreaId');
 				$relateCommunity = I('relateCommunityId');
 				$m = M('shops_communitys');
@@ -270,7 +280,7 @@ class ShopsModel extends BaseModel {
 		$us = $m->where("userId=".$rs['userId'])->find();
 		$rs['userName'] = $us['userName'];
 		$rs['userPhone'] = $us['userPhone'];
-		//获取门店社区关系
+		//获取店铺社区关系
 		$m = M('shops_communitys');
 		$rc = $m->where('shopId='.I('id'))->select();
 		$relateArea = array();

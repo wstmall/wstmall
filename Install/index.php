@@ -24,8 +24,9 @@ timezone_set();
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>WSTMall开源商城安装</title>
 <link href="./css/general.css" rel="stylesheet" type="text/css">
-<script type="text/javascript" src="./js/jquery-1.8.3.min.js"></script>
-<script type="text/javascript" src="./js/install.js"></script>
+<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="js/install.js"></script>
+<script type="text/javascript" src="../Public/js/common.js"></script>
 <script type="text/javascript">
 </script>
 </head>
@@ -86,7 +87,7 @@ timezone_set();
                             if($v['status'] == 1) {
                                 $str .= '<span class="check1"></span>可写';
                             }else if($v['status'] == -1) {
-                                $str .= '<span class="check-1"></span>目录不存在';
+                                $str .= '<span class="check-1"></span>目录不可写';
                                 $check = false;
                             }else {
                                 $str .= '<span class="check-1"></span>不可写';
@@ -116,6 +117,7 @@ timezone_set();
     <?php }else if($step==2){?>
     <div id="system_data" class='main'>
        <div class='content'>
+          <div id='data_config'> 
              <span class='bold' style='font-size:15px;'>数据库帐号</span>
              <table class='check-env'>
                 <tbody>
@@ -191,9 +193,12 @@ timezone_set();
                </tr>
             </tbody>
            </table>
+           </div>
+           <div id='data_init' style='display:none'></div>
         </div>
+        
         <div class='bottom'>
-           <span id='init_msg' style='display:none'>正在初始化数据库...</span>
+           <span id='init_msg' style='display:none'><img width='16' src='images/loading-2.gif'>正在初始化数据库...</span>
            <input type='button' class='btn' value='上一步' onclick='showStep(1)'/>
 		   <input type='button' class='btn nextBtn' value='下一步' onclick='showStep(3)'/>
 	    </div>

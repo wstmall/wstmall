@@ -205,6 +205,7 @@ function saveAddress(){
 				addressInfo.push('</label>');
 				addressInfo.push('</div>');
 				$(addressInfo.join("")).insertAfter("#flagdiv");
+				
 			}else{
 				$("#radusername_"+addressId).html(params.userName);
 				var addressInfo = new Array();
@@ -214,6 +215,7 @@ function saveAddress(){
 				addressInfo.push(params.address);	
 				$("#radaddress_"+addressId).html(addressInfo.join(""));
 			}
+
 		}else{
 			WST.msg("收货人信息添加失败", {icon: 5});
 		}
@@ -257,7 +259,7 @@ function submitOrder(){
 		}
 	});
 	if(!flag){
-		WST.msg("抱歉，您的订单金额未达到该门店的配送订单起步价，不能提交订单。", {icon: 5});
+		WST.msg("抱歉，您的订单金额未达到该店铺的配送订单起步价，不能提交订单。", {icon: 5});
 		return;
 	}
 	var ll = layer.msg('正在保存数据，请稍候...', {icon: 16,shade: [0.5, '#B3B3B3']});
@@ -348,7 +350,8 @@ function getPayUrl(){
 			var rlist = json.rlist;
 			var garr = new Array();
 			for(var i=0;i<rlist.length;i++){
-				garr.push(rlist[i].goodsName);
+				garr.push(rlist[i].goodsName+rlist[i].goodsAttrName);
+				rlist[i].goodsAttrName
 			}
 			WST.msg('订单中商品【'+garr.join("，")+'】库存不足，不能进行支付。', {icon: 5});
 			

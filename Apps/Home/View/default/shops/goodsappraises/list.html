@@ -11,7 +11,7 @@ $(document).ready(function(){
 <div class='wst-page-header'>卖家中心 > 评价管理</div>
 <div class='wst-page-content'>
    <div class='wst-tbar-query'>
-    门店分类：<select id='shopCatId1' autocomplete="off" onchange='javascript:getShopCatListForAppraises(this.value,"{$object['shopCatId2']}")'>
+    店铺分类：<select id='shopCatId1' autocomplete="off" onchange='javascript:getShopCatListForAppraises(this.value,"{$object['shopCatId2']}")'>
 	         <option value='0'>请选择</option>
 	         <volist name="shopCatsList" id="vo">
 	         <option value='{$vo['catId']}' <if condition="$shopCatId1 == $vo['catId'] ">selected</if>>{$vo['catName']}</option>

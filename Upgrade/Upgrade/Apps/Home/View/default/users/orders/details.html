@@ -62,7 +62,13 @@
 	        		</tr>
 	        		<tr>
 	        			<td class="wst-td-title">配送方式：</td>
-	        			<td class="wst-td-content"><if condition='$orderInfo["order"]["deliverType"]==0'>商城配送<else/>门店配送</if></td>
+	        			<td class="wst-td-content">
+	        				<if condition='$orderInfo["order"]["isSelf"]==1'>
+	        					自提
+	        				<else/>
+	        					<if condition='$orderInfo["order"]["deliverType"]==0'>商城配送<else/>店铺配送</if>
+	        				</if>
+	        			</td>
 	        		</tr>
 	        		<tr>
 	        		    <td class="wst-td-title">买家留言：</td>

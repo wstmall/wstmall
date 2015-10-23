@@ -1,0 +1,91 @@
+body {
+  background: #EDEDED;
+  font-size: 1.6rem;
+  color: #333;
+}
+a {
+  color: #333;
+  font-size: 1.5rem;
+}
+.users-area {
+  padding: 15px 0px;
+}
+.user-photo {
+  width: 65px;
+}
+.loginname {
+  display: block;
+  margin-top: 10px;
+}
+.userscore {
+  display: block;
+}
+.user-options {
+  background: #fff;
+  padding: 10px 0px;
+  margin-top: 5px;
+}
+.options-icon {
+  height: 25px;
+  margin-right: 10px;
+}
+.options-right {
+  text-align: right;
+}
+.logout-area {
+  margin-top: 30px;
+  text-align: center;
+}
+.user-logout {
+  width: 30%;
+  min-width: 100px;
+  border-radius: 5px;
+}
+
+/* 账号安全 */
+body {
+  background: white;
+}
+.no-outline {
+  width: 100%;
+  padding: 12px 5px;
+  outline: none;
+}
+.pwd-confirm {
+  margin-top: 40px;
+  padding: 0px 20px;
+}
+.pwd-confirm button {
+  background: #F3F1E4;
+  color: white;
+}
+.pwd-confirm.active button {
+  background: #F26F27;
+}
+
+
+/* 个人信息 */
+.userinfo {
+  margin-right: 5px;
+  color: gray;
+}
+
+/* 修改昵称 */
+.nickName-area {
+  cursor: pointer;
+}
+.close-nickName {
+  cursor: pointer;
+}
+.editNickName {
+  cursor: pointer;
+}
+.userSex-area {
+  cursor: pointer;
+}
+.usersex {
+  cursor: pointer;
+}
+.close-usersex {
+  cursor: pointer;
+}

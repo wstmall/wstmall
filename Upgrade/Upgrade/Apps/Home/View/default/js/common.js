@@ -191,24 +191,29 @@ function topay(){
 	location.href = Think.U('Home/Cart/getCartInfo','rnd='+Math.round(Math.random()*10000000));
 }
 
-function changeCity(areaId2){
-	if(areaId2){
-		jQuery.post( Think.U('Home/Index/reChangeCity') ,{"city":areaId2,"changeCity":true},function(data) {
-			var currurl = location.href;
-			if(currurl.indexOf("changeCity")!=-1){
-				location.href = domainURL +"/index.php";
-			}else{
-				location.href = location.href;
-			}
-		});
-	}else{
-		location.href = Think.U('Home/Index/changeCity');
-	}
+function toChangeCity(){
+	location.href = Think.U('Home/Index/changeCity');
 }
 
+function changeCity(areaId2){
+	areaId2 = (areaId2>0)?areaId2:$("#cityId").val();
+	
+	jQuery.post( Think.U('Home/Index/reChangeCity') ,{"city":areaId2,"changeCity":true},function(data) {
+		var currurl = location.href;
+			currurl = currurl.toLowerCase();
+		if(currurl.indexOf("changecity")!=-1){
+			location.href = domainURL +"/index.php";
+		}else{
+			location.href = location.href;
+		}
+	});
+	
+}
+
+
 function addToFavorite(){
-	var a=domainURL ,b="收藏WSTMall";
-	document.all?window.external.AddFavorite(a,b):window.sidebar&&window.sidebar.addPanel?window.sidebar.addPanel(b,a,""):alert("\u5bf9\u4e0d\u8d77\uff0c\u60a8\u7684\u6d4f\u89c8\u5668\u4e0d\u652f\u6301\u6b64\u64cd\u4f5c!\n\u8bf7\u60a8\u4f7f\u7528\u83dc\u5355\u680f\u6216Ctrl+D\u6536\u85cf\u672c\u7ad9\u3002"),createCookie("_fv","1",30,"/;domain=http://localhost/wstmall/")
+	var a=domainURL ,b="收藏"+wstMallName;
+	document.all?window.external.AddFavorite(a,b):window.sidebar&&window.sidebar.addPanel?window.sidebar.addPanel(b,a,""):alert("\u5bf9\u4e0d\u8d77\uff0c\u60a8\u7684\u6d4f\u89c8\u5668\u4e0d\u652f\u6301\u6b64\u64cd\u4f5c!\n\u8bf7\u60a8\u4f7f\u7528\u83dc\u5355\u680f\u6216Ctrl+D\u6536\u85cf\u672c\u7ad9\u3002"),createCookie("_fv","1",30,"/;domain="+domainURL)
 }
 
 
@@ -259,7 +264,7 @@ function getSearchInfo(obj,event){
 		var searchType = $("#wst-search-type").val();
 		var surl = Think.U('Home/Goods/getKeyList');
     	if(searchType==2){
-    		surl = Think.U('Home/Shops/getShopList');
+    		surl = Think.U('Home/Shops/getKeyList');
     	}
 		$.post(surl,params,function(rsp){
 			var json = WST.toJson(rsp);
@@ -347,4 +352,46 @@ function addAccess(aid){
 	$.post(Think.U('Home/Index/access'),{id:aid},function(data,textStatus){
 		
 	});
+}
+
+
+//上傳文件
+
+function getUploadFilename(sfilename,srcpath,thumbpath,fname){
+	if(srcpath!="fail"){
+		$("#s_"+sfilename).val(srcpath);
+		$("#"+fname).val(srcpath);
+		if(fname=="goodsImg"){
+			$("#goodsThumbs").val(thumbpath);
+		}
+		$("#preview_"+sfilename+" img").attr("src",ThinkPHP.ROOT+"/"+thumbpath);
+		$("#preview_"+sfilename+" img").show();
+	}else{
+		$("#s_"+sfilename).val("");
+		$("#"+fname).val("");
+	}
+}
+
+function updfile(filename){
+	
+	var filepath = jQuery("#"+filename).val();
+	var patharr = filepath.split("\\");
+	var fnames = patharr[patharr.length-1].split(".");
+	var ext = (fnames[fnames.length-1]);
+		ext = ext.toLocaleLowerCase();	
+	var flag = false;
+	for(var i=0;i<filetypes.length;i++){
+		if(filetypes[i]==ext){
+			flag = true;
+			break;
+		}
+	}
+	
+	if(flag){	
+		jQuery("#uploadform_"+filename).submit();
+	}else{		
+		WST.msg("上传文件类型错误 (文档支持格式："+filetypes.join(",")+")", {icon: 5});		
+		jQuery('#uploadform_'+filename)[0].reset();
+		return;
+	}	
 }

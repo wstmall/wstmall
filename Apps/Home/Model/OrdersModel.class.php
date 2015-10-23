@@ -80,7 +80,7 @@ class OrdersModel extends BaseModel {
 	public function getPayOrders($obj){
 			
 		$orderIds = $obj["orderIds"];
-		$sql = "SELECT o.orderId, o.orderNo, g.goodsId, g.goodsName, og.goodsNums ,og.goodsPrice 
+		$sql = "SELECT o.orderId, o.orderNo, g.goodsId, g.goodsName ,og.goodsAttrName , og.goodsNums ,og.goodsPrice 
 				FROM __PREFIX__order_goods og, __PREFIX__goods g, __PREFIX__orders o
 				WHERE o.orderId = og.orderId AND og.goodsId = g.goodsId AND o.payType=1 AND orderFlag =1 AND o.isPay=0 AND o.needPay>0 AND o.orderStatus = -2 AND og.orderId in ($orderIds)";
 		$rslist = $this->query($sql);
@@ -300,7 +300,7 @@ class OrdersModel extends BaseModel {
 		$pcurr = I("pcurr",0);
 		$pageSize = 20;
 		
-		$sql = "SELECT o.*,sp.shopId,sp.shopName FROM __PREFIX__orders o,__PREFIX__shops sp WHERE o.userId = $userId AND o.orderStatus =-2 AND o.payType = 1 AND o.shopId=sp.shopId ";
+		$sql = "SELECT o.*,sp.shopId,sp.shopName FROM __PREFIX__orders o,__PREFIX__shops sp WHERE o.userId = $userId AND o.orderStatus =-2 AND o.isPay = 0 AND needPay >0 AND o.payType = 1 AND o.shopId=sp.shopId ";
 		if($orderNo!=""){
 			$sql .= " AND o.orderNo like '%$orderNo%'";
 		}
@@ -768,12 +768,12 @@ class OrdersModel extends BaseModel {
 	public function getOrderStatusCount($obj){
 		$userId = $obj["userId"];
 		$data = array();
-		$sql = "select orderStatus,COUNT(*) cnt from __PREFIX__orders WHERE orderStatus in (1,2,3) and orderFlag=1 and userId = $userId GROUP BY orderStatus";
+		$sql = "select orderStatus,COUNT(*) cnt from __PREFIX__orders WHERE orderStatus in (0,1,2,3) and orderFlag=1 and userId = $userId GROUP BY orderStatus";
 		$olist = $this->query($sql);
 		$data = array('-3'=>0,'-2'=>0,'2'=>0,'3'=>0,'4'=>0);
 		for($i=0;$i<count($olist);$i++){
 			$row = $olist[$i];
-			if($row["orderStatus"]==1 || $row["orderStatus"]==2){
+			if($row["orderStatus"]==0 || $row["orderStatus"]==1 || $row["orderStatus"]==2){
 				$row["orderStatus"] = 2;
 			}
 			$data[$row["orderStatus"]] = $data[$row["orderStatus"]]+$row["cnt"];
@@ -788,7 +788,7 @@ class OrdersModel extends BaseModel {
 		$olist = $this->query($sql);
 		$data[-3] = $olist[0]['cnt'];
 		//获取待评价订单
-		$sql = "select COUNT(*) cnt from __PREFIX__orders WHERE orderStatus = 4 and isAppraises=0 and orderFlag=1 and userId = $userId";
+		$sql = "select COUNT(*) cnt from __PREFIX__orders WHERE orderStatus in (4,5) and isAppraises=0 and orderFlag=1 and userId = $userId";
 		$olist = $this->query($sql);
 		$data[4] = $olist[0]['cnt'];
 		return $data;
@@ -1038,7 +1038,7 @@ class OrdersModel extends BaseModel {
 		
 		if($ocnt==$rsv[0]['counts']){
 			
-			$sql = "SELECT og.goodsId,og.goodsName,g.goodsStock,og.goodsNums, og.goodsAttrId, ga.attrStock FROM  __PREFIX__goods g ,__PREFIX__order_goods og
+			$sql = "SELECT og.goodsId,og.goodsName,og.goodsAttrName,g.goodsStock,og.goodsNums, og.goodsAttrId, ga.attrStock FROM  __PREFIX__goods g ,__PREFIX__order_goods og
 					left join __PREFIX__goods_attributes ga on ga.goodsId=og.goodsId and og.goodsAttrId=ga.id
 					WHERE og.goodsId = g.goodsId and og.orderId in($orderIds)";
 			$glist = $this->query($sql);

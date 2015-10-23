@@ -1,5 +1,7 @@
 $(function () { 
     	 getVerify();
+    	 initTime('serviceStartTime','8');
+ 		 initTime('serviceEndTime','20');
     	 $.formValidator.initConfig({
   		   theme:'Default',mode:'AutoTip',formID:"myform",debug:true,submitOnce:true,onSuccess:function(){
   			       regist();
@@ -51,70 +53,47 @@ $(function () {
   			onWait : "请稍候..."
   		});
   		$("#shopCompany").formValidator({onShow:"",onFocus:"请输入公司名称",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"公司名称不能为空,请确认"});
-  		$("#shopName").formValidator({onShow:"",onFocus:"店铺名称不能超过20个字符",onCorrect:"输入正确"}).inputValidator({min:1,max:20,onError:"店铺名称不符合要求,请确认"});
+  		$("#shopName").formValidator({onShow:"",onFocus:"店铺名称不能超过20个字符",onCorrect:"输入正确"}).inputValidator({min:1,max:40,onError:"店铺名称不符合要求,请确认"});
   		$("#userName").formValidator({onShow:"",onFocus:"请输入店主姓名",onCorrect:"输入正确"}).inputValidator({min:1,max:20,onError:"店主姓名不能为空,请确认"});
   		$("#shopAddress").formValidator({onShow:"",onFocus:"请输入店铺地址",onCorrect:"输入正确"}).inputValidator({min:1,max:120,onError:"店铺地址不能为空,请确认"});
   		$("#areaId3").formValidator({onFocus:"请选择所属地区"}).inputValidator({min:1,onError: "请选择所属地区"});
   		$("#goodsCatId3").formValidator({onFocus:"请选择所属行业"}).inputValidator({min:1,onError: "请选择所属行业"});
-		$("#shopImgUpload").uploadify({
-  		    formData      : {'dir':'shops','width':500,'height':500},
-  		    buttonText    : '选择图标',
-  		    fileTypeDesc  : 'Image Files',
-  	        fileTypeExts  : '*.gif; *.jpg; *.png',
-  	        swf           : publicurl+'/plugins/uploadify/uploadify.swf',
-  	        uploader      : Think.U('Home/shops/uploadPic'),
-  	        onUploadSuccess : function(file, data, response) {
-  	        	var json = WST.toJson(data);
-  	        	var url = domainURL +'/'+json.Filedata.savepath+json.Filedata.savethumbname;
-  	        	$('#preview').attr('src',url).show();
-  	        	$('#shopImg').val(json.Filedata.savepath+json.Filedata.savename);
-  	        	$('#preview').adjustImgage({width:150,height:150});
-              }
-  	    });
-		$("#shopImgUpload2").uploadify({
-  		    formData      : {'dir':'shops','width':500,'height':500},
-  		    buttonText    : '选择图标',
-  		    fileTypeDesc  : 'Image Files',
-  	        fileTypeExts  : '*.gif; *.jpg; *.png',
-  	        swf           : publicurl+'/plugins/uploadify/uploadify.swf',
-  	        uploader      : Think.U('Home/shops/uploadPic'),
-  	        onUploadSuccess : function(file, data, response) {
-  	        	var json = WST.toJson(data);
-  	        	var url = domainURL +'/'+json.Filedata.savepath+json.Filedata.savethumbname;
-  	        	$('#preview2').attr('src',url).show();
-  	        	$('#shopImg2').val(json.Filedata.savepath+json.Filedata.savename);
-  	        	$('#preview2').adjustImgage({width:150,height:150});
-              }
-  	    });
-	    $("#shopImgUpload").uploadify({
-		    formData      : {'dir':'shops','width':150,'height':150},
-		    buttonText    : '选择图标',
-		    fileTypeDesc  : 'Image Files',
-	        fileTypeExts  : '*.gif; *.jpg; *.png',
-	        swf           : publicurl+'/plugins/uploadify/uploadify.swf',
-	        uploader      : Think.U('Home/shops/uploadPic'),
-	        onUploadSuccess : function(file, data, response) {
-	        	var json = WST.toJson(data);
-	        	var url = domainURL +'/'+json.Filedata.savepath+json.Filedata.savethumbname;
-	        	$('#preview').attr('src',url).show();
-	        	$('#shopImg').val(json.Filedata.savepath+json.Filedata.savename);
-	        }
-	    });
+  		$("#bankId").formValidator({onFocus:"请选择所属银行"}).inputValidator({min:1,onError: "请选择所属银行"});
+		$("#bankNo").formValidator({onShow:"",onFocus:"请输入银行卡号",onCorrect:"输入正确"}).inputValidator({min:16,max:19,onError:"银行卡号格式错误,请确认"}) .functionValidator({fun:luhmCheck,onError:"请输入正确的银行卡号！"});
+		
+	    ShopMapInit({});
     })
-    function getAreaList(objId,parentId,t,id){
+function initTime(objId,val){
+   for(var i=0;i<24;i++){
+	  $('<option value="'+i+'" '+((val==i)?"selected":'')+'>'+i+':00</option>').appendTo($('#'+objId));
+	  $('<option value="'+(i+0.5)+'" '+((val==(i+0.5))?"selected":'')+'>'+i+':30</option>').appendTo($('#'+objId));
+   }
+}
+function isInvoce(v){
+   if(v){
+	   $('#invoiceRemarkstr').show();
+   }else{
+	   $('#invoiceRemarkstr').hide();
+   }
+}
+function getAreaListForOpen(objId,parentId,t,id){
 	   var params = {};
 	   params.parentId = parentId;
-	   params.type = t;
+	   params.type = t+1;
 	   $('#'+objId).empty();
 	   if(t<1){
 		   $('#areaId3').empty();
 		   $('#areaId3').html('<option value="">请选择</option>');
+		   if(t==0 && shopMap && $('#areaId2').find("option:selected").text()!=''){
+			   shopMap.setCity($('#areaId2').find("option:selected").text());
+			   $('#showLevel').val(shopMap.getZoom());
+		   }
 	   }
 	   var html = [];
 	   $.post(Think.U('Home/Areas/queryByList'),params,function(data,textStatus){
 		    html.push('<option value="">请选择</option>');
 			var json = WST.toJson(data);
-			if(json.status=='1' && json.list && json.list.length>0){
+			if(json.status=='1' && json.list){
 				var opts = null;
 				for(var i=0;i<json.list.length;i++){
 					opts = json.list[i];
@@ -122,8 +101,53 @@ $(function () {
 				}
 			}
 			$('#'+objId).html(html.join(''));
+			if(t==0)getCommunitysForOpen();
 	   });
-   }
+}
+
+// 修改开始2015-4-25
+function getCommunitysForOpen(){
+	  $('#areaTree').empty();
+	  var areaId = $('#areaId2').val();
+	  $.post(Think.U('Home/Areas/getAreaAndCommunitysByList'),{areaId:areaId},function(data,textStatus){
+			var json = data;
+			if(json.list){
+					var html = [];
+					json = json.list;
+					for(var i=0;i<json.length;i++){
+						communitysCount = 0
+						html.push("<dl class='areaSelect' id='"+json[i]['areaId']+"'>");
+						html.push("<dt class='ATRoot' id='node_"+json[i]['areaId']+"' isshow='0'><div class='tleft'>"+json[i]['areaName']+"：</div><span> <input type='checkbox' all='1' class='AreaNode' onclick='javascript:selectArea(this)' id='ck_"+json[i]['areaId']+"' value='"+json[i]['areaId']+"'><label for='ck_"+json[i]['areaId']+"' value='"+json[i]['areaId']+"'>全区配送</label></span> <small>(已选<span class='count'>"+communitysCount+"</span>个社区)</small></dt>");
+						if(json[i].communitys && json[i].communitys.length){
+							html.push('<dd>');
+							for(var j=0;j<json[i].communitys.length;j++){
+							    html.push("<div class='ATNode' id='node_"+json[i]['areaId']+"_"+json[i].communitys[j]['communityId']+"'><input type='checkbox' id='ck_"+json[i]['areaId']+"_"+json[i].communitys[j]['communityId']+"' all='0' class='AreaNode' onclick='javascript:selectArea(this)' value='"+json[i].communitys[j]['communityId']+"'><label for='ck_"+json[i]['areaId']+"_"+json[i].communitys[j]['communityId']+"'>"+json[i].communitys[j]['communityName']+"</label></div>");
+							}
+							html.push('</dd>');
+						}
+						html.push("</dl>");
+					}
+					$('#areaTree').html(html.join(''));
+					$('#expendAll').parent().removeClass('Hide');
+					$('#expendAll').attr('checked','checked');
+				}
+		});
+	}
+function selectArea(v){
+	count = 0;
+	if($(v).attr('all')=='1'){
+		$('input[id^="'+$(v).attr('id')+'_"]').each(function(){
+			$(this)[0].checked = $(v)[0].checked;
+			$(this)[0].disabled = $(v)[0].checked;
+			if ($(v)[0].checked) {count++};
+		});
+	}else{
+		$(v).closest('dl').find('input[type="checkbox"]').each(function(){
+			if ($(this).prop('checked') == true) { count++};
+		});
+	}
+	$(v).closest('dl').find('.count:first').html(count);
+}
    function getCatList(objId,parentId,t,id){
  	   var params = {};
  	   params.id = parentId;
@@ -233,13 +257,57 @@ $(function () {
 	   	params.goodsCatId1 = $('#goodsCatId1').val();
 	   	params.goodsCatId2 = $('#goodsCatId2').val();
 	   	params.goodsCatId3 = $('#goodsCatId3').val();
+	   	params.latitude = $('#latitude').val();
+	   	params.longitude = $('#longitude').val();
+	   	params.mapLevel = $('#mapLevel').val();
+		params.shopTel = $('#shopTel').val();
 	   	params.shopName = $('#shopName').val();
 	   	params.shopCompany = $('#shopCompany').val();
 	   	params.shopImg = $('#shopImg').val();
+	   	params.deliveryStartMoney = $('#deliveryStartMoney').val();
+	   	params.deliveryMoney = $('#deliveryMoney').val();
+		params.deliveryFreeMoney = $('#deliveryFreeMoney').val();
+		params.avgeCostMoney = $('#avgeCostMoney').val();
+		params.bankId = $('#bankId').val();
+		params.bankNo = $('#bankNo').val();
+		params.isInvoice = $("input[name='isInvoice']:checked").val();
+		params.invoiceRemarks = $.trim($('#invoiceRemarks').val());
+		params.serviceStartTime = $('#serviceStartTime').val();
+		params.serviceEndTime = $('#serviceEndTime').val();
+		params.shopAtive = $("input[name='shopAtive']:checked").val();
 	   	if(params.shopImg==''){
 	   		WST.msg('请上传店铺图片!', {icon: 5});
 	   		return;
 	   	}
+	   	if(params.latitude=='' || params.longitude==''){
+			   WST.msg('请标注店铺地址!', {icon: 5});
+			   return;
+		   }
+	   	var relateArea = [0];
+		var relateCommunity = [0];
+		$('.AreaNode').each(function(){
+			if($(this)[0].checked){
+				if($(this).attr('all')==1){
+					relateArea.push($(this).val());
+				}else{
+					relateCommunity.push($(this).val());
+				}
+			}
+		});
+		params.relateAreaId=relateArea.join(',');
+		params.relateCommunityId=relateCommunity.join(',');
+		if(params.relateAreaId=='0' && params.relateCommunityId=='0'){
+			 WST.msg('请选择配送区域!', {icon: 5});
+			 return;
+		}
+		if(params.isInvoice==1 && params.invoiceRemarks==''){
+			 WST.msg('请输入发票说明!', {icon: 5});
+			 return;
+		}
+		if(parseInt(params.serviceStartTime,10)>parseInt(params.serviceEndTime,10)){
+			 WST.msg('开始营业时间不能大于结束营业时间!', {icon: 5});
+			 return;
+		}
 	   	params.shopTel = $('#shopTel').val();
 	   	params.shopAddress = $('#shopAddress').val();
 	   	params.mobileCode = $.trim($('#mobileCode').val());
@@ -268,5 +336,43 @@ $(function () {
 	   		}
 	   		getVerify();
 	   	});
+   }
+   var shopMap = null;
+   var toolBar = null;
+   function ShopMapInit(option){
+	   var opts = {zoom:$('#mapLevel').val(),longitude:$('#longitude').val(),latitude:$('#latitude').val()};
+	   if(shopMap)return;
+	   $('#shopMap').show();
+	   shopMap = new AMap.Map('mapContainer', {
+			view: new AMap.View2D({
+				zoom:opts.zoom
+			})
+	   });
+	   if(opts.longitude!='' && opts.latitude){
+		   shopMap.setZoomAndCenter(opts.zoom, new AMap.LngLat(opts.longitude, opts.latitude));
+		   var marker = new AMap.Marker({
+				position: new AMap.LngLat(opts.longitude, opts.latitude), //基点位置
+				icon:"http://webapi.amap.com/images/marker_sprite.png"
+		   });
+		   marker.setMap(shopMap);
+	   }
+	   shopMap.plugin(["AMap.ToolBar"],function(){		
+			toolBar = new AMap.ToolBar();
+			shopMap.addControl(toolBar);		
+	   });
+	   toolBar.show();
+	   AMap.event.addListener(shopMap,'click',function(e){
+			shopMap.clearMap();
+			$('#longitude').val(e.lnglat.getLng());
+			$('#latitude').val(e.lnglat.getLat());
+			var marker = new AMap.Marker({
+				position: e.lnglat, //基点位置
+				icon:"http://webapi.amap.com/images/marker_sprite.png"
+			});
+			marker.setMap(shopMap);
+	   });
+	   AMap.event.addListener(shopMap,'zoomchange',function(e){
+		   $('#mapLevel').val(this.getZoom());
+	   })
    }
    

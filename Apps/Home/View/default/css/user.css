@@ -290,3 +290,20 @@ input, textarea {
 .wst-appraise-box .appraise-box .item .content{float:left;width:700px;text-align: left;}
 .wst-appraise-box .appraise-box .btn-box{padding-right:80px;margin:15px;float: right;}
 .wst-goods-tb{margin-top:3px;margin-bottom:2px;border:0px;}
+
+
+
+.wst-msg-tips-box {
+    background-color: #f0a869;
+    border-radius: 12px;
+    color: white;
+    cursor: pointer;
+    display: inline-block;
+    height: 24px;
+    left: 30px;
+    line-height: 24px;
+    position: relative;
+    text-align: center;
+    top: 0px;
+    width: 24px;
+}

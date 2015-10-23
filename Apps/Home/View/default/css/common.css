@@ -1018,9 +1018,83 @@ b, strong {
 .wst-search-btn{position:absolute;top:0px;right:0px;width:80px;height:36px;color:#ffffff;font-weight:bolder;background-color:#e23c3d;line-height:36px;text-align:center;font-size:15px;cursor:pointer;}
 
 
+.filelist li .setdef {
+		background: none repeat scroll 0 0 #F48C3A;
+		bottom: 0;
+		line-height: 18px;
+		height: 18px;
+		position: absolute;
+		right: 0;
+        padding: 0 5px;
+        z-index: 9999;
+        color: #FFFFFF;
+	}
+.filelist li .setdel:hover{
+        color: #E4F14A;
+    }
+.filelist li .setdel {
+        cursor:pointer;
+		background: none repeat scroll 0 0 #3b72a5;
+		top: 200;
+		color: #FFFFFF;
+		height: 18px;
+		line-height: 18px;
+		padding: 0 5px;
+		position: absolute;
+		right: 0px;
+        z-index: 9999;
+	}
+
+.filelist li img {
+    cursor: pointer;
+}
 
 
-
-
+#uploader .filelist li{
+    display: inline;
+    float: left;
+    font-size: 12px;
+    height: auto;
+    margin: 0 8px 8px 0;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+    width: 152px;
+}
+.div1{ 
+	background: #eeecdb none repeat scroll 0 0;
+    border: 1px solid #003c74;
+    border-radius: 2px;
+    float: left;
+    height: 25px;
+    position: relative;
+    top: 3px;
+    width: 45px; }
+.div1:hover{
+	background: none repeat scroll 0 0 #dfefef;
+    border: 1px solid #003C74;
+    border-radius: 2px;
+    float: left;
+    height: 25px;
+    position: relative;
+    top: 3px;
+    width: 45px;
+}
+.div2{
+	font-size: 13px;
+    line-height: 25px;
+    text-align: center;}
+.inputstyle{
+	cursor: pointer;
+    font-size: 13px;
+    height: 25px;
+    left: 0px;
+    opacity: 0;
+    outline: medium none;
+    position: absolute;
+    top: -9px;
+    width: 45px;
+}
+.statusBar{padding-left:10px;}
 
 

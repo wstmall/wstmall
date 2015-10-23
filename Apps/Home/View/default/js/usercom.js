@@ -189,8 +189,9 @@ function editUser(){
 		   layer.close(ll);
 			var json = WST.toJson(data);
 			if(json.status=='1'){
-				WST.msg('修改用户资料成功!', {icon: 1});
-				location.reload();
+				WST.msg('修改用户资料成功!', {icon: 1},function(){
+					location.href= location.href;
+				});
 			}else if(json.status=='-2'){
 				WST.msg('用户手机已存在!', {icon: 5});
 			}else if(json.status=='-3'){
@@ -213,7 +214,7 @@ function toPay(id){
 			var rlist = json.rlist;
 			var garr = new Array();
 			for(var i=0;i<rlist.length;i++){
-				garr.push(rlist[i].goodsName);
+				garr.push(rlist[i].goodsName+rlist[i].goodsAttrName);
 			}
 			WST.msg('订单中商品【'+garr.join("，")+'】库存不足，不能进行支付。', {icon: 5});
 		}else{
@@ -332,11 +333,15 @@ function orderConfirm(id,type){
 function getAreaListForOpen(objId,parentId,t,id){
 	   var params = {};
 	   params.parentId = parentId;
-	   params.type = t;
+	   params.type = t + 1;
 	   $('#'+objId).empty();
 	   if(t<1){
 		   $('#areaId3').empty();
 		   $('#areaId3').html('<option value="">请选择</option>');
+		   if(t==0 && shopMap && $('#areaId2').find("option:selected").text()!=''){
+			   shopMap.setCity($('#areaId2').find("option:selected").text());
+			   $('#showLevel').val(shopMap.getZoom());
+		   }
 	   }
 	   var html = [];
 	   $.post(Think.U('Home/Areas/queryByList'),params,function(data,textStatus){
@@ -377,7 +382,9 @@ function getCommunitysForOpen(){
 							for(var j=0;j<json[i].communitys.length;j++){
 								var isCommunitySelected = ($.inArray(json[i].communitys[j]['communityId'],relateCommunity)>-1)?" checked ":"";
 								isCommunitySelected += (isAreaSelected!='')?" disabled ":"";
-							    html.push("<dd id='node_"+json[i]['areaId']+"_"+json[i].communitys[j]['communityId']+"'><input type='checkbox' id='ck_"+json[i]['areaId']+"_"+json[i].communitys[j]['communityId']+"' all='0' class='AreaNode' "+isCommunitySelected+" onclick='javascript:selectArea(this)' value='"+json[i].communitys[j]['communityId']+"'><label for='ck_"+json[i]['areaId']+"_"+json[i].communitys[j]['communityId']+"'>"+json[i].communitys[j]['communityName']+"</label></dd>");
+								html.push('<dd>');
+							    html.push("<div class='ATNode' id='node_"+json[i]['areaId']+"_"+json[i].communitys[j]['communityId']+"'><input type='checkbox' id='ck_"+json[i]['areaId']+"_"+json[i].communitys[j]['communityId']+"' all='0' class='AreaNode' "+isCommunitySelected+" onclick='javascript:selectArea(this)' value='"+json[i].communitys[j]['communityId']+"'><label for='ck_"+json[i]['areaId']+"_"+json[i].communitys[j]['communityId']+"'>"+json[i].communitys[j]['communityName']+"</label></div>");
+							    html.push('</dd>');
 							}
 						}
 						html.push("</dl>");
@@ -415,6 +422,7 @@ function openShop(){
 	   params.areaId3 = $('#areaId3').val();
 	   params.goodsCatId1 = $('#goodsCatId1').val();
 	   params.shopAddress = $('#shopAddress').val();
+	   params.deliveryStartMoney = $('#deliveryStartMoney').val();
 	   params.deliveryMoney = $('#deliveryMoney').val();
 	   params.deliveryFreeMoney = $('#deliveryFreeMoney').val();
 	   params.avgeCostMoney = $('#avgeCostMoney').val();
@@ -425,7 +433,14 @@ function openShop(){
 	   params.serviceStartTime = $('#serviceStartTime').val();
 	   params.serviceEndTime = $('#serviceEndTime').val();
 	   params.shopAtive = $("input[name='shopAtive']:checked").val();
+	   params.latitude = $('#latitude').val();
+	   params.longitude = $('#longitude').val();
+	   params.mapLevel = $('#mapLevel').val();
 	   params.verify = $('#authcode').val();
+	   if(params.latitude=='' || params.longitude==''){
+		   WST.msg('请标注店铺地址!', {icon: 5});
+		   return;
+	   }
 	   if(params.shopImg==''){
 		   WST.msg('请上传店铺图片!', {icon: 5});
 		   return;
@@ -463,7 +478,7 @@ function openShop(){
 		   WST.msg('请输入验证码!',{icon: 5});
 		   return;
 	   }
-	   layer.load('正在处理，请稍后...', 3);
+	   var ll = layer.load('正在处理，请稍后...', 3);
 	   $.post(Think.U('Home/Shops/openShopByUser'),params,function(data,textStatus){
 			var json = WST.toJson(data);
 			if(json.status=='1'){
@@ -512,7 +527,44 @@ function showXiey(id){
 		});
 	}	
 
-
+var shopMap = null;
+var toolBar = null;
+function ShopMapInit(option){
+	   var opts = {zoom:$('#mapLevel').val(),longitude:$('#longitude').val(),latitude:$('#latitude').val()};
+	   if(shopMap)return;
+	   $('#shopMap').show();
+	   shopMap = new AMap.Map('mapContainer', {
+			view: new AMap.View2D({
+				zoom:opts.zoom
+			})
+	   });
+	   if(opts.longitude!='' && opts.latitude){
+		   shopMap.setZoomAndCenter(opts.zoom, new AMap.LngLat(opts.longitude, opts.latitude));
+		   var marker = new AMap.Marker({
+				position: new AMap.LngLat(opts.longitude, opts.latitude), //基点位置
+				icon:"http://webapi.amap.com/images/marker_sprite.png"
+		   });
+		   marker.setMap(shopMap);
+	   }
+	   shopMap.plugin(["AMap.ToolBar"],function(){		
+			toolBar = new AMap.ToolBar();
+			shopMap.addControl(toolBar);		
+	   });
+	   toolBar.show();
+	   AMap.event.addListener(shopMap,'click',function(e){
+			shopMap.clearMap();
+			$('#longitude').val(e.lnglat.getLng());
+			$('#latitude').val(e.lnglat.getLat());
+			var marker = new AMap.Marker({
+				position: e.lnglat, //基点位置
+				icon:"http://webapi.amap.com/images/marker_sprite.png"
+			});
+			marker.setMap(shopMap);
+	   });
+	   AMap.event.addListener(shopMap,'zoomchange',function(e){
+		   $('#mapLevel').val(this.getZoom());
+	   })
+}
 
 
 
@@ -562,6 +614,47 @@ function getOrdersList(type){
 
 
 
+function getUserMsgTips(){
+	$.post(Think.U('Home/Orders/getUserMsgTips'),{},function(data,textStatus){
+		var json = WST.toJson(data);
+		for(var i in json){
+			if(i==-2){//未支付
+				if(json[i]>0){
+					$("#li_queryPayByPage .wst-msg-tips-box").show();
+				}else{
+					$("#li_queryPayByPage .wst-msg-tips-box").hide();
+				}
+				$("#li_queryPayByPage .wst-msg-tips-box").html(json[i]);
+			}else if(i==2){//待发货
+				if(json[i]>0){
+					$("#li_queryDeliveryByPage .wst-msg-tips-box").show();
+				}else{
+					$("#li_queryDeliveryByPage .wst-msg-tips-box").hide();
+				}
+				$("#li_queryDeliveryByPage .wst-msg-tips-box").html(json[i]);
+			}else if(i==3){//待收货
+				if(json[i]>0){
+					$("#li_queryReceiveByPage .wst-msg-tips-box").show();
+				}else{
+					$("#li_queryReceiveByPage .wst-msg-tips-box").hide();
+				}
+				$("#li_queryReceiveByPage .wst-msg-tips-box").html(json[i]);
+			}else if(i==-3){//退款订单
+				
+			}else if(i==4){//获取待评价订单
+				if(json[i]>0){
+					$("#li_queryAppraiseByPage .wst-msg-tips-box").show();
+				}else{
+					$("#li_queryAppraiseByPage .wst-msg-tips-box").hide();
+				}
+				$("#li_queryAppraiseByPage .wst-msg-tips-box").html(json[i]);
+			}
+		}
+	});
+}
 
-
+$(function() {
+	getUserMsgTips();
+	setInterval("getUserMsgTips()",30000);
+});
 

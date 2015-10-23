@@ -1,0 +1,1 @@
+alter table wst_goods add goodsKeywords varchar(200);

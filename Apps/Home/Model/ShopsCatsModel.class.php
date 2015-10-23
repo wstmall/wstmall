@@ -155,7 +155,7 @@ class ShopsCatsModel extends BaseModel {
 	 
 	 
 	/**
-	  * 获取门店商品分类列表
+	  * 获取店铺商品分类列表
 	*/
     public function getShopCateList($shopId = 0){
 		$shopId = ($shopId>0)?$shopId:(int)I("shopId");

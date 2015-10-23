@@ -9,14 +9,17 @@ dl.areaSelect:hover{border:1px solid #E5CD29;}
 dl.areaSelect:hover dd{display: block;}
 dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
 </style>
-<link rel="stylesheet" href="__PUBLIC__/plugins/uploadify/uploadify.css">
-<script src="__PUBLIC__/plugins/uploadify/jquery.uploadify.min.js"></script>
+
 <script src="__PUBLIC__/plugins/kindeditor/kindeditor.js"></script>
 <script src="__PUBLIC__/plugins/kindeditor/lang/zh_CN.js"></script>
+<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=37f0869604ca86505487639427d52bf6"></script>
+
 <script>
 var relateCommunity = "{$object['relateCommunity']}".split(',');
 var relateArea = "{$object['relateArea']}".split(',');
 var areaId = '{$object['areaId2']}';
+var shopMap = null;
+var toolBar = null;
 $(function () {
 	   //展开按钮
 	   $("#expendAll").click(function(){
@@ -32,7 +35,7 @@ $(function () {
 	    $("#shopName").formValidator({onShow:"",onFocus:"店铺名称不能超过20个字符",onCorrect:"输入正确"}).inputValidator({min:1,max:20,onError:"店铺名称不符合要求,请确认"});
 		$("#shopName").formValidator({onShow:"",onFocus:"店铺名称不能超过20个字符",onCorrect:"输入正确"}).inputValidator({min:1,max:20,onError:"店铺名称不符合要求,请确认"});
 		$("#userName").formValidator({onShow:"",onFocus:"请输入店主姓名",onCorrect:"输入正确"}).inputValidator({min:1,max:20,onError:"店主姓名不能为空,请确认"});
-		$("#shopCompany").formValidator({onShow:"",onFocus:"请输入公司名称",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"门店关键字不能为空,请确认"});
+		$("#shopCompany").formValidator({onShow:"",onFocus:"请输入公司名称",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"店铺关键字不能为空,请确认"});
 		$("#shopAddress").formValidator({onShow:"",onFocus:"请输入公司地址",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"公司地址不能为空,请确认"});
 		$("#bankNo").formValidator({onShow:"",onFocus:"请输入银行卡号",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"银行卡号不能为空,请确认"});
 		$("#deliveryStartMoney").formValidator({onShow:"",onFocus:"请输入订单配送起步价",onCorrect:"输入正确"});
@@ -40,31 +43,62 @@ $(function () {
 		$("#deliveryMoney").formValidator({onShow:"",onFocus:"请输入邮费",onCorrect:"输入正确"});
 		$("#deliveryCostTime").formValidator({onShow:"",onFocus:"请输入平均配送时间",onCorrect:"输入正确"});
 		$("#avgeCostMoney").formValidator({onShow:"",onFocus:"请输入平均消费金额",onCorrect:"输入正确"});
-		$("#shopImgUpload").uploadify({
-		    formData      : {'dir':'shops','width':0,'height':120},
-		    buttonText    : '选择图标',
-		    fileTypeDesc  : 'Image Files',
-	        fileTypeExts  : '*.gif; *.jpg; *.png',
-	        swf           : publicurl+'/plugins/uploadify/uploadify.swf',
-	        uploader      : domainURL +'/index.php/Home/shops/uploadPic',
-	        onUploadSuccess : function(file, data, response) {
-	        	var json = WST.toJson(data);
-	        	$('#preview').attr('src',domainURL +'/'+json.Filedata.savepath+json.Filedata.savethumbname).show();
-	        	$('#shopImg').val(json.Filedata.savepath+json.Filedata.savename);
-        }
-	    });
+		
 		getCommunitysForShopEdit();
 		initTime('serviceStartTime','{$object['serviceStartTime']}');
 		initTime('serviceEndTime','{$object['serviceEndTime']}');
+		ShopMapInit();
 });
-
+function ShopMapInit(option){
+	   var opts = {zoom:$('#mapLevel').val(),longitude:$('#longitude').val(),latitude:$('#latitude').val()};
+	   if(shopMap)return;
+	   $('#shopMap').show();
+	   shopMap = new AMap.Map('mapContainer', {
+			view: new AMap.View2D({
+				zoom:opts.zoom
+			})
+	   });
+	   if(opts.longitude!='' && opts.latitude){
+		   shopMap.setZoomAndCenter(opts.zoom, new AMap.LngLat(opts.longitude, opts.latitude));
+		   var marker = new AMap.Marker({
+				position: new AMap.LngLat(opts.longitude, opts.latitude), //基点位置
+				icon:"http://webapi.amap.com/images/marker_sprite.png"
+		   });
+		   marker.setMap(shopMap);
+	   }
+	   shopMap.plugin(["AMap.ToolBar"],function(){		
+			toolBar = new AMap.ToolBar();
+			shopMap.addControl(toolBar);		
+	   });
+	   toolBar.show();
+}
+var filetypes = ["gif","jpg","png","jpeg"];
 </script>
    <div class="wst-body"> 
        <div class='wst-page-header'>卖家中心 > 店铺资料</div>
-       <div class='wst-page-content'>
+       <div class='wst-page-content' style="position:relative;">
+       <iframe name="upload" style="display:none"></iframe>
+		<form id="uploadform_Filedata" autocomplete="off" style="position:absolute;top:108px;left:159px;z-index:10;" enctype="multipart/form-data" method="POST" target="upload" action="{:U('Home/Shops/uploadPic')}" >
+			<div style="position:relative;">
+			<input id="shopImg" name="shopImg" type="text" value="{$object.shopImg}" readonly style="margin-right:4px;float:left;margin-left:8px;width:250px;"/>
+			<div class="div1">
+				<div class="div2">浏览</div>
+				<input type="file" class="inputstyle" id="Filedata" name="Filedata" onchange="updfile('Filedata');" >
+			</div>
+			<div style="clear:both;"></div>
+			<div >&nbsp;图片大小:150 x 150 (px)(格式为 gif, jpg, jpeg, png)</div>
+			<input type="hidden" name="dir" value="shops">
+			<input type="hidden" name="width" value="150">
+			<input type="hidden" name="folder" value="Filedata">
+			<input type="hidden" name="sfilename" value="Filedata">
+			<input type="hidden" name="fname" value="shopImg">
+			<input type="hidden" id="s_Filedata" name="s_Filedata" value="">
+			
+			</div>
+		</form>
        <form name="myform" method="post" id="myform" autocomplete="off">
         <input type='hidden' id='id' value='{$object.shopId}'/>
-        <input type='hidden' id='shopImg' value='{$object.shopImg}'/>
+       
         <table class="table table-hover table-striped table-bordered wst-form">
            <tr>
              <th width='150' align='right'>店铺名称<font color='red'>*</font>：</th>
@@ -78,15 +112,15 @@ $(function () {
              <th align='right'>公司名称<font color='red'>*</font>：</th>
              <td><input type='text' id='shopCompany' class="form-control wst-ipt" value='{$object.shopCompany}' style='width:250px;' maxLength='25'/></td>
            </tr>
-           <tr>
+           <tr style="height:80px;">
              <th align='right'>店铺图标<font color='red'>*</font>：</th>
              <td>
-             <div style="position:relative;">
-             <input type='text' id='shopImgUpload' class="form-control wst-ipt"/>
-             <span style="position:absolute;top:4px;left:140px;">图片大小:150 x 120 (px)</span></div>
-             <div style="padding-top:4px;">
-             	<img id='preview' src='__ROOT__/{$object.shopImg}' width='140' height="100" <if condition="$object['shopImg'] =='' ">style='display:none'</if> />
-             </div>
+	          
+	             <div id="preview_Filedata" style="margin-top: 70px;">
+	             	<if condition="$object['shopImg'] !='' ">
+	             		<img height="150" id='preview' src='__ROOT__/{$object.shopImg}'>
+	             	</if>
+	             </div>
              </td>
            </tr>
            
@@ -98,6 +132,18 @@ $(function () {
              <th align='right'>店铺地址<font color='red'>*</font>：</th>
              <td><input type='text' id='shopAddress' class="form-control wst-ipt" value='{$object.shopAddress}' style='width:350px;' maxLength='100'/></td>
            </tr>
+           <tr id='shopMap'>
+             <td>&nbsp;</td>
+             <td>
+             <div id="mapContainer" style='height:400px;width:90%;'>等待地图初始化...</div>
+             <div >
+             <input type='hidden' id='latitude' name='latitude' value="{$object['latitude']}"/>
+             <input type='hidden' id='longitude' name='longitude' value="{$object['longitude']}"/>
+             <input type='hidden' id='mapLevel' name='mapLevel' value="{$object['mapLevel']}"/>
+             </div>
+             </td>
+           </tr>
+          
            <tr>
              <th align='right'>营业状态<font color='red'>*</font>：</th>
              <td>
@@ -140,15 +186,15 @@ $(function () {
              <th align='right'>能否开发票<font color='red'>*</font>：</th>
              <td>
              <label>
-             <input type='radio' id='isInvoice1' name='isInvoice' value='1' <if condition="$object['isInvoice'] ==1 ">checked</if> />能&nbsp;&nbsp;
+             <input type='radio' id='isInvoice1' name='isInvoice' value='1' onclick='javascript:isInvoce(true)' <if condition="$object['isInvoice'] ==1 ">checked</if> />能&nbsp;&nbsp;
              </label>
              <label>
-             <input type='radio' id='isInvoice0' name='isInvoice' value='0' <if condition="$object['isInvoice'] ==0 ">checked</if> />否
+             <input type='radio' id='isInvoice0' name='isInvoice' value='0' onclick='javascript:isInvoce(false)' <if condition="$object['isInvoice'] ==0 ">checked</if> />否
              </label>
              </td>
            </tr>
-           <tr>
-             <th align='right'>发票说明<font color='red'>*</font>：</th>
+           <tr id='invoiceRemarkstr' <if condition="$object['isInvoice'] ==0 ">style='display:none'</if>>
+             <th align='right'>发票说明：</th>
              <td><input type='text' id='invoiceRemarks' class="form-control wst-ipt" value='{$object.invoiceRemarks}' style='width:350px;' maxLength='100'/></td>
            </tr>
            <tr>

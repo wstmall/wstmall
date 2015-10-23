@@ -11,11 +11,28 @@
       	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/regist.css">
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/passport.css">
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/footer.css">
-     	<link rel="stylesheet" href="__PUBLIC__/plugins/uploadify/uploadify.css">
+     	<style>
+		.div1{ background: #eeecdb none repeat scroll 0 0;border: 1px solid #003c74;border-radius: 2px;float: left;height: 35px;position: relative;top: 0px;width: 45px; }
+		.div1:hover{background: none repeat scroll 0 0 #dfefef;border: 1px solid #003C74;border-radius: 2px;float: left;height: 35px;position: relative;top: 0px;width: 45px;}
+		.div2{font-size: 13px;line-height: 35px;text-align: center;}
+		.inputstyle{cursor: pointer;font-size: 13px;height: 35px;left: 0px;opacity: 0;outline: medium none;position: absolute;top: 0px;width: 45px;}
+		</style>
+     	<script>
+     	var filetypes = ["gif","jpg","png","jpeg"];
+   		</script>	
    	</head>
    	<body>
     <style>
     .yj-select select{height:30px;font-size:17px;margin-right:5px;}
+    .ATRoot{padding:0px 5px;height:22px;line-height:22px;clear:both;}
+    .ATNode{margin-right:5px;;line-height:22px;width:150px;float:left;}
+    label{cursor:pointer;}
+    .tleft{float:left;}
+    .Hide{display:none;}
+    dl.areaSelect{display: inline-block; width:100%; margin-bottom: 0;}
+    dl.areaSelect:hover{border:1px solid #E5CD29;}
+    dl.areaSelect:hover dd{display: block;}
+    dl.areaSelect dd{margin-left:20px;width:100%;}
     </style>
 	<div id="shortcut-2013">
 		<include file="./Apps/Home/View/default/header_nav.html" />
@@ -29,9 +46,27 @@
 	    </div>
 	</div>
 	<div class="wst-regist" id="regist">	    
-	    <div class="mc">
+	    <div class="mc" style="position:relative;">
+	    	<iframe name="upload" style="display:none"></iframe>
+			<form id="uploadform_Filedata" autocomplete="off" style="position:absolute;top:386px;left:193px;z-index:10;" enctype="multipart/form-data" method="POST" target="upload" action="{:U('Home/Shops/uploadPic')}" >
+				<div style="position:relative;">
+				<input id="shopImg" name="shopImg" class="text" type="text" value="{$object.shopImg}" readonly style="margin-right:4px;float:left;margin-left:8px;width:237px;"/>
+				<div class="div1">
+					<div class="div2">浏览</div>
+					<input type="file" class="inputstyle" id="Filedata" name="Filedata" onchange="updfile('Filedata');" >
+				</div>
+				<div style="clear:both;"></div>
+				<div >&nbsp;图片大小:150 x 150 (px)(格式为 gif, jpg, jpeg, png)</div>
+				<input type="hidden" name="dir" value="shops">
+				<input type="hidden" name="width" value="150">
+				<input type="hidden" name="folder" value="Filedata">
+				<input type="hidden" name="sfilename" value="Filedata">
+				<input type="hidden" name="fname" value="shopImg">
+				<input type="hidden" id="s_Filedata" name="s_Filedata" value="">
+				
+				</div>
+			</form>
 	        <form name="myform" method="post" id="myform" autocomplete="off">
-	            <input type='hidden' id='shopImg' value='{$object.shopImg}'/>
 	            <div class="form">
 	                <div class="item" id="select-regName">
 	                    <span class="label"><b class="ftx04">*</b>登录账户：</span>	
@@ -78,25 +113,31 @@
 	                            <label id="shopCompany_succeed" ></label>	                           
 	                        </div>
 	                    </div>
+	                    <div class="item">
+	                        <span class="label"><b class="ftx04">*</b>店铺电话：</span>	
+	                        <div class="fl item-ifo">
+	                            <input id="shopTel" name="shopTel" class="text" tabindex="3" autocomplete="off" style="" type="text"/>	                           	                           
+	                        </div>
+	                    </div>
 	                    <div class="item" style='height:auto;position:relative;'>
 	                        <span class="label">店铺图标：</span>	
 	                        <div class="fl item-ifo">
-	                            <input type='text' id='shopImgUpload' class="form-control wst-ipt"/>
-                                <img id='preview' src='' ref='' width='100' style='display:none'/>	                           
+	                            <div id="preview_Filedata" style="margin-top: 70px;">
+                                <img id='preview' src='' ref='' width='100' style='display:none'/>	 
+                                </div>                          
 	                        </div>
-	                        <span class="label" style="position:absolute;top:6px;left:322px;">图片大小：150 × 120 (px) </span>
 	                    </div>
 	                   
 	                    <div class="item">
 	                        <span class="label"><b class="ftx04">*</b>所属地区：</span>	
 	                        <div class="fl item-ifo yj-select">
-	                            <select id='areaId1' onchange='javascript:getAreaList("areaId2",this.value,0)'>
+	                            <select id='areaId1' onchange='javascript:getAreaListForOpen("areaId2",this.value,-1)'>
 					               <option value=''>请选择</option>
 					               <volist name="areaList" id="vo">
 					               <option value='{$vo['areaId']}' <if condition="$area['parentId'] == $vo['areaId'] ">selected</if>>{$vo['areaName']}</option>
 					               </volist>
 					             </select>
-					             <select id='areaId2' onchange='javascript:getAreaList("areaId3",this.value,1);'>
+					             <select id='areaId2' onchange='javascript:getAreaListForOpen("areaId3",this.value,0);'>
 					               <option value=''>请选择</option>
 					             </select>
 					             <select id='areaId3'>
@@ -112,6 +153,18 @@
 	                            <label id="shopAddress_succeed" ></label>	                           
 	                        </div>
 	                    </div>
+	                    <div class="item" style='height:440px;'>
+	                    <span class="label">&nbsp;</span>	
+                        <div class="fl item-ifo">
+                             <div id="mapContainer" style='height:400px;width:660px;'>等待地图初始化...</div>
+                             <div style='color:red'>(注意：提交开店申请之后店铺地址将无法修改)</div>
+				             <div style='display:none'>
+				             <input type='text' id='latitude' name='latitude' value=""/>
+				             <input type='text' id='longitude' name='longitude' value=""/>
+				             <input type='text' id='mapLevel' name='mapLevel' value=""/>
+				             </div>
+				        </div>
+				        </div>
 						<div class="item">
 	                        <span class="label"><b class="ftx04">*</b>行业：</span>	
 	                        <div class="fl item-ifo yj-select">
@@ -123,14 +176,98 @@
 					            </select>
 	                            <label id="shopTel_succeed" ></label>	                           
 	                        </div>
-	                    </div>      
+	                    </div>
+	                    <div class="item">
+	                        <span class="label"><b class="ftx04">*</b>营业状态：</span>	
+	                        <div class="fl item-ifo">
+	                            <label>
+					             <input type="radio" id="shopAtive1" name="shopAtive" value="1">营业中&nbsp;&nbsp;
+					            </label>
+					            <label>
+					             <input type="radio" id="shopAtive0" name="shopAtive" value="0" checked="">休息中
+					            </label>	                           
+	                        </div>
+	                    </div>
+	                    <div class="item" style='height:auto;'>
+	                        <span class="label"><b class="ftx04">*</b>配送区域：</span>	
+	                        <div class="fl item-ifo yj-select" style='width:670px;'>
+             					 <div id='areaTree'></div>	                           
+	                        </div>
+	                    </div>
+	                    <div class="item">
+	                        <span class="label"><b class="ftx04">*</b>订单配送起步价：</span>	
+	                        <div class="fl item-ifo">
+	                            <input type="text" id="deliveryStartMoney" class="text" value="0.0" onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxlength="8">            
+	                        </div>
+	                    </div>
+	                    <div class="item">
+	                        <span class="label"><b class="ftx04">*</b>包邮起步价：</span>	
+	                        <div class="fl item-ifo">
+	                            <input type="text" id="deliveryFreeMoney" class='text' value='0.0' onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxlength="8">	                           
+	                        </div>
+	                    </div>
+	                    <div class="item">
+	                        <span class="label"><b class="ftx04">*</b>邮费：</span>	
+	                        <div class="fl item-ifo">
+	                           <input type="text" id="deliveryMoney" class='text' value='0.0' onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxlength="8">
+	                        </div>
+	                    </div>
+	                    <div class="item">
+	                        <span class="label"><b class="ftx04">*</b>平均消费金额：</span>	
+	                        <div class="fl item-ifo">
+	                           <input type="text" id="avgeCostMoney" class='text' value='0.0' onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxlength="8">
+	                        </div>
+	                    </div>
+	                    <div class="item">
+	                        <span class="label"><b class="ftx04">*</b>能否开发票：</span>	
+	                        <div class="fl item-ifo">
+	                           <label>
+					             <input type="radio" id="isInvoice1" onclick="javascript:isInvoce(true)" name="isInvoice" value="1">能&nbsp;&nbsp;
+					             </label>
+					             <label>
+					             <input type="radio" id="isInvoice0" onclick="javascript:isInvoce(false)" name="isInvoice" value="0" checked>否
+					             </label>
+	                        </div>
+	                    </div>
+	                   <div id='invoiceRemarkstr' class="item" style='display:none'>
+			             <span class="label"><b class="ftx04">*</b>发票说明：</span>
+			             <div class="fl item-ifo">
+			             <input type='text' id='invoiceRemarks' class="text" value='{$object.invoiceRemarks}' style='width:350px;' maxLength='100'/>
+			             </div>
+			            </div>    
+	                    <div class="item">
+	                        <span class="label"><b class="ftx04">*</b>转账银行：</span>	
+	                        <div class="fl item-ifo yj-select">
+	                           <select id='bankId'>
+					                <option value=''>请选择</option>
+					                <volist name="bankList" id="vo">
+					                <option value='{$vo['bankId']}'>{$vo['bankName']}</option>
+					                </volist>
+					             </select>
+	                        </div>
+	                    </div> 
+	                    <div class="item">
+	                        <span class="label"><b class="ftx04">*</b>银行卡卡号：</span>	
+	                        <div class="fl item-ifo">
+	                           <input type="text" class='text' id="bankNo" maxlength="25" size="50">
+	                        </div>
+	                    </div>
+	                    <div class="item">
+	                        <span class="label"><b class="ftx04">*</b>营业时间：</span>	
+	                        <div class="fl item-ifo yj-select">
+	                           <select id='serviceStartTime'></select>
+                               <div class='tleft'>&nbsp;至&nbsp;</div> 
+                               <select id='serviceEndTime'></select>
+	                        </div>
+	                    </div>    
 	                    <div class="item">
 	                        <span class="label"><b class="ftx04">*</b>手机号码：</span>	
 	                        <div class="fl item-ifo">
 	                            <input id="userPhone" name="userPhone" class="text" tabindex="3" autocomplete="off" type="text" maxlength="11"/>	                           
 	                            <label id="userPhone_succeed" ></label>	                           
 	                        </div>
-	                    </div> 
+	                    </div>
+	                     
 	                  	<div class="item" id="authcodeDiv">
 	                            <span class="label"><b class="ftx04">*</b>验证码：</span>	
 	                            <div class="fl item-ifo">
@@ -170,14 +307,14 @@
 	<!--footer end-->
 	<script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
    	<script src="__PUBLIC__/plugins/formValidator/formValidator-4.1.3.js"></script>
-   	<script src="__PUBLIC__/plugins/uploadify/jquery.uploadify.min.js"></script>
     <script src="__PUBLIC__/js/common.js"></script>
     <script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
     <script src="__ROOT__/Apps/Home/View/default/js/open_shop.js"></script>
+    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=37f0869604ca86505487639427d52bf6"></script>
     <script type="text/javascript">
        $(function(){
-    	   getAreaList("areaId2",'{$area["parentId"]}',0,'{$area["areaId"]}');
-	       getAreaList("areaId3",'{$area["areaId"]}',1);
+    	   getAreaListForOpen("areaId2",'{$area["parentId"]}',0,'{$area["areaId"]}');
+    	   getAreaListForOpen("areaId3",'{$area["areaId"]}',1);
        })
    </script>
    <style>

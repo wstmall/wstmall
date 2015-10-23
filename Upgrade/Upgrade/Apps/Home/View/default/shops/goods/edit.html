@@ -1,9 +1,17 @@
 <extend name="./Apps/Home/View/default/shops/layout.html" />
 <block name="content">
-<link rel="stylesheet" href="__PUBLIC__/plugins/uploadify/uploadify.css">
-<script src="__PUBLIC__/plugins/uploadify/jquery.uploadify.min.js"></script>
+
 <script src="__PUBLIC__/plugins/kindeditor/kindeditor.js"></script>
 <script src="__PUBLIC__/plugins/kindeditor/lang/zh_CN.js"></script>
+
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/webuploader/style.css" />
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/webuploader/webuploader.css" />
+<script type="text/javascript" src="__PUBLIC__/plugins/webuploader/webuploader.js"></script>
+<script type="text/javascript" src="__ROOT__/Apps/Home/View/default/js/goodsbatchupload.js"></script>
+<style>
+
+
+</style>   
 <script>
 $(function () {
 	   $('#tab').TabPanel({tab:0});
@@ -21,36 +29,7 @@ $(function () {
 	   $("#goodsUnit").formValidator({onShow:"",onFocus:"",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"请输入商品单位"});
 	   $("#goodsCatId3").formValidator({onFocus:"请选择商品分类"}).inputValidator({min:1,onError: "请选择完整商品分类"});
 	   $("#shopCatId2").formValidator({onFocus:"请选择店铺分类"}).inputValidator({min:1,onError: "请选择完整店铺分类"});
-	   $("#goodsImgUpload").uploadify({
-		    formData      : {'dir':'goods','width':150,'height':150},
-		    buttonText    : '选择商品图片',
-		    fileTypeDesc  : 'Image Files',
-	        fileTypeExts  : '*.gif; *.jpg; *.png',
-	        swf           : publicurl+'/plugins/uploadify/uploadify.swf',
-	        uploader      : domainURL +'/index.php/Home/shops/uploadPic',
-	        onUploadSuccess : function(file, data, response) {
-	        	var json = WST.toJson(data);
-	        	if(json.status && json.status==1){
-		        	$('#goodsImgPreview').attr('src',domainURL +'/'+json.Filedata.savepath+json.Filedata.savethumbname).show();
-		        	$('#goodsImg').val(json.Filedata.savepath+json.Filedata.savename);
-		        	$('#goodsThumbs').val(json.Filedata.savepath+json.Filedata.savename);
-	        	}
-        }
-	    });
-	   $("#galleryImgUpload").uploadify({
-		    formData      : {'dir':'goods','width':150,'height':150},
-		    buttonText    : '选择商品图片',
-		    fileTypeDesc  : 'Image Files',
-	        fileTypeExts  : '*.gif; *.jpg; *.png',
-	        swf           : publicurl+'/plugins/uploadify/uploadify.swf',
-	        uploader      : domainURL +'/index.php/Home/shops/uploadPic',
-	        onUploadSuccess : function(file, data, response) {
-	        	var json = WST.toJson(data);
-	        	if(json.status && json.status==1){
-	        		$('<div class="wst-gallery-img" onmouseover="imgmouseover(this);" onmouseout="imgmouseout(this);"><span class="wst-gallery-goods-del" onclick="javascript:delImg(this)"></span><img class="gallery-img" iv="'+json.Filedata.savepath+json.Filedata.savethumbname+'" v="'+json.Filedata.savepath+json.Filedata.savename+'" src="'+domainURL +'/'+json.Filedata.savepath+json.Filedata.savethumbname+'"/></div>').appendTo('#galleryImgs');
-	        	}
-       }
-	   });
+	   
 	   KindEditor.ready(function(K) {
 			editor1 = K.create('textarea[name="goodsDesc"]', {
 				height:'250px',
@@ -74,9 +53,29 @@ $(function () {
 	   getCatListForEdit("goodsCatId3",{$object.goodsCatId2},1,{$object.goodsCatId3});
 	   getShopCatListForEdit({$object.shopCatId1},{$object.shopCatId2});
 	   </if>
-	   
-	  
+	
 });
+
+function imglimouseover(obj){
+	if(!$(obj).find('.file-panel').html()){
+		$(obj).find('.setdel').addClass('trconb');
+		$(obj).find('.setdel').css({"display":""});
+	}
+}
+
+function imglimouseout(obj){
+	
+	$(obj).find('.setdel').removeClass('trconb');
+	$(obj).find('.setdel').css({"display":"none"});
+}
+
+function imglidel(obj){
+	if (confirm('是否删除图片?')) {
+		$(obj).parent().remove("li");
+		return;
+	}
+}
+
 function imgmouseover(obj){
 	$(obj).find('.wst-gallery-goods-del').show();
 }
@@ -86,7 +85,9 @@ function imgmouseout(obj){
 function delImg(obj){
 	   $(obj).parent().remove();
 }
-	</script>
+
+var filetypes = ["gif","jpg","png","jpeg"];
+</script>
        <div class="wst-body"> 
        <div class='wst-page-header'>卖家中心 > <if condition="$object['goodsId'] ==0 ">新增<else/>编辑</if>商品资料</div>
        <div class='wst-page-content'>
@@ -97,12 +98,32 @@ function delImg(obj){
 	        <li>商品相册</li>
 	    </ul>
     	<div class="wst-tab-content" style='width:99%;margin-bottom: 10px;'>
-    	<form name="myform" method="post" id="myform" autocomplete="off">
+    	 
+    	
     	<!-- 商品基础信息 -->
-    	<div class='wst-tab-item'>
-	        
+    	<div class='wst-tab-item' style="position: relative;">
+    		<iframe name="upload" style="display:none"></iframe>
+			<form id="uploadform_Filedata" autocomplete="off" style="position:absolute;top:155px;left:417px;z-index:10;" enctype="multipart/form-data" method="POST" target="upload" action="{:U('Home/Shops/uploadPic')}" >
+				<div style="position:relative;">
+				<input id="goodsImg" name="goodsImg" type="text" value="{$object.goodsImg}" readonly style="margin-right:4px;float:left;margin-left:8px;width:140px;"/>
+				<div class="div1">
+					<div class="div2">浏览</div>
+					<input type="file" class="inputstyle" id="Filedata" name="Filedata" onchange="updfile('Filedata');" >
+				</div>
+				<div style="clear:both;"></div>
+				<div >&nbsp;图片大小:150 x 120 (px)(格式为 gif, jpg, jpeg, png)</div>
+				<input type="hidden" name="dir" value="goods">
+				<input type="hidden" name="width" value="150">
+				<input type="hidden" name="folder" value="Filedata">
+				<input type="hidden" name="sfilename" value="Filedata">
+				<input type="hidden" name="fname" value="goodsImg">
+				<input type="hidden" id="s_Filedata" name="s_Filedata" value="">
+				
+				</div>
+			</form>
+	       <form name="myform" method="post" id="myform" autocomplete="off">
 	        <input type='hidden' id='id' value='{$object.goodsId}'/>
-	        <input type='hidden' id='goodsImg' value='{$object.goodsImg}'/>
+	      
 	        <input type='hidden' id='goodsThumbs' value='{$object.goodsThums}'/>
 	        <table class="wst-form" >
 	           <tr>
@@ -110,9 +131,10 @@ function delImg(obj){
 	             <td width='300'>
 	             <input type='text' id='goodsSn' name='goodsSn' class="form-control wst-ipt" value='{$object.goodsSn}' maxLength='25'/>
 	             </td>
-	             <td rowspan='6' style='padding:5px;'>
-	             <img id='goodsImgPreview' src='<if condition="$object['goodsImg'] =='' ">__ROOT__/Apps/Home/View/default/images/store_default_sign.png<else/>__ROOT__/{$object['goodsImg']}</if>' width='160' height='160'/><br/>
-	             <input type='text' id='goodsImgUpload'/>
+	             <td rowspan='7' valign='top'>
+	               <div id="preview_Filedata">
+		           <img id='goodsImgPreview' src='<if condition="$object['goodsImg'] =='' ">__ROOT__/Apps/Home/View/default/images/store_default_sign.png<else/>__ROOT__/{$object['goodsImg']}</if>' height='152'/><br/>
+	               </div>
 	             </td>
 	           </tr>
 	           <tr>
@@ -143,6 +165,12 @@ function delImg(obj){
 	           <tr>
 	             <th width='120'>单位<font color='red'>*</font>：</th>
 	             <td><input type='text' id='goodsUnit' name='goodsUnit' class="form-control wst-ipt" value='{$object.goodsUnit}'  maxLength='25'/></td>
+	           </tr>
+	           <tr>
+	             <th width='120'>商品SEO关键字：</th>
+	             <td colspan='3'>
+	             <input type='text' style="width:788px" id='goodsKeywords' name='goodsKeywords' value='{$object.goodsKeywords}' maxlength="100">
+	             </td>
 	           </tr>
 	           <tr>
 	             <th width='120'>商品信息：</th>
@@ -232,9 +260,9 @@ function delImg(obj){
 	             </td>
 	           </tr>
 	        </table>
-	       
+	        </form>
 	      </div>
-	      
+	     
 	      <div class='wst-tab-item'>
 	      商品类型：<select id='attrCatId' onchange='javascript:getAttrList(this.value)'>
 	         <option value='0'>请选择</option>
@@ -298,7 +326,7 @@ function delImg(obj){
 	            </table>
 			</fieldset>
 			<div style='width:100%;text-align:center;'>
-			<button class='wst-btn-query' type="submit">保&nbsp;存</button>
+			<button class='wst-btn-query' type="button" onclick='javascript:$("#myform").submit()'>保&nbsp;存</button>
 	        <if condition="$umark !='toEdit' ">
 	             <button class='wst-btn-query' type="button" onclick='javascript:location.href="__ROOT__/index.php/Home/Goods/{$umark}"'>返&nbsp;回</button>
 	        </if>
@@ -308,18 +336,77 @@ function delImg(obj){
 	      
 	      <!-- 相册 -->
 	      <div class='wst-tab-item'>
+	      <!-- 
 	       <div><input type='text' id='galleryImgUpload'/></div>
+	        -->
 	       <div id='galleryImgs' class='wst-gallery-imgs'>
-	           <volist name="object['gallery']" id="vo" key='i'>
-		       <div class="wst-gallery-img" onmouseover="imgmouseover(this);" onmouseout="imgmouseout(this);">
-			       <span class="wst-gallery-goods-del" onclick="javascript:delImg(this)"></span>
-			       <img class="gallery-img" width='140' height='100' iv="{$vo.goodsThumbs}" v="{$vo.goodsImg}" src="__ROOT__/{$vo.goodsThumbs}"/>
-		       </div>
-		       </volist>
+                  <div id="tt"></div>
+                  <if condition="count($object['gallery']) eq 0" >
+                       <div id="wrapper">
+                           <div id="container">
+            <!--头部，相册选择和格式选择-->
+                              <div id="uploader">
+                               <div class="queueList">
+                                   <div id="dndArea" class="placeholder">
+                                      <div id="filePicker"></div>
+                                      </div>
+                                   <ul class="filelist"></ul>
+                               </div>
+                             <div class="statusBar" style="display:none">
+                               <div class="progress">
+                                    <span class="text">0%</span>
+                                    <span class="percentage"></span>
+                               </div>
+                                    <div class="info"></div>
+                               <div class="btns">
+                                 <div id="filePicker2" class="webuploader-containe webuploader-container"></div><div class="uploadBtn state-finish">开始上传</div>
+                               </div>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+               <else/>
+               	<div id="wrapper">
+                       <div id="container">
+                          <div id="uploader">
+                             <div class="queueList">
+                                 <div id="dndArea" class="placeholder element-invisible">
+                                    <div id="filePicker" class="webuploader-container"></div>
+                                    </div>
+                                 <ul class="filelist">
+                                 	<volist name="object['gallery']" id="vo" key='i'>
+                                 	
+                                 		<li style="border: 1px solid rgb(59, 114, 165)" order="100" onmouseover="imglimouseover(this)" onmouseout="imglimouseout(this)">
+	                                 		<input type="hidden" class="gallery-img" iv="{$vo.goodsThumbs}" v="{$vo.goodsImg}" />
+	                                 		<img width="152" height="152" src="__ROOT__/{$vo.goodsThumbs}"><span class="setdef" style="display:none">默认</span><span class="setdel" onclick="imglidel(this)" style="display:none">删除</span>
+                                 		</li>
+                                 	
+							       	</volist>
+                                 </ul>
+                            </div>
+                            <div class="statusBar" style="">
+                               <div class="progress">
+                                    <span class="text"></span>
+                                    <span class="percentage"></span>
+                               </div>
+                               <div class="info"></div>
+                               <div class="btns">
+                                  <div id="filePicker2" class="webuploader-containe webuploader-container"></div>
+                                  <div class="uploadBtn state-finish">开始上传</div>
+                               </div>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+               </if>
+		   
+	       
+	       
+	           
 	       </div>
 	       <div style='clear:both;'></div>
 	      </div>
-	      </form>
+	      
        </div>
        </div>
        

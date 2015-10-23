@@ -310,6 +310,9 @@ class ShopsAction extends BaseAction {
 		$cityId = $this->getDefaultCity();
 		$area = $m->getArea($cityId);
 		$this->assign('area',$area);
+		//获取银行列表
+		$m = D('Home/Banks');
+		$this->assign('bankList',$m->queryByList(0));
 		$object = $m->getModel();
 		$this->assign('object',$object);
 		$this->display("default/open_shop");

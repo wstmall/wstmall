@@ -15,7 +15,7 @@
        <div class='wst-page-header'>卖家中心 > 待审核商品</div>
        <div class='wst-page-content'>
         <div class='wst-tbar-query'>
-        门店分类：<select id='shopCatId1' autocomplete="off" onchange='javascript:getShopCatListForGoods(this.value,"{$object['shopCatId2']}")'>
+        店铺分类：<select id='shopCatId1' autocomplete="off" onchange='javascript:getShopCatListForGoods(this.value,"{$object['shopCatId2']}")'>
 	         <option value='0'>请选择</option>
 	         <volist name="shopCatsList" id="vo">
 	         <option value='{$vo['catId']}' <if condition="$shopCatId1 == $vo['catId'] ">selected</if>>{$vo['catName']}</option>
@@ -63,40 +63,55 @@
                </td>
                <td>{$vo['goodsSn']}</td>
                <td>{$vo['shopPrice']}</td>
-               <td>
-               <if condition="$vo['isRecomm'] == 1 ">
-               <span class='wst-state_yes'></span>
-               <else/>
-               <span class='wst-state_no'></span>
-               </if>
+               <td style="cursor:pointer;" ondblclick="javascript:changSaleStatus({$vo['goodsId']},1)">
+               <input id="isRecomm_{$vo['goodsId']}" type="hidden" value="{$vo[isRecomm]}"/>
+               <div id="isRecomm_div_{$vo['goodsId']}">
+	               <if condition="$vo['isRecomm'] == 1 ">
+	               <span class='wst-state_yes'></span>
+	               <else/>
+	               <span class='wst-state_no'></span>
+	               </if>
+               </div>
                </td>
-               <td>
-               <if condition="$vo['isBest'] == 1 ">
-               <span class='wst-state_yes'></span>
-               <else/>
-               <span class='wst-state_no'></span>
-               </if>
+               <td style="cursor:pointer;" ondblclick="javascript:changSaleStatus({$vo['goodsId']},2)">
+               <input id="isBest_{$vo['goodsId']}" type="hidden" value="{$vo[isBest]}"/>
+               <div id="isBest_div_{$vo['goodsId']}">
+	               <if condition="$vo['isBest'] == 1 ">
+	               <span class='wst-state_yes'></span>
+	               <else/>
+	               <span class='wst-state_no'></span>
+	               </if>
+               </div>
                </td>
-               <td>
-               <if condition="$vo['isNew'] == 1 ">
-               <span class='wst-state_yes'></span>
-               <else/>
-               <span class='wst-state_no'></span>
-               </if>
+               <td style="cursor:pointer;" ondblclick="javascript:changSaleStatus({$vo['goodsId']},3)">
+               <input id="isNew_{$vo['goodsId']}" type="hidden" value="{$vo[isNew]}"/>
+               <div id="isNew_div_{$vo['goodsId']}">
+	               <if condition="$vo['isNew'] == 1 ">
+	               <span class='wst-state_yes'></span>
+	               <else/>
+	               <span class='wst-state_no'></span>
+	               </if>
+               </div>
                </td>
-               <td>
-               <if condition="$vo['isHot'] == 1 ">
-               <span class='wst-state_yes'></span>
-               <else/>
-               <span class='wst-state_no'></span>
-               </if>
+               <td style="cursor:pointer;" ondblclick="javascript:changSaleStatus({$vo['goodsId']},4)">
+               <input id="isHot_{$vo['goodsId']}" type="hidden" value="{$vo[isHot]}"/>
+               <div id="isHot_div_{$vo['goodsId']}">
+	               <if condition="$vo['isHot'] == 1 ">
+	               <span class='wst-state_yes'></span>
+	               <else/>
+	               <span class='wst-state_no'></span>
+	               </if>
+               </div>
                </td>
-               <td>
-               <if condition="$vo['isSale'] == 1 ">
-               <span class='wst-state_yes'></span>
-               <else/>
-               <span class='wst-state_no'></span>
-               </if>
+               <td style="cursor:pointer;" ondblclick="javascript:changSaleStatus({$vo['goodsId']},5)">
+               <input id="isSale_{$vo['goodsId']}" type="hidden" value="{$vo[isSale]}"/>
+               <div id="isSale_div_{$vo['goodsId']}">
+	               <if condition="$vo['isSale'] == 1 ">
+	               <span class='wst-state_yes'></span>
+	               <else/>
+	               <span class='wst-state_no'></span>
+	               </if>
+               </div>
                </td>
                <td>{$vo['saleCount']}</td>
                <td style="cursor:pointer;" ondblclick="javascript:toEditStock({$vo['goodsId']},'{$vo[attIsRecomm]}')" >

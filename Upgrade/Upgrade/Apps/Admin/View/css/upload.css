@@ -1,0 +1,46 @@
+@CHARSET "UTF-8";
+#uploader .filelist li{
+		    display: inline;
+		    float: left;
+		    font-size: 12px;
+		    height: auto;
+		    margin: 0 8px 8px 0;
+		    overflow: hidden;
+		    position: relative;
+		    text-align: center;
+		    width: 152px;
+		}
+		.div1{ 
+			background: #eeecdb none repeat scroll 0 0;
+		    border: 1px solid #003c74;
+		    border-radius: 2px;
+		    float: left;
+		    height: 25px;
+		    position: relative;
+		    top: 0px;
+		    width: 45px; }
+		.div1:hover{
+			background: none repeat scroll 0 0 #dfefef;
+		    border: 1px solid #003C74;
+		    border-radius: 2px;
+		    float: left;
+		    height: 25px;
+		    position: relative;
+		    top: 0px;
+		    width: 45px;
+		}
+		.div2{
+			font-size: 13px;
+		    line-height: 25px;
+		    text-align: center;}
+		.inputstyle{
+			cursor: pointer;
+		    font-size: 13px;
+		    height: 25px;
+		    left: 0px;
+		    opacity: 0;
+		    outline: medium none;
+		    position: absolute;
+		    top: 0px;
+		    width: 45px;
+		}

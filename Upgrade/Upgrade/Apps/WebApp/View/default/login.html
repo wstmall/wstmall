@@ -1,0 +1,80 @@
+<!doctype html>
+<html class="no-js">
+<head>
+  <include file="./Apps/WebApp/View/default/common_meta.html" />
+  <title>我的 - {$CONF['mallTitle']}</title>
+  <link rel="stylesheet" href="__ROOT__/Apps/WebApp/View/default/AmazeUI/assets/css/amazeui.min.css">
+  <link rel="stylesheet" href="__ROOT__/Apps/WebApp/View/default/css/common.css">
+  <link rel="stylesheet" href="__ROOT__/Apps/WebApp/View/default/css/ajax-page-common.css">
+  <link rel="stylesheet" href="__ROOT__/Apps/WebApp/View/default/css/login.css">
+</head>
+<body>
+  <div class="wst-page" id="wst-ajax-index">
+
+    <header data-am-widget="header" class="am-header am-header-default am-header-fixed" style="background-color:#F36C2C;">
+      <div class="am-header-left am-header-nav"></div>
+      <h1 class="am-header-title">WSTMall</h1>
+    </header>
+
+    <div class="am-g login-area">
+      <div class="am-u-md-8 am-u-sm-centered am-u-md-centered">
+        <form action="" class="am-form am-form-inline">
+          <fieldset class="am-form-set">
+            <div class="am-form-group am-form-icon">
+              <i class="am-icon-user wst-login-icon"></i>
+              <input type="text" class="am-form-field wst-username" id="wst-username" placeholder="用户名" autocomplete="off" style="border-radius: 5px;height: 40px;">
+            </div>
+
+            <div class="am-form-group am-form-icon">
+              <i class="am-icon-lock wst-login-icon"></i>
+              <input type="password" class="am-form-field wst-password" id="wst-password" placeholder="密码" autocomplete="off" style="border-radius: 5px;height: 40px;">
+            </div>
+
+            <div class="am-form">
+              <div class="am-g">
+                <div class="am-u-sm-6">
+                <input type="text" class="am-form-field wst-verifyCode" id="wst-verifyCode" name="verifyCode" placeholder="验证码" style="border-radius: 5px;height: 40px;"></div>
+                <div class="am-u-sm-6">
+              <img style='vertical-align:middle;cursor:pointer;height:39px;width:100%;border-radius: 5px;' class='login-verifyImg' id="login-verifyImg" src='__ROOT__/Apps/WebApp/View/default/images/clickForVerify.png' title='刷新验证码' onclick="javascript:getVerify('login-verifyImg');"/> </div>
+              </div>
+            </div>
+          </fieldset>
+          <button type="button" class="am-btn am-btn-block wst-login-button" id="wst-login" onclick="javascript:loginCheck();">登录</button>
+        </form>
+      </div>
+    </div>
+    <div class="register-now"><a href="#register">立即注册</a></div>
+
+  </div>
+  <div class="wst-page" id="wst-ajaxpage"></div>
+
+  <include file="./Apps/WebApp/View/default/common_footer.html" />  
+
+  <div class="am-modal am-modal-alert" tabindex="-1" id="wst-login-alert">
+    <div class="am-modal-dialog">
+      <div class="am-modal-hd"></div>
+      <div class="am-modal-bd" id="wst-login-msg"></div></div>
+  </div>
+  <include file="./Apps/WebApp/View/default/register.html" /><!-- 注册页模板 --> 
+
+  <script type="text/javascript" src="__PUBLIC__/js/jquery.min.js"></script>
+  <script type="text/javascript">
+  var ThinkPHP = window.Think = {
+          "ROOT"   : "__ROOT__",
+          "APP"    : "__APP__",
+          "PUBLIC" : "__PUBLIC__",
+          "DEEP"   : "{:C('URL_PATHINFO_DEPR')}",
+          "MODEL"  : ["{:C('URL_MODEL')}", "{:C('URL_CASE_INSENSITIVE')}", "{:C('URL_HTML_SUFFIX')}"],
+          "VAR"    : ["{:C('VAR_MODULE')}", "{:C('VAR_CONTROLLER')}", "{:C('VAR_ACTION')}"]
+  }
+  var rooturl = "__ROOT__";
+  </script>
+  <script src="__PUBLIC__/js/think.js"></script>
+  <script src="__ROOT__/Apps/WebApp/View/default/AmazeUI/assets/js/amazeui.min.js"></script>
+  <script src="__ROOT__/Apps/WebApp/View/default/AmazeUI/assets/js/handlebars.min.js"></script>
+  <script src="__ROOT__/Apps/WebApp/View/default/AmazeUI/assets/js/amazeui.widgets.helper.js"></script>
+  <script src="__ROOT__/Apps/WebApp/View/default/js/common.js"></script>
+  <script src="__ROOT__/Apps/WebApp/View/default/js/ajax-page-common.js"></script>
+  <script src="__ROOT__/Apps/WebApp/View/default/js/login.js"></script>
+</body>
+</html>

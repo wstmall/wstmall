@@ -267,6 +267,7 @@ function editGoods(menuId){
 	   params.isRecomm = $('input[name="isRecomm"]:checked').val();;
 	   params.goodsDesc = $('#goodsDesc').val();
 	   params.attrCatId = $('#attrCatId').val();
+	   params.goodsKeywords = $('#goodsKeywords').val();
 	   if(params.attrCatId>0){
 		   params.priceAttrId = $('.hiddenPriceAttr').attr('dataId');
 		   params.goodsPriceNo = $('.hiddenPriceAttr').attr('dataNo');
@@ -883,6 +884,13 @@ function initTime(objId,val){
 		$('<option value="'+(i+".5")+'" '+((val==(i+".5"))?"selected":'')+'>'+i+':30</option>').appendTo($('#'+objId));
 	}
 }
+function isInvoce(v){
+	if(v){
+		$('#invoiceRemarkstr').show();
+	}else{
+		$('#invoiceRemarkstr').hide();
+	}
+}
 function editShop(){
 	   var params = {};
 	   params.userName = $('#userName').val();
@@ -902,6 +910,10 @@ function editShop(){
 	   params.invoiceRemarks = $('#invoiceRemarks').val();
 	   params.serviceStartTime = $('#serviceStartTime').val();
 	   params.serviceEndTime = $('#serviceEndTime').val();
+	   
+	   params.latitude = $('#latitude').val();
+	   params.longitude = $('#longitude').val();
+	   params.mapLevel = $('#mapLevel').val();
 	   
 	   params.shopAtive = $("input[name='shopAtive']:checked").val();
 	   var relateArea = [0];
@@ -927,12 +939,13 @@ function editShop(){
 	   params.shopAdsUrl=shopAdsUrl.join('#@#');
 	   params.relateAreaId=relateArea.join(',');
 	   params.relateCommunityId=relateCommunity.join(',');
-	   layer.load('正在处理，请稍后...', 3);
+	   var layerIdx = layer.load('正在处理，请稍后...', 3);
 	   $.post(Think.U('Home/Shops/edit'),params,function(data,textStatus){
 			var json = WST.toJson(data);
+			layer.close(layerIdx);
 			if(json.status=='1'){
 				WST.msg('操作成功!', {icon: 1}, function(){
-					location.reload();
+					location.href = location.href;
 				});
 			}else{
 				WST.msg('操作失败!', {icon: 5});
@@ -962,7 +975,7 @@ function setShop(){
 			var json = WST.toJson(data);
 			if(json.status=='1'){
 				WST.msg('操作成功!', {icon: 1}, function(){
-					location.reload();
+					location.href=location.href;
 				});
 			}else{
 				WST.msg('操作失败!', {icon: 5});
@@ -1193,3 +1206,78 @@ function ChangeCatStatus(isShow,id,pid){
 	});
 	
 }
+
+function changSaleStatus(goodsId,flag){
+	var tak = "";
+	if(flag==1){
+		tak = "isRecomm";
+	}else if(flag==2){
+		tak = "isBest";
+	}else if(flag==3){
+		tak = "isNew";
+	}else if(flag==4){
+		tak = "isHot";
+	}else if(flag==5){
+		tak = "isSale";
+	}
+	var tamk = $("#"+tak+"_"+goodsId).val();
+	jQuery.post(Think.U('Home/Goods/changSaleStatus'),{goodsId:goodsId,tamk:tamk,flag:flag},function(data,textStatus){
+		var json = WST.toJson(data);
+		if(json.status>0){
+			if(tamk == 0){
+				tamk = 1;
+				$("#"+tak+"_div_"+goodsId).html("<span class='wst-state_yes'></span>");
+			}else{
+				tamk = 0;
+				$("#"+tak+"_div_"+goodsId).html("<span class='wst-state_no'></span>");
+			}
+			$("#"+tak+"_"+goodsId).val(tamk);
+			
+			
+		}else{
+			WST.msg('修改失败!', {icon: 5}); 
+		}
+	});
+}
+
+function addGoodsCat(obj,p){
+	var html = new Array();
+	if(typeof(obj)=="number"){
+		html.push("<tbody>");
+		html.push("<tr class='tr_0' isLoad='1' datatype='0_1'>");
+			html.push("<td>");
+				html.push("<input class='catId' type='hidden' value=''/>");
+				html.push("<span class='wst-tree-open' onclick='javascript:loadGoodsCatChildTree(this)'>&nbsp;</span>");
+				html.push("<input type='text' style='width:400px;height:22px;' value='' dataId='' onchange='javascript:editGoodsCatName(this)'/>");
+			html.push("</td>"); 
+			html.push("<td><input type='text' style='width:35px;' value='0'/></td>");
+			html.push("<td style='cursor:pointer;' onclick='ChangeCatStatus(1)'><span class='wst-state_no'></span></td>");    
+			html.push("<td>");
+				html.push("<span dataid='' onclick='addGoodsCat(this,2);' class='add btn' title='新增'></span>"); 
+				//html.push("<span class='edit btn' title='编辑'></span>");
+				html.push("<span class='del btn' title='删除'></span>&nbsp;");
+			html.push("</td>");  
+		html.push("</tr>"); 
+		html.push("</tbody>");
+		$("#cat_list_tab").append(html.join(""));
+	}else{
+		html.push("<tr class='tr_0_0' isLoad='1' datatype='0_2'>");
+			html.push("<td>");
+				html.push("<input class='catId' type='hidden' value=''/>");
+				html.push("<span class='wst-tree-second'>&nbsp;</span>&nbsp;");  
+				html.push("<input type='text' style='width:400px;height:22px;' value='' dataId='' onchange='javascript:editGoodsCatName(this)'/>");
+			html.push("</td>"); 
+			html.push("<td><input type='text' style='width:35px;' value='0'/></td>");
+			html.push("<td style='cursor:pointer;' ><input type='checkbox' checked/><span style='display:none;' class='wst-state_yes' onclick='ChangeCatStatus(1)'></span></td>");    
+			html.push("<td>");
+				//html.push("<span class='edit btn' title='编辑'></span>");
+				html.push("<span class='del btn' title='删除'></span>&nbsp;");
+			html.push("</td>");  
+		html.push("</tr>");
+		$(obj).parent().parent().parent().append(html.join(""))
+		//$(obj).parent().parent().parent().appent(html.join(""));
+	}
+	
+	//alert($("tr[datatype="+dataId+"_"+p+"]").length);
+}
+

@@ -1,0 +1,65 @@
+body {
+	background: #F2F0F5;
+	font-size: 14px;
+}
+.condition-area {
+	text-align: center;
+}
+.condition-li {
+	padding: 12px 0px 7px 0px;
+	border-top: 1px solid #DCDCDC;
+	border-bottom: 1px solid #DCDCDC;
+	cursor: pointer;
+	background: #fff;
+}
+.condition-li.condition-active {
+	border-bottom: 1px solid #ED7552;
+	color: #ED7552;
+}
+.orders {
+	padding: 0px 10px;
+	margin: 10px 0px;
+	background: #fff;
+}
+.orders-top {
+	border-bottom: 1px solid #F0F0F0;
+	padding: 5px 0px;
+}
+.orders-shopname {
+	color: rgb(76, 73, 73);
+}
+.orders-top-right {
+	text-align: right;
+}
+.orders-status {
+	color: #ED7552;
+	font-size: 16px;
+}
+.orders-middle {
+	padding: 10px 0px;
+}
+.orders-goods-name {
+	color: black;
+	font-size: 15px;
+	font-weight: bold;
+}
+.orders-goods-img {
+	width: 100%;
+	max-width: 100px;
+	min-width: 50px;
+}
+.orders-goods-price-area {
+	text-align: right;
+}
+.orders-goods-price {
+	font-weight: bold;
+	display: block;
+}
+.orders-totalmoney {
+	font-weight: bold;
+}
+.orders-bottom {
+	border-top: 1px solid #F0F0F0;
+	text-align: right;
+	padding: 5px 0px;
+}

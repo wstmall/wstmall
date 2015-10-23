@@ -19,11 +19,11 @@ class Mysql {
 		$this->tablepre = $tablepre;
 		if($pconnect) {
 			if(!$this->link = mysql_pconnect($dbhost, $dbuser, $dbpw)) {
-				die('Can not connect to MySQL server');
+				die('{status:-1,msg:"Can not connect to MySQL server"}');
 			}
 		} else {
 			if(!$this->link = mysql_connect($dbhost, $dbuser, $dbpw, 1)) {
-				die('Can not connect to MySQL server');
+				die('{status:-1,msg:"Can not connect to MySQL server"}');
 			}
 		}
 
@@ -47,12 +47,8 @@ class Mysql {
 
 	}
 
-	function query($sql, $type = '', $cachetime = FALSE) {
-		$func = $type == 'UNBUFFERED' && @function_exists('mysql_unbuffered_query') ? 'mysql_unbuffered_query' : 'mysql_query';
-		if(!($query = $func($sql, $this->link)) && $type != 'SILENT') {
-			die('SQL:'.mysql_error());
-		}
-		return $query;
+	function query($sql) {
+		return mysql_query($sql, $this->link);
 	}
 
 	function version() {

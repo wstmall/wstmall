@@ -65,10 +65,11 @@ function dir_writeable($dir) {
 	if(is_dir($dir)) {
 		if($fp = @fopen("$dir/test.txt", 'w')) {
 			@fclose($fp);
+			
+		}
+	    if(file_exists("$dir/test.txt")){
+	    	$writeable = 1;
 			@unlink("$dir/test.txt");
-			$writeable = 1;
-		} else {
-			$writeable = -1;
 		}
 	}
 	return $writeable;
@@ -93,6 +94,7 @@ function initConfig($db_host,$db_user,$db_pass,$db_prefix,$db_name){
 	)";
 	$code = "<?php\n ".$code.";\n?>";
     file_put_contents(INSTALL_ROOT."/Apps/Common/Conf/config.php", $code);
+    
     clearstatcache();
 }
 function check_func($func_items){
@@ -112,10 +114,7 @@ function runquery($sql,$tablepre = '') {
 	global $db;
 
 	if(!isset($sql) || empty($sql)) return;
-
-	$sql = str_replace("\r", "\n", str_replace(' '.ORIG_TABLEPRE, ' '.$tablepre, $sql));
-	$sql = str_replace("\r", "\n", str_replace(' `'.ORIG_TABLEPRE, ' `'.$tablepre, $sql));
-	
+	$sql = str_replace("\r", "\n", str_replace(' `'.TABLEPRE, ' `'.$tablepre, $sql));
 	$ret = array();
 	$num = 0;
 	foreach(explode(";\n", trim($sql)) as $query) {
@@ -127,26 +126,18 @@ function runquery($sql,$tablepre = '') {
 		$num++;
 	}
 	unset($sql);
-
+	$dbver = $db->version();
 	foreach($ret as $query) {
 		$query = trim($query);
 		if($query) {
-
-			if(substr($query, 0, 12) == 'CREATE TABLE') {
-				$name = preg_replace("/CREATE TABLE ([a-z0-9_]+) .*/is", "\\1", $query);
-				$db->query(createtable($query, $db->version()));
-			} else {
-				$db->query($query);
+			if(strtoupper(substr($query, 0, 12)) == 'CREATE TABLE') {
+				$type = strtoupper(preg_replace("/^\s*CREATE TABLE\s+.+\s+\(.+?\).*(ENGINE|TYPE)\s*=\s*([a-z]+?).*$/isU", "\\2", $query));
+	            $type = in_array($type, array('MYISAM', 'HEAP', 'MEMORY')) ? $type : 'MYISAM';
+	            $query = preg_replace("/^\s*(CREATE TABLE\s+.+\s+\(.+?\)).*$/isU", "\\1", $query).($dbver > '4.1' ? " ENGINE=$type DEFAULT CHARSET=".DBCHARSET : " TYPE=$type");
 			}
+			$db->query($query);
 		}
 	}
-}
-
-function createtable($sql, $dbver) {
-	$type = strtoupper(preg_replace("/^\s*CREATE TABLE\s+.+\s+\(.+?\).*(ENGINE|TYPE)\s*=\s*([a-z]+?).*$/isU", "\\2", $sql));
-	$type = in_array($type, array('MYISAM', 'HEAP', 'MEMORY')) ? $type : 'MYISAM';
-	return preg_replace("/^\s*(CREATE TABLE\s+.+\s+\(.+?\)).*$/isU", "\\1", $sql).
-	($dbver > '4.1' ? " ENGINE=$type DEFAULT CHARSET=".DBCHARSET : " TYPE=$type");
 }
 
 function timezone_set($timeoffset = 8) {

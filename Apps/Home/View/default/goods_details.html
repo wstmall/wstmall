@@ -5,8 +5,8 @@
       	<meta http-equiv="X-UA-Compatible" content="IE=edge">
       	<meta name="viewport" content="width=device-width, initial-scale=1">
       	<title>{$goodsDetails["goodsName"]} - {$CONF['mallTitle']}</title>
-      	<meta name="keywords" content="{$goodsDetails['goodsName']}" />
-      	<meta name="description" content="{$CONF['mallDesc']},{$goodsDetails['goodsName']}" />
+      	<meta name="keywords" content="{$goodsDetails['goodsKeywords']}" />
+      	<meta name="description" content="{$goodsDetails['goodsName']},{$CONF['mallDesc']}" />
       	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/goodsdetails.css" />
      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
@@ -19,7 +19,7 @@
    	</head>
    	<body>
 		<include file="./Apps/Home/View/default/header_common.html" />
-	
+		<input id="shopId" type="hidden" value="{$goodsDetails['shopId']}"/>
 		<input id="goodsId" type="hidden" value="{$goodsDetails['goodsId']}"/>
 		<!----加载商品楼层start----->
 		<div class="wst-container">
@@ -59,10 +59,9 @@
 								<tr>
 									<td colspan="2">
 										<div class="des-title">
-											<a href="">
 											{$goodsDetails["goodsName"]}
-											</a>
 										</div>
+										<div class='wst-goods-spec'>{$goodsDetails["goodsSpec"]|htmlspecialchars_decode}</div>
 									</td>
 								</tr>
 								<tr>
@@ -136,6 +135,7 @@
 												<input id="buy-num" type="text" class="buy-cnt-txt" value="1" maxVal="{$goodsDetails['goodsStock']}" maxlength="3" onkeypress="return WST.isNumberKey(event);" onkeyup="changebuynum(0);" autocomplete="off"/>
 												<div class="buy-cnt-add" onclick="changebuynum(2)"></div>
 											</div>
+											<div class='wst-goods-stock'>库存：<span id='goodsStock'>{$goodsDetails['goodsStock']}</span>{$goodsDetails['goodsUnit']}</div>
 										</div>
 										<div id="noGoodsToBuy" <if condition="$goodsDetails['goodsStock'] gt 0">style="display:none;"</if>>
 											<div style="font-weight: bold;">所选地区该商品暂时无货，非常抱歉！</div>
@@ -243,22 +243,8 @@
 			
 			<div class="wst-goods-pdetails">
 				<div class="wst-goods-pdetails-left">
-					<div class="wst-goods-hotsale-box">
-						<div class="hotsale-title">热销商品</div>
-						<volist name="hotgoods" key="k" id="vo">
-						<div class="hotsale-goods-box">
-							<div class="hotsale-goods-img">
-								<img data-original="__ROOT__/{$vo['goodsThums']}" width="65" height="65" />
-							</div>
-							<div class="hotsale-goods-title">
-								<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo['goodsId']))}">{$vo['goodsName']}</a>
-								<div><span class="span1">￥{$vo['shopPrice']}</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="span2">￥{$vo['marketPrice']}</span></div>
-							</div>
-							<div class="wst-clear"></div>
-						</div>
-						</volist>
-						
-					</div>
+					{:W('Goods/getHotGoods',array('shopId'=>$goodsDetails['shopId']))}
+					{:W('Goods/getViewGoods')}
 				</div>
 				<div id="wst-goods-pdetails-right" class="wst-goods-pdetails-right">
 					<div class="goods-nvg">

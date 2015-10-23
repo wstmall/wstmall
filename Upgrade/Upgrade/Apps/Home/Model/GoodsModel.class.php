@@ -94,7 +94,7 @@ class GoodsModel extends BaseModel {
 		$pages = $this->pageQuery($sql,$pcurr,30);
 		$rs["maxPrice"] = $maxPrice;
 		$brands = array();
-		$sql = "SELECT b.brandId, b.brandName FROM wst_brands b, wst_goods_cat_brands cb WHERE b.brandId = cb.brandId AND b.brandFlag=1 ";
+		$sql = "SELECT b.brandId, b.brandName FROM __PREFIX__brands b, __PREFIX__goods_cat_brands cb WHERE b.brandId = cb.brandId AND b.brandFlag=1 ";
 		if($c1Id>0){
 			$sql .= " AND cb.catId = $c1Id";
 		}
@@ -371,6 +371,7 @@ class GoodsModel extends BaseModel {
 		if($this->checkEmpty($data,true)){
 			$data["brandId"] = (int)I("brandId");
 			$data["goodsSpec"] = I("goodsSpec");
+			$data["goodsKeywords"] = I("goodsKeywords");
 			$m = M('goods');
 			$goodsId = $m->add($data);
 			if(false !== $goodsId){
@@ -465,6 +466,7 @@ class GoodsModel extends BaseModel {
 	 	$goods = $m->where('goodsId='.$goodsId." and shopId=".$shopId)->find();
 	 	if(empty($goods))return array();
 		$data = array();
+		
 		$data["goodsSn"] = I("goodsSn");
 		$data["goodsName"] = I("goodsName");
 		$data["goodsImg"] = I("goodsImg");
@@ -480,6 +482,7 @@ class GoodsModel extends BaseModel {
 		$data["isRecomm"] = (int)I("isRecomm");
 		$data["isNew"] = (int)I("isNew");
 		$data["isHot"] = (int)I("isHot");
+		
 	    //如果商家状态不是已审核则所有商品只能在仓库中
 	    if($shopStatus[0]['shopStatus']==1){
 			$data["isSale"] = (int)I("isSale");
@@ -495,8 +498,11 @@ class GoodsModel extends BaseModel {
 		$data["goodsStatus"] = ($GLOBALS['CONFIG']['isGoodsVerify']['fieldValue']==1)?0:1;
 		$data["attrCatId"] = (int)I("attrCatId");
 		if($this->checkEmpty($data,true)){
+			$data["goodsKeywords"] =  I("goodsKeywords");
 			$data["brandId"] = (int)I("brandId");
 			$data["goodsSpec"] = I("goodsSpec");
+			
+			
 			$rs = $m->where('goodsId='.$goods['goodsId'])->save($data);
 			if(false !== $rs){
 				if($shopStatus[0]['shopStatus']==1){
@@ -737,7 +743,7 @@ class GoodsModel extends BaseModel {
 	 }
 	 
 	/**
-	 * 获取门店商品列表
+	 * 获取店铺商品列表
 	 */
 	public function getShopsGoods($shopId = 0){
 		
@@ -790,16 +796,19 @@ class GoodsModel extends BaseModel {
 	
 	
 	/**
-	 * 获取门店商品列表
+	 * 获取店铺商品列表
 	 */
 	public function getHotGoods($shopId){
-		//热销排名
-		$sql = "SELECT sp.shopName, g.saleCount totalnum, sp.shopId , g.goodsId , g.goodsName,g.goodsImg, g.goodsThums,g.shopPrice,g.marketPrice, g.goodsSn 
-						FROM __PREFIX__goods g,__PREFIX__shops sp 
-						WHERE g.shopId = sp.shopId AND g.goodsFlag = 1 AND sp.shopFlag=1 AND sp.shopStatus=1 AND g.isAdminBest = 1 AND g.isSale = 1 AND g.goodsStatus = 1 AND sp.shopId = $shopId
-						ORDER BY g.saleCount desc limit 5";
-				
-		$hotgoods = $this->query($sql);
+		$hotgoods = S("WST_CACHE_HOT_GOODS_".$shopId);
+		if(!$hotgoods){
+			//热销排名
+			$sql = "SELECT sp.shopName, g.saleCount totalnum, sp.shopId , g.goodsId , g.goodsName,g.goodsImg, g.goodsThums,g.shopPrice,g.marketPrice, g.goodsSn 
+							FROM __PREFIX__goods g,__PREFIX__shops sp 
+							WHERE g.shopId = sp.shopId AND g.goodsFlag = 1 AND sp.shopFlag=1 AND sp.shopStatus=1 AND g.isSale = 1 AND g.goodsStatus = 1 AND sp.shopId = $shopId
+							ORDER BY g.saleCount desc limit 5";	
+			$hotgoods = $this->query($sql);
+			S("WST_CACHE_HOT_GOODS_".$shopId,$hotgoods,86400);
+		}
 		return  $hotgoods;
 	}
 	
@@ -940,5 +949,58 @@ class GoodsModel extends BaseModel {
 		$sql="select DISTINCT goodsName as searchKey from __PREFIX__goods where goodsStatus=1 and goodsFlag=1 and goodsName like '%$keywords%' Order by saleCount desc, goodsName asc limit 10";
 		$rs = $this->query($sql);
 		return $rs;
+	}
+	
+	
+	/**
+	 * 修改 推荐/精品/新品/热销/上架
+	 */
+	public function changSaleStatus(){
+		$rdata= array("status"=>-1);
+		$goodsId = (int)I("goodsId");
+		$tamk = (int)I("tamk");
+		$flag = (int)I("flag");
+		$data = array();
+		if($tamk==0){
+			$tamk = 1;
+		}else{
+			$tamk = 0;
+		}
+		if($flag==1){
+			$data["isRecomm"] = $tamk;
+		}else if($flag==2){
+			$data["isBest"] = $tamk;
+		}else if($flag==3){
+			$data["isNew"] = $tamk;
+		}else if($flag==4){
+			$data["isHot"] = $tamk;
+		}else if($flag==5){
+			$data["isSale"] = $tamk;
+		}
+	
+		M('goods')->where("goodsId=$goodsId")->save($data);
+		$rdata["status"] = 1;
+		return $rdata;
+	}
+	
+	/**
+	 * 获取商品历史浏览记录(取最新10條)
+	 */
+	function getViewGoods(){
+		$m = M();
+		$viewGoods = cookie("viewGoods");
+		$viewGoods = array_reverse($viewGoods);
+		$goodIds = 0;
+		if(!empty($viewGoods)){
+			$goodIds = implode(",",$viewGoods);
+		}
+		//热销排名
+		$sql = "SELECT g.saleCount totalnum, g.goodsId , g.goodsName,g.goodsImg, g.goodsThums,g.shopPrice,g.marketPrice, g.goodsSn FROM __PREFIX__goods g
+				WHERE g.goodsId in ($goodIds) AND g.goodsFlag = 1 AND g.isSale = 1 AND g.goodsStatus = 1
+				ORDER BY FIELD(g.goodsId,$goodIds) limit 10";
+	
+		$goods = $m->query($sql);
+		return  $goods;
+	
 	}
 }

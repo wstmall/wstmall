@@ -46,8 +46,8 @@
                	<td width='70'>{$order["totalMoney"]}</td>
                	<td width='140'><div style="line-height:20px;">{$order["createTime"]}</div></td>
                	<td width='100'>
-               		<if condition='$order["orderStatus"] eq -5'>门店同意取消
-               		<elseif condition='$order["orderStatus"] eq -4'/>门店同意拒收
+               		<if condition='$order["orderStatus"] eq -5'>店铺同意取消
+               		<elseif condition='$order["orderStatus"] eq -4'/>店铺同意拒收
                		<elseif condition='$order["orderStatus"] eq -3'/>用户拒收
                		<elseif condition='$order["orderStatus"] eq -2'/>未付款
                		<elseif condition='$order["orderStatus"] eq -1'/>用户已取消

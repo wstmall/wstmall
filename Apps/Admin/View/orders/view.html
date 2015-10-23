@@ -76,9 +76,9 @@
                   <td>
                   <if condition='$object["isSelf"] eq 1'>
                                                                   自提
+                  <else/>
+                  	<if condition='$object["deliverType"] eq 1'>店铺配送<else/>商城配送</if>
                   </if>                                                
-                  <if condition='($object["isSelf"] eq 0) AND ($object["deliverType"] eq 1)'>店铺配送<else/>商城配送</if>
-                  
                   </td>
                 </tr>
                 <tr>
