@@ -51,7 +51,7 @@
    <body class='wst-page'>
      <form method='post' action="{:U('Admin/Orders/queryRefundByPage')}">
        <div class='wst-tbar'>
-          区域：<select id='areaId1' name='areaId1' onchange='javascript:getAreaList("areaId2",this.value,0)'>
+          地区：<select id='areaId1' name='areaId1' onchange='javascript:getAreaList("areaId2",this.value,0)'>
              <option value=''>请选择</option>
              <volist name="areaList" id="vo">
              <option value='{$vo['areaId']}' <if condition="$areaId1 == $vo['areaId'] ">selected</if>>{$vo['areaName']}</option>

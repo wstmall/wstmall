@@ -56,8 +56,9 @@ function checkCartPay(shopId,goodsId,num,ischk,isBook,goodsAttrId){
 				var shopTotalMoney = 0;
 				$("input[name='chk_goods_"+shopId+"']").each(function(){
 					if($(this).is(":checked")){
-						var gnum = $("#buy-num_"+goodsId).val();
-						var gprice = parseFloat($("#price_"+goodsId).val(),10);
+						var gid = $(this).val();
+						var gnum = $("#buy-num_"+gid).val();
+						var gprice = parseFloat($("#price_"+gid).val(),10);
 						shopTotalMoney += gnum*gprice;
 					}
 				});
@@ -68,6 +69,7 @@ function checkCartPay(shopId,goodsId,num,ischk,isBook,goodsAttrId){
 					if($("#chk_goods_"+gid).is(":checked")){
 						var price = parseFloat($("#price_"+gid).val(),10);
 						var cnt = parseInt($("#buy-num_"+gid).val(),10);
+						
 						totalMoney += price*cnt;
 					}
 				});			
@@ -169,13 +171,12 @@ jQuery(function(){
 	});
 
 	$("#chk_all").click(function(){
-		if($(this).is(":checked")){
+		if($(this).prop("checked")){
 			$("input[id^='chk_shop_']").each(function(){
-				$(this).attr("checked", true);
+				$(this).prop("checked",true);
 				var shopId = $(this).val();
 				$("input[name='chk_goods_"+shopId+"']").each(function(){
-					$(this).attr("checked", true);
-					
+					$(this).prop("checked",true);
 					var shopId = $(this).attr("parent");
 					var goodsId = $(this).val();
 					var num = $("#buy-num_"+goodsId).val();
@@ -186,10 +187,10 @@ jQuery(function(){
 			});
 		}else{
 			$("input[id^='chk_shop_']").each(function(){
-				$(this).attr("checked",false);
+				$(this).prop("checked",false);
 				var shopId = $(this).val();
 				$("input[name='chk_goods_"+shopId+"']").each(function(){
-					$(this).attr("checked",false);
+					$(this).prop("checked",false);
 					
 					var shopId = $(this).attr("parent");
 					var goodsId = $(this).val();
@@ -205,10 +206,9 @@ jQuery(function(){
 	
 	$("input[id^='chk_shop_']").click(function(){
 		var shopId = $(this).val();
-		if($(this).is(":checked")){
+		if($(this).prop("checked")){
 			$("input[name='chk_goods_"+shopId+"']").each(function(){
-				$(this).attr("checked", true);
-				//$(this).attr("checked",true);
+				$(this).prop("checked",true)
 				
 				var shopId = $(this).attr("parent");
 				var goodsId = $(this).val();
@@ -219,8 +219,7 @@ jQuery(function(){
 			});
 		}else{
 			$("input[name='chk_goods_"+shopId+"']").each(function(){
-				$(this).attr("checked",false);
-				
+				$(this).prop("checked",false);
 				var shopId = $(this).attr("parent");
 				var goodsId = $(this).val();
 				var num = $("#buy-num_"+goodsId).val();

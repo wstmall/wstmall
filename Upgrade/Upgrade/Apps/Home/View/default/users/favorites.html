@@ -1,0 +1,187 @@
+<extend name="./Apps/Home/View/default/users/layout.html" />
+<block name="content">
+	<script>
+	var statusMark = 0;
+	$(function () {
+		$('#tab').TabPanel({tab:statusMark,callback:function(tab){
+			statusMark = tab;
+			if(statusMark==0){
+				queryFavoriteGoods();
+			}else{
+				queryFavoriteShops();
+			}
+		}});
+	});
+	</script>
+	<style>
+.wst-goods-item {
+    border: 2px solid #ffffff;
+    float: left;
+    height: 272px;
+    margin-left: 2px;
+    margin-top: 4px;
+    text-align: center;
+}
+.wst-shops-item {
+    border: 2px solid #ffffff;
+    float: left;
+    height: 212px;
+    margin-left: 2px;
+    margin-top: 4px;
+    text-align: center;
+}
+.wst-goods-page li {
+    border: 2px solid #ffffff;
+    border-radius: 5px;
+    transition: all 0.1s ease 0s;
+}
+.wst-goods-item .goods-img, .wst-shops-item .goods-img{
+    height: 172px;
+    line-height: 172px;
+    padding: 4px;
+    width: 172px;
+    max-height: 172px;
+    max-width: 172px;
+}
+.wst-goods-page .wst-goods-item .goods-des, .wst-shops-page .wst-shops-item .goods-des{
+    margin-top: 5px;
+}
+
+.wst-goods-page .wst-goods-item .goods-title {
+    height: 36px;
+    overflow: hidden;
+    padding-left: 2px;
+    text-align: left;
+    width: 172px;
+}
+.wst-goods-page .wst-goods-item .goods-price {
+    text-align: left;
+}
+.wst-goods-page .wst-goods-item .goods-buy {
+    text-align: left;
+    color: green;
+    margin-left: 2px;
+}
+.wst-goods-item .goods-buy .goods-left{
+    float: left;
+    font-size: 12px;
+    width: 90px;
+    margin-left:2px;
+    text-align:left;
+}
+.wst-shops-item .goods-des .goods-left{
+    float: left;
+    font-size: 12px;
+    width: 120px;
+    height:20px;
+    overflow:hidden;
+    margin-left:2px;
+    text-align:left;
+}
+.wst-goods-item .goods-buy .goods-right,.wst-shops-item .goods-des .goods-right {
+    float: right;
+    margin-right: 2px;
+    width: 85px;
+}
+
+.wst-goods-page li:hover {
+    background-color: #ffffff;
+    border: 2px solid #e23e3d;
+    transform: scale3d(1.2, 1.2, 1);
+}
+
+	</style>
+	<div class="wst-body" style="margin-bottom: 8px;"> 
+		<div class='wst-page-header'>买家中心 > 我的关注</div>
+		<div class='wst-page-content' style="padding-top:10px;">
+		   <div id='tab' class="wst-tab-box">
+			<ul class="wst-tab-nav">
+				<li id="wst-msg-li-0">关注的商品<span style="display:none;" class="wst-order-tips-box"></span></li>
+				<li id="wst-msg-li-1">关注的店铺<span style="display:none;"></span></li>
+			</ul>
+			<div class="wst-tab-content" style='width:98%;padding:0px 5px 5px 5px;'>
+			    <!-- 关注的商品 -->
+				<div class='wst-tab-item'>
+					   <div class='wst-list-tbar'>
+						商品名称：<input type="text" id="key_0" style='width:120px;' autocomplete="off"/>
+						<button class='wst-btn-query' onclick="queryFavoriteGoods()">查询</button>
+					   </div>
+					   <div class='wst-list-content'>
+						<script id="tblist" type="text/html">
+                                    {{# for(var i = 0; i < d.length; i++){ }}
+                                    <li class="wst-goods-item">
+                                      <div class="goods-img">
+										<a href="{{ Think.U('Home/Goods/getGoodsDetails','goodsId='+d[i].goodsId)}}">
+											<img class='lazyImg' data-original="__ROOT__/{{d[i].goodsThums}}" width="170" />
+										</a>
+									  </div>
+                                      <div class="goods-des">
+										<div class="goods-title"><a href="{{ Think.U('Home/Goods/getGoodsDetails','goodsId='+d[i].goodsId)}}">{{d[i].goodsName}}</a></div>
+										<div class="goods-price"><span class="span1" id='shopGoodsPrice_{{d[i].goodsId}}' dataId='{{d[i].goodsAttrId}}'>￥{{d[i].shopPrice}}</span>&nbsp;&nbsp;&nbsp;&nbsp;</div>
+										<div class="goods-buy">
+                                            {{#if(d[i].isSale==1){ }}
+											<div class="goods-left">
+                                               <a href='javascript:;' onclick='javascript:cancelGoodsFavorites(this,{{d[i].favoriteId}},0)'>取消关注</a>
+											</div>
+											<div class="goods-right">
+											   <a href="javascript:addCart({{d[i].goodsId}},1,'__ROOT__/{{d[i].goodsThums}}')" class="btnCart">
+												<img src="__ROOT__/Apps/Home/View/default/images/btn_addcart.png" width="85"/>
+											   </a>
+											</div>
+                                            {{#}else{}}
+                                            <div class="goods-left">
+											已下架
+											</div>
+                                            <div class="goods-right" style='width:58px;'>
+                                            <a href='javascript:;' onclick='javascript:cancelGoodsFavorites(this,{{d[i].favoriteId}},0)'>取消关注</a>
+                                            </div>
+                                            {{#} }}
+											<div class="wst-clear"></div>
+										</div>
+									  </div>
+                                    </li>
+                                    {{# } }}
+                       </script>
+					   <ul class='wst-goods-page' style='width:950px;border:1px soild blue;'></ul>
+					   <div style='clear:both;'></div>
+					</div>
+					<div id="wst-page-0" class='wst-page' style="padding-bottom:10px;"></div>		
+				</div>
+				<!-- 关注的店铺 -->
+				<div class='wst-tab-item' style="display:none;">
+					<div class='wst-list-tbar'>
+						店铺名称：<input type="text" id="key_1" style='width:120px;' autocomplete="off"/>
+						<button class='wst-btn-query' onclick="queryFavoriteShops()">查询</button>
+					   </div>
+					   <div class='wst-list-content'>
+						<script id="tblist2" type="text/html">
+                             {{# for(var i = 0; i < d.length; i++){ }}
+                             <li class="wst-shops-item">
+                                <div class="goods-img">
+									<a href="{{ Think.U('Home/Shops/toShopHome','shopId='+d[i].shopId)}}">
+										<img class='lazyImg' data-original="__ROOT__/{{d[i].shopImg}}" width="170" />
+									</a>
+								</div>
+                                <div class="goods-des">
+									<div class="goods-left">
+                                        <a href="{{ Think.U('Home/Shops/toShopHome','shopId='+d[i].shopId)}}" title='{{d[i].shopName}}'>{{WST.cutStr(d[i].shopName,15)}}</a>
+                                    </div>
+                                    <div class="goods-right" style='width:58px;'>
+                                    <a href='javascript:;' onclick='javascript:cancelShopFavorites(this,{{d[i].favoriteId}})'>取消关注</a>
+                                    </div>
+								</div>
+                            </li>
+                            {{# } }}
+                       </script>
+					   <ul class='wst-shops-page' style='width:950px;border:1px soild blue;'></ul>
+					   <div style='clear:both;'></div>
+					</div>
+					<div id="wst-page-1" class='wst-page' style="padding-bottom:10px;"></div>
+				</div>
+				
+			</div>
+			</div>
+		</div>
+		<div style='clear:both;'></div>
+	</div>
+</block>  

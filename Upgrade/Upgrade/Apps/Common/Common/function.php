@@ -154,6 +154,12 @@ function WSTDomain(){
 	return $http.$server.__ROOT__;
 }
 /**
+ * 获取系统根目录
+ */
+function WSTRootPath(){
+	return dirname(dirname(dirname(dirname(__File__))));
+}
+/**
  * 获取网站根域名
  */
 function WSTRootDomain(){
@@ -220,5 +226,75 @@ function WSTDataFile($name, $path = '',$data=array()){
 		}
 		return null;
 	}
+}
+
+
+
+/**
+ * 建立文件夹
+ * @param string $aimUrl
+ * @return viod
+ */
+function WSTCreateDir($aimUrl) {
+	$aimUrl = str_replace('', '/', $aimUrl);
+	$aimDir = '';
+	$arr = explode('/', $aimUrl);
+	$result = true;
+	foreach ($arr as $str) {
+		$aimDir .= $str . '/';
+		if (!file_exists_case($aimDir)) {
+			$result = mkdir($aimDir,0777);
+		}
+	}
+	return $result;
+}
+
+/**
+ * 建立文件
+ * @param string $aimUrl
+ * @param boolean $overWrite 该参数控制是否覆盖原文件
+ * @return boolean
+ */
+function WSTCreateFile($aimUrl, $overWrite = false) {
+	if (file_exists_case($aimUrl) && $overWrite == false) {
+		return false;
+	} elseif (file_exists_case($aimUrl) && $overWrite == true) {
+		WSTUnlinkFile($aimUrl);
+	}
+	$aimDir = dirname($aimUrl);
+	WSTCreateDir($aimDir);
+	touch($aimUrl);
+	return true;
+}
+
+/**
+ * 删除文件
+ * @param string $aimUrl
+ * @return boolean
+ */
+function WSTUnlinkFile($aimUrl) {
+	if (file_exists_case($aimUrl)) {
+		unlink($aimUrl);
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function  WSTLogResult($filepath,$word){
+	if(!file_exists_case($filepath)){
+		WSTCreateFile($filepath);
+	}
+	$fp = fopen($filepath,"a");
+	flock($fp, LOCK_EX) ;
+	fwrite($fp,"执行日期：".strftime("%Y-%m-%d %H:%M:%S",time())."\n".$word."\n\n");
+	flock($fp, LOCK_UN);
+	fclose($fp);
+}
+
+function WSTReadExcel($file){
+	Vendor("PHPExcel.PHPExcel");
+	Vendor("PHPExcel.PHPExcel.IOFactory");
+	return PHPExcel_IOFactory::load(WSTRootPath()."/Upload/".$file);
 }
 

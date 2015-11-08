@@ -46,4 +46,3 @@ function searchwst(){
 	var goodsName = $.trim($("#goodsName").val());
 	window.location = Think.U('Home/goods/getGoodsList','searchType=2&keyWords='+encodeURIComponent(goodsName));
 }
-

@@ -103,7 +103,7 @@ class ShopsCatsModel extends BaseModel {
 	  */
      public function get($id){
 	 	$m = M('shops_cats');
-		return $m->where("catId=".$id)->find();
+		return $m->where("catId=".(int)$id)->find();
 	 }
 	 /**
 	  * 分页列表
@@ -158,9 +158,9 @@ class ShopsCatsModel extends BaseModel {
 		$shopId = (int)session('WST_USER.shopId');
 		//把相关的商品下架了
 		$sql = "update __PREFIX__goods set isSale=0 where shopId=".$shopId." and shopCatId1 = ".$id;
-		$m->query($sql);
+		$m->execute($sql);
 		$sql = "update __PREFIX__goods set isSale=0 where shopId=".$shopId." and shopCatId2 = ".$id;
-		$m->query($sql);
+		$m->execute($sql);
 		//删除商品分类
 		$data = array();
 		$data["catFlag"] = -1;
@@ -206,13 +206,13 @@ class ShopsCatsModel extends BaseModel {
 	/**
 	 * 显示状态
 	 */
-	public function ChangeCatStatus(){
+	public function changeCatStatus(){
 		$rd = array('status'=>-1);
-		$id = I("id",0);
-		$isShow = I("isShow",0);
-		$parentId = I("pid",0);
+		$id = (int)I("id",0);
+		$isShow = (int)I("isShow",0);
+		$parentId = (int)I("pid",0);
 		$data = array();
-		$data["isShow"] = I("isShow");
+		$data["isShow"] = (int)I("isShow");
 		$shopId = (int)session('WST_USER.shopId');
 		if($this->checkEmpty($data,true)){
 			$m = M('shops_cats');

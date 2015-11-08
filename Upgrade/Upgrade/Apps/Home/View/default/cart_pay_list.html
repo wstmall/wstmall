@@ -66,7 +66,12 @@
                 		<input type="checkbox" id="chk_shop_{$key}" value="{$key}" name="chk_shop"/>
                 	</div>
              		<div class="wst-cart-dp-pb1">
-                 		<span class="wst-cart-shop-span"><span id="sp_{$shopgoods['shopgoods'][0]['shopId']}">{$shopgoods["shopgoods"][0]["shopName"]}</span></span>
+                 		<span class="wst-cart-shop-span"><span id="sp_{$shopgoods['shopgoods'][0]['shopId']}">{$shopgoods["shopgoods"][0]["shopName"]}</span></span>&nbsp;&nbsp;&nbsp;&nbsp;
+             			<if condition="$shopgoods['shopgoods'][0]['qqNo'] neq ''">
+							<a href="tencent://message/?uin={$shopgoods['shopgoods'][0]['qqNo']}&Site=QQ交谈&Menu=yes">
+								<img border="0" src="http://wpa.qq.com/pa?p=1:{$shopgoods['shopgoods'][0]['qqNo']}:7" alt="QQ交谈" width="71" height="24" />
+							</a>
+						</if>
              		</div>
              		<div class="wst-goods-tips">
                  		 包邮起步价：¥{$shopgoods["shopgoods"][0]["deliveryFreeMoney"]}元

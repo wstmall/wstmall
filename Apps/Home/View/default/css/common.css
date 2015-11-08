@@ -55,12 +55,12 @@ button::-moz-focus-inner,input[type=reset]::-moz-focus-inner,input[type=button]:
 
 a {
 	color: black;
-	text-decoration: none
+	text-decoration: none;
 }
 
 a:hover {
 	color: #E4393C;
-	text-decoration: underline
+
 }
 
 .w {
@@ -573,6 +573,8 @@ a:hover {
 button:hover{
 	background: none repeat scroll 0 0 #ff0000;
     border: 1px solid #ff0080;
+    color:#ffffff;
+    font-weight: bold;
 }
 
 .wst-footer{
@@ -1132,4 +1134,21 @@ b, strong {
     top: 0;
     width: 24px;
 }
-
+.wst-shop-btn {
+	    display: inline-block;
+	    border: 1px solid #ddd;
+	    border-radius: 2px;
+	    text-align: center;
+	    text-decoration: none;
+	    color: #333;
+	    padding: 0 12px;
+	    height: 25px;
+        line-height: 25px;
+        margin-right:5px;
+        overflow: hidden;
+	    background: -moz-linear-gradient(top,#f7f7f7,#f2f2f2);
+	    background: -webkit-gradient(linear,0 0,0 100%,from(#f7f7f7),to(#f2f2f2));
+	    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f7f7f7", endColorstr="#f2f2f2");
+	    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr="#f7f7f7", endColorstr="#f2f2f2")";
+}
+.wst-list-tbar{border-bottom:1px solid #ddd;padding:5px;}

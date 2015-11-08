@@ -90,15 +90,15 @@ class ShopsModel extends BaseModel {
 		$data["userPhone"] = I("userPhone");
 		//店铺资料
 		$sdata = array();
-		$sdata["areaId1"] = I("areaId1");
-		$sdata["areaId2"] = I("areaId2");
-		$sdata["areaId3"] = I("areaId3");
-		$sdata["goodsCatId1"] = I("goodsCatId1");
+		$sdata["areaId1"] = (int)I("areaId1");
+		$sdata["areaId2"] = (int)I("areaId2");
+		$sdata["areaId3"] = (int)I("areaId3");
+		$sdata["goodsCatId1"] = (int)I("goodsCatId1");
 		$sdata["shopName"] = I("shopName");
 		$sdata["shopCompany"] = I("shopCompany");
 		$sdata["shopImg"] = I("shopImg");
 		$sdata["shopAddress"] = I("shopAddress");
-		$sdata["bankId"] = I("bankId");
+		$sdata["bankId"] = (int)I("bankId");
 		$sdata["bankNo"] = I("bankNo");
 		$sdata["latitude"] = I("latitude");
 		$sdata["longitude"] = I("longitude");
@@ -123,7 +123,7 @@ class ShopsModel extends BaseModel {
 		        $sdata["invoiceRemarks"] = I("invoiceRemarks");
 		        $sdata["qqNo"] = I("qqNo");
 				$sdata["shopStatus"] = 0;
-				$sdata["shopAtive"] = I("shopAtive",1);
+				$sdata["shopAtive"] = (int)I("shopAtive",1);
 				$sdata["shopFlag"] = 1;
 				$sdata["createTime"] = date('Y-m-d H:i:s');
 			   
@@ -147,8 +147,8 @@ class ShopsModel extends BaseModel {
 							if($v=='' || $v=='0')continue;
 							$tmp = array();
 							$tmp['shopId'] = $shopId;
-							$tmp['areaId1'] = I("areaId1");
-							$tmp['areaId2'] = I("areaId2");
+							$tmp['areaId1'] = (int)I("areaId1");
+							$tmp['areaId2'] = (int)I("areaId2");
 							$tmp['areaId3'] = $v;
 							$tmp['communityId'] = 0;
 							$ra = $m->add($tmp);
@@ -198,11 +198,11 @@ class ShopsModel extends BaseModel {
 			if(false !== $rs){
 				$data = array();
 				$data["userId"] = $userId;
-				$data["areaId1"] = I("areaId1");
-				$data["areaId2"] = I("areaId2");
-				$data["areaId3"] = I("areaId3");
-				$data["goodsCatId1"] = I("goodsCatId1");
-				$data["isSelf"] = I("isSelf",0);
+				$data["areaId1"] = (int)I("areaId1");
+				$data["areaId2"] = (int)I("areaId2");
+				$data["areaId3"] = (int)I("areaId3");
+				$data["goodsCatId1"] = (int)I("goodsCatId1");
+				$data["isSelf"] = (int)I("isSelf",0);
 				if($data["isSelf"]==1){
 					$data["deliveryType"] = 1;
 				}else{
@@ -222,7 +222,7 @@ class ShopsModel extends BaseModel {
 				$data["serviceStartTime"] = I("serviceStartTime");
 				$data["serviceEndTime"] = I("serviceEndTime");
 				$data["shopStatus"] = 0;
-				$data["shopAtive"] = I("shopAtive",1);
+				$data["shopAtive"] = (int)I("shopAtive",1);
 				$data["shopFlag"] = 1;
 				$data["latitude"] = I("latitude");
 		        $data["longitude"] = I("longitude");
@@ -251,8 +251,8 @@ class ShopsModel extends BaseModel {
 								if($v=='' || $v=='0')continue;
 								$tmp = array();
 								$tmp['shopId'] = $shopId;
-								$tmp['areaId1'] = I("areaId1");
-								$tmp['areaId2'] = I("areaId2");
+								$tmp['areaId1'] = (int)I("areaId1");
+								$tmp['areaId2'] = (int)I("areaId2");
 								$tmp['areaId3'] = $v;
 								$tmp['communityId'] = 0;
 								$ra = $m->add($tmp);
@@ -302,12 +302,12 @@ class ShopsModel extends BaseModel {
 		$data["deliveryFreeMoney"] = I("deliveryFreeMoney",0);
 		$data["deliveryMoney"] = I("deliveryMoney",0);
 		$data["avgeCostMoney"] = I("avgeCostMoney",0);
-		$data["isInvoice"] = I("isInvoice",1);
+		$data["isInvoice"] = (int)I("isInvoice",1);
 		$data["serviceStartTime"] = I("serviceStartTime");
 		$data["serviceEndTime"] = I("serviceEndTime");
-		$data["shopAtive"] = I("shopAtive",1);
+		$data["shopAtive"] = (int)I("shopAtive",1);
 		$data["shopTel"] = I("shopTel");
-		$data["bankId"] = I("bankId");
+		$data["bankId"] = (int)I("bankId");
 		$data["bankNo"] = I("bankNo");
 		
 		if($this->checkEmpty($data,true)){
@@ -317,6 +317,8 @@ class ShopsModel extends BaseModel {
 		    if(false !== $rs){
 		    	S('WST_CACHE_RECOMM_SHOP_'.$shops['areaId2'],null);
 		    	$USER = session('WST_USER');
+		    	$data["serviceEndTime"] = str_replace('.5',':30',$data["serviceEndTime"]);
+		        $data["serviceStartTime"] = str_replace('.5',':30',$data["serviceStartTime"]);
 		    	session('WST_USER',array_merge($USER,$data));
 				$rd['status']= 1;
 				//修改用户资料
@@ -336,8 +338,8 @@ class ShopsModel extends BaseModel {
 							if($v=='' || $v=='0')continue;
 							    $tmp = array();
 								$tmp['shopId'] = $shopId;
-								$tmp['areaId1'] = I("areaId1");
-								$tmp['areaId2'] = I("areaId2");
+								$tmp['areaId1'] = (int)I("areaId1");
+								$tmp['areaId2'] = (int)I("areaId2");
 								$tmp['areaId3'] = $v;
 								$tmp['communityId'] = 0;
 								$ra = $m->add($tmp);
@@ -398,14 +400,14 @@ class ShopsModel extends BaseModel {
 	 */
      public function get($id){
 	 	$m = M('shops');
-		$rs = $m->where("shopId=".$id)->find();
+		$rs = $m->where("shopId=".(int)$id)->find();
 		$m = M('users');
 		$us = $m->where("userId=".$rs['userId'])->find();
 		$rs['userName'] = $us['userName'];
 		$rs['userPhone'] = $us['userPhone'];
 		//获取店铺社区关系
 		$m = M('shops_communitys');
-		$rc = $m->where('shopId='.$id)->select();
+		$rc = $m->where('shopId='.(int)$id)->select();
 		$relateArea = array();
 		$relateCommunity = array();
 		if(count($rc)>0){
@@ -488,7 +490,7 @@ class ShopsModel extends BaseModel {
 	  */
 	public function getDistrictsShops($obj){
 		$m = M('areas');
-		$areaId3 = $obj["areaId3"];
+		$areaId3 = (int)$obj["areaId3"];
 		$shopName = $obj["shopName"];
 		$keyWords = I("keyWords");
    		$deliveryStartMoney = $obj["deliveryStartMoney"];
@@ -505,8 +507,24 @@ class ShopsModel extends BaseModel {
    			$mdeliveryEnd = intval($mdeliverys[1]);
    		}
    		
-   		$shopAtive = $obj["shopAtive"];
+   		$shopAtive = (int)$obj["shopAtive"];
    		
+   		
+   		$words = array();
+   		$words1 = array();
+   		$words2 = array();
+   		if($keyWords!=""){
+   			$keyWords = urldecode($keyWords);
+   			$words1 = explode(" ",$keyWords);
+   		}
+   		
+   		
+   		$words = array();
+   		if($shopName!=""){
+   			$keyWords = urldecode($shopName);
+   			$words2 = explode(" ",$keyWords);
+   		}
+   		$words = array_merge($words1,$words2);
 		$dsplist = array();
 		$sql = "SELECT communityId,communityName from __PREFIX__communitys WHERE communityFlag=1 AND isShow = 1 AND areaId3=".$areaId3;
 		$ctlist = $this->query($sql);
@@ -514,8 +532,18 @@ class ShopsModel extends BaseModel {
 		for($k=0;$k<count($ctlist);$k++){
 			$community = $ctlist[$k];
 			$communityId = $community["communityId"];
-			$sql = "SELECT count(*) as spcnt from __PREFIX__shops_communitys sc,__PREFIX__shops sp WHERE sc.shopId = sp.shopId AND communityId=".$communityId;
-			if($keyWords!="" && $shopName!=""){
+			$sql = "SELECT count(*) as spcnt from __PREFIX__shops_communitys sc,__PREFIX__shops sp WHERE sp.shopStatus = 1 AND sp.shopFlag = 1 AND sc.shopId = sp.shopId AND communityId=".$communityId;
+			
+			if(!empty($words)){
+				$sarr = array();
+				foreach ($words as $key => $word) {
+					if($word!=""){
+						$sarr[] = "sp.shopName LIKE '%$word%'";
+					}
+				}
+				$sql .= " AND (".implode(" or ", $sarr).")";
+			}
+			/*if($keyWords!="" && $shopName!=""){
 				$sql .= " AND (sp.shopName like '%$keyWords%' OR shopName like '%$shopName%')";
 			}else{
 				if($keyWords!=""){
@@ -524,7 +552,7 @@ class ShopsModel extends BaseModel {
 				if($shopName!=""){
 					$sql .= " AND sp.shopName like '%$shopName%'";
 				}
-			}
+			}*/
 			if($deliveryStart!="" && $deliveryStart>=0){
 				$sql .= " AND deliveryStartMoney >= $deliveryStart";
 			}
@@ -542,7 +570,6 @@ class ShopsModel extends BaseModel {
 			if($shopAtive!="" && $shopAtive >=0){
 				$sql .= " AND shopAtive = $shopAtive";
 			}
-			
 			$splist = $this->query($sql);
 			$spcnt = $splist[0]["spcnt"];
 			$community["spcnt"] = $spcnt;
@@ -558,10 +585,10 @@ class ShopsModel extends BaseModel {
 	  */
 	public function getShopByCommunitys($obj){
 		
-		$communityId = $obj["communityId"];
+		$communityId = (int)$obj["communityId"];
 		$shopName = $obj["shopName"];
 		$keyWords = I("keyWords");
-		$pcurr = I("curr");
+		$pcurr = (int)I("curr");
 		$deliveryStartMoney = $obj["deliveryStartMoney"];
 		if($deliveryStartMoney != -1){
 			$deliverys = explode("-",$deliveryStartMoney);
@@ -575,13 +602,29 @@ class ShopsModel extends BaseModel {
 			$mdeliveryStart = intval($mdeliverys[0]);
 			$mdeliveryEnd = intval($mdeliverys[1]);
 		}
+
+		$words = array();
+		$words1 = array();
+		$words2 = array();
+		if($keyWords!=""){
+			$keyWords = urldecode($keyWords);
+			$words1 = explode(" ",$keyWords);
+		}
 		 
+		 
+		$words = array();
+		if($shopName!=""){
+			$keyWords = urldecode($shopName);
+			$words2 = explode(" ",$keyWords);
+		}
+		$words = array_merge($words1,$words2);
+		
 		$shopAtive = $obj["shopAtive"];
 		$dsplist = array();
 		$sql = "SELECT sp.shopId,sp.shopName,sp.shopAddress,sp.deliveryStartMoney,sp.shopAtive,sp.deliveryMoney,sp.shopImg,sp.deliveryCostTime,sp.deliveryFreeMoney
-		   ,sp.avgeCostMoney from __PREFIX__shops_communitys sc,__PREFIX__shops sp WHERE sc.shopId = sp.shopId AND sc.communityId=".$communityId;
+		   ,sp.avgeCostMoney from __PREFIX__shops_communitys sc,__PREFIX__shops sp WHERE sp.shopStatus = 1 AND sp.shopFlag = 1 AND sc.shopId = sp.shopId AND sc.communityId=".$communityId;
 		
-		if($keyWords!="" && $shopName!=""){
+		/*if($keyWords!="" && $shopName!=""){
 			$sql .= " AND (sp.shopName like '%$keyWords%' OR shopName like '%$shopName%')";
 		}else{
 			if($keyWords!=""){
@@ -590,6 +633,16 @@ class ShopsModel extends BaseModel {
 			if($shopName!=""){
 				$sql .= " AND sp.shopName like '%$shopName%'";
 			}
+		}*/
+		
+		if(!empty($words)){
+			$sarr = array();
+			foreach ($words as $key => $word) {
+				if($word!=""){
+					$sarr[] = "sp.shopName LIKE '%$word%'";
+				}
+			}
+			$sql .= " AND (".implode(" or ", $sarr).")";
 		}
 		
 		if($deliveryStart!="" && $deliveryStart>=0){
@@ -619,7 +672,7 @@ class ShopsModel extends BaseModel {
 	  */
 	public function getShopDetails($obj){
 		
-		$shopId = $obj["shopId"];
+		$shopId = (int)$obj["shopId"];
 		$dsplist = array();
 		$sql = "SELECT totalScore,totalScore ,
 				       goodsScore,goodsUsers,
@@ -681,7 +734,7 @@ class ShopsModel extends BaseModel {
 	 * 获取店铺评分
 	 */
 	public function getShopScores($obj){
-		$shopId = $obj["shopId"];
+		$shopId = (int)$obj["shopId"];
 		$sql = "SELECT totalScore,totalScore ,goodsScore,goodsUsers,serviceScore,serviceUsers,timeScore,timeUsers
 				FROM __PREFIX__shop_scores WHERE shopId = $shopId";
 		$scores = $this->queryRow($sql);

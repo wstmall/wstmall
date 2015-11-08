@@ -146,6 +146,7 @@ class PaymentsModel extends BaseModel {
      */
     public function complatePay ($obj){
 
+    	$trade_no = $obj["trade_no"];
 		$orderIds = $obj["out_trade_no"];
 		$total_fee = $obj["total_fee"];
 		$userId = $obj["userId"];
@@ -157,6 +158,7 @@ class PaymentsModel extends BaseModel {
 		$data["needPay"] = 0;
 		$data["isPay"] = 1;
 		$data["orderStatus"] = 0;
+		$data["tradeNo"] = $trade_no;
 			
 		$rd = array('status'=>-1);
 		$om = M('orders');
@@ -171,7 +173,7 @@ class PaymentsModel extends BaseModel {
 				$goodsNums = $sgoods['goodsNums'];
 				$goodsAttrId = $sgoods['goodsAttrId'];
 				$sql="update __PREFIX__goods set goodsStock=goodsStock-".$goodsNums." where goodsId=".$goodsId;
-				$this->query($sql);
+				$this->execute($sql);
 				if((int)$goodsAttrId>0){
 					$sql="update __PREFIX__goods_attributes set attrStock=attrStock-".$goodsNums." where id=".$goodsAttrId;
 					$this->execute($sql);

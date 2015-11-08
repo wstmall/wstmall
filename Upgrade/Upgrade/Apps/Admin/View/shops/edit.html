@@ -25,6 +25,7 @@
       
    </head>
    <style>
+   img {max-width: 100px;}
 .ATRoot{height:22px;line-height:22px;margin-left:5px;clear:both;cursor:pointer;}
 .ATNode{margin-left:5px;line-height:22px;margin-left:17px;clear:both;cursor:pointer;}
 .Hide{display:none;}
@@ -182,7 +183,7 @@ dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
 				zoom:opts.zoom
 			})
 	   });
-	   if(opts.longitude!='' && opts.latitude){
+	   if(opts.longitude!='' && opts.latitude!=''){
 		   shopMap.setZoomAndCenter(opts.zoom, new AMap.LngLat(opts.longitude, opts.latitude));
 		   var marker = new AMap.Marker({
 				position: new AMap.LngLat(opts.longitude, opts.latitude), //基点位置
@@ -228,7 +229,7 @@ dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
 	   $.post("{:U('Admin/Areas/queryShowByList')}",params,function(data,textStatus){
 		    html.push('<option value="">请选择</option>');
 			var json = WST.toJson(data);
-			if(json.status=='1' && json.list.length>0){
+			if(json.status=='1' && json.list && json.list.length>0){
 				var opts = null;
 				for(var i=0;i<json.list.length;i++){
 					opts = json.list[i];

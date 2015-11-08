@@ -154,7 +154,7 @@ class OrdersAction extends BaseAction {
     	$morders = D('Home/Orders');
     	$obj["userId"] = (int)$USER['userId'];
     	$obj["orderId"] = I("orderId");
-    	$obj["type"] = I("type");
+    	$obj["type"] = (int)I("type");
 		$rs = $morders->orderConfirm($obj);
 		$this->ajaxReturn($rs);
 	} 
@@ -276,10 +276,10 @@ class OrdersAction extends BaseAction {
 		$totalCnt = 0;
 		$userId = (int)$USER['userId'];
 		
-		$consigneeId = I("consigneeId");
-		$payway = I("payway");
-		$isself = I("isself");
-		$needreceipt = I("needreceipt");
+		$consigneeId = (int)I("consigneeId");
+		$payway = (int)I("payway");
+		$isself = (int)I("isself");
+		$needreceipt = (int)I("needreceipt");
 		$orderunique = I("orderunique");
 		$shopcat = session("WST_CART")?session("WST_CART"):array();	
 		
@@ -427,6 +427,15 @@ class OrdersAction extends BaseAction {
 		$rs = $morders->shopOrderAccept($obj);
 		$this->ajaxReturn($rs);
 	} 
+    /**
+	 * 商家批量受理订单
+	 */
+    public function batchShopOrderAccept(){
+    	$this->isShopAjaxLogin();
+    	$morders = D('Home/Orders');
+		$rs = $morders->batchShopOrderAccept($obj);
+		$this->ajaxReturn($rs);
+	}
 	/**
 	 * 商家生产订单
 	 */
@@ -438,6 +447,12 @@ class OrdersAction extends BaseAction {
     	$obj["shopId"] = (int)$USER['shopId'];
     	$obj["orderId"] = I("orderId");
 		$rs = $morders->shopOrderProduce($obj);
+		$this->ajaxReturn($rs);
+	} 
+	public function batchShopOrderProduce(){
+    	$this->isShopAjaxLogin();
+    	$morders = D('Home/Orders');
+		$rs = $morders->batchShopOrderProduce($obj);
 		$this->ajaxReturn($rs);
 	} 
 	/**
@@ -453,6 +468,16 @@ class OrdersAction extends BaseAction {
 		$rs = $morders->shopOrderDelivery($obj);
 		$this->ajaxReturn($rs);
 	} 
+	
+    /**
+	 * 商家发货配送订单
+	 */
+    public function batchShopOrderDelivery(){
+    	$this->isShopAjaxLogin();
+    	$morders = D('Home/Orders');
+		$rs = $morders->batchShopOrderDelivery($obj);
+		$this->ajaxReturn($rs);
+	}
 	
 	/**
 	 * 商家确认收货订单

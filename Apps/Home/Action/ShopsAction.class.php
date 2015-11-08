@@ -35,7 +35,7 @@ class ShopsAction extends BaseAction {
 			$this->assign('sj',I("sj",0));
 			$this->assign('sprice',I("sprice"));//上架开始时间
 			$this->assign('eprice',I("eprice"));//上架结束时间
-			$this->assign('goodsName',I("goodsName"));//上架结束时间
+			$this->assign('goodsName',urldecode(I("goodsName")));//上架结束时间
 					
 			$mshopscates = D('Home/ShopsCats');
 			$shopscates = $mshopscates->getShopCateList($shopId);
@@ -49,6 +49,9 @@ class ShopsAction extends BaseAction {
 			$obj["shopId"] = $shopId;
 			$shopScores = $mshops->getShopScores($obj);
 			$this->assign("shopScores",$shopScores);
+			
+			$m = D('Home/Favorites');
+			$this->assign("favoriteShopId",$m->checkFavorite($shopId,1));
 		}
         $this->display("default/shop_home");
 	}
@@ -61,8 +64,8 @@ class ShopsAction extends BaseAction {
    		$areaList = $areas->getDistricts($areaId2);
    		$mshops = D('Home/Shops');
    		$obj = array();
-   		if(cookie("bstreesAreaId3")){
-   			$obj["areaId3"] = cookie("bstreesAreaId3");
+   		if((int)cookie("bstreesAreaId3")){
+   			$obj["areaId3"] = (int)cookie("bstreesAreaId3");
    		}else{
    			$obj["areaId3"] = ((int)I('areaId3')>0)?(int)I('areaId3'):$areaList[0]['areaId'];
    			cookie("bstreesAreaId3",$obj["areaId3"]);
@@ -82,7 +85,7 @@ class ShopsAction extends BaseAction {
      */
 	public function getDistrictsShops(){
    		$mshops = D('Home/Shops');
-   		$obj["areaId3"] = I("areaId3");
+   		$obj["areaId3"] = (int)I("areaId3");
    		$obj["shopName"] = I("shopName");
    		$obj["deliveryStartMoney"] = I("deliveryStartMoney");
    		$obj["deliveryMoney"] = I("deliveryMoney");
@@ -99,12 +102,12 @@ class ShopsAction extends BaseAction {
 	public function getShopByCommunitys(){
 		
    		$mshops = D('Home/Shops');
-   		$obj["communityId"] = I("communityId");
-   		$obj["areaId3"] = I("areaId3");
+   		$obj["communityId"] = (int)I("communityId");
+   		$obj["areaId3"] = (int)I("areaId3");
    		$obj["shopName"] = I("shopName");
    		$obj["deliveryStartMoney"] = I("deliveryStartMoney");
    		$obj["deliveryMoney"] = I("deliveryMoney");
-   		$obj["shopAtive"] = I("shopAtive");
+   		$obj["shopAtive"] = (int)I("shopAtive");
    		$ctplist = $mshops->getShopByCommunitys($obj);
    		$pages = $rslist["pages"];
 
@@ -156,8 +159,8 @@ class ShopsAction extends BaseAction {
 	 */
 	public function index(){
 		$this->isShopLogin();
-		$data['shop'] = session('WST_USER');
 		$spm = D('Home/Shops');
+		$data['shop'] = $spm->loadShopInfo(session('WST_USER.userId'));
 		$obj["shopId"] = $data['shop']['shopId'];
 		$details = $spm->getShopDetails($obj);
 		$data['details'] = $details;

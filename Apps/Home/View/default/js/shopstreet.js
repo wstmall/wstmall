@@ -16,6 +16,7 @@ function getShopByCommunitys(obj){
 	if(searchType==2){
 		keyWords = $.trim($("#keyword").val());
 	}
+	$("#wst-page-items").hide();
 	$.post(Think.U('Home/Shops/getShopByCommunitys') ,{"curr": 1,"communityId":communityId,"shopName":shopName,"deliveryStartMoney":deliveryStartMoney,"deliveryMoney":deliveryMoney,"shopAtive":shopAtive,"keyWords":keyWords},function(data) {		
 		var json = WST.toJson(data);
 		
@@ -46,6 +47,9 @@ function getShopByCommunitys(obj){
 	        				html.push('</div>');
 	        				html.push('<div class="wst-clear"></div>');
 	        			html.push('</div>');
+	        		}
+	        		if(json.totalPage>1){
+	        			$("#wst-page-items").show();
 	        		}
 	        		$(".wst-shop-list").html(html.join(""));
 	        		$(".wst-shop-list img").lazyload({effect: "fadeIn",failurelimit : 1000,threshold: 200,placeholder:currDefaultImg});

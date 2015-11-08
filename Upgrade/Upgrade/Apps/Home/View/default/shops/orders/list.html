@@ -28,14 +28,16 @@
 						<table class='wst-list' style="font-size:13px;">
 							<thead>
 								<tr>
-									<th colspan="6" class="wst-form">
+									<th colspan="7" class="wst-form">
 									订单号：<input type="text" id="orderNo_0" style='width:120px;' autocomplete="off"/>
 									收货人：<input type="text" id="userName_0" style='width:120px;' autocomplete="off"/>
 									收货地址：<input type="text" id="userAddress_0" style='width:120px;' autocomplete="off"/>
 									<button class='wst-btn-query' onclick="queryOrderPager(0,0)">查询</button>
+									<button class='wst-btn-query' style='width:80px;' onclick="batchShopOrderAccept()">批量受理</button>
 									</th>
 								</tr>
 								<tr>
+								    <th width='20'><input type='checkbox' onclick='WST.checkChks(this,".chk_0")'/></th>
 									<th width='100'>订单号</th>
 									<th width='100'>收货人</th>
 									<th width='*'>收货地址</th>
@@ -63,14 +65,16 @@
 						<table class='wst-list' style="font-size:13px;">
 							<thead>
 								<tr>
-									<th colspan="6" class="wst-form">
+									<th colspan="7" class="wst-form">
 									订单号：<input type="text" id="orderNo_1" style='width:120px;' autocomplete="off"/>
 									收货人：<input type="text" id="userName_1" style='width:120px;' autocomplete="off"/>
 									收货地址：<input type="text" id="userAddress_1" style='width:120px;' autocomplete="off"/>
 									<button class='wst-btn-query' onclick="queryOrderPager(1,0)">查询</button>
+									<button class='wst-btn-query' style='width:80px;' onclick="batchShopOrderProduce()">批量打包</button>
 									</th>
 								</tr>
 								<tr>
+								    <th width='20'><input type='checkbox' onclick='WST.checkChks(this,".chk_1")'/></th>
 									<th width='100'>订单号</th>
 									<th width='100'>收货人</th>
 									<th width='*'>收货地址</th>
@@ -98,14 +102,16 @@
 						<table class='wst-list' style="font-size:13px;">
 							<thead>
 								<tr>
-									<th colspan="6" class="wst-form">
+									<th colspan="7" class="wst-form">
 									订单号：<input type="text" id="orderNo_2" style='width:120px;' autocomplete="off"/>
 									收货人：<input type="text" id="userName_2" style='width:120px;' autocomplete="off"/>
 									收货地址：<input type="text" id="userAddress_2" style='width:120px;' autocomplete="off"/>
 									<button class='wst-btn-query' onclick="queryOrderPager(2,0)">查询</button>
+									<button class='wst-btn-query' style='width:80px;' onclick="batchShopOrderDelivery()">批量配送</button>
 									</th>
 								</tr>
 								<tr>
+								    <th width='20'><input type='checkbox' onclick='WST.checkChks(this,".chk_2")'/></th>
 									<th width='100'>订单号</th>
 									<th width='100'>收货人</th>
 									<th width='*'>收货地址</th>

@@ -92,7 +92,7 @@ class UsersAction extends BaseAction {
 		
 		$m = D('Home/Users');
 		$res = array();
-		$nameType = I("nameType");
+		$nameType = (int)I("nameType");
 		if($nameType!=3 && !$this->checkVerify("3")){			
 			$res['status'] = -4;
 		}else{			
@@ -222,7 +222,7 @@ class UsersAction extends BaseAction {
     	//禁止缓存
     	header('Cache-Control:no-cache,must-revalidate');  
 		header('Pragma:no-cache');
-    	$step = I('step');
+    	$step = (int)I('step');
     	switch ($step) {
     		case 1:#第二步，验证身份
     			if (!$this->checkCodeVerify(false)) {

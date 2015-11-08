@@ -59,8 +59,8 @@ $(document).ready(function(){
             <volist name="Page['root']" id="vo" key='i'>
              <tr>
                <td><input class='chk' type='checkbox' value='{$vo['goodsId']}'/></td>
-               <td img='{$vo['goodsThums']}' class='imgPreview'>
-               <img src="__ROOT__/{$vo['goodsThums']}" height="50" width="50"/>
+               <td <if condition="$vo['goodsThums'] neq ''">img='{$vo['goodsThums']}' class='imgPreview'</if>>
+               <img class='lazyImg' data-original="__ROOT__/{$vo['goodsThums']}" height="50" width="50"/>
                {$vo['goodsName']}
                </td>
                <td style="cursor:pointer;" title='双击修改' ondblclick="javascript:toEditGoodsBase(1,{$vo['goodsId']},0)">

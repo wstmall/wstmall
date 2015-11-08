@@ -162,8 +162,8 @@ var filetypes = ["gif","jpg","png","jpeg"];
            </tr>
            <tr>
              <th align='right'>配送区域<font color='red'>*</font>：</th>
-             <td>
-             <div class="text-gray Hide">展开全部：<input type="checkbox" id="expendAll" checked></div>
+             <td id="wst_shop_area">
+             <div class="text-gray Hide">展开全部：<input type="checkbox" id="expendAll" checked <if condition="$WST_USER['isSelf'] == 1">disabled</if> ></div>
              <div id='areaTree'></div>
              </td>
            </tr>
@@ -240,4 +240,7 @@ var filetypes = ["gif","jpg","png","jpeg"];
        </form>
        </div>
    </div>
+   <script type="text/javascript">
+   var isSelf = "{$WST_USER['isSelf']}"; 
+	</script>
 </block>  

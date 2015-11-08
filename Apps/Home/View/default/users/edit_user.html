@@ -76,7 +76,7 @@ var filetypes = ["gif","jpg","png","jpeg"];
        		<iframe name="upload" style="display:none"></iframe>
 			<form id="uploadform_Filedata" autocomplete="off" style="position:absolute;left:388px;z-index:10;" enctype="multipart/form-data" method="POST" target="upload" action="{:U('Home/Shops/uploadPic')}" >
 				<div id="preview_Filedata" >
-             	<img id='preview' src='<if condition="$user['userPhoto'] =='' ">__ROOT__/{$CONF['mallLogo']}<else/>__ROOT__/{$user.userPhoto}</if>' height='150' />
+             	<img id='preview' src='<if condition="$user['userPhoto'] =='' ">__ROOT__/{$CONF['goodsImg']}<else/>__ROOT__/{$user.userPhoto}</if>' height='150' />
                 </div>
 				<div style="position:relative;left: -4px;">
 				<input id="userPhoto" name="userPhoto" type="text" value="{$user.userPhoto}" readonly style="float:left;width:140px;"/>

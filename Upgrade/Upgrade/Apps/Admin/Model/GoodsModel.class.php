@@ -15,7 +15,7 @@ class GoodsModel extends BaseModel {
 	 */
 	 public function get(){
 	 	$m = M('goods');
-	 	$id = I('id',0);
+	 	$id = (int)I('id',0);
 		$goods = $m->where("goodsId=".$id)->find();
 		//相册
 		$m = M('goods_gallerys');
@@ -69,15 +69,21 @@ class GoodsModel extends BaseModel {
         $m = M('goods');
         $shopName = I('shopName');
      	$goodsName = I('goodsName');
-     	$areaId1 = I('areaId1',0);
-     	$areaId2 = I('areaId2',0);
+     	$areaId1 = (int)I('areaId1',0);
+     	$areaId2 = (int)I('areaId2',0);
+     	$goodsCatId1 = (int)I('goodsCatId1',0);
+     	$goodsCatId2 = (int)I('goodsCatId2',0);
+     	$goodsCatId3 = (int)I('goodsCatId3',0);
 	 	$sql = "select g.*,gc.catName,sc.catName shopCatName,p.shopName from __PREFIX__goods g 
 	 	      left join __PREFIX__goods_cats gc on g.goodsCatId3=gc.catId 
 	 	      left join __PREFIX__shops_cats sc on sc.catId=g.shopCatId2,__PREFIX__shops p 
 	 	      where goodsStatus=0 and goodsFlag=1 and p.shopId=g.shopId and g.isSale=1";
 	 	if($areaId1>0)$sql.=" and p.areaId1=".$areaId1;
 	 	if($areaId2>0)$sql.=" and p.areaId2=".$areaId2;
-	 	if($shopName!='')$sql.=" and (p.shopName like '%".$shopName."%' or p.shopSn like '%'".$shopName."%')";
+	 	if($goodsCatId1>0)$sql.=" and g.goodsCatId1=".$goodsCatId1;
+	 	if($goodsCatId2>0)$sql.=" and g.goodsCatId2=".$goodsCatId2;
+	 	if($goodsCatId3>0)$sql.=" and g.goodsCatId3=".$goodsCatId3;
+	 	if($shopName!='')$sql.=" and (p.shopName like '%".$shopName."%' or p.shopSn like '%".$shopName."%')";
 	 	if($goodsName!='')$sql.=" and (g.goodsName like '%".$goodsName."%' or g.goodsSn like '%".$goodsName."%')";
 	 	$sql.="  order by goodsId desc";
 		return $m->pageQuery($sql);
@@ -89,14 +95,24 @@ class GoodsModel extends BaseModel {
         $m = M('goods');
         $shopName = I('shopName');
      	$goodsName = I('goodsName');
-     	$areaId1 = I('areaId1',0);
-     	$areaId2 = I('areaId2',0);
+     	$areaId1 = (int)I('areaId1',0);
+     	$areaId2 = (int)I('areaId2',0);
+     	$goodsCatId1 = (int)I('goodsCatId1',0);
+     	$goodsCatId2 = (int)I('goodsCatId2',0);
+     	$goodsCatId3 = (int)I('goodsCatId3',0);
+     	$isAdminBest = (int)I('isAdminBest',-1);
+     	$isAdminRecom = (int)I('isAdminRecom',-1);
 	 	$sql = "select g.*,gc.catName,sc.catName shopCatName,p.shopName from __PREFIX__goods g 
 	 	      left join __PREFIX__goods_cats gc on g.goodsCatId3=gc.catId 
 	 	      left join __PREFIX__shops_cats sc on sc.catId=g.shopCatId2,__PREFIX__shops p 
 	 	      where goodsStatus=1 and goodsFlag=1 and p.shopId=g.shopId and g.isSale=1";
 	 	if($areaId1>0)$sql.=" and p.areaId1=".$areaId1;
 	 	if($areaId2>0)$sql.=" and p.areaId2=".$areaId2;
+	 	if($goodsCatId1>0)$sql.=" and g.goodsCatId1=".$goodsCatId1;
+	 	if($goodsCatId2>0)$sql.=" and g.goodsCatId2=".$goodsCatId2;
+	 	if($goodsCatId3>0)$sql.=" and g.goodsCatId3=".$goodsCatId3;
+	 	if($isAdminBest>=0)$sql.=" and g.isAdminBest=".$isAdminBest;
+	 	if($isAdminRecom>=0)$sql.=" and g.isAdminRecom=".$isAdminRecom;
 	 	if($shopName!='')$sql.=" and (p.shopName like '%".$shopName."%' or p.shopSn like '%".$shopName."%')";
 	 	if($goodsName!='')$sql.=" and (g.goodsName like '%".$goodsName."%' or g.goodsSn like '%".$goodsName."%')";
 	 	$sql.="  order by goodsId desc";   
@@ -117,7 +133,7 @@ class GoodsModel extends BaseModel {
 	 	$rd = array('status'=>-1);
 	 	$m = M('goods');
 	 	$id = (int)I('id',0);
-	 	$m->goodsStatus = I('status',0);
+	 	$m->goodsStatus = (int)I('status',0);
 		$rs = $m->where('goodsId='.$id)->save();
 		if(false !== $rs){
 			$sql = "select goodsName,userId from __PREFIX__goods g,__PREFIX__shops s where g.shopId=s.shopId and g.goodsId=".$id;
@@ -160,7 +176,7 @@ class GoodsModel extends BaseModel {
 	 	$rd = array('status'=>-1);
 	 	$m = M('goods');
 	 	$id = I('id',0);
-	 	$m->isAdminBest = I('status',0);
+	 	$m->isAdminBest = (int)I('status',0);
 		$rs = $m->where('goodsId in('.$id.")")->save();
 		if(false !== $rs){
 			$rd['status'] = 1;
@@ -174,7 +190,7 @@ class GoodsModel extends BaseModel {
 	 	$rd = array('status'=>-1);
 	 	$m = M('goods');
 	 	$id = I('id',0);
-	 	$m->isAdminRecom = I('status',0);
+	 	$m->isAdminRecom = (int)I('status',0);
 		$rs = $m->where('goodsId in('.$id.")")->save();
 		if(false !== $rs){
 			$rd['status'] = 1;

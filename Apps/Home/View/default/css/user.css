@@ -264,12 +264,53 @@ input, textarea {
     background-color: white;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-shadow: 2px 2px 2px #f0f0f0 inset;
     font-family: inherit;
     font-size: 100%;
     margin: 3px;
     padding: 5px;
     vertical-align: middle;
+}
+.wst-tab-box {
+	width: 100%;
+	height: auto;
+	margin: 0px auto;
+}
+
+.wst-tab-nav {
+	margin: 0;
+	padding: 0;
+	height: 31px;
+	
+}
+
+.wst-tab-nav li {
+	cursor: pointer;
+	float: left;
+	margin: 0 0px;
+	list-style: none;
+	border: 1px solid #ddd;
+	border-bottom: none;
+	line-height: 30px;
+	text-align: center;
+	background: #eeeeee;
+	color: #000000;
+	padding-left: 10px;
+    padding-right: 10px;
+}
+
+.wst-tab-nav .on {
+	background: none repeat scroll 0 0 #e23e3d;
+    border-bottom: 0 none;
+    color: #ffffff;
+    font-weight:bold;
+}
+
+.wst-tab-content {
+	padding: 5px;
+	width: 99%;
+	height: auto;
+	border: 1px solid #ddd;
+	background: #FFF;
 }
 .wst-appraise-box{margin: 0 auto; margin-top:20px;margin-bottom :10px;}
 .wst-appraise-box .appraise-title{margin-top: 10px;font-weight: bold;text-align:left;padding-left:30px;padding-bottom:10px;}

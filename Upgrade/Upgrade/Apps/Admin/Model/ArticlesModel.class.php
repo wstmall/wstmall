@@ -14,11 +14,11 @@ class ArticlesModel extends BaseModel {
 	  */
 	 public function insert(){
 	 	$rd = array('status'=>-1);
-	 	$id = I("id",0);
+	 	$id = (int)I("id",0);
 		$data = array();
-		$data["catId"] = I("catId");
+		$data["catId"] = (int)I("catId");
 		$data["articleTitle"] = I("articleTitle");
-		$data["isShow"] = I("isShow",0);
+		$data["isShow"] = (int)I("isShow",0);
 		$data["articleContent"] = I("articleContent");
 		$data["articleKey"] = I("articleKey");
 		$data["staffId"] = (int)session('WST_STAFF.staffId');
@@ -37,17 +37,17 @@ class ArticlesModel extends BaseModel {
 	  */
 	 public function edit(){
 	 	$rd = array('status'=>-1);
-	 	$id = I("id",0);
+	 	$id = (int)I("id",0);
 		$data = array();
-		$data["catId"] = I("catId");
+		$data["catId"] = (int)I("catId");
 		$data["articleTitle"] = I("articleTitle");
-		$data["isShow"] = I("isShow",0);
+		$data["isShow"] = (int)I("isShow",0);
 		$data["articleContent"] = I("articleContent");
 		$data["articleKey"] = I("articleKey");
 		$data["staffId"] = (int)session('WST_STAFF.staffId');
 	    if($this->checkEmpty($data,true)){	
 			$m = M('articles');
-		    $rs = $m->where("articleId=".I('id',0))->save($data);
+		    $rs = $m->where("articleId=".(int)I('id',0))->save($data);
 			if(false !== $rs){
 				$rd['status']= 1;
 				
@@ -60,7 +60,7 @@ class ArticlesModel extends BaseModel {
 	  */
      public function get(){
 	 	$m = M('articles');
-		return $m->where("articleId=".I('id'))->find();
+		return $m->where("articleId=".(int)I('id'))->find();
 	 }
 	 /**
 	  * 分页列表
@@ -91,7 +91,7 @@ class ArticlesModel extends BaseModel {
 	 public function del(){
 	 	$rd = array('status'=>-1);
 	    $m = M('articles');
-	    $rs = $m->delete(I('id'));
+	    $rs = $m->delete((int)I('id'));
 		if(false !== $rs){
 		   $rd['status']= 1;
 		}
@@ -104,8 +104,8 @@ class ArticlesModel extends BaseModel {
 	 	$rd = array('status'=>-1);
 	 	if(I('id',0)==0)return $rd;
 	 	$m = M('articles');
-	 	$m->isShow = (I('isShow')==1)?1:0;
-	 	$rs = $m->where("articleId=".I('id',0))->save();
+	 	$m->isShow = ((int)I('isShow')==1)?1:0;
+	 	$rs = $m->where("articleId=".(int)I('id',0))->save();
 	    if(false !== $rs){
 			$rd['status']= 1;
 		}

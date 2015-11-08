@@ -39,7 +39,7 @@ class IndexAction extends BaseAction {
      */
     public function access(){
     	$ads = D('Home/Ads');
-    	$ads->statistics(I('id'));
+    	$ads->statistics((int)I('id'));
     }
     /**
      * 切换城市

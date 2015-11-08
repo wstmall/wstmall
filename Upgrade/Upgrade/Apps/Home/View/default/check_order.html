@@ -43,7 +43,7 @@
                         	填写并核对订单信息
                     </div>
                     <div>                        
-						<div id="consignee1">
+						<div id="consignee1" <if condition="count($addressList) eq 0">style='display:none'</if>>
 							<div>
 								<span class="wst-chkod-s1-title">收货人信息 </span>
 								<input type="hidden" id="paddressId" value="{$addressList[0]['addressId']}"/>
@@ -256,6 +256,11 @@
 							<div>
                                 <div class="wst-chkod-dp-pb1">
                                     <span class="wst-chkod-dp-hds">商品清单</span><span class="wst-chkod-shop-span">【<span id="sp_{$shopgoods['shopgoods'][0]['shopId']}">{$shopgoods["shopgoods"][0]["shopName"]}</span><if condition='$shopgoods["shopgoods"][0]["isInvoice"] eq 1'>：本店可开具发票<else/>：不可开发票</if>】</span>
+                                	<if condition="$shopgoods['shopgoods'][0]['qqNo'] neq ''">
+										<a href="tencent://message/?uin={$shopgoods['shopgoods'][0]['qqNo']}&Site=QQ交谈&Menu=yes">
+											<img border="0" src="http://wpa.qq.com/pa?p=1:{$shopgoods['shopgoods'][0]['qqNo']}:7" alt="QQ交谈" width="71" height="24" />
+										</a>
+									</if>
                                 </div>
                                 <div class="wst-goods-tips">
                                    	 包邮起步价：¥{$shopgoods["shopgoods"][0]["deliveryFreeMoney"]}元
@@ -452,14 +457,17 @@
 		var currMinutes = d.getMinutes();
 	   	var m=d.getMonth()+1;
 	   	var currDate = d.getFullYear()+'-'+(m>=10?m:'0'+m)+'-'+(d.getDate()>=10?d.getDate():"0"+d.getDate());
-	   	var startNum = {$startTime};
+	   	var startNum = 0;
+
 	   	if(currDate == requestdate){
+	   		
 	   		var startNum = currHour*4+(Math.ceil(currMinutes/15))+4;
 			if(startNum<{$startTime}){
 				startNum = {$startTime};
 			}
-	 	}		
-		for(var i=startNum;i<={$endTime};i++){ 	
+	 	}
+	 
+		for(var i=startNum;i<=96;i++){ 	
 			if(times[i]){	
 	      		html.push('<option id="'+times[i]+'">'+times[i]+'</option>');
 	   		}       

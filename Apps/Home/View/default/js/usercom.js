@@ -725,3 +725,129 @@ $(function() {
 	setInterval("getUserMsgTips()",30000);
 });
 
+function queryFavoriteGoods(p){
+	 layer.load('正在查询商品数据，请稍后...', 3);
+	 var param = {};
+	 param.key = $.trim($("#key_"+statusMark).val());
+     params.p = p;
+     $.post(Think.U('Home/Favorites/queryGoodsByPage'),params,function(data,textStatus){
+       var json = WST.toJson(data);
+       
+     });
+}
+function queryFavoriteGoods(p){
+	var tips = WST.msg('正在加载记录,请稍候...',{time:600000000});
+	var params = {};
+	params.key = $.trim($('#key_0').val());
+	params.p = p;
+	$.post(Think.U('Home/Favorites/queryGoodsByPage'),params,function(data,textStatus){
+		layer.close(tips);
+	    var json = WST.toJson(data);
+	    if(json.status==1 && json.data){
+	       	var gettpl = document.getElementById('tblist').innerHTML;
+	       	laytpl(gettpl).render(json.data.root, function(html){
+	       	    $('.wst-goods-page').html(html);
+	       	});
+	       	$('.lazyImg').lazyload({ effect: "fadeIn",failurelimit : 10,threshold: 200,placeholder:currDefaultImg});
+	       	if(json.data.totalPage>1){
+	       		laypage({
+		        	 cont: 'wst-page-0', 
+		        	 pages:json.data.totalPage, 
+		        	 curr: json.data.currPage,
+		        	 skin: '#e23e3d',
+		        	 groups: 3,
+		        	 jump: function(e, first){
+		        		    if(!first){
+		        		    	queryFavoriteGoods(e.curr);
+		        		    }
+		        	    } 
+		        });
+	       	}else{
+	       		$('#wst-page-0').empty();
+	       	}
+       	}  
+	});
+}
+/**
+ * 加入购物车
+ */
+function addCart(goodsId,type,goodsThums){
+	var params = {};
+	params.goodsId = goodsId;
+	params.gcount = parseInt($("#buy-num").val(),10);
+	params.rnd = Math.random();
+	params.goodsAttrId = $('#shopGoodsPrice_'+goodsId).attr('dataId');
+	$("#flyItem img").attr("src",domainURL  +"/"+ goodsThums)
+	jQuery.post(Think.U('Home/Cart/addToCartAjax') ,params,function(data) {
+		if(type==1){
+			location.href= Think.U('Home/Cart/toCart');
+		}else{
+			layer.msg("添加成功!",1,1);
+		}
+	});
+}
+function cancelGoodsFavorites(obj,id){
+	layer.confirm('您确定取消关注该商品吗？',{icon: 3, title:'系统提示'}, function(tips){
+		layer.close(tips);
+	    var ll = layer.load('数据处理中，请稍候...');
+		jQuery.post(Think.U("Home/Favorites/cancelFavorite") ,{id:id,type:0},function(data) {
+			var json = WST.toJson(data,1);
+			if(json.status==1){
+				layer.close(ll);
+				$(obj).parent().parent().parent().parent().remove();
+				if($('.wst-goods-page').children().length==0)queryFavoriteGoods();
+			}else{
+				WST.msg('取消关注失败!');
+			}
+		});
+	});
+}
+function queryFavoriteShops(p){
+	var tips = WST.msg('正在加载记录,请稍候...',{time:600000000});
+	var params = {};
+	params.key = $.trim($('#key_1').val());
+	params.p = p;
+	$.post(Think.U('Home/Favorites/queryShopsByPage'),params,function(data,textStatus){
+		layer.close(tips);
+	    var json = WST.toJson(data);
+	    if(json.status==1 && json.data){
+	       	var gettpl = document.getElementById('tblist2').innerHTML;
+	       	laytpl(gettpl).render(json.data.root, function(html){
+	       	    $('.wst-shops-page').html(html);
+	       	});
+	       	$('.lazyImg').lazyload({ effect: "fadeIn",failurelimit : 10,threshold: 200,placeholder:currDefaultImg});
+	       	if(json.data.totalPage>1){
+	       		laypage({
+		        	 cont: 'wst-page-1', 
+		        	 pages:json.data.totalPage, 
+		        	 curr: json.data.currPage,
+		        	 skin: '#e23e3d',
+		        	 groups: 3,
+		        	 jump: function(e, first){
+		        		    if(!first){
+		        		    	queryFavoriteShops(e.curr);
+		        		    }
+		        	    } 
+		        });
+	       	}else{
+	       		$('#wst-page-1').empty();
+	       	}
+       	}  
+	});
+}
+function cancelShopFavorites(obj,id){
+	layer.confirm('您确定取消关注该店铺吗？',{icon: 3, title:'系统提示'}, function(tips){
+		layer.close(tips);
+	    var ll = layer.load('数据处理中，请稍候...');
+		jQuery.post(Think.U("Home/Favorites/cancelFavorite") ,{id:id,type:1},function(data) {
+			var json = WST.toJson(data,1);
+			if(json.status==1){
+				layer.close(ll);
+				$(obj).parent().parent().parent().remove();
+				if($('.wst-shops-page').children().length==0)queryFavoriteShops();
+			}else{
+				WST.msg('取消关注失败!');
+			}
+		});
+	});
+}

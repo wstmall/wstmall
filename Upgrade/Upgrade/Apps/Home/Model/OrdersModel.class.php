@@ -218,7 +218,7 @@ class OrdersModel extends BaseModel {
 					//修改库存
 					foreach ($pshopgoods as $key=> $sgoods){
 						$sql="update __PREFIX__goods set goodsStock=goodsStock-".$sgoods['cnt']." where goodsId=".$sgoods["goodsId"];
-						$this->query($sql);
+						$this->execute($sql);
 						if((int)$sgoods["goodsAttrId"]>0){
 							$sql="update __PREFIX__goods_attributes set attrStock=attrStock-".$sgoods['cnt']." where id=".$sgoods["goodsAttrId"];
 							$this->execute($sql);
@@ -252,7 +252,7 @@ class OrdersModel extends BaseModel {
 	 */
 	public function queryByPage($obj){
 		$userId = $obj["userId"];
-		$pcurr = I("pcurr",0);
+		$pcurr = (int)I("pcurr",0);
 		$sql = "SELECT o.* FROM __PREFIX__orders o
 				WHERE userId = $userId AND orderFlag=1 order by orderId desc";
 		$pages = $this->pageQuery($sql,$pcurr);	
@@ -286,15 +286,15 @@ class OrdersModel extends BaseModel {
 	 * 获取待付款订单
 	 */
 	public function queryPayByPage($obj){
-		$userId = $obj["userId"];
+		$userId = (int)$obj["userId"];
 		$orderNo = I("orderNo");
-		$orderStatus = I("orderStatus",0);
+		$orderStatus = (int)I("orderStatus",0);
 		$goodsName = I("goodsName");
 		$shopName = I("shopName");
 		$userName = I("userName");
 		$sdate = I("sdate");
 		$edate = I("edate");
-		$pcurr = I("pcurr",0);
+		$pcurr = (int)I("pcurr",0);
 		
 		$sql = "SELECT o.orderId,o.orderNo,o.shopId,o.orderStatus,o.userName,o.totalMoney,
 		        o.createTime,o.payType,o.isRefund,o.isAppraises,sp.shopName 
@@ -349,15 +349,15 @@ class OrdersModel extends BaseModel {
 	 * 获取待确认收货
 	 */
 	public function queryReceiveByPage($obj){
-		$userId = $obj["userId"];
+		$userId = (int)$obj["userId"];
 		$orderNo = I("orderNo");
-		$orderStatus = I("orderStatus",0);
+		$orderStatus = (int)I("orderStatus",0);
 		$goodsName = I("goodsName");
 		$shopName = I("shopName");
 		$userName = I("userName");
 		$sdate = I("sdate");
 		$edate = I("edate");
-		$pcurr = I("pcurr",0);
+		$pcurr = (int)I("pcurr",0);
 
 		$sql = "SELECT o.orderId,o.orderNo,o.shopId,o.orderStatus,o.userName,o.totalMoney,
 		        o.createTime,o.payType,o.isRefund,o.isAppraises,sp.shopName 
@@ -408,15 +408,15 @@ class OrdersModel extends BaseModel {
 	 * 获取待发货订单
 	 */
 	public function queryDeliveryByPage($obj){
-		$userId = $obj["userId"];
+		$userId = (int)$obj["userId"];
 		$orderNo = I("orderNo");
-		$orderStatus = I("orderStatus",0);
+		$orderStatus = (int)I("orderStatus",0);
 		$goodsName = I("goodsName");
 		$shopName = I("shopName");
 		$userName = I("userName");
 		$sdate = I("sdate");
 		$edate = I("edate");
-		$pcurr = I("pcurr",0);
+		$pcurr = (int)I("pcurr",0);
 
 		$sql = "SELECT o.orderId,o.orderNo,o.shopId,o.orderStatus,o.userName,o.totalMoney,
 		        o.createTime,o.payType,o.isRefund,o.isAppraises,sp.shopName 
@@ -469,15 +469,15 @@ class OrdersModel extends BaseModel {
 	 * 获取退款
 	 */
 	public function queryRefundByPage($obj){
-		$userId = $obj["userId"];
+		$userId = (int)$obj["userId"];
 		$orderNo = I("orderNo");
-		$orderStatus = I("orderStatus",0);
+		$orderStatus = (int)I("orderStatus",0);
 		$goodsName = I("goodsName");
 		$shopName = I("shopName");
 		$userName = I("userName");
 		$sdate = I("sdate");
 		$edate = I("edate");
-		$pcurr = I("pcurr",0);
+		$pcurr = (int)I("pcurr",0);
 		//必须是在线支付的才允许退款
 
 		$sql = "SELECT o.orderId,o.orderNo,o.shopId,o.orderStatus,o.userName,o.totalMoney,
@@ -532,15 +532,15 @@ class OrdersModel extends BaseModel {
 	 * 获取取消的订单
 	 */
 	public function queryCancelOrders($obj){
-		$userId = $obj["userId"];
+		$userId = (int)$obj["userId"];
 		$orderNo = I("orderNo");
-		$orderStatus = I("orderStatus",0);
+		$orderStatus = (int)I("orderStatus",0);
 		$goodsName = I("goodsName");
 		$shopName = I("shopName");
 		$userName = I("userName");
 		$sdate = I("sdate");
 		$edate = I("edate");
-		$pcurr = I("pcurr",0);
+		$pcurr = (int)I("pcurr",0);
 
 		$sql = "SELECT o.orderId,o.orderNo,o.shopId,o.orderStatus,o.userName,o.totalMoney,
 		        o.createTime,o.payType,o.isRefund,o.isAppraises,sp.shopName 
@@ -593,14 +593,14 @@ class OrdersModel extends BaseModel {
 	 * 获取待评价交易
 	 */
 	public function queryAppraiseByPage($obj){
-		$userId = $obj["userId"];
+		$userId = (int)$obj["userId"];
 		$orderNo = I("orderNo");
 		$goodsName = I("goodsName");
 		$shopName = I("shopName");
 		$userName = I("userName");
 		$sdate = I("sdate");
 		$edate = I("edate");
-		$pcurr = I("pcurr",0);
+		$pcurr = (int)I("pcurr",0);
 		$sql = "SELECT o.orderId,o.orderNo,o.shopId,o.orderStatus,o.userName,o.totalMoney,
 		        o.createTime,o.payType,o.isRefund,o.isAppraises,sp.shopName 
 		        FROM __PREFIX__orders o,__PREFIX__shops sp WHERE o.userId = $userId AND o.shopId=sp.shopId ";	
@@ -651,8 +651,8 @@ class OrdersModel extends BaseModel {
 	 * 取消订单
 	 */
 	public function orderCancel($obj){		
-		$userId = $obj["userId"];
-		$orderId = $obj["orderId"];
+		$userId = (int)$obj["userId"];
+		$orderId = (int)$obj["orderId"];
 		$rsdata = array('status'=>-1);
 		//判断订单状态，只有符合状态的订单才允许改变
 		$sql = "SELECT orderId,orderNo,orderStatus FROM __PREFIX__orders WHERE orderId = $orderId and orderFlag = 1 and userId=".$userId;		
@@ -664,7 +664,7 @@ class OrdersModel extends BaseModel {
 		if($rsv["orderStatus"]==0 || $rsv["orderStatus"]==-2)$orderStatus = -1;
 		if($orderStatus==-6 && I('rejectionRemarks')=='')return $rsdata;//如果是受理后取消需要有原因
 		$sql = "UPDATE __PREFIX__orders set orderStatus = ".$orderStatus." WHERE orderId = $orderId and userId=".$userId;	
-		$rs = $this->query($sql);		
+		$rs = $this->execute($sql);		
 		
 		$sql = "select ord.deliverType, ord.orderId, og.goodsId ,og.goodsId, og.goodsNums 
 				from __PREFIX__orders ord , __PREFIX__order_goods og 
@@ -674,10 +674,10 @@ class OrdersModel extends BaseModel {
 		for($i=0;$i<count($ogoodsList);$i++){
 			$sgoods = $ogoodsList[$i];
 			$sql="update __PREFIX__goods set goodsStock=goodsStock+".$sgoods['goodsNums']." where goodsId=".$sgoods["goodsId"];
-			$this->query($sql);
+			$this->execute($sql);
 		}
 		$sql="Delete From __PREFIX__order_reminds where orderId=".$orderId." AND remindType=0";
-		$this->query($sql);
+		$this->execute($sql);
 		
 		$data = array();
 		$m = M('log_orders');
@@ -695,9 +695,9 @@ class OrdersModel extends BaseModel {
 	 * 用户确认收货
 	 */
 	public function orderConfirm ($obj){		
-		$userId = $obj["userId"];
-		$orderId = $obj["orderId"];
-		$type = $obj["type"];
+		$userId = (int)$obj["userId"];
+		$orderId = (int)$obj["orderId"];
+		$type = (int)$obj["type"];
 		$rsdata = array();
 		$sql = "SELECT orderId,orderNo,orderScore,orderStatus FROM __PREFIX__orders WHERE orderId = $orderId and userId=".$userId;		
 		$rsv = $this->queryRow($sql);
@@ -708,18 +708,18 @@ class OrdersModel extends BaseModel {
         //收货则给用户增加积分
         if($type==1){
         	$sql = "UPDATE __PREFIX__orders set orderStatus = 4 WHERE orderId = $orderId and userId=".$userId;			
-        	$rs = $this->query($sql);
+        	$rs = $this->execute($sql);
         	
         	//修改商品销量
         	$sql = "UPDATE __PREFIX__goods g, __PREFIX__order_goods og, __PREFIX__orders o SET g.saleCount=g.saleCount+og.goodsNums WHERE g.goodsId= og.goodsId AND og.orderId = o.orderId AND o.orderId=$orderId AND o.userId=".$userId;
-        	$rs = $this->query($sql);
+        	$rs = $this->execute($sql);
         	
         	$sql = "UPDATE __PREFIX__users set userScore=userScore+".$rsv["orderScore"]." WHERE userId=".$userId;
-        	$rs = $this->query($sql);
+        	$rs = $this->execute($sql);
         }else{
         	if(I('rejectionRemarks')=='')return $rsdata;//如果是拒收的话需要填写原因
         	$sql = "UPDATE __PREFIX__orders set orderStatus = -3 WHERE orderId = $orderId and userId=".$userId;			
-        	$rs = $this->query($sql);
+        	$rs = $this->execute($sql);
         }
         //增加记录
 		$data = array();
@@ -740,7 +740,7 @@ class OrdersModel extends BaseModel {
 	public function getOrderDetails($obj){
 		$userId = (int)$obj["userId"];
 		$shopId = (int)$obj["shopId"];
-		$orderId = $obj["orderId"];
+		$orderId = (int)$obj["orderId"];
 		$data = array();
 		$sql = "SELECT * FROM __PREFIX__orders WHERE orderId = $orderId and (userId=".$userId." or shopId=".$shopId.")";	
 		$order = $this->queryRow($sql);
@@ -756,7 +756,7 @@ class OrdersModel extends BaseModel {
 		for($i=0;$i<count($ogoodsList);$i++){
 			$sgoods = $ogoodsList[$i];
 			$sql="update __PREFIX__goods set goodsStock=goodsStock+".$sgoods['goodsNums']." where goodsId=".$sgoods["goodsId"];
-			$this->query($sql);
+			$this->execute($sql);
 		}
 		
 		$sql = "SELECT * FROM __PREFIX__log_orders WHERE orderId = $orderId ";	
@@ -770,7 +770,7 @@ class OrdersModel extends BaseModel {
 	 * 获取用户指定状态的订单数目
 	 */
 	public function getUserOrderStatusCount($obj){
-		$userId = $obj["userId"];
+		$userId = (int)$obj["userId"];
 		$data = array();
 		$sql = "select orderStatus,COUNT(*) cnt from __PREFIX__orders WHERE orderStatus in (0,1,2,3) and orderFlag=1 and userId = $userId GROUP BY orderStatus";
 		$olist = $this->query($sql);
@@ -809,7 +809,7 @@ class OrdersModel extends BaseModel {
 	 * 获取用户指定状态的订单数目
 	 */
 	public function getShopOrderStatusCount($obj){
-		$shopId = $obj["shopId"];
+		$shopId = (int)$obj["shopId"];
 		$rsdata = array();
 		//待受理订单
 		$sql = "SELECT COUNT(*) cnt FROM __PREFIX__orders WHERE shopId = $shopId AND orderStatus = 0 ";
@@ -823,7 +823,7 @@ class OrdersModel extends BaseModel {
 		$rsdata[100] = $rsdata[0]+$rsdata[5];
 		
 		//获取商城信息
-		$sql = "select count(*) cnt from __PREFIX__messages WHERE  receiveUserId=".$obj["userId"]." and msgStatus=0 and msgFlag=1 ";
+		$sql = "select count(*) cnt from __PREFIX__messages WHERE  receiveUserId=".(int)$obj["userId"]." and msgStatus=0 and msgFlag=1 ";
 		$olist = $this->query($sql);
 		$rsdata[100000] = empty($olist)?0:$olist[0]['cnt'];
 		
@@ -836,10 +836,10 @@ class OrdersModel extends BaseModel {
 	 * 获取商家订单列表
 	 */
 	public function queryShopOrders($obj){		
-		$userId = $obj["userId"];
-		$shopId = $obj["shopId"];
-		$pcurr = I("pcurr",0);
-		$orderStatus = I("statusMark");
+		$userId = (int)$obj["userId"];
+		$shopId = (int)$obj["shopId"];
+		$pcurr = (int)I("pcurr",0);
+		$orderStatus = (int)I("statusMark");
 		
 		$orderNo = I("orderNo");
 		$userName = I("userName");
@@ -875,7 +875,7 @@ class OrdersModel extends BaseModel {
 		//要对用户取消【-6】的状态进行处理,表示这一条取消信息商家已经知道了
 		if($orderStatus==5 && count($noReadrderIds)>0){
 			$sql = "UPDATE __PREFIX__orders set orderStatus=-7 WHERE shopId = $shopId AND orderId in (".implode(',',$noReadrderIds).")AND orderStatus = -6 ";
-			$this->query($sql);
+			$this->execute($sql);
 		}
 		return $data;
 	}
@@ -884,9 +884,9 @@ class OrdersModel extends BaseModel {
 	 * 商家受理订单-只能受理【未受理】的订单
 	 */
 	public function shopOrderAccept ($obj){		
-		$userId = $obj["userId"];
-		$orderId = $obj["orderId"];
-		$shopId = $obj["shopId"];
+		$userId = (int)$obj["userId"];
+		$orderId = (int)$obj["orderId"];
+		$shopId = (int)$obj["shopId"];
 		$rsdata = array();
 		$sql = "SELECT orderId,orderNo,orderStatus FROM __PREFIX__orders WHERE orderId = $orderId AND orderFlag=1 and shopId=".$shopId;		
 		$rsv = $this->queryRow($sql);
@@ -896,7 +896,7 @@ class OrdersModel extends BaseModel {
 		}
 
 		$sql = "UPDATE __PREFIX__orders set orderStatus = 1 WHERE orderId = $orderId and shopId=".$shopId;		
-		$rs = $this->query($sql);		
+		$rs = $this->execute($sql);		
 
 		$data = array();
 		$m = M('log_orders');
@@ -908,16 +908,50 @@ class OrdersModel extends BaseModel {
 		$ra = $m->add($data);
 		$rsdata["status"] = $ra;
 		return $rsdata;
-		
+	}
+	
+    /**
+	 * 商家批量受理订单-只能受理【未受理】的订单
+	 */
+	public function batchShopOrderAccept(){		
+		$USER = session('WST_USER');
+		$userId = (int)$USER["userId"];
+		$orderIds = I("orderIds");
+		$shopId = (int)$USER["shopId"];
+		if($orderIds=='')return array('status'=>-2);
+		$orderIds = explode(',',$orderIds);
+		$orderNum = count($orderIds);
+		$editOrderNum = 0;
+		foreach ($orderIds as $orderId){
+			if($orderId=='')continue;//订单号为空则跳过
+			$sql = "SELECT orderId,orderNo,orderStatus FROM __PREFIX__orders WHERE orderId = $orderId AND orderFlag=1 and shopId=".$shopId;		
+			$rsv = $this->queryRow($sql);
+			if($rsv["orderStatus"]!=0)continue;//订单状态不符合则跳过
+			$sql = "UPDATE __PREFIX__orders set orderStatus = 1 WHERE orderId = $orderId and shopId=".$shopId;		
+			$rs = $this->execute($sql);		
+	
+			$data = array();
+			$m = M('log_orders');
+			$data["orderId"] = $orderId;
+			$data["logContent"] = "商家已受理订单";
+			$data["logUserId"] = $userId;
+			$data["logType"] = 0;
+			$data["logTime"] = date('Y-m-d H:i:s');
+			$ra = $m->add($data);
+			$editOrderNum++;
+		}
+		if($editOrderNum==0)return array('status'=>-1);//没有符合条件的执行操作
+		if($editOrderNum<$orderNum)return array('status'=>-2);//只有部分订单符合操作
+		return array('status'=>1);
 	}
 	
 	/**
 	 * 商家打包订单-只能处理[受理]的订单
 	 */
 	public function shopOrderProduce ($obj){		
-		$userId = $obj["userId"];
-		$shopId = $obj["shopId"];
-		$orderId = $obj["orderId"];
+		$userId = (int)$obj["userId"];
+		$shopId = (int)$obj["shopId"];
+		$orderId = (int)$obj["orderId"];
 		$rsdata = array();
 		$sql = "SELECT orderId,orderNo,orderStatus FROM __PREFIX__orders WHERE orderId = $orderId AND orderFlag =1 and shopId=".$shopId;		
 		$rsv = $this->queryRow($sql);
@@ -927,7 +961,7 @@ class OrdersModel extends BaseModel {
 		}
 
 		$sql = "UPDATE __PREFIX__orders set orderStatus = 2 WHERE orderId = $orderId and shopId=".$shopId;		
-		$rs = $this->query($sql);		
+		$rs = $this->execute($sql);		
 		$data = array();
 		$m = M('log_orders');
 		$data["orderId"] = $orderId;
@@ -940,13 +974,48 @@ class OrdersModel extends BaseModel {
 		return $rsdata;
 	}
 	
+    /**
+	 * 商家批量打包订单-只能处理[受理]的订单
+	 */
+	public function batchShopOrderProduce (){		
+		$USER = session('WST_USER');
+		$userId = (int)$USER["userId"];
+		$orderIds = I("orderIds");
+		$shopId = (int)$USER["shopId"];
+		if($orderIds=='')return array('status'=>-2);
+		$orderIds = explode(',',$orderIds);
+		$orderNum = count($orderIds);
+		$editOrderNum = 0;
+		foreach ($orderIds as $orderId){
+			if($orderId=='')continue;//订单号为空则跳过
+			$sql = "SELECT orderId,orderNo,orderStatus FROM __PREFIX__orders WHERE orderId = $orderId AND orderFlag =1 and shopId=".$shopId;		
+			$rsv = $this->queryRow($sql);
+			if($rsv["orderStatus"]!=1)continue;//订单状态不符合则跳过
+	
+			$sql = "UPDATE __PREFIX__orders set orderStatus = 2 WHERE orderId = $orderId and shopId=".$shopId;		
+			$rs = $this->execute($sql);		
+			$data = array();
+			$m = M('log_orders');
+			$data["orderId"] = $orderId;
+			$data["logContent"] = "订单打包中";
+			$data["logUserId"] = $userId;
+			$data["logType"] = 0;
+			$data["logTime"] = date('Y-m-d H:i:s');
+			$ra = $m->add($data);
+			$editOrderNum++;
+		}
+		if($editOrderNum==0)return array('status'=>-1);//没有符合条件的执行操作
+		if($editOrderNum<$orderNum)return array('status'=>-2);//只有部分订单符合操作
+		return array('status'=>1);
+	}
+	
 	/**
 	 * 商家发货配送订单
 	 */
 	public function shopOrderDelivery ($obj){		
-		$userId = $obj["userId"];
-		$orderId = $obj["orderId"];
-		$shopId = $obj["shopId"];
+		$userId = (int)$obj["userId"];
+		$orderId = (int)$obj["orderId"];
+		$shopId = (int)$obj["shopId"];
 		$rsdata = array();
 		$sql = "SELECT orderId,orderNo,orderStatus FROM __PREFIX__orders WHERE orderId = $orderId AND orderFlag =1 and shopId=".$shopId;		
 		$rsv = $this->queryRow($sql);
@@ -956,7 +1025,7 @@ class OrdersModel extends BaseModel {
 		}
 
 		$sql = "UPDATE __PREFIX__orders set orderStatus = 3 WHERE orderId = $orderId and shopId=".$shopId;		
-		$rs = $this->query($sql);		
+		$rs = $this->execute($sql);		
 
 		$data = array();
 		$m = M('log_orders');
@@ -970,13 +1039,49 @@ class OrdersModel extends BaseModel {
 		return $rsdata;
 	}
 	
+    /**
+	 * 商家发货配送订单
+	 */
+	public function batchShopOrderDelivery ($obj){		
+		$USER = session('WST_USER');
+		$userId = (int)$USER["userId"];
+		$orderIds = I("orderIds");
+		$shopId = (int)$USER["shopId"];
+		if($orderIds=='')return array('status'=>-2);
+		$orderIds = explode(',',$orderIds);
+		$orderNum = count($orderIds);
+		$editOrderNum = 0;
+		foreach ($orderIds as $orderId){
+			if($orderId=='')continue;//订单号为空则跳过
+			$sql = "SELECT orderId,orderNo,orderStatus FROM __PREFIX__orders WHERE orderId = $orderId AND orderFlag =1 and shopId=".$shopId;		
+			$rsv = $this->queryRow($sql);
+			if($rsv["orderStatus"]!=2)continue;//状态不符合则跳过
+	
+			$sql = "UPDATE __PREFIX__orders set orderStatus = 3 WHERE orderId = $orderId and shopId=".$shopId;		
+			$rs = $this->execute($sql);		
+	
+			$data = array();
+			$m = M('log_orders');
+			$data["orderId"] = $orderId;
+			$data["logContent"] = "商家已发货";
+			$data["logUserId"] = $userId;
+			$data["logType"] = 0;
+			$data["logTime"] = date('Y-m-d H:i:s');
+			$ra = $m->add($data);
+		    $editOrderNum++;
+		}
+		if($editOrderNum==0)return array('status'=>-1);//没有符合条件的执行操作
+		if($editOrderNum<$orderNum)return array('status'=>-2);//只有部分订单符合操作
+		return array('status'=>1);
+	}
+	
 	/**
 	 * 商家确认收货
 	 */
 	public function shopOrderReceipt ($obj){		
-		$userId = $obj["userId"];
-		$shopId = $obj["shopId"];
-		$orderId = $obj["orderId"];
+		$userId = (int)$obj["userId"];
+		$shopId = (int)$obj["shopId"];
+		$orderId = (int)$obj["orderId"];
 		$rsdata = array();
 		$sql = "SELECT orderId,orderNo,orderStatus FROM __PREFIX__orders WHERE orderId = $orderId AND orderFlag =1 and shopId=".$shopId;		
 		$rsv = $this->queryRow($sql);
@@ -986,7 +1091,7 @@ class OrdersModel extends BaseModel {
 		}
 
 		$sql = "UPDATE __PREFIX__orders set orderStatus = 5 WHERE orderId = $orderId and shopId=".$shopId;		
-		$rs = $this->query($sql);		
+		$rs = $this->execute($sql);		
 
 		$data = array();
 		$m = M('log_orders');
@@ -1003,9 +1108,9 @@ class OrdersModel extends BaseModel {
 	 * 商家确认拒收/不同意拒收
 	 */
 	public function shopOrderRefund ($obj){		
-		$userId = $obj["userId"];
-		$orderId = $obj["orderId"];
-		$shopId = $obj["shopId"];
+		$userId = (int)$obj["userId"];
+		$orderId = (int)$obj["orderId"];
+		$shopId = (int)$obj["shopId"];
 		$type = (int)I('type');
 		$rsdata = array();
 		$sql = "SELECT orderId,orderNo,orderStatus FROM __PREFIX__orders WHERE orderId = $orderId AND orderFlag = 1 and shopId=".$shopId;		
@@ -1055,7 +1160,7 @@ class OrdersModel extends BaseModel {
 	 * 检查订单是否已支付
 	 */
 	public function checkOrderPay ($obj){
-		$userId = $obj["userId"];
+		$userId = (int)$obj["userId"];
 		$orderIds = $obj["orderIds"];
 		$sql = "SELECT count(orderId) counts FROM __PREFIX__orders WHERE userId = $userId AND orderId in ($orderIds) AND orderFlag = 1 AND orderStatus = -2 AND isPay = 0 AND payType = 1";
 		$rsv = $this->query($sql);

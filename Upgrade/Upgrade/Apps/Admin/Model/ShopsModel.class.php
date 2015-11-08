@@ -15,7 +15,7 @@ class ShopsModel extends BaseModel {
 	 public function checkLoginKey($val,$id = 0){
 	 	$sql = " (loginName ='%s' or userPhone ='%s' or userEmail='%s') ";
 	 	$keyArr = array($val,$val,$val);
-	 	if($id>0)$sql.=" and userId!=".$id;
+	 	if($id>0)$sql.=" and userId!=".(int)$id;
 	 	$m = M('users');
 	 	$rs = $m->where($sql,$keyArr)->count();
 	    if($rs==0)return 1;
@@ -43,22 +43,22 @@ class ShopsModel extends BaseModel {
 		//店铺资料
 		$sdata = array();
 		$sdata["shopSn"] = I("shopSn");
-		$sdata["areaId1"] = I("areaId1");
-		$sdata["areaId2"] = I("areaId2");
-		$sdata["areaId3"] = I("areaId3");
-		$sdata["goodsCatId1"] = I("goodsCatId1");
+		$sdata["areaId1"] = (int)I("areaId1");
+		$sdata["areaId2"] = (int)I("areaId2");
+		$sdata["areaId3"] = (int)I("areaId3");
+		$sdata["goodsCatId1"] = (int)I("goodsCatId1");
 		$sdata["shopName"] = I("shopName");
 		$sdata["shopCompany"] = I("shopCompany");
 		$sdata["shopImg"] = I("shopImg");
 		$sdata["shopAddress"] = I("shopAddress");
-		$sdata["bankId"] = I("bankId");
+		$sdata["bankId"] = (int)I("bankId");
 		$sdata["bankNo"] = I("bankNo");
 		$sdata["serviceStartTime"] = I("serviceStartTime");
 		$sdata["serviceEndTime"] = I("serviceEndTime");
 		$sdata["shopTel"] = I("shopTel");
 		if($this->checkEmpty($data,true) && $this->checkEmpty($sdata,true)){ 
-			$data["userStatus"] = I("userStatus",1);
-			$data["userType"] = I("userType",1);
+			$data["userStatus"] = (int)I("userStatus",1);
+			$data["userType"] = (int)I("userType",1);
 			$data["userEmail"] = I("userEmail");
 			$data["userQQ"] = I("userQQ");
 			$data["userScore"] = I("userScore",0);
@@ -69,7 +69,7 @@ class ShopsModel extends BaseModel {
 			$userId = $m->add($data);
 			if(false !== $userId){
 				$sdata["userId"] = $userId;
-				$sdata["isSelf"] = I("isSelf",0);
+				$sdata["isSelf"] = (int)I("isSelf",0);
 				if($sdata["isSelf"]==1){
 					$sdata["deliveryType"] = 1;
 				}else{
@@ -83,9 +83,9 @@ class ShopsModel extends BaseModel {
 				$sdata["longitude"] = (float)I("longitude");
 				$sdata["latitude"] = (float)I("latitude");
 				$sdata["mapLevel"] = (int)I("mapLevel",13);
-				$sdata["isInvoice"] = I("isInvoice",1);
-				$sdata["shopStatus"] = I("shopStatus",1);
-				$sdata["shopAtive"] = I("shopAtive",1);
+				$sdata["isInvoice"] = (int)I("isInvoice",1);
+				$sdata["shopStatus"] = (int)I("shopStatus",1);
+				$sdata["shopAtive"] = (int)I("shopAtive",1);
 				$sdata["shopFlag"] = 1;
 				$sdata["createTime"] = date('Y-m-d H:i:s');
 			    $sdata['statusRemarks'] = I('statusRemarks');
@@ -110,8 +110,8 @@ class ShopsModel extends BaseModel {
 							if($v=='' || $v=='0')continue;
 							$tmp = array();
 							$tmp['shopId'] = $shopId;
-							$tmp['areaId1'] = I("areaId1");
-							$tmp['areaId2'] = I("areaId2");
+							$tmp['areaId1'] = (int)I("areaId1");
+							$tmp['areaId2'] = (int)I("areaId2");
 							$tmp['areaId3'] = $v;
 							$tmp['communityId'] = 0;
 							$ra = $m->add($tmp);
@@ -146,7 +146,7 @@ class ShopsModel extends BaseModel {
 	  */
 	 public function edit(){
 	 	$rd = array('status'=>-1);
-	 	$shopId = I('id',0);
+	 	$shopId = (int)I('id',0);
 	 	if($shopId==0)return rd;
 	 	$m = M('shops');
 	 	//获取店铺资料
@@ -161,11 +161,11 @@ class ShopsModel extends BaseModel {
 	 	}
 	    $data = array();
 		$data["shopSn"] = I("shopSn");
-		$data["areaId1"] = I("areaId1");
-		$data["areaId2"] = I("areaId2");
-		$data["areaId3"] = I("areaId3");
-		$data["goodsCatId1"] = I("goodsCatId1");
-		$data["isSelf"] = I("isSelf",0);
+		$data["areaId1"] = (int)I("areaId1");
+		$data["areaId2"] = (int)I("areaId2");
+		$data["areaId3"] = (int)I("areaId3");
+		$data["goodsCatId1"] = (int)I("goodsCatId1");
+		$data["isSelf"] = (int)I("isSelf",0);
 		if($data["isSelf"]==1){
 			$data["deliveryType"] = 1;
 		}else{
@@ -188,8 +188,8 @@ class ShopsModel extends BaseModel {
 		$data["isInvoice"] = I("isInvoice",1);
 		$data["serviceStartTime"] = I("serviceStartTime");
 		$data["serviceEndTime"] = I("serviceEndTime");
-		$data["shopStatus"] = I("shopStatus",0);
-		$data["shopAtive"] = I("shopAtive",1);
+		$data["shopStatus"] = (int)I("shopStatus",0);
+		$data["shopAtive"] = (int)I("shopAtive",1);
 		$data["shopTel"] = I("shopTel");
 		if($this->checkEmpty($data,true)){
 			$data['qqNo'] = I('qqNo');
@@ -200,8 +200,8 @@ class ShopsModel extends BaseModel {
 		    	//如果[已通过的店铺]被改为未审核的话也要停止了该店铺的商品
 		    	if($shops['shopStatus']!=$data['shopStatus']){
 					if($data['shopStatus']!=1){
-						$sql = "update __PREFIX__goods set isSale=0 where shopId=".$shopId;
-			 	        $m->query($sql);
+						$sql = "update __PREFIX__goods set isSale=0,goodsStatus=0 where shopId=".$shopId;
+			 	        $m->execute($sql);
 			 	        $shopMessage = "您的店铺状态已被改为“未审核”状态，如有疑问请与商场管理员联系。";
 					}
 					if($shops['shopStatus']!=1 && $data['shopStatus']==1){
@@ -245,8 +245,8 @@ class ShopsModel extends BaseModel {
 						if($v=='' || $v=='0')continue;
 						    $tmp = array();
 							$tmp['shopId'] = $shopId;
-							$tmp['areaId1'] = I("areaId1");
-							$tmp['areaId2'] = I("areaId2");
+							$tmp['areaId1'] = (int)I("areaId1");
+							$tmp['areaId2'] = (int)I("areaId2");
 							$tmp['areaId3'] = $v;
 							$tmp['communityId'] = 0;
 							$ra = $m->add($tmp);
@@ -278,14 +278,14 @@ class ShopsModel extends BaseModel {
 	  */
      public function get(){
 	 	$m = M('shops');
-		$rs = $m->where("shopId=".I('id'))->find();
+		$rs = $m->where("shopId=".(int)I('id'))->find();
 		$m = M('users');
 		$us = $m->where("userId=".$rs['userId'])->find();
 		$rs['userName'] = $us['userName'];
 		$rs['userPhone'] = $us['userPhone'];
 		//获取店铺社区关系
 		$m = M('shops_communitys');
-		$rc = $m->where('shopId='.I('id'))->select();
+		$rc = $m->where('shopId='.(int)I('id'))->select();
 		$relateArea = array();
 		$relateCommunity = array();
 		if(count($rc)>0){
@@ -309,7 +309,7 @@ class ShopsModel extends BaseModel {
 	 	//获取店铺资料
 	 	$shops = $m->where("shopId=".$shopId)->find();
 	 	$data = array();
-	 	$data['shopStatus'] = I('shopStatus',-1);
+	 	$data['shopStatus'] = (int)I('shopStatus',-1);
 	 	$data['statusRemarks'] = I('statusRemarks');
 	 	if($this->checkEmpty($data,true)){
 		 	$rs = $m->where("shopId=".$shopId)->save($data);
@@ -318,8 +318,8 @@ class ShopsModel extends BaseModel {
 				if($shops['shopStatus']!=$data['shopStatus']){
 					$shopMessage = '';
 					if($data['shopStatus']!=1){
-						$sql = "update __PREFIX__goods set isSale=0 where shopId=".$shopId;
-			 	        $m->query($sql);
+						$sql = "update __PREFIX__goods set isSale=0,goodsStatus=0 where shopId=".$shopId;
+			 	        $m->execute($sql);
 			 	        if($data['shopStatus']==0){
 			 	        	$shopMessage = "您的店铺状态已被改为“未审核”状态，如有疑问请与商场管理员联系。";
 			 	        }else{
@@ -349,8 +349,8 @@ class ShopsModel extends BaseModel {
 	  */
      public function queryByPage(){
         $m = M('shops');
-        $areaId1 = I('areaId1',0);
-     	$areaId2 = I('areaId2',0);
+        $areaId1 = (int)I('areaId1',0);
+     	$areaId2 = (int)I('areaId2',0);
 	 	$sql = "select shopId,shopSn,shopName,u.userName,shopAtive,shopStatus,gc.catName from __PREFIX__shops s,__PREFIX__users u ,__PREFIX__goods_cats gc 
 	 	     where gc.catId=s.goodsCatId1 and s.userId=u.userId and shopStatus=1 and shopFlag=1 ";
 	 	if(I('shopName')!='')$sql.=" and shopName like '%".I('shopName')."%'";
@@ -365,8 +365,8 @@ class ShopsModel extends BaseModel {
 	  */
      public function queryPeddingByPage(){
         $m = M('shops');
-        $areaId1 = I('areaId1',0);
-     	$areaId2 = I('areaId2',0);
+        $areaId1 = (int)I('areaId1',0);
+     	$areaId2 = (int)I('areaId2',0);
 	 	$sql = "select shopId,shopSn,shopName,u.userName,shopAtive,shopStatus,gc.catName from __PREFIX__shops s,__PREFIX__users u ,__PREFIX__goods_cats gc 
 	 	     where gc.catId=s.goodsCatId1 and s.userId=u.userId and shopStatus<=0 and shopFlag=1";
 	 	if(I('shopName')!='')$sql.=" and shopName like '%".I('shopName')."%'";
@@ -390,11 +390,22 @@ class ShopsModel extends BaseModel {
 	  * 删除
 	  */
 	 public function del(){
+	 	$shopId = (int)I('id');
 	    $rd = array('status'=>-1);
-	 	$m = M('shops');
+	    $m = M('shops');
+	    //下架所有商品
+	    $sql = "update __PREFIX__goods set isSale=0,goodsStatus=-1 where shopId=".$shopId;
+		$m->execute($sql);
+		$sql = "select userId from __PREFIX__shops where shopId=".$shopId;
+		$shop = $this->queryRow($sql);
+		//删除登录账号
+		$sql = "update __PREFIX__users set userFlag=-1 where userId=".$shop['userId'];
+		$m->execute($sql);
+		//标记店铺删除状态
 	    $data = array();
 		$data["shopFlag"] = -1;
-	 	$rs = $m->where("shopId=".I('id'))->save($data);
+		$data["shopStatus"] = -2;
+	 	$rs = $m->where("shopId=".$shopId)->save($data);
 	    if(false !== $rs){
 			$rd['status']= 1;
 		}

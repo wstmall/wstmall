@@ -15,7 +15,7 @@ class BrandsModel extends BaseModel {
 	public function queryBrandsByDistrict(){
 		$areaId3 = (int)I("areaId3");
 		$brandName = I("brandName");
-		$pcurr = I("pcurr");
+		$pcurr = (int)I("pcurr");
 		
 		$sql = "SELECT bs.brandId,bs.brandName,bs.brandIco FROM __PREFIX__brands bs,__PREFIX__shops sp,__PREFIX__goods g,__PREFIX__goods_cat_brands gcb
 						WHERE bs.brandId=g.brandId AND g.shopId=sp.shopId AND gcb.brandId=bs.brandId AND bs.brandFlag = 1";

@@ -52,13 +52,24 @@
 						    <!--缩图结束-->
 						  </div>
 						  <!--产品参数结束-->
+						  <div class='wst-short-tool'>
+						       <div style='float:left;'>商品编号：{$goodsDetails["goodsSn"]}</div>
+						       <div style='float:right;'>
+						         <a href='javascript:favoriteGoods({$goodsDetails['goodsId']})'>
+						         <b></b>
+						         <span id='f0_txt' f='{$favoriteGoodsId}'>
+						         <if condition="$favoriteGoodsId gt 0">已关注<else/>关注商品</if>
+						         </span>
+						         </a>
+						       </div>
+						  </div>
 					</div>
 					<div class="goods-des-box">
 						<table class="goods-des-tab">
 							<tbody>
 								<tr>
 									<td colspan="2">
-										<div class="des-title">
+										<div class="des-title" style="word-break:break-all;">
 											{$goodsDetails["goodsName"]}
 										</div>
 										<div class='wst-goods-spec'>{$goodsDetails["goodsSpec"]|htmlspecialchars_decode}</div>
@@ -70,10 +81,6 @@
 											价格：<span id='shopGoodsPrice_{$goodsDetails["goodsId"]}' dataId='{$goodsDetails["goodsAttrId"]}'>￥{$goodsDetails["shopPrice"]}</span>
 										</div>
 									</td>
-								</tr>
-								<tr>
-									<td width="70"><span class="des-title-span">商品编号：</span></td>
-									<td>{$goodsDetails["goodsSn"]}</td>
 								</tr>
 								<tr>
 									<td width="70"><span class="des-title-span">配送至：</span></td>
@@ -159,7 +166,12 @@
 								</tr>
 								</if>
 								<tr>
-									<td ></td>
+									<td style="position: relative;">
+									<div id='qrBox' style='position:absolute ;top:-50px;left:450px;padding:2px;'>
+										<div id='qrcode' style='width:132px;height:132px;border:1px solid #ddd;margin-bottom:2px;'></div>
+										<div>下载移动客户端扫一扫</div>
+									</div>
+									</td>
 									<td></td>
 								</tr>
 								<if condition="$goodsDetails['goodsStock'] gt 0">
@@ -185,6 +197,7 @@
 								</if>
 							</tbody>
 						</table>
+						
 					</div>
 				</div>
 				<div class="details-right">
@@ -241,7 +254,12 @@
 							<tr>
 								<td colspan="2" class="wst-shop-eval">
 									<div class="shop-eval-box" style="width:214px;margin:0 auto;">
-										<a href="{:U('Home/Shops/toShopHome/',array('shopId'=>$goodsDetails['shopId']))}"><img src="__ROOT__/Apps/Home/View/default/images/btn_into.png" width="112" height="38"/></a>
+										<a class='wst-shop-btn' href="{:U('Home/Shops/toShopHome/',array('shopId'=>$goodsDetails['shopId']))}">
+										进入店铺
+										</a>
+										<a class='wst-shop-btn' href="javascript:favoriteShops({$goodsDetails['shopId']})">
+										<span id='f1_txt' f='{$favoriteShopId}'><if condition="$favoriteShopId gt 0">已关注<else/>关注店铺</if></span>
+										</a>
 									</div>
 								</td>
 							</tr>
@@ -270,7 +288,7 @@
 						<div class="wst-clear"></div>
 					</div>
 					<div class="tabcon">
-						<div style="font-weight:bolder;height:auto;line-height:30px;padding-left:8px;">
+						<div id="wst_goods_desc" style="font-weight:bolder;height:auto;line-height:30px;padding-left:8px;">
 						{$goodsDetails["goodsDesc"]}
 						</div>
 					</div>
@@ -310,23 +328,32 @@
 		<include file="./Apps/Home/View/default/right_cart.html" />
    	</body>
    	
-   	<script src="__ROOT__/Apps/Home/View/default/js/goods.js"></script>
+<script src="__ROOT__/Apps/Home/View/default/js/goods.js"></script>
 <script src="__PUBLIC__/js/common.js"></script>
 <script src="__ROOT__/Apps/Home/View/default/js/head.js" type="text/javascript"></script>
 <script src="__ROOT__/Apps/Home/View/default/js/common.js" type="text/javascript"></script>
 <script src="__ROOT__/Apps/Home/View/default/js/pslocation.js" type="text/javascript"></script>
 <script src="__ROOT__/Apps/Home/View/default/js/jquery.jqzoom.js" type="text/javascript"></script>
 <script src="__ROOT__/Apps/Home/View/default/js/magnifier.js" type="text/javascript"></script>
-<script src="__ROOT__/Apps/Home/View/default/js/jquery.page.js" type="text/javascript"></script>
+<script src="__PUBLIC__/js/qrcode.js"></script>
 <script> 
 $("#store-selector").hover(function() {
-}, function() {
+}, function(){
 	$("#store-selector").removeClass("hover");
 });
 
 
 $(function(){
+	var qr = qrcode(10, 'M');
+	qr.addData("{$qrcode}");
+	qr.make();
+	$('#qrcode').html(qr.createImgTag());
 	getGoodsappraises({$goodsDetails["goodsId"]},0);
+	$("#wst_goods_desc img").each(function(){
+		if($(this).width()>940){
+			$(this).width(940);
+		}
+	});
 });
 </script>
    	

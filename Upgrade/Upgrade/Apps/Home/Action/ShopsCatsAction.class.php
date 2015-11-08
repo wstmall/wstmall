@@ -16,7 +16,7 @@ class ShopsCatsAction extends BaseAction{
     	$this->isShopLogin();
 		$m = D('Home/ShopsCats');
     	$rs = array();
-    	if(I('id',0)>0){
+    	if((int)I('id',0)>0){
     		$rs = $m->editName();
     	}
     	$this->ajaxReturn($rs);
@@ -28,7 +28,7 @@ class ShopsCatsAction extends BaseAction{
     	$this->isShopLogin();
 		$m = D('Home/ShopsCats');
     	$rs = array();
-    	if(I('id',0)>0){
+    	if((int)I('id',0)>0){
     		$rs = $m->editSort();
     	}
     	$this->ajaxReturn($rs);
@@ -76,9 +76,9 @@ class ShopsCatsAction extends BaseAction{
 		$this->ajaxReturn($rs);
 	}
 	
-	public function ChangeCatStatus(){
+	public function changeCatStatus(){
 		$m = D('Home/ShopsCats');
-		$rs = $m->ChangeCatStatus($USER['shopId']);
+		$rs = $m->changeCatStatus($USER['shopId']);
 		$this->ajaxReturn($rs);
 	}
 };

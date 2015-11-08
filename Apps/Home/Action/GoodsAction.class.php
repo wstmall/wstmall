@@ -16,7 +16,6 @@ class GoodsAction extends BaseAction {
    		$mgoods = D('Home/Goods');
    		$mareas = D('Home/Areas');
    		$mcommunitys = D('Home/Communitys');
-   		$mcommon = D('Home/Common');
    		//获取默认城市及县区
    		$areaId2 = $this->getDefaultCity();
    		$districts = $mareas->getDistricts($areaId2);
@@ -79,7 +78,7 @@ class GoodsAction extends BaseAction {
    		$this->assign('eprice',$pricelist[1]);
    		
    		$this->assign('brandId',I("brandId",0));
-   		$this->assign('keyWords',I("keyWords"));
+   		$this->assign('keyWords',urldecode(I("keyWords")));
 		$this->assign('brands',$brands);
 		$this->assign('goodsNav',$goodsNav);
 		$this->assign('pages',$pages);
@@ -96,6 +95,7 @@ class GoodsAction extends BaseAction {
 	 * 
 	 */
 	public function getGoodsDetails(){
+
 		$goods = D('Home/Goods');
 		$kcode = I("kcode");
 		$scrictCode = base64_encode(md5("wstmall".date("Y-m-d")));
@@ -151,7 +151,13 @@ class GoodsAction extends BaseAction {
 			if(!empty($viewGoods)){
 				cookie("viewGoods",$viewGoods,25920000);
 			}
-			
+			//获取关注信息
+			$m = D('Home/Favorites');
+			$this->assign("favoriteGoodsId",$m->checkFavorite($goodsId,0));
+			$m = D('Home/Favorites');
+			$this->assign("favoriteShopId",$m->checkFavorite($shopId,1));
+			//客户端二维码
+		$this->assign("qrcode",base64_encode("{type:'goods',content:'".$goodsId."',key:'wstmall'}"));
 			$this->display('default/goods_details');
 		}else{
 			$this->display('default/goods_notexist');
@@ -278,7 +284,7 @@ class GoodsAction extends BaseAction {
 		$this->isShopLogin();
 		$m = D('Home/Goods');
     	$rs = array();
-    	if(I('id',0)>0){
+    	if((int)I('id',0)>0){
     		$rs = $m->edit();
     	}else{
     		$rs = $m->insert();
@@ -397,11 +403,35 @@ class GoodsAction extends BaseAction {
      * 修改 推荐/精品/新品/热销/上架
      */
     public function changSaleStatus(){
+    	$this->isShopLogin();
     	$m = D('Home/Goods');
     	$rs = $m->changSaleStatus();
     	$this->ajaxReturn($rs);
     }
     
-    
+    /**
+     * 上传商品数据
+     */
+    public function importGoods(){
+    	$this->isShopLogin();
+    	$config = array(
+		        'maxSize'       =>  0, //上传的文件大小限制 (0-不做限制)
+		        'exts'          =>  array('xls','xlsx','xlsm'), //允许上传的文件后缀
+		        'rootPath'      =>  './Upload/', //保存根路径
+		        'driver'        =>  'LOCAL', // 文件上传驱动
+		        'subName'       =>  array('date', 'Y-m'),
+		        'savePath'      =>  I('dir','uploads')."/"
+		);
+		$upload = new \Think\Upload($config);
+		$rs = $upload->upload($_FILES);
+		$rv = array('status'=>-1);
+		if(!$rs){
+			$rv['msg'] = $upload->getError();
+		}else{
+			$m = D('Home/Goods');
+    	    $rv = $m->importGoods($rs);
+		}
+    	$this->ajaxReturn($rv);
+    }
 	
 }

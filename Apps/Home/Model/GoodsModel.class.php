@@ -17,18 +17,22 @@ class GoodsModel extends BaseModel {
 		$areaId2 = $obj["areaId2"];
 		$areaId3 = $obj["areaId3"];
 		$communityId = I("communityId");
-		$c1Id = I("c1Id",0);
-		$c2Id = I("c2Id");
-		$c3Id = I("c3Id");
-		$pcurr = I("pcurr");
-		$msort = I("msort",1);//排序标识
+		$c1Id = (int)I("c1Id",0);
+		$c2Id = (int)I("c2Id");
+		$c3Id = (int)I("c3Id");
+		$pcurr = (int)I("pcurr");
+		$msort = (int)I("msort",1);//排序标识
 		$prices = I("prices");
 		if($prices != ""){
 			$pricelist = explode("_",$prices);
 		}
 		$brandId = I("brandId",0);
 		
-		$keyWords = I("keyWords");
+		$keyWords = urldecode(I("keyWords"));
+		$words = array();
+		if($keyWords!=""){
+			$words = explode(" ",$keyWords);
+		}
 		
 		$sql = "SELECT  g.goodsId,goodsSn,goodsName,goodsThums,goodsStock,g.saleCount,p.shopId,marketPrice,shopPrice,ga.id goodsAttrId 
 				FROM __PREFIX__goods g left join __PREFIX__goods_attributes ga on g.goodsId=ga.goodsId and ga.isRecomm=1, __PREFIX__shops p ";
@@ -59,8 +63,14 @@ class GoodsModel extends BaseModel {
 		if($areaId3>0){
 			$sql .= " AND p.areaId3 = $areaId3";
 		}
-		if($keyWords!=""){
-			$sql .= " AND g.goodsName LIKE '%$keyWords%'";
+		if(!empty($words)){
+			$sarr = array();
+			foreach ($words as $key => $word) {
+				if($word!=""){
+					$sarr[] = "g.goodsName LIKE '%$word%'";
+				}
+			}
+			$sql .= " AND (".implode(" or ", $sarr).")";
 		}
 		$glist = $this->query($sql);
 		$shops = array();
@@ -90,7 +100,6 @@ class GoodsModel extends BaseModel {
 		}else if($msort==11){//上架时间
 			$sql .= " ORDER BY g.saleTime DESC ";
 		}
-
 		$pages = $this->pageQuery($sql,$pcurr,30);
 		$rs["maxPrice"] = $maxPrice;
 		$brands = array();
@@ -120,15 +129,19 @@ class GoodsModel extends BaseModel {
 	public function getMaxPrice($obj){
 		$areaId2 = $obj["areaId2"];
 
-		$c1Id = I("c1Id");
-		$c2Id = I("c2Id");
-		$c3Id = I("c3Id");
+		$c1Id = (int)I("c1Id");
+		$c2Id = (int)I("c2Id");
+		$c3Id = (int)I("c3Id");
 		
-		$keyWords = I("keyWords");
+		$keyWords = urldecode(I("keyWords"));
+		$words = array();
+		if($keyWords!=""){
+			$words = explode(" ",$keyWords);
+		}
 		
 		$sql = "SELECT bd.brandId,bd.brandName, goodsId,goodsSn,goodsName,goodsThums,g.saleCount,p.shopId,marketPrice,shopPrice,p.shopName 
 				FROM __PREFIX__goods g , __PREFIX__brands bd, __PREFIX__shops p ";
-		$sql .= "WHERE p.areaId2 = $areaId2 AND g.shopId = p.shopId AND bd.brandId=p.brandId AND  g.goodsStatus=1 AND g.goodsFlag = 1";
+		$sql .= "WHERE p.areaId2 = $areaId2 AND g.shopId = p.shopId AND bd.brandId=g.brandId AND  g.goodsStatus=1 AND g.goodsFlag = 1";
 		
 		if($c1Id>0){
 			$sql .= " AND g.goodsCatId1 = $c1Id";
@@ -139,8 +152,14 @@ class GoodsModel extends BaseModel {
 		if($c3Id>0){
 			$sql .= " AND g.goodsCatId3 = $c3Id";
 		}
-		if($keyWords!=""){
-			$sql .= " AND g.goodsName LIKE '%$keyWords%'";
+		if(!empty($words)){
+			$sarr = array();
+			foreach ($words as $key => $word) {
+				if($word!=""){
+					$sarr[] = "g.goodsName LIKE '%$word%'";
+				}
+			}
+			$sql .= " AND (".implode(" or ", $sarr).")";
 		}
 		$sql .= " ORDER BY g.saleCount DESC";
 		$glist = $this->query($sql);
@@ -180,11 +199,11 @@ class GoodsModel extends BaseModel {
 	 * 获取商品信息-购物车/核对订单用
 	 */
     public function getGoodsForCheck($obj){		
-		$goodsId = $obj["goodsId"];
-		$goodsAttrId = $obj["goodsAttrId"];
+		$goodsId = (int)$obj["goodsId"];
+		$goodsAttrId = (int)$obj["goodsAttrId"];
 		$sql = "SELECT sc.catName,sc2.catName as pCatName, g.attrCatId,g.goodsThums,g.goodsId,g.goodsName,g.shopPrice,g.goodsStock
-				,g.shopId,shop.shopName,shop.deliveryType,shop.shopAtive,shop.shopTel,shop.shopAddress,shop.deliveryTime,shop.isInvoice, 
-				shop.deliveryStartMoney,g.goodsStock,shop.deliveryFreeMoney,shop.deliveryMoney ,g.goodsSn,shop.serviceStartTime,shop.serviceEndTime
+				,g.shopId,shop.shopName,shop.qqNo,shop.deliveryType,shop.shopAtive,shop.shopTel,shop.shopAddress,shop.deliveryTime,shop.isInvoice, 
+				shop.deliveryStartMoney,g.goodsStock,shop.deliveryFreeMoney,shop.deliveryMoney ,g.goodsSn,shop.serviceStartTime startTime,shop.serviceEndTime endTime
 				FROM __PREFIX__goods g, __PREFIX__shops shop, __PREFIX__shops_cats sc 
 				LEFT JOIN __PREFIX__shops_cats sc2 ON sc.parentId = sc2.catId
 				WHERE g.goodsId = $goodsId AND shop.shopId=sc.shopId AND sc.catId=g.shopCatId1 AND g.shopId = shop.shopId AND g.goodsFlag = 1 ";		
@@ -209,9 +228,9 @@ class GoodsModel extends BaseModel {
 	 * 获取商品的属性
 	 */
 	public function getAttrs($obj){
-		$id = $obj["goodsId"];
-		$shopId = $obj["shopId"];
-		$attrCatId = $obj["attrCatId"];
+		$id = (int)$obj["goodsId"];
+		$shopId = (int)$obj["shopId"];
+		$attrCatId = (int)$obj["attrCatId"];
 		$goods = array();
 		//获取规格属性
 		$sql = "select ga.id,ga.attrVal,ga.attrPrice,ga.attrStock,a.attrId,a.attrName,a.isPriceAttr
@@ -242,7 +261,7 @@ class GoodsModel extends BaseModel {
 	 */
 	public function getGoodsImgs(){
 		
-		$goodsId = I("goodsId");
+		$goodsId = (int)I("goodsId");
 	
 		$sql = "SELECT img.* FROM __PREFIX__goods_gallerys img WHERE img.goodsId = $goodsId ";		
 		$rs = $this->query($sql);
@@ -256,7 +275,7 @@ class GoodsModel extends BaseModel {
 	 */
 	public function getRelatedGoods(){
 		
-		$goodsId = I("goodsId");
+		$goodsId = (int)I("goodsId");
 		$sql = "SELECT g.* FROM __PREFIX__goods g, ".DB_PRE."goods_relateds gr WHERE g.goodsId = gr.relatedGoodsId AND g.goodsStock>0 AND g.goodsStatus = 1 AND gr.goodsId =$goodsId";
 		$rs = $this->query($sql);
 		return $rs;
@@ -268,8 +287,8 @@ class GoodsModel extends BaseModel {
 	 */
 	public function queryOnSaleByPage(){
 		$shopId=(int)session('WST_USER.shopId');
-		$shopCatId1 = I('shopCatId1',0);
-		$shopCatId2 = I('shopCatId2',0);
+		$shopCatId1 = (int)I('shopCatId1',0);
+		$shopCatId2 = (int)I('shopCatId2',0);
 		$goodsName = I('goodsName');
 		$sql = "select g.goodsId,g.goodsSn,g.goodsName,g.goodsImg,g.goodsThums,g.shopPrice,g.goodsStock,g.saleCount,g.isSale,g.isRecomm,g.isHot,g.isBest,g.isNew,ga.isRecomm as attIsRecomm from __PREFIX__goods g
 				left join __PREFIX__goods_attributes ga on g.goodsId = ga.goodsId and ga.isRecomm = 1
@@ -287,8 +306,8 @@ class GoodsModel extends BaseModel {
 	 */
 	public function queryUnSaleByPage(){
 		$shopId=(int)session('WST_USER.shopId');
-		$shopCatId1 = I('shopCatId1',0);
-		$shopCatId2 = I('shopCatId2',0);
+		$shopCatId1 = (int)I('shopCatId1',0);
+		$shopCatId2 = (int)I('shopCatId2',0);
 		$goodsName = I('goodsName');
 		$sql = "select g.goodsId,g.goodsSn,g.goodsName,g.goodsImg,g.goodsThums,g.shopPrice,g.goodsStock,g.saleCount,g.isSale,g.isRecomm,g.isHot,g.isBest,g.isNew,ga.isRecomm as attIsRecomm from __PREFIX__goods  g
 				left join __PREFIX__goods_attributes ga on g.goodsId = ga.goodsId and ga.isRecomm = 1
@@ -305,8 +324,8 @@ class GoodsModel extends BaseModel {
 	 */
 	public function queryPenddingByPage(){
 		$shopId=(int)session('WST_USER.shopId');
-		$shopCatId1 = I('shopCatId1',0);
-		$shopCatId2 = I('shopCatId2',0);
+		$shopCatId1 = (int)I('shopCatId1',0);
+		$shopCatId2 = (int)I('shopCatId2',0);
 		$goodsName = I('goodsName');
 		$sql = "select g.goodsId,g.goodsSn,g.goodsName,g.goodsImg,g.goodsThums,g.shopPrice,g.goodsStock,g.saleCount,g.isSale,g.isRecomm,g.isHot,g.isBest,g.isNew,ga.isRecomm as attIsRecomm from __PREFIX__goods g
 				left join __PREFIX__goods_attributes ga on g.goodsId = ga.goodsId and ga.isRecomm = 1
@@ -422,7 +441,7 @@ class GoodsModel extends BaseModel {
 							}
 							//更新商品总库存
 							$sql = "update __PREFIX__goods set goodsStock=".$totalStock." where goodsId=".$goodsId;
-							$m->query($sql);
+							$m->execute($sql);
 						}
 					}
 				}
@@ -452,7 +471,7 @@ class GoodsModel extends BaseModel {
 	 */
 	public function edit(){
 		$rd = array('status'=>-1);
-	 	$goodsId = I("id",0);
+	 	$goodsId = (int)I("id",0);
 	 	$shopId = (int)session('WST_USER.shopId');
 	    //查询商家状态
 		$sql = "select shopStatus from __PREFIX__shops where shopFlag = 1 and shopId=".$shopId;
@@ -566,7 +585,7 @@ class GoodsModel extends BaseModel {
 								$sql .= ",shopPrice=".$recommPrice;
 							}
 							$sql .= " where goodsId=".$goodsId;
-							$m->query($sql);
+							$m->execute($sql);
 						}
 					}
 				}
@@ -599,7 +618,7 @@ class GoodsModel extends BaseModel {
 	 */
 	 public function get(){
 	 	$m = M('goods');
-	 	$id = I('id',0);
+	 	$id = (int)I('id',0);
 	 	$shopId = (int)session('WST_USER.shopId');
 		$goods = $m->where("goodsId=".$id." and shopId=".$shopId)->find();
 		if(empty($goods))return array();
@@ -754,7 +773,12 @@ class GoodsModel extends BaseModel {
 		
 		$sprice = I("sprice");//开始价格
 		$eprice = I("eprice");//结束价格
-		$goodsName = I("goodsName");//搜索店鋪名
+		//$goodsName = I("goodsName");//搜索店鋪名
+		$goodsName = urldecode(I("goodsName"));//搜索店鋪名
+		$words = array();
+		if($goodsName!=""){
+			$words = explode(" ",$goodsName);
+		}
 		$sql = "SELECT sp.shopName, g.saleCount totalnum, sp.shopId ,g.goodsStock, g.goodsId , g.goodsName,g.goodsImg, g.goodsThums,g.shopPrice,g.marketPrice, g.goodsSn,ga.id goodsAttrId 
 						FROM __PREFIX__goods g left join __PREFIX__goods_attributes ga on g.goodsId = ga.goodsId and ga.isRecomm=1,__PREFIX__shops sp 
 						WHERE g.shopId = sp.shopId AND sp.shopFlag=1 AND sp.shopStatus=1 AND g.goodsFlag = 1 AND g.isSale = 1 AND g.goodsStatus = 1 AND g.shopId = $shopId";
@@ -771,9 +795,17 @@ class GoodsModel extends BaseModel {
 		if($eprice!=""){
 			$sql .= " AND g.shopPrice <= '$eprice' ";
 		}
-		if($goodsName!=""){
-			$sql .= " AND g.goodsName like '%$goodsName%' ";
+
+		if(!empty($words)){
+			$sarr = array();
+			foreach ($words as $key => $word) {
+				if($word!=""){
+					$sarr[] = "g.goodsName LIKE '%$word%'";
+				}
+			}
+			$sql .= " AND (".implode(" or ", $sarr).")";
 		}
+		
 		if($msort==1){//综合
 			$sql .= " ORDER BY g.saleCount DESC ";
 		}else if($msort==2){//人气
@@ -1010,5 +1042,92 @@ class GoodsModel extends BaseModel {
 		$goods = $m->query($sql);
 		return  $goods;
 	
+	}
+	
+	/**
+	 * 上传商品数据
+	 */
+	public function importGoods($data){
+		$objReader = WSTReadExcel($data['file']['savepath'].$data['file']['savename']);
+        $objReader->setActiveSheetIndex(0); 
+        $sheet = $objReader->getActiveSheet();
+        $rows = $sheet->getHighestRow();
+        $cells = $sheet->getHighestColumn();
+        //数据集合
+        $readData = array();
+        $goodsCatMap = array();
+        $shopGoodsCatMap = array();
+        $brandMap = array();
+        $shopId = (int)session('WST_USER.shopId');
+        $goodsModel = M('goods');
+        $importNum = 0;
+        //循环读取每个单元格的数据
+        for ($row = 3; $row <= $rows; $row++){//行数是以第3行开始
+            $goods = array();
+            $goods['shopId'] = $shopId;
+            $goods['goodsSn'] = trim($sheet->getCell("A".$row)->getValue());
+            if($goods['goodsSn']=='')break;//如果某一行第一列为空则停止导入
+            $goods['goodsName'] = trim($sheet->getCell("B".$row)->getValue());
+            $goods['marketPrice'] = trim($sheet->getCell("C".$row)->getValue());
+            $goods['shopPrice'] = trim($sheet->getCell("D".$row)->getValue());
+            $goods['goodsStock'] = trim($sheet->getCell("E".$row)->getValue());
+            $goods['saleCount'] = trim($sheet->getCell("F".$row)->getValue());
+            $goods['goodsUnit'] = trim($sheet->getCell("G".$row)->getValue());
+            $goods['goodsSpec'] = trim($sheet->getCell("H".$row)->getValue());
+            $goods['goodsKeywords'] = trim($sheet->getCell("I".$row)->getValue());
+            $goods['isSale'] = 0;
+            $goods['isRecomm'] = (trim($sheet->getCell("J".$row)->getValue())!='')?1:0;
+            $goods['isBest'] = (trim($sheet->getCell("K".$row)->getValue())!='')?1:0;
+            $goods['isNew'] = (trim($sheet->getCell("L".$row)->getValue())!='')?1:0;
+            $goods['isHot'] = (trim($sheet->getCell("M".$row)->getValue())!='')?1:0;
+            //查询商城分类
+            $goodsCat = trim($sheet->getCell("N".$row)->getValue());
+            if($goodsCatMap[$goodsCat]==''){
+	            $sql = "select gc1.catId catId1,gc2.catId catId2,gc3.catId catId3,gc3.catName 
+	                    from __PREFIX__goods_cats gc3, __PREFIX__goods_cats gc2,__PREFIX__goods_cats gc1
+	                    where gc3.parentId=gc2.catId and gc2.parentId=gc1.catId and gc3.isShow=1 and gc2.isShow=1 and gc1.isShow=1
+	                    and gc3.catFlag=1 and gc2.catFlag=1 and gc1.catFlag=1 and gc3.catName='".$goodsCat."'";
+	            $trs = $this->queryRow($sql);
+	            if(!empty($trs)){
+	            	$goodsCatMap[$trs['catName']] = $trs;
+	            }
+            }
+            $goods['goodsCatId1'] = (int)$goodsCatMap[$goodsCat]['catId1'];
+            $goods['goodsCatId2'] = (int)$goodsCatMap[$goodsCat]['catId2'];
+            $goods['goodsCatId3'] = (int)$goodsCatMap[$goodsCat]['catId3'];
+            //查询商城分类
+            $shopGoodsCat = trim($sheet->getCell("O".$row)->getValue());
+            if($shopGoodsCatMap[$shopGoodsCat]==''){
+	            $sql = "select sc1.catId catId1,sc2.catId catId2,sc2.catName
+	                    from __PREFIX__shops_cats sc2, __PREFIX__shops_cats sc1
+	                    where sc2.parentId=sc1.catId
+	                    and sc2.catFlag=1 and sc1.catFlag=1 and sc1.shopId=".$shopId." and sc2.catName='".$shopGoodsCat."'";
+	            $trs = $this->queryRow($sql);
+	            if(!empty($trs)){
+	            	$shopGoodsCatMap[$trs['catName']] = $trs;
+	            }
+            }
+            $goods['shopCatId1'] = (int)$shopGoodsCatMap[$shopGoodsCat]['catId1'];
+            $goods['shopCatId2'] = (int)$shopGoodsCatMap[$shopGoodsCat]['catId2'];
+            //查询品牌
+            $brand = trim($sheet->getCell("P".$row)->getValue());
+            if($brandMap[$brand]==''){
+            	$sql="select brandId,brandName from __PREFIX__brands where brandName='".$brand."' and brandFlag=1";
+            	$trs = $this->queryRow($sql);
+	            if(!empty($trs)){
+	            	$brandMap[$trs['brandName']] = $trs;
+	            }
+            }
+            $goods['brandId'] = (int)$brandMap[$brand]['brandId'];
+            $goods['goodsDesc'] = trim($sheet->getCell("Q".$row)->getValue());
+            $goods['goodsStatus'] = 0;
+            $goods['goodsFlag'] = 1;
+            $goods['createTime'] = date('Y-m-d H:i:s');
+            //$val = preg_replace('/^[(\xc2\xa0)|\s]+/', '',$val);
+            $readData[] = $goods;
+            $importNum++;
+        }
+        if(count($readData)>0)$goodsModel->addAll($readData);
+        return array('status'=>1,'importNum'=>$importNum);
 	}
 }

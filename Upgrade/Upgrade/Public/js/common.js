@@ -4,7 +4,7 @@ $.browser.webkit = /webkit/.test(navigator.userAgent.toLowerCase());
 $.browser.opera = /opera/.test(navigator.userAgent.toLowerCase()); 
 $.browser.msie = /msie/.test(navigator.userAgent.toLowerCase());
 var WST = {};
-WST.v = '1.3.1';
+WST.v = '1.4.0';
 WST.pageHeight = function(){
 	if($.browser.msie){ 
 		return document.compatMode == "CSS1Compat"? document.documentElement.clientHeight : 
@@ -288,7 +288,7 @@ WST.msg = function(msg, options, func){
 		return layer.msg(msg, options);
 	}
 }
-WST.toJson = function(str){
+WST.toJson = function(str,notLimit){
 	var json = {};
 	try{
 		if(typeof(str )=="object"){
@@ -296,21 +296,23 @@ WST.toJson = function(str){
 		}else{
 			json = eval("("+str+")");
 		}
-		if(json.status && json.status=='-999'){
-			alert('对不起，您已经退出系统！请重新登录');
-			if(window.parent){
-				window.parent.location.reload();
-			}else{
-				location.reload();
+		if(!notLimit){
+			if(json.status && json.status=='-999'){
+				alert('对不起，您已经退出系统！请重新登录');
+				if(window.parent){
+					window.parent.location.reload();
+				}else{
+					location.reload();
+				}
+			}else if(json.status && json.status=='-998'){
+				if(Plugins){
+					Plugins.closeWindow();
+					Plugins.Tips({title:'信息提示',icon:'error',content:'对不起，您没有操作权限，请与管理员联系',timeout:1000});
+				}else{
+					alert('对不起，您没有操作权限，请与管理员联系');
+				}
+				return;
 			}
-		}else if(json.status && json.status=='-998'){
-			if(Plugins){
-				Plugins.closeWindow();
-				Plugins.Tips({title:'信息提示',icon:'error',content:'对不起，您没有操作权限，请与管理员联系',timeout:1000});
-			}else{
-				alert('对不起，您没有操作权限，请与管理员联系');
-			}
-			return;
 		}
 	}catch(e){
 		alert("系统发生错误:"+e.getMessage);
@@ -461,3 +463,16 @@ WST.cutStr = function (str,len)
 	}
 	return s;
 }
+WST.checkChks = function(obj,cobj){
+	$(cobj).each(function(){
+		$(this)[0].checked = obj.checked;
+	})
+}
+WST.getChks = function(obj){
+	var ids = [];
+	$(obj).each(function(){
+		if($(this)[0].checked)ids.push($(this).val());
+	});
+	return ids;
+}
+

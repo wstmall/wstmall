@@ -53,6 +53,9 @@ class GoodsAction extends BaseAction{
 		//获取地区信息
 		$m = D('Admin/Areas');
 		$this->assign('areaList',$m->queryShowByList(0));
+		//获取商品分类信息
+		$m = D('Admin/GoodsCats');
+		$this->assign('goodsCatsList',$m->queryByList());
 		$m = D('Admin/Goods');
     	$page = $m->queryByPage();
     	$pager = new \Think\Page($page['total'],$page['pageSize']);// 实例化分页类 传入总记录数和每页显示的记录数
@@ -62,6 +65,11 @@ class GoodsAction extends BaseAction{
     	$this->assign('goodsName',I('goodsName'));
     	$this->assign('areaId1',I('areaId1',0));
     	$this->assign('areaId2',I('areaId2',0));
+    	$this->assign('goodsCatId1',I('goodsCatId1',0));
+    	$this->assign('goodsCatId2',I('goodsCatId2',0));
+    	$this->assign('goodsCatId3',I('goodsCatId3',0));
+    	$this->assign('isAdminBest',I('isAdminBest',-1));
+    	$this->assign('isAdminRecom',I('isAdminRecom',-1));
         $this->display("/goods/list");
 	}
     /**
@@ -73,6 +81,9 @@ class GoodsAction extends BaseAction{
 		//获取地区信息
 		$m = D('Admin/Areas');
 		$this->assign('areaList',$m->queryShowByList(0));
+		//获取商品分类信息
+		$m = D('Admin/GoodsCats');
+		$this->assign('goodsCatsList',$m->queryByList());
 		$m = D('Admin/Goods');
     	$page = $m->queryPenddingByPage();
     	$pager = new \Think\Page($page['total'],$page['pageSize']);// 实例化分页类 传入总记录数和每页显示的记录数
@@ -83,6 +94,9 @@ class GoodsAction extends BaseAction{
     	$this->assign('goodsName',I('goodsName'));
     	$this->assign('areaId1',I('areaId1',0));
     	$this->assign('areaId2',I('areaId2',0));
+    	$this->assign('goodsCatId1',I('goodsCatId1',0));
+    	$this->assign('goodsCatId2',I('goodsCatId2',0));
+    	$this->assign('goodsCatId3',I('goodsCatId3',0));
         $this->display("/goods/list_pendding");
 	}
 	/**

@@ -247,5 +247,51 @@ function getGoodsappraises(goodsId,p){
 	});
 }
 
-
+function favoriteGoods(id){
+	if($('#f0_txt').attr('f')=='0'){
+		jQuery.post(Think.U("Home/Favorites/favoriteGoods") ,{id:id},function(data) {
+			var json = WST.toJson(data,1);
+			if(json.status==1){
+				$('#f0_txt').html('已关注');
+				$('#f0_txt').attr('f',json.id);
+			}else if(json.status==-999){
+				WST.msg('关注失败，请先登录!');
+			}else{
+				WST.msg('关注失败!');
+			}
+		});
+	}else{
+		id = $('#f0_txt').attr('f');
+		cancelFavorites(id,0);
+	}
+}
+function favoriteShops(id){
+	if($('#f1_txt').attr('f')=='0'){
+		jQuery.post(Think.U("Home/Favorites/favoriteShops") ,{id:id},function(data) {
+			var json = WST.toJson(data,1);
+			if(json.status==1){
+				$('#f1_txt').html('已关注');
+				$('#f1_txt').attr('f',json.id);
+			}else if(json.status==-999){
+				WST.msg('关注失败，请先登录!');
+			}else{
+				WST.msg('关注失败!');
+			}
+		});
+	}else{
+		id = $('#f1_txt').attr('f');
+		cancelFavorites(id,1);
+	}
+}
+function cancelFavorites(id,type){
+	jQuery.post(Think.U("Home/Favorites/cancelFavorite") ,{id:id,type:type},function(data) {
+		var json = WST.toJson(data,1);
+		if(json.status==1){
+			$('#f'+type+'_txt').html('关注'+((type==1)?'店铺':'商品'));
+			$('#f'+type+'_txt').attr('f',0);
+		}else{
+			WST.msg('取消关注失败!');
+		}
+	});
+}
 

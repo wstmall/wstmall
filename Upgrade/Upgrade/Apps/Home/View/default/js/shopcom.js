@@ -11,20 +11,7 @@ function getChks(){
 	});
 	return ids.join(',');
 }
-$.fn.TabPanel = function(options){
-	var defaults = {    
-		tab: 0      
-	}; 
-	var opts = $.extend(defaults, options);
-	var t = this;
-	$(t).find('.wst-tab-nav li').click(function(){
-		$(this).addClass("on").siblings().removeClass();
-		var index = $(this).index();
-		$(t).find('.wst-tab-content .wst-tab-item').eq(index).show().siblings().hide();
-		if(opts.callback)opts.callback(index);
-	});
-	$(t).find('.wst-tab-nav li').eq(opts.tab).click();
-}
+
 /****************************商品操作**************************/
 function queryUnSaleByPage(){
 	var shopCatId1 = $('#shopCatId1').val();
@@ -187,6 +174,10 @@ function getShopCatListForEdit(v,id){
 	   var params = {};
 	   params.id = v;
 	   $('#shopCatId2').empty();
+	   if(v==0){
+		   $('#shopCatId2').html('<option value="">请选择</option>');
+		   return;
+	   }
 	   var html = [];
 	   $.post(Think.U('Home/ShopsCats/queryByList'),params,function(data,textStatus){
 		    html.push('<option value="">请选择</option>');
@@ -619,11 +610,38 @@ function shopOrderAccept(id){
 			}
 	   });
 	});
-	
 }
-//包装
+//批量受理
+function batchShopOrderAccept(){
+	var ids = WST.getChks('.chk_0');
+	ids = ids.join(',');
+	if(ids==''){
+		WST.msg('请选择要受理的订单 !', {icon: 5});
+		return;
+	}
+	layer.confirm('您确定受理这些订单吗？', {icon: 3, title:'系统提示'}, function(tips){
+	    var ll = layer.load('数据处理中，请稍候...');
+	    $.post(Think.U('Home/Orders/batchShopOrderAccept'),{orderIds:ids},function(data){
+	    	layer.close(ll);
+	    	layer.close(tips);
+	    	var json = WST.toJson(data);
+			if(json.status>0){
+				$(".wst-tab-nav").find("li").eq(statusMark).click();
+			}else if(json.status==-1){
+				WST.msg('操作失败，订单状态已发生改变，请刷新后再重试 !', {icon: 5});
+			}else if(json.status==-2){
+				WST.msg('操作完成，部分订单状态已发生改变，请注意核对订单状态 !', {icon: 5},function(){
+					$(".wst-tab-nav").find("li").eq(statusMark).click();
+				});
+			}else{
+				WST.msg('操作失败，请与商城管理员联系 !', {icon: 5});
+			}
+	   });
+	});
+}
+//打包
 function shopOrderProduce(id){
-	layer.confirm('确定打包中吗？',{icon: 3, title:'系统提示'}, function(tips){
+	layer.confirm('您确定打包该商品吗？',{icon: 3, title:'系统提示'}, function(tips){
 	    var ll = layer.load('数据处理中，请稍候...');
 	    $.post(Think.U('Home/Orders/shopOrderProduce'),{orderId:id},function(data){
 	    	layer.close(ll);
@@ -638,7 +656,34 @@ function shopOrderProduce(id){
 			}
 	   });
 	});
-	
+}
+//批量打包
+function batchShopOrderProduce(){
+	var ids = WST.getChks('.chk_1');
+	ids = ids.join(',');
+	if(ids==''){
+		WST.msg('请选择要打包的订单 !', {icon: 5});
+		return;
+	}
+	layer.confirm('您确定打包这些商品吗？',{icon: 3, title:'系统提示'}, function(tips){
+	    var ll = layer.load('数据处理中，请稍候...');
+	    $.post(Think.U('Home/Orders/batchShopOrderProduce'),{orderIds:ids},function(data){
+	    	layer.close(ll);
+	    	layer.close(tips);
+	    	var json = WST.toJson(data);
+	    	if(json.status>0){
+				$(".wst-tab-nav").find("li").eq(statusMark).click();
+			}else if(json.status==-1){
+				WST.msg('操作失败，订单状态已发生改变，请刷新后再重试 !', {icon: 5});
+			}else if(json.status==-2){
+				WST.msg('操作完成，部分订单状态已发生改变，请注意核对订单状态 !', {icon: 5},function(){
+					$(".wst-tab-nav").find("li").eq(statusMark).click();
+				});
+			}else{
+				WST.msg('操作失败，请与商城管理员联系 !', {icon: 5});
+			}
+	   });
+	});
 }
 //发货配送
 function shopOrderDelivery(id){
@@ -657,7 +702,34 @@ function shopOrderDelivery(id){
 			}
 	   });
 	});
-	
+}
+//批量发货配送
+function batchShopOrderDelivery(id){
+	var ids = WST.getChks('.chk_2');
+	ids = ids.join(',');
+	if(ids==''){
+		WST.msg('请选择要发货的订单 !', {icon: 5});
+		return;
+	}
+	layer.confirm('您确定这些订单正在发货吗？',{icon: 3, title:'系统提示'}, function(tips){
+	    var ll = layer.load('数据处理中，请稍候...');
+	    $.post(Think.U('Home/Orders/batchShopOrderDelivery'),{orderIds:ids},function(data){
+	    	layer.close(ll);
+	    	layer.close(tips);
+	    	var json = WST.toJson(data);
+	    	if(json.status>0){
+				$(".wst-tab-nav").find("li").eq(statusMark).click();
+			}else if(json.status==-1){
+				WST.msg('操作失败，订单状态已发生改变，请刷新后再重试 !', {icon: 5});
+			}else if(json.status==-2){
+				WST.msg('操作完成，部分订单状态已发生改变，请注意核对订单状态 !', {icon: 5},function(){
+					$(".wst-tab-nav").find("li").eq(statusMark).click();
+				});
+			}else{
+				WST.msg('操作失败，请与商城管理员联系 !', {icon: 5});
+			}
+	   });
+	});
 }
 //确认收货
 function shopOrderReceipt(id){
@@ -745,6 +817,9 @@ function queryOrderPager(statusMark,pcurr){
 				for(var i=0;i<json.root.length;i++){
 					var order = json.root[i];
 					html.push("<tr style='color:"+((order.orderStatus==-6 || order.orderStatus==-3)?"red":"blue")+";'>");
+					if(order.orderStatus==0 || order.orderStatus==1 || order.orderStatus==2){
+						html.push("<td width='20'><input type='checkbox' class='chk_"+order.orderStatus+"' value='"+order.orderId+"'/></td>");
+					}
 					html.push("<td width='100'><a href='javascript:;' style='color:"+((order.orderStatus==-6 || order.orderStatus==-3)?"red":"blue")+";font-weight:bold;' onclick=showOrder('"+order.orderId+"')>"+order.orderNo+"</a></td>");
 					html.push("<td width='100'>"+order.userName+"</td>");
 					if(order.orderStatus<=-3 && order.orderStatus>=-7){
@@ -810,10 +885,11 @@ function editPass(){
 }
 /***************编辑店铺资料******************/
 function getCommunitysForShopEdit(){
-	  
+
 	  $.post(Think.U('Home/Areas/getAreaAndCommunitysByList'),{areaId:areaId},function(data,textStatus){
 			var json = data;
 			if(json.list){
+				
 				var html = [];
 				json = json.list;
 				for(var i=0;i<json.length;i++){
@@ -825,12 +901,12 @@ function getCommunitysForShopEdit(){
 						};
 					};
 					html.push("<dl class='areaSelect' id='"+json[i]['areaId']+"'>");
-					html.push("<dt class='ATRoot' id='node_"+json[i]['areaId']+"' isshow='0'>"+json[i]['areaName']+"：<span> <input type='checkbox' all='1' class='AreaNode' onclick='javascript:selectArea(this)' id='ck_"+json[i]['areaId']+"' "+isAreaSelected+" value='"+json[i]['areaId']+"'><label for='ck_"+json[i]['areaId']+"' "+isAreaSelected+" value='"+json[i]['areaId']+"'>全区配送</label></span> <small>(已选<span class='count'>"+communitysCount+"</span>个社区)</small></dt>");
+					html.push("<dt class='ATRoot' id='node_"+json[i]['areaId']+"' isshow='0'>"+json[i]['areaName']+"：<span> <input "+((isSelf==1)?"disabled":"")+" type='checkbox' all='1' class='AreaNode' onclick='javascript:selectArea(this)' id='ck_"+json[i]['areaId']+"' "+isAreaSelected+" value='"+json[i]['areaId']+"'><label for='ck_"+json[i]['areaId']+"' "+isAreaSelected+" value='"+json[i]['areaId']+"'>全区配送</label></span> <small>(已选<span class='count'>"+communitysCount+"</span>个社区)</small></dt>");
 					if(json[i].communitys && json[i].communitys.length){
 						for(var j=0;j<json[i].communitys.length;j++){
 							var isCommunitySelected = ($.inArray(json[i].communitys[j]['communityId'],relateCommunity)>-1)?" checked ":"";
 							isCommunitySelected += (isAreaSelected!='')?" disabled ":"";
-						    html.push("<dd id='node_"+json[i]['areaId']+"_"+json[i].communitys[j]['communityId']+"'><input type='checkbox' id='ck_"+json[i]['areaId']+"_"+json[i].communitys[j]['communityId']+"' all='0' class='AreaNode' "+isCommunitySelected+" onclick='javascript:selectArea(this)' value='"+json[i].communitys[j]['communityId']+"'><label for='ck_"+json[i]['areaId']+"_"+json[i].communitys[j]['communityId']+"'>"+json[i].communitys[j]['communityName']+"</label></dd>");
+						    html.push("<dd id='node_"+json[i]['areaId']+"_"+json[i].communitys[j]['communityId']+"'><input "+((isSelf==1)?"disabled":"")+" type='checkbox' id='ck_"+json[i]['areaId']+"_"+json[i].communitys[j]['communityId']+"' all='0' class='AreaNode' "+isCommunitySelected+" onclick='javascript:selectArea(this)' value='"+json[i].communitys[j]['communityId']+"'><label for='ck_"+json[i]['areaId']+"_"+json[i].communitys[j]['communityId']+"'>"+json[i].communitys[j]['communityName']+"</label></dd>");
 						}
 					}
 					html.push("</dl>");
@@ -1191,7 +1267,7 @@ function changeCatStatus(isShow,id,pid){
 	params.id = id;
 	params.isShow = isShow;
 	params.pid = pid;
-	$.post(Think.U('Home/ShopsCats/ChangeCatStatus'),params,function(data,textStatus){
+	$.post(Think.U('Home/ShopsCats/changeCatStatus'),params,function(data,textStatus){
 		location.reload();  
 	});
 	

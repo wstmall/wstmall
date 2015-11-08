@@ -14,9 +14,9 @@ class AdsModel extends BaseModel {
 	  */
 	 public function insert(){
 	 	$rd = array('status'=>-1);
-	 	$id = I("id",0);
+	 	$id = (int)I("id",0);
 		$data = array();
-		$data["adPositionId"] = I("adPositionId");
+		$data["adPositionId"] = (int)I("adPositionId");
 		$data["adFile"] = I("adFile");
 		$data["adStartDate"] = I("adStartDate");
 		$data["adEndDate"] = I("adEndDate");
@@ -39,19 +39,19 @@ class AdsModel extends BaseModel {
 	  */
 	 public function edit(){
 	 	$rd = array('status'=>-1);
-	 	$id = I("id",0);
-		$data["adPositionId"] = I("adPositionId");
+	 	$id = (int)I("id",0);
+		$data["adPositionId"] = (int)I("adPositionId");
 		$data["adFile"] = I("adFile");
 		$data["adStartDate"] = I("adStartDate");
 		$data["adEndDate"] = I("adEndDate");
-		$data["adSort"] = I("adSort",0);
+		$data["adSort"] = (int)I("adSort",0);
 	    if($this->checkEmpty($data,true)){	
 	    	$data["adName"] = I("adName");
 			$data["adURL"] = I("adURL");
-	    	$data["areaId1"] = I("areaId1");
-			$data["areaId2"] = I("areaId2");
+	    	$data["areaId1"] = (int)I("areaId1");
+			$data["areaId2"] = (int)I("areaId2");
 			$m = M('ads');
-		    $rs = $m->where("adId=".I('id',0))->save($data);
+		    $rs = $m->where("adId=".(int)I('id',0))->save($data);
 			if(false !== $rs){
 				$rd['status']= 1;
 			}
@@ -63,13 +63,13 @@ class AdsModel extends BaseModel {
 	  */
      public function get(){
 	 	$m = M('ads');
-		return $m->where("adId=".I('id'))->find();
+		return $m->where("adId=".(int)I('id'))->find();
 	 }
 	 /**
 	  * 分页列表
 	  */
      public function queryByPage(){
-     	$adPositionId = I('adPositionId');
+     	$adPositionId = (int)I('adPositionId');
      	$adDateRange = I('adDateRange');
      	$adName = I('adName');
         $m = M('ads');
@@ -99,7 +99,7 @@ class AdsModel extends BaseModel {
 	 public function del(){
 	    $rd = array('status'=>-1);
 	    $m = M('ads');
-	    $rs = $m->delete(I('id'));
+	    $rs = $m->delete((int)I('id'));
 		if(false !== $rs){
 		   $rd['status']= 1;
 		}

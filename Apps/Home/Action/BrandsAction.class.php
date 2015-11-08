@@ -19,8 +19,8 @@ class BrandsAction extends BaseAction{
    		$areaList = $areas->getDistricts($areaId2);
    		$this->assign('areaList',$areaList);
    		
-   		if(cookie("bstreesAreaId3")){
-   			$obj["areaId3"] = cookie("bstreesAreaId3");
+   		if((int)cookie("bstreesAreaId3")){
+   			$obj["areaId3"] = (int)cookie("bstreesAreaId3");
    		}else{
    			$obj["areaId3"] = ((int)I('areaId3')>0)?(int)I('areaId3'):$areaList[0]['areaId'];
    			cookie("bstreesAreaId3",$obj["areaId3"]);

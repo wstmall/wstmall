@@ -11,6 +11,7 @@
 		<meta http-equiv="Cache" content="no-cache">
   		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/shop.css">
+    	<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/webuploader/webuploader.css" />
       	<script>
 		var publicurl = '__PUBLIC__/';
 		var shopId = '{$orderInfo["order"]["shopId"]}';
@@ -64,6 +65,7 @@
                	<a href="{:U('Home/GoodsAppraises/index/')}"><li <if condition='$umark eq "GoodsAppraises"'> class='liselect'</if>>评价管理</li></a>
 
                	<a href="{:U('Home/AttributeCats/index')}"><li <if condition='$umark eq "AttributeCats"'> class='liselect'</if>>商品类型</li></a>
+               	<a href="{:U('Home/Imports/index')}"><li <if condition='$umark eq "Imports"'> class='liselect'</if>>数据导入</li></a>
 			
               	<span class='wst-menu-title'><span></span>网店设置</span>
             	<a href="{:U('Home/Shops/toEdit/')}"><li <if condition='$umark eq "toEdit"'> class='liselect'</if>>店铺资料</li></a>

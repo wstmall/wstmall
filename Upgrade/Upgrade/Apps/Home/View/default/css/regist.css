@@ -33,13 +33,10 @@
 }
 
 #regist .mc {
-	padding: 30px 0 20px;
+	margin-top:20px;
+	padding: 0px 0 20px;
 	border: solid #dddddd;
-	border-width: 0px 1px 1px;
-}
-
-#regist .md {
-	
+	border-width: 1px 1px 1px;
 }
 
 #regist .tab {
@@ -420,13 +417,7 @@
 .form {
 	float: left;
 	width: 900px;
-}
-
-.phone {
-	float: left;
-	margin-top: 9px;
-	width: 220px;
-	height: 182px;
+	margin-left:150px;
 }
 
 .item-protocol {

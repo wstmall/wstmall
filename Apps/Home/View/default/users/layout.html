@@ -53,10 +53,10 @@
                <a href="{:U('Home/Orders/queryCancelOrders/')}"><li id="li_queryCancelOrders" <if condition='$umark eq "queryCancelOrders"'> class='selected'</if>>已取消订单</li></a>
                <span class='wst-menu-title'><span></span>交易操作</span>
            
-               <!-- a href="{:U('Home/Orders/queryByPage/')}"><li <if condition='$umark eq "queryByPage"'> class='selected'</if>>我的订单</li></a-->
                <a href="{:U('Home/Orders/queryRefundByPage/')}"><li <if condition='$umark eq "queryRefundByPage"'> class='selected'</if>>拒收/退款</li></a>
                <a href="{:U('Home/UserAddress/queryByPage/')}"><li <if condition='$umark eq "addressQueryByPage"'> class='selected'</if>>收货地址</li></a>
                <a  href="{:U('Home/GoodsAppraises/getAppraisesList/')}"><li <if condition='$umark eq "getAppraisesList"'> class='selected'</if>>评价管理</li></a>
+               <a  href="{:U('Home/Favorites/queryByPage/')}"><li <if condition='$umark eq "queryFavoritesByPage"'> class='selected'</if>>我的关注</li></a>
                <a href="{:U('Home/Messages/queryByPage/')}"><li id='li_queryMessageByPage' <if condition='$umark eq "queryMessageByPage"'> class='liselect'</if>>商城消息<span style="display:none;" class="wst-msg-tips-box"></span></li></a>
                <a href="{:U('Home/Users/toEdit/')}"><li <if condition='$umark eq "toEditUser"'> class='selected'</if>>个人资料</li></a>
                <a href="{:U('Home/Users/toEditPass/')}"><li <if condition='$umark eq "toEditPass"'> class='selected'</if>>修改密码</li></a>

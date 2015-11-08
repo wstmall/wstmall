@@ -39,6 +39,7 @@ CREATE TABLE `wst_orders` (
   `orderSrc` tinyint(4) NOT NULL DEFAULT '0',
   `orderFlag` tinyint(4) NOT NULL DEFAULT '1',
   `needPay` float(11,1) DEFAULT '0.0',
+  `tradeNo` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`orderId`),
   KEY `shopId` (`shopId`,`orderFlag`),
   KEY `userId` (`userId`,`orderFlag`),

@@ -28,9 +28,9 @@
 						</if>
 						<if condition="$shopInfo['shop']['shopStatus'] eq 1">
 							已审核
-						<elseif condition="$shopInfo['shop']['shopStatus'] eq -1"/>
-							已停用
 						<elseif condition="$shopInfo['shop']['shopStatus'] eq -2"/>
+							已停止
+						<elseif condition="$shopInfo['shop']['shopStatus'] eq -1"/>
 							已拒绝
 						<elseif condition="$shopInfo['shop']['shopStatus'] eq 0"/>
 							待审核

@@ -13,7 +13,7 @@ class AreasAction extends BaseAction{
 	 * 列表查询
 	 */
     public function queryByList(){
-    	$cityId = I('parentId',0);
+    	$cityId = (int)I('parentId',0);
     	//如果是游客注册开店则取当前城市;
     	$USER = session('WST_USER');
     	if(empty($USER) && $cityId==0){
@@ -37,7 +37,8 @@ class AreasAction extends BaseAction{
 	 */
     public function getAreaAndCommunitysByList(){
 		$m = D('Home/Areas');
-		$list = $m->queryAreaAndCommunitysByList(I('areaId'));
+		$areaId = (int)I('areaId');
+		$list = $m->queryAreaAndCommunitysByList($areaId);
 		$rs = array();
 		$rs['status'] = 1;
 		$rs['list'] = $list;

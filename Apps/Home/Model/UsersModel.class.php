@@ -15,7 +15,7 @@ class UsersModel extends BaseModel {
 	  */
      public function get($userId=0){
 	 	$m = M('users');
-	 	$userId = $userId?$userId:I('id',0);
+	 	$userId = $userId?$userId:(int)I('id',0);
 		$user = $m->where("userId=".$userId)->find();
 		if(!empty($user) && $user['userType']==1){
 			//加载商家信息
@@ -41,7 +41,7 @@ class UsersModel extends BaseModel {
 	  */
      public function getUserById($obj){
 	 	$m = M('users');
-		$userId = $obj["userId"];
+		$userId = (int)$obj["userId"];
 	 	$rs = $m->where(" userId ='%s' ",array($userId))->find();
 	 	
 	    return $rs;
@@ -279,7 +279,7 @@ class UsersModel extends BaseModel {
 		$rd = array('status'=>-1);
 		$userPhone = I("userPhone");
 		$userEmail = I("userEmail");
-		$userId = $obj["userId"];
+		$userId = (int)$obj["userId"];
 	    //检测账号是否存在
         $crs = $this->checkLoginKey($userPhone,$userId);
         if($crs['status']!=1){
@@ -298,7 +298,7 @@ class UsersModel extends BaseModel {
 		$data["userName"] = I("userName");
 		$data["userQQ"] = I("userQQ");
 		$data["userPhone"] = $userPhone;
-		$data["userSex"] = I("userSex",0);
+		$data["userSex"] = (int)I("userSex",0);
 		$data["userEmail"] = $userEmail;
 		$data["userPhoto"] = I("userPhoto");
 		$rs = $m->where(" userId=".$userId)->data($data)->save();

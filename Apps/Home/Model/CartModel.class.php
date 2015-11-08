@@ -89,7 +89,7 @@ class CartModel extends BaseModel {
 			$temp = explode('_',$goodsId);
 			$goodsId = (int)$temp[0];
 			$goodsAttrId = (int)$temp[1];
-			$sql = "SELECT  g.goodsThums,g.goodsId,g.shopPrice,g.isBook,g.goodsName,g.shopId,g.goodsStock,g.shopPrice,shop.shopName,shop.deliveryType,shop.shopAtive,
+			$sql = "SELECT  g.goodsThums,g.goodsId,g.shopPrice,g.isBook,g.goodsName,g.shopId,g.goodsStock,g.shopPrice,shop.shopName,shop.qqNo,shop.deliveryType,shop.shopAtive,
 					shop.shopTel,shop.shopAddress,shop.deliveryTime,shop.isInvoice, shop.deliveryStartMoney,
 					shop.deliveryFreeMoney,shop.deliveryMoney ,g.goodsSn,shop.serviceStartTime,shop.serviceEndTime
 					FROM __PREFIX__goods g, __PREFIX__shops shop
@@ -178,7 +178,7 @@ class CartModel extends BaseModel {
 	 */
 	public function delCartGoods(){
 		
-		$goodsId = I("goodsId");
+		$goodsId = (int)I("goodsId");
 		$shopcart = session("WST_CART")?session("WST_CART"):array();
 		session("WST_CART");
 		$newShopcat = array();

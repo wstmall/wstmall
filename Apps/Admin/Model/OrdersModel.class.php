@@ -14,7 +14,7 @@ class OrdersModel extends BaseModel {
 	 */
 	 public function getDetail(){
 	 	$m = M('orders');
-	 	$id = I('id',0);
+	 	$id = (int)I('id',0);
 		$sql = "select o.*,s.shopName from __PREFIX__orders o
 	 	         left join __PREFIX__shops s on o.shopId=s.shopId 
 	 	         where o.orderFlag=1 and o.orderId=".$id;
@@ -56,10 +56,10 @@ class OrdersModel extends BaseModel {
         $m = M('goods');
         $shopName = I('shopName');
      	$orderNo = I('orderNo');
-     	$areaId1 = I('areaId1',0);
-     	$areaId2 = I('areaId2',0);
-     	$areaId3 = I('areaId3',0);
-     	$orderStatus = I('orderStatus',-9999);
+     	$areaId1 = (int)I('areaId1',0);
+     	$areaId2 = (int)I('areaId2',0);
+     	$areaId3 = (int)I('areaId3',0);
+     	$orderStatus = (int)I('orderStatus',-9999);
 	 	$sql = "select o.orderId,o.orderNo,o.totalMoney,o.orderStatus,o.deliverMoney,o.payType,o.createTime,s.shopName,o.userName from __PREFIX__orders o
 	 	         left join __PREFIX__shops s on o.shopId=s.shopId  where o.orderFlag=1 ";
 	 	if($areaId1>0)$sql.=" and s.areaId1=".$areaId1;
@@ -97,10 +97,10 @@ class OrdersModel extends BaseModel {
         $m = M('goods');
         $shopName = I('shopName');
      	$orderNo = I('orderNo');
-     	$isRefund = I('isRefund',-1);
-     	$areaId1 = I('areaId1',0);
-     	$areaId2 = I('areaId2',0);
-     	$areaId3 = I('areaId3',0);
+     	$isRefund = (int)I('isRefund',-1);
+     	$areaId1 = (int)I('areaId1',0);
+     	$areaId2 = (int)I('areaId2',0);
+     	$areaId3 = (int)I('areaId3',0);
 	 	$sql = "select o.orderId,o.orderNo,o.totalMoney,o.orderStatus,o.isRefund,o.deliverMoney,o.payType,o.createTime,s.shopName,o.userName from __PREFIX__orders o
 	 	         left join __PREFIX__shops s on o.shopId=s.shopId  where o.orderFlag=1 and o.orderStatus in (-1,-4,-6,-7) and payType=1 and isPay=1 ";
 	 	if($areaId1>0)$sql.=" and s.areaId1=".$areaId1;
@@ -141,7 +141,7 @@ class OrdersModel extends BaseModel {
 	 		$data = array();
 	 		$data['isRefund'] = 1;
 	 		$data['refundRemark'] = I('content');
-	 	    $rss = $m->where("orderId=".I('id',0))->save($data);
+	 	    $rss = $m->where("orderId=".(int)I('id',0))->save($data);
 			if(false !== $rs){
 				$rd['status']= 1;
 			}else{

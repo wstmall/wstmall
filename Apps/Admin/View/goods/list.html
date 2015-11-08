@@ -101,8 +101,8 @@
 	   params.parentId = parentId;
 	   $('#'+objId).empty();
 	   if(t<1){
-		   $('#areaId3').empty();
-		   $('#areaId3').html('<option value="">请选择</option>');
+		   $('#areaId2').html('<option value="">请选择</option>');
+		   if(parentId==0)return;
 	   }
 	   var html = [];
 	   $.post("{:U('Admin/Areas/queryByList')}",params,function(data,textStatus){
@@ -118,27 +118,83 @@
 			$('#'+objId).html(html.join(''));
 	   });
    }
+   function getCatList(objId,parentId,t,id){
+	   var params = {};
+	   params.id = parentId;
+	   $('#'+objId).empty();
+	   if(t<1){
+		   $('#goodsCatId3').empty();
+		   $('#goodsCatId3').html('<option value="0">请选择</option>');
+		   if(parentId==0){
+			   $('#goodsCatId2').html('<option value="0">请选择</option>');
+			   return;
+		   }
+	   }
+	   var html = [];
+	   $.post("{:U('Home/GoodsCats/queryByList')}",params,function(data,textStatus){
+		    html.push('<option value="0">请选择</option>');
+			var json = WST.toJson(data);
+			if(json.status=='1' && json.list){
+				var opts = null;
+				for(var i=0;i<json.list.length;i++){
+					opts = json.list[i];
+					html.push('<option value="'+opts.catId+'" '+((id==opts.catId)?'selected':'')+'>'+opts.catName+'</option>');
+				}
+			}
+			$('#'+objId).html(html.join(''));
+	   });
+   }
    $(document).ready(function(){
 	    $('.imgPreview').imagePreview();
 	    <notempty name='areaId1'>
 		   getAreaList("areaId2",'{$areaId1}',0,'{$areaId2}');
 		</notempty>
+		<if condition="$goodsCatId1  neq 0 ">
+		getCatList("goodsCatId2",{$goodsCatId1},0,{$goodsCatId2});
+		</if>
+		<if condition="$goodsCatId2 neq 0 ">
+		getCatList("goodsCatId3",{$goodsCatId2},1,{$goodsCatId3});
+		</if>
    });
    </script>
    <body class='wst-page'>
-    <form method='post' action='{:U("Admin/Goods/index")}' autocomplete="off">
+    <form method='get' action='{:U("Admin/Goods/index")}' autocomplete="off">
        <div class='wst-tbar'> 
       地区：<select id='areaId1' name='areaId1' onchange='javascript:getAreaList("areaId2",this.value,0)'>
-               <option value=''>请选择</option>
+               <option value='0'>请选择</option>
                <volist name="areaList" id="vo">
                <option value='{$vo['areaId']}' <if condition="$areaId1 == $vo['areaId'] ">selected</if>>{$vo['areaName']}</option>
                </volist>
              </select>
              <select id='areaId2' name='areaId2'>
-               <option value=''>请选择</option>
+               <option value='0'>请选择</option>
              </select>
+  商城分类：<select id='goodsCatId1' name='goodsCatId1' onchange='javascript:getCatList("goodsCatId2",this.value,0)'>
+	                <option value='0'>请选择</option>
+	                <volist name="goodsCatsList" id="vo">
+	                <option value='{$vo['catId']}' <if condition="$goodsCatId1 == $vo['catId'] ">selected</if>>{$vo['catName']}</option>
+	                </volist>
+	             </select>
+	             <select id='goodsCatId2' name='goodsCatId2' onchange='javascript:getCatList("goodsCatId3",this.value,1);'>
+	                <option value='0'>请选择</option>
+	             </select>
+	             <select id='goodsCatId3' name='goodsCatId3'>
+	                <option value='0'>请选择</option>
+	             </select>
+   </div>
+   <div class='wst-tbar'>            
        所属店铺：<input type='text' id='shopName' name='shopName' value='{$shopName}'/>            
-       商品：<input type='text' id='goodsName' name='goodsName' value='{$goodsName}'/>   
+       商品：<input type='text' id='goodsName' name='goodsName' value='{$goodsName}'/> 
+     商品类型：<select id='isAdminBest' name='isAdminBest'>
+    <option value='-1'>全部</option>
+    <option value='1' <if condition="$isAdminBest eq 1">selected</if>>精品</option>
+    <option value='0' <if condition="$isAdminBest eq 0">selected</if>>非精品</option>
+  </select>
+  <select id='isAdminRecom' name='isAdminRecom'>
+    <option value='-1'>全部</option>
+    <option value='1' <if condition="$isAdminRecom eq 1">selected</if>>推荐</option>
+    <option value='0' <if condition="$isAdminRecom eq 0">selected</if>>非推荐</option>
+  </select>
   <button type="submit" class="btn btn-primary glyphicon glyphicon-search">查询</button> 
        </div>
        </form>
@@ -158,7 +214,6 @@
                <th width='40'>价格</th>
                <th width='100'>店铺</th>
                <th width='100'>商城分类</th>
-               <th width='80'>店铺分类</th>
                <th width='25'>推荐</th>
                <th width='25'>精品</th>
                <th width='25'>销量</th>
@@ -175,9 +230,8 @@
                </td>
                <td>{$vo['goodsSn']}&nbsp;</td>
                <td>{$vo['shopPrice']}&nbsp;</td>
-               <td><a href="{:U('Home/Shops/toShopHome',array('shopId'=>$vo['shopId']))}" target='_blank'>{$vo['shopName']}</a>&nbsp;</td>
+               <td><a href="{:U('Admin/Goods/index',array('shopName'=>$vo['shopName']))}">{$vo['shopName']}</a>&nbsp;</td>
                <td>{$vo['catName']}&nbsp;</td>
-               <td>{$vo['shopCatName']}&nbsp;</td>
                <td>
                <if condition="$vo['isAdminRecom']==1 "><span class='label label-success'>推荐</span></if>
                </td>
@@ -194,7 +248,7 @@
              </tr>
              </volist>
              <tr>
-                <td colspan='11' align='center'>{$Page['pager']}</td>
+                <td colspan='10' align='center'>{$Page['pager']}</td>
              </tr>
            </tbody>
         </table>

@@ -22,7 +22,7 @@ $(function () {
 			},onError:function(msg){
 		}});
 	   $("#goodsSn").formValidator({onShow:"",onFocus:"",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"请输入商品编号"});
-	   $("#goodsName").formValidator({onShow:"",onFocus:"",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"请输入商品名称"});
+	   $("#goodsName").formValidator({onShow:"",onFocus:"",onCorrect:"输入正确"}).inputValidator({min:1,max:200,onError:"请输入商品名称"});
 	   $("#marketPrice").formValidator({onShow:"",onFocus:"",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"请输入市场价格"});
 	   $("#shopPrice").formValidator({onShow:"",onFocus:"",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"请输入店铺价格"});
 	   $("#goodsStock").formValidator({onShow:"",onFocus:"",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"请输入库存"});
@@ -37,12 +37,12 @@ $(function () {
 				allowFileManager : false,
 				allowImageUpload : true,
 				items:[
-				        'source', '|', 'undo', 'redo', '|', 'preview', 'print', 'template', 'code', 'cut', 'copy', 'paste',
+				        'source', '|', 'undo', 'redo', '|', 'preview', 'print', 'template', 'cut', 'copy', 'paste',
 				        'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
 				        'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
 				        'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
 				        'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
-				        'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|','image','table', 'hr', 'emoticons', 'baidumap', 'pagebreak',
+				        'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|','image','multiimage','table', 'hr', 'emoticons', 'baidumap', 'pagebreak',
 				        'anchor', 'link', 'unlink', '|', 'about'
 				],
 				afterBlur: function(){ this.sync(); }
@@ -113,7 +113,7 @@ var filetypes = ["gif","jpg","png","jpeg"];
 				<div style="clear:both;"></div>
 				<div >&nbsp;图片大小:150 x 120 (px)(格式为 gif, jpg, jpeg, png)</div>
 				<input type="hidden" name="dir" value="goods">
-				<input type="hidden" name="width" value="150">
+				<input type="hidden" name="width" value="500">
 				<input type="hidden" name="folder" value="Filedata">
 				<input type="hidden" name="sfilename" value="Filedata">
 				<input type="hidden" name="fname" value="goodsImg">
@@ -133,13 +133,13 @@ var filetypes = ["gif","jpg","png","jpeg"];
 	             </td>
 	             <td rowspan='7' valign='top'>
 	               <div id="preview_Filedata">
-		           <img id='goodsImgPreview' src='<if condition="$object['goodsImg'] =='' ">__ROOT__/{$CONF['mallLogo']}<else/>__ROOT__/{$object['goodsImg']}</if>' height='152'/><br/>
+		           <img id='goodsImgPreview' src='<if condition="$object['goodsImg'] =='' ">__ROOT__/{$CONF['goodsImg']}<else/>__ROOT__/{$object['goodsImg']}</if>' height='152'/><br/>
 	               </div>
 	             </td>
 	           </tr>
 	           <tr>
 	             <th width='120'>商品名称<font color='red'>*</font>：</th>
-	             <td><input type='text' id='goodsName' name='goodsName' class="form-control wst-ipt" value='{$object.goodsName}' maxLength='40'/></td>
+	             <td><input type='text' id='goodsName' name='goodsName' class="form-control wst-ipt" value='{$object.goodsName}' maxLength='100'/></td>
 	           </tr>
 	            <tr>
 	             <th width='120'>市场价格<font color='red'>*</font>：</th>

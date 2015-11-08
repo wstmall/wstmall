@@ -1,4 +1,17 @@
-
+$.fn.TabPanel = function(options){
+	var defaults = {    
+		tab: 0      
+	}; 
+	var opts = $.extend(defaults, options);
+	var t = this;
+	$(t).find('.wst-tab-nav li').click(function(){
+		$(this).addClass("on").siblings().removeClass();
+		var index = $(this).index();
+		$(t).find('.wst-tab-content .wst-tab-item').eq(index).show().siblings().hide();
+		if(opts.callback)opts.callback(index);
+	});
+	$(t).find('.wst-tab-nav li').eq(opts.tab).click();
+}
 
 $(function() {
 	
@@ -171,7 +184,7 @@ function checkCart(){
 				html.push(  "<div style='float:left;'>" +
 									"<a href='"+url+"'><img src='"+domainURL +"/"+goods.goodsThums+"' width='65' height='65'/></a>" +
 									"</div>" +
-							"<div style='float:left;width:280px;padding:4px;'>");
+							"<div style='float:left;width:280px;padding:4px;overflow: hidden;'>");
 				html.push(  "<a target='_blank' href='"+url+"'>"+goods.goodsName+"</a><br/>");
 				if(goods.attrName){
 					html.push(  goods.attrName+"："+goods.attrVal+"<br/>");
@@ -397,4 +410,19 @@ function updfile(filename){
 		jQuery('#uploadform_'+filename)[0].reset();
 		return;
 	}	
+}
+function uploadFile(opts){
+	var _opts = {};
+	_opts = $.extend(_opts,{auto: true,swf: publicurl +'/plugins/webuploader/Uploader.swf'},opts);
+	var uploader = WebUploader.create(_opts);
+	uploader.on('uploadSuccess', function( file,response ) {
+	    var json = WST.toJson(response._raw);
+	    if(_opts.callback)_opts.callback(json);
+	});
+	uploader.on('uploadError', function( file ) {
+		WST.msg('上传失败!', {icon: 5});
+	});
+	uploader.on( 'uploadProgress', function( file, percentage ) {
+		if(_opts.progress)_opts.progress(percentage);
+	});
 }

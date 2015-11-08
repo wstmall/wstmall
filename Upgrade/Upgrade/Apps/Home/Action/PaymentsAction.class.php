@@ -86,6 +86,7 @@ class PaymentsAction extends BaseAction{
 		unset($request['_URL_']);
 		$pay_res = D('Payments')->notify($request);
 		if($pay_res['status']){
+			$this->redirect("Orders/queryByPage");
 			//支付成功业务逻辑
 		}else{
 			$this->error('支付失败');
@@ -103,6 +104,7 @@ class PaymentsAction extends BaseAction{
 			
 			//商户订单号
 			$obj = array();
+			$obj["trade_no"] = $_POST['trade_no'];
 			$obj["out_trade_no"] = $_POST['out_trade_no'];
 			$obj["total_fee"] = $_POST['total_fee'];
 			$obj["userId"] = $_POST['extra_common_param'];

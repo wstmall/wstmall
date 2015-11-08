@@ -44,8 +44,8 @@ class UsersModel extends BaseModel {
 			$data["userPhoto"] = I("userPhoto");
 			$data["userName"] = I("userName");
 			$data["userStatus"] = I("userStatus",0);
-			$data["userType"] = I("userType",0);
-			$data["userSex"] = I("userSex",0);
+			$data["userType"] = (int)I("userType",0);
+			$data["userSex"] = (int)I("userSex",0);
 			$data["userEmail"] = I("userEmail");
 			$data["userPhone"] = I("userPhone");
 			$data["userQQ"] = I("userQQ");
@@ -67,7 +67,7 @@ class UsersModel extends BaseModel {
 	  */
 	 public function edit(){
 	 	$rd = array('status'=>-1);
-	 	$id = I('id',0);
+	 	$id = (int)I('id',0);
 	 	//检测账号
 	 	if(I("userPhone")!=''){
 	        $hasUserPhone = self::checkLoginKey(I("userPhone"),$id);
@@ -87,12 +87,12 @@ class UsersModel extends BaseModel {
 	 	//修改数据
 		$m = M('users');
 		$data = array();
-		$data["userScore"] = I("userScore",0);
-		$data["userTotalScore"] = I("userTotalScore",0);
+		$data["userScore"] = (int)I("userScore",0);
+		$data["userTotalScore"] = (int)I("userTotalScore",0);
 		if($this->checkEmpty($data,true)){	
 			$data["userName"] = I("userName");
 			$data["userPhoto"] = I("userPhoto");
-			$data["userSex"] = I("userSex",0);
+			$data["userSex"] = (int)I("userSex",0);
 		    $data["userQQ"] = I("userQQ");
 		    $data["userPhone"] = I("userPhone");
 		    $data["userEmail"] = I("userEmail");
@@ -109,7 +109,7 @@ class UsersModel extends BaseModel {
 	  */
      public function get(){
 	 	$m = M('users');
-		return $m->where("userId=".I('id'))->find();
+		return $m->where("userId=".(int)I('id'))->find();
 	 }
 	 /**
 	  * 分页列表
@@ -165,10 +165,11 @@ class UsersModel extends BaseModel {
 		   if($userType==1){
 		   	    $m = M('shops');
 		   	    $m->shopFlag = -1;
+		   	    $m->shopStatus=-2;
 		   	    $rs = $m->where(" userId=".$id)->save();
 		   	    $shopId = $m->where('userId='.$id)->getField('shopId',1);
-				$sql = "update __PREFIX__goods set isSale=0 where shopId=".$shopId;
-			 	$m->query($sql);
+				$sql = "update __PREFIX__goods set isSale=0,goodsStatus=-1 where shopId=".$shopId;
+			 	$m->execute($sql);
 		   }
 		}
 		
@@ -252,7 +253,7 @@ class UsersModel extends BaseModel {
 	 	$loginSecret = $m->where("userId=".I('id'))->getField('loginSecret');
 	 	if(I('loginPwd')!='')$m->loginPwd = md5(I('loginPwd').$loginSecret);
 	 	$m->userStatus = I('userStatus',0);
-	 	$rs = $m->where('userId='.I('id'))->save();
+	 	$rs = $m->where('userId='.(int)I('id'))->save();
 	    if(false !== $rs){
 			$rd['status']= 1;
 		}

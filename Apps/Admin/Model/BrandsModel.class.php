@@ -100,9 +100,9 @@ class BrandsModel extends BaseModel {
 	  */
      public function get(){
 	 	$m = M('brands');
-		$rs = $m->where("brandId=".I('id'))->find();
+		$rs = $m->where("brandId=".(int)I('id'))->find();
         //获取关联的分类
-		$sql = "select * from __PREFIX__goods_cat_brands where brandId=".I('id');
+		$sql = "select * from __PREFIX__goods_cat_brands where brandId=".(int)I('id');
 		$catBrands = $this->query($sql);
 		if(!empty($catBrands)){
 			foreach ($catBrands as $key => $v){
@@ -117,7 +117,7 @@ class BrandsModel extends BaseModel {
      public function queryByPage(){
         $m = M('brands');
         $brandName = I("brandName");
-        $catId = I("catId");
+        $catId = (int)I("catId");
 	 	$sql = "select b.* from __PREFIX__brands b";
 	 	if($catId>0){
 	 		$sql .= ", __PREFIX__goods_cat_brands cb";
@@ -149,7 +149,7 @@ class BrandsModel extends BaseModel {
 	 	if(I('id',0)==0)return $rd;
 	 	$m = M('brands');
 	 	$m->brandFlag = -1;
-	 	$rs = $m->where("brandId=".I('id',0))->save();
+	 	$rs = $m->where("brandId=".(int)I('id',0))->save();
 	    if(false !== $rs){
 			$rd['status']= 1;
 		}

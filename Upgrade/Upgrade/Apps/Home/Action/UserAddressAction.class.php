@@ -16,7 +16,7 @@ class UserAddressAction extends BaseAction{
 		$this->isUserLogin();
 	    $m = D('Home/UserAddress');
     	$object = array();
-    	if(I('id',0)>0){
+    	if((int)I('id',0)>0){
     		$object = $m->get();
     	}else{
     		$object = $m->getModel();
@@ -36,7 +36,7 @@ class UserAddressAction extends BaseAction{
 		$this->isUserAjaxLogin();
 		$m = D('Home/UserAddress');
     	$rs = array();
-    	if(I('id',0)>0){
+    	if((int)I('id',0)>0){
     		$rs = $m->edit();
     	}else{
     		$rs = $m->insert();
@@ -83,7 +83,7 @@ class UserAddressAction extends BaseAction{
 	public function getDistricts(){
 		
 		$m = D('Home/UserAddress');
-		$areaId2 = I("areaId2");
+		$areaId2 = (int)I("areaId2");
 		$communitys = $m->getDistricts($areaId2);	
 		$this->ajaxReturn($communitys);
 			
@@ -95,7 +95,7 @@ class UserAddressAction extends BaseAction{
 	public function getCommunitys(){
 		
 		$m = D('Home/UserAddress');
-		$districtId = I("districtId");
+		$districtId = (int)I("districtId");
 		$communitys = $m->getCommunitys($districtId);	
 		$this->ajaxReturn($communitys);
 			
@@ -107,7 +107,7 @@ class UserAddressAction extends BaseAction{
 	public function getDistrictsOption(){
 		
 		$m = D('Home/UserAddress');
-		$areaId2 = I("areaId2");
+		$areaId2 = (int)I("areaId2");
 		$communitys = $m->getDistrictsOption($areaId2);	
 		$this->ajaxReturn($communitys);
 			
@@ -119,7 +119,7 @@ class UserAddressAction extends BaseAction{
 	public function getCommunitysOption(){
 		
 		$m = D('Home/UserAddress');
-		$districtId = I("districtId");
+		$districtId = (int)I("districtId");
 		$communitys = $m->getCommunitysOption($districtId);	
 		$this->ajaxReturn($communitys);
 			
@@ -131,8 +131,8 @@ class UserAddressAction extends BaseAction{
 	public function getShopDistricts(){
 	
 		$m = D('Home/UserAddress');
-		$areaId2 = I("areaId2");
-		$shopId = I("shopId");
+		$areaId2 = (int)I("areaId2");
+		$shopId = (int)I("shopId");
 		$communitys = $m->getShopDistricts($areaId2,$shopId);
 		$this->ajaxReturn($communitys);
 			
@@ -144,8 +144,8 @@ class UserAddressAction extends BaseAction{
 	public function getShopCommunitys(){
 	
 		$m = D('Home/UserAddress');
-		$districtId = I("districtId");
-		$shopId = I("shopId");
+		$districtId = (int)I("districtId");
+		$shopId = (int)I("shopId");
 		$communitys = $m->getShopCommunitys($districtId,$shopId);
 		$this->ajaxReturn($communitys);
 			

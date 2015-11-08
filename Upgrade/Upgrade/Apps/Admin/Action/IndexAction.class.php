@@ -102,7 +102,7 @@ class IndexAction extends BaseAction {
      * 获取当前版本
      */
     public function getWSTMallVersion(){
-    	$rs = $this->isLogin();
+    	$this->isAjaxLogin();
     	$version = C('WST_VERSION');
     	$key = C('WST_MD5');
     	$license = $GLOBALS['CONFIG']['mallLicense'];
@@ -118,14 +118,14 @@ class IndexAction extends BaseAction {
      * 输入授权码
      */
     public function enterLicense(){
-    	$rs = $this->isLogin();
+    	$this->isLogin();
     	$this->display("/enter_license");
     }
     /**
      * 验证授权码
      */
     public function verifyLicense(){
-    	$this->checkPrivelege('scxx_00');
+    	$this->isAjaxLogin();
     	$license = I('license');
     	$content = file_get_contents(C('WST_WEB').'/index.php?m=Api&c=License&a=verifyLicense&host='.WSTRootDomain().'&license='.$license);
     	$json = json_decode($content,true);
@@ -140,7 +140,7 @@ class IndexAction extends BaseAction {
      * 清除缓存
      */
     public function cleanAllCache(){
-    	$rs = $this->isLogin();
+    	$this->isAjaxLogin();
         $rv = array('status'=>-1);
 		$rv['status'] = WSTDelDir(C('WST_RUNTIME_PATH'));
     	$this->ajaxReturn($rv);

@@ -21,7 +21,7 @@ class BaseAction extends Controller {
 		$areaId2 = $this->getDefaultCity();
 		$currArea = $areas->getArea($areaId2);
 		$this->assign('currArea',$currArea);
-   		$this->assign('searchType',I("searchType",1));
+   		$this->assign('searchType',(int)I("searchType",1));
    		
    		//$this->assign('currCity',$areaList[$areaId2]);
    		$this->assign('areaId2',$areaId2);
@@ -186,8 +186,16 @@ class BaseAction extends Controller {
 			$images = new \Think\Image();
 			$images->open('./Upload/'.$rs[$Filedata]['savepath'].$rs[$Filedata]['savename']);
 			$newsavename = str_replace('.','_thumb.',$rs[$Filedata]['savename']);
-			$vv = $images->thumb(I('width',100), I('height',100))->save('./Upload/'.$rs[$Filedata]['savepath'].$newsavename);
-	        $rs[$Filedata]['savepath'] = "Upload/".$rs[$Filedata]['savepath'];
+			$vv = $images->thumb(I('width',300), I('height',300))->save('./Upload/'.$rs[$Filedata]['savepath'].$newsavename);
+		    if(C('WST_M_IMG_SUFFIX')!=''){
+		        $msuffix = C('WST_M_IMG_SUFFIX');
+		        $mnewsavename = str_replace('.',$msuffix.'.',$rs[$Filedata]['savename']);
+		        $mnewsavename_thmb = str_replace('.',"_thumb".$msuffix.'.',$rs[$Filedata]['savename']);
+			    $images->open('./Upload/'.$rs[$Filedata]['savepath'].$rs[$Filedata]['savename']);
+			    $images->thumb(I('width',700), I('height',700))->save('./Upload/'.$rs[$Filedata]['savepath'].$mnewsavename);
+			    $images->thumb(I('width',250), I('height',250))->save('./Upload/'.$rs[$Filedata]['savepath'].$mnewsavename_thmb);
+			}
+			$rs[$Filedata]['savepath'] = "Upload/".$rs[$Filedata]['savepath'];
 			$rs[$Filedata]['savethumbname'] = $newsavename;
 			$rs['status'] = 1;
 			if($folder=="Filedata"){

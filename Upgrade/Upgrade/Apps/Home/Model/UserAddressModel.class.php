@@ -14,21 +14,21 @@ class UserAddressModel extends BaseModel {
 	  */
 	 public function insert(){
 	 	$rd = array('status'=>-1);
-	 	$id = I("id",0);
+	 	$id = (int)I("id",0);
 		$data = array();
 		$data["userId"] = (int)session('WST_USER.userId');
 		$data["userName"] = I("userName");
-		$data["areaId2"] = I("areaId2");
+		$data["areaId2"] = (int)I("areaId2");
 		if(I("areaId1")){
-			$data["areaId1"] = I("areaId1");
+			$data["areaId1"] = (int)I("areaId1");
 		}else{
 			$sql ="SELECT parentId FROM __PREFIX__areas WHERE areaId='".$data["areaId2"]."' AND areaFlag=1";
 			$ars = $this->queryRow($sql);
 			$data["areaId1"] = $ars["parentId"];
 		}
 		
-		$data["areaId3"] = I("areaId3");
-		$data["communityId"] = I("communityId");
+		$data["areaId3"] = (int)I("areaId3");
+		$data["communityId"] = (int)I("communityId");
 		if(I("userPhone")!=''){
 			$data["userPhone"] = I("userPhone");
 		}else{
@@ -36,7 +36,7 @@ class UserAddressModel extends BaseModel {
 		}
 		
 		$data["address"] = I("address");
-		$data["isDefault"] = I("isDefault",0);
+		$data["isDefault"] = (int)I("isDefault",0);
 		$data["addressFlag"] = 1;
 		$data["createTime"] = date('Y-m-d H:i:s');
 	    if($this->checkEmpty($data,true)){	
@@ -46,7 +46,7 @@ class UserAddressModel extends BaseModel {
 			$rs = $m->add($data);
 			if(false !== $rs){
 				$rd['status']= $rs;
-				if(I("isDefault")==1){
+				if((int)I("isDefault")==1){
 					//修改所有的地址为非默认
 					$m->isDefault = 0;
 					$m->where('userId='.(int)session('WST_USER.userId')." and addressId!=".$rs)->save();
@@ -60,7 +60,7 @@ class UserAddressModel extends BaseModel {
 	  */
 	 public function edit(){
 	 	$rd = array('status'=>-1);
-	 	$id = I("id",0);
+	 	$id = (int)I("id",0);
 		$data = array();
 		$data["userName"] = I("userName");
 		//$data["userPhone"] = I("userPhone");
@@ -69,8 +69,8 @@ class UserAddressModel extends BaseModel {
 		}else{
 		    $data["userTel"] = I("userTel");
 		}
-		$data["areaId2"] = I("areaId2");
-		$data["areaId3"] = I("areaId3");
+		$data["areaId2"] = (int)I("areaId2");
+		$data["areaId3"] = (int)I("areaId3");
 		$data["communityId"] = I("communityId");
 		$data["address"] = I("address");
 		
@@ -78,7 +78,7 @@ class UserAddressModel extends BaseModel {
 			$m = M('user_address');
 			$data["userPhone"] = I("userPhone");
 			$data["userTel"] = I("userTel");
-			$data["isDefault"] = I("isDefault");
+			$data["isDefault"] = (int)I("isDefault");
 			$rs = $m->where("userId=".(int)session('WST_USER.userId')." and addressId=".$id)->save($data);
 			if(false !== $rs){
 				$rd['status']= 1;
@@ -96,7 +96,7 @@ class UserAddressModel extends BaseModel {
 	  */
      public function get(){
 	 	$m = M('user_address');
-		return $m->where("addressId=".I('id')." and userId=".(int)session('WST_USER.userId'))->find();
+		return $m->where("addressId=".(int)I('id')." and userId=".(int)session('WST_USER.userId'))->find();
 	 }
 	 /**
 	  * 获取列表
@@ -134,7 +134,7 @@ class UserAddressModel extends BaseModel {
 	 public function del(){
 	 	$rd = array('status'=>-1);
 	    $m = M('user_address');
-	    $rs = $m->where("userId=".(int)session('WST_USER.userId')." and addressId=".I('id'))->delete();
+	    $rs = $m->where("userId=".(int)session('WST_USER.userId')." and addressId=".(int)I('id'))->delete();
 		if(false !== $rs){
 		   $rd['status']= 1;
 		}
@@ -145,7 +145,7 @@ class UserAddressModel extends BaseModel {
 	 */
 	public function getUserAddressInfo(){
 		$m = M('user_address'); 
-		$addressId = I("addressId");
+		$addressId = (int)I("addressId");
 		$sql ="SELECT ad.*, a.areaName FROM __PREFIX__user_address ad
 			  left join __PREFIX__areas a ON ad.areaId2 = a.areaId
 		      WHERE ad.addressId=$addressId AND ad.addressFlag=1 and ad.userId=".(int)session('WST_USER.userId');

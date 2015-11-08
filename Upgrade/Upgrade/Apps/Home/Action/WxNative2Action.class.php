@@ -127,6 +127,7 @@ class WxNative2Action extends BaseAction {
 				// 此处应该更新一下订单状态，商户自行增删操作
 				$order = $notify->getData ();
 				// $out_trade_no = $order["out_trade_no"];
+				$trade_no = $order["transaction_id"];
 				$total_fee = $order ["total_fee"];
 				$pkey = $order ["attach"] ;
 				$pkeys = explode ( "@", $pkey );
@@ -136,6 +137,7 @@ class WxNative2Action extends BaseAction {
 				$pm = D ( 'Home/Payments' );
 				// 商户订单号
 				$obj = array ();
+				$obj ["trade_no"] = $trade_no;
 				$obj ["out_trade_no"] = $out_trade_no;
 				$obj ["total_fee"] = $total_fee;
 				$obj ["userId"] = $userId;

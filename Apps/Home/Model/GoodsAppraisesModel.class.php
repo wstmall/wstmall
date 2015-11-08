@@ -14,10 +14,10 @@ class GoodsAppraisesModel extends BaseModel {
 	  */
      public function queryByPage($shopId){
         $m = M('goods_appraises');
-        $shopCatId1 = I('shopCatId1',0);
-		$shopCatId2 = I('shopCatId2',0);
+        $shopCatId1 = (int)I('shopCatId1',0);
+		$shopCatId2 = (int)I('shopCatId2',0);
 		$goodsName = I('goodsName');
-        $pcurr = I("pcurr",0);
+        $pcurr = (int)I("pcurr",0);
 	 	$sql = "select gp.*,g.goodsName,g.goodsThums,u.loginName from 
 	 	           __PREFIX__goods_appraises gp ,__PREFIX__goods g, __PREFIX__users u
 	 	           where gp.userId=u.userId and gp.goodsId=g.goodsId and gp.shopId=".$shopId."";
@@ -37,7 +37,7 @@ class GoodsAppraisesModel extends BaseModel {
 		$goodsId = (int)I("goodsId");
 		$sql = "SELECT ga.*, u.userName,u.loginName, od.createTime as ocreateTIme 
 				FROM __PREFIX__goods_appraises ga , __PREFIX__orders od , __PREFIX__users u 
-				WHERE ga.userId = u.userId AND ga.orderId = od.orderId AND ga.goodsId = $goodsId AND ga.isShow =1";		
+				WHERE ga.userId = u.userId AND ga.orderId = od.orderId AND ga.goodsId = $goodsId AND ga.isShow =1 order by id desc ";		
 		$data = $this->pageQuery($sql);	
 		return $data;
 	}
@@ -47,7 +47,7 @@ class GoodsAppraisesModel extends BaseModel {
 	  */
      public function getAppraise(){
 	 	$m = M('goods_appraises');
-	 	$id = I('id');
+	 	$id = (int)I('id');
 	 	$sql = "select gp.*,g.goodsName,g.goodsThums from __PREFIX__goods_appraises gp ,__PREFIX__goods g where gp.goodsId=g.goodsId and gp.id=".$id;
 		return $this->queryRow($sql);
 	 }
@@ -73,9 +73,19 @@ class GoodsAppraisesModel extends BaseModel {
 		$userId = $obj["userId"];
 		$orderId = $obj["orderId"];
 		$goodsId = $obj["goodsId"];
+		
+		$goodsScore = (int)I("goodsScore");
+		$goodsScore = $goodsScore>5?5:$goodsScore;
+		$goodsScore = $goodsScore<1?1:$goodsScore;
+		$timeScore = (int)I("timeScore");
+		$timeScore = $timeScore>5?5:$timeScore;
+		$timeScore = $timeScore<1?1:$timeScore;
+		$serviceScore = (int)I("serviceScore");
+		$serviceScore = $serviceScore>5?5:$serviceScore;
+		$serviceScore = $serviceScore<1?1:$serviceScore;
 		//检查订单是否已评论
 		$sql="select isAppraises,orderFlag,shopId,goodsId from __PREFIX__orders o, __PREFIX__order_goods og 
-		     where o.orderId=og.orderId and o.orderStatus in (4,5) and og.goodsId=".$goodsId." and o.orderId=".$orderId." and o.userId=".$userId;
+		     where o.orderId=og.orderId and o.orderStatus = 4 and og.goodsId=".$goodsId." and o.orderId=".$orderId." and o.userId=".$userId;
 		$rs = $this->query($sql);
 		
 		if(empty($rs))return -1;
@@ -87,9 +97,9 @@ class GoodsAppraisesModel extends BaseModel {
 		$data["goodsId"] = $goodsId;
 		$data["shopId"] = $shopId;
 		$data["userId"] = $userId;
-		$data["goodsScore"] = (int)I("goodsScore");
-		$data["timeScore"] = (int)I("timeScore");
-		$data["serviceScore"] =(int)I("serviceScore");
+		$data["goodsScore"] = $goodsScore;
+		$data["timeScore"] = $timeScore;
+		$data["serviceScore"] = $serviceScore;
 		$data["content"] = I("content");
 		$data["isShow"] = 1;
 		$data["createTime"] = date('Y-m-d H:i:s');
@@ -108,21 +118,21 @@ class GoodsAppraisesModel extends BaseModel {
 						,timeUsers = timeUsers +1 , timeScore = timeScore +".$data["timeScore"]."
 						,serviceUsers = serviceUsers +1 , serviceScore = serviceScore +".$data["serviceScore"]."
 						WHERE goodsId = ".$goodsId;		
-				$this->query($sql);		
+				$this->execute($sql);		
 			}else{
 				$data = array();
 				$gm = M('goods_scores');
 	
-				$data["goodsId"] = I("goodsId");
+				$data["goodsId"] = (int)I("goodsId");
 				$data["shopId"] = $shopId;
 				
-				$data["goodsScore"] =(int)I("goodsScore");
+				$data["goodsScore"] = $goodsScore;
 				$data["goodsUsers"] = 1;
 				
-				$data["timeScore"] =(int)I("timeScore");
+				$data["timeScore"] = $timeScore;
 				$data["timeUsers"] = 1;
 				
-				$data["serviceScore"] =(int)I("serviceScore");
+				$data["serviceScore"] = $serviceScore;
 				$data["serviceUsers"] = 1;
 				
 				$data["totalScore"] = (int)$data["goodsScore"]+$data["timeScore"]+$data["serviceScore"];
@@ -137,7 +147,7 @@ class GoodsAppraisesModel extends BaseModel {
 						,timeUsers = timeUsers +1 , timeScore = timeScore +".$data["timeScore"]."
 						,serviceUsers = serviceUsers +1 , serviceScore = serviceScore +".$data["serviceScore"]."
 						WHERE shopId = ".$shopId;		
-			$this->query($sql);
+			$this->execute($sql);
 			//检查下是不是订单的所有商品都评论完了
 			$sql = "SELECT g.goodsId,og.goodsNums as ogoodsNums,og.goodsPrice as ogoodsPrice ,ga.id as gaId
 					FROM __PREFIX__order_goods og, __PREFIX__goods g 
@@ -151,7 +161,7 @@ class GoodsAppraisesModel extends BaseModel {
 			}
 			if($gmark==1){
 				$sql="update __PREFIX__orders set isAppraises=1 where orderId=".$orderId;
-				$this->query($sql);
+				$this->execute($sql);
 			}
 		}
 		return 1;
@@ -186,7 +196,7 @@ class GoodsAppraisesModel extends BaseModel {
 	 */
 	public function getAppraisesList($obj){
 		$userId = $obj["userId"];
-		$pcurr = I("pcurr",0);
+		$pcurr = (int)I("pcurr",0);
 		$data = array();
 
 		$sql = "SELECT ga.*,o.orderNo,g.goodsName,g.goodsThums

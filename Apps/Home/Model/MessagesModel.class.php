@@ -15,7 +15,7 @@ class MessagesModel extends BaseModel {
 	 public function del(){
 	 	$rd = array('status'=>-1);
 	    $m = M('messages');
-	    $map = array('id'=>I('id'),'receiveUserId'=>(int)session('WST_USER.userId'));
+	    $map = array('id'=>(int)I('id'),'receiveUserId'=>(int)session('WST_USER.userId'));
 	    $rs = $m->where($map)->delete();
 		if(false !== $rs){
 		   $rd['status']= 1;
@@ -36,7 +36,7 @@ class MessagesModel extends BaseModel {
 	 * 获取消息
 	 */
 	public function get(){
-		$id = I('id');
+		$id = (int)I('id');
         $map = array('id'=>$id,'receiveUserId'=>(int)session('WST_USER.userId'));
         $info = $this->where($map)->find();
         if (!empty($info)) {
