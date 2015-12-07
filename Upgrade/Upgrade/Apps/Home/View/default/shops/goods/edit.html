@@ -13,8 +13,11 @@
 
 </style>   
 <script>
+var ablumInit = false;
 $(function () {
-	   $('#tab').TabPanel({tab:0});
+	   $('#tab').TabPanel({tab:0,callback:function(no){
+		    if(no==2 && !ablumInit)uploadAblumInit();
+	   }});
 	   $.formValidator.initConfig({
 		   theme:'Default',mode:'AutoTip',formID:"myform",debug:true,submitOnce:true,onSuccess:function(){
 			       editGoods('{$umark}');
@@ -101,7 +104,7 @@ var filetypes = ["gif","jpg","png","jpeg"];
     	 
     	
     	<!-- 商品基础信息 -->
-    	<div class='wst-tab-item' style="position: relative;">
+    	<div class='wst-tab-item' style="position: relative;style='display:none'">
     		<iframe name="upload" style="display:none"></iframe>
 			<form id="uploadform_Filedata" autocomplete="off" style="position:absolute;top:155px;left:417px;z-index:10;" enctype="multipart/form-data" method="POST" target="upload" action="{:U('Home/Shops/uploadPic')}" >
 				<div style="position:relative;">
@@ -335,7 +338,7 @@ var filetypes = ["gif","jpg","png","jpeg"];
 	      </div>
 	      
 	      <!-- 相册 -->
-	      <div class='wst-tab-item'>
+	      <div class='wst-tab-item' style='display:none'>
 	      <!-- 
 	       <div><input type='text' id='galleryImgUpload'/></div>
 	        -->

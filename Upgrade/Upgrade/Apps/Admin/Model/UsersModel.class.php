@@ -181,7 +181,7 @@ class UsersModel extends BaseModel {
 	 public function checkLoginKey($val,$id = 0){
 	 	$rd = array('status'=>-1);
 	 	if($val=='')return $rd;
-	 	$sql = " (loginName ='%s' or userPhone ='%s' or userEmail='%s') ";
+	 	$sql = " (loginName ='%s' or userPhone ='%s' or userEmail='%s') and userFlag=1";
 	 	$keyArr = array($val,$val,$val);
 	 	if($id>0){
 	 		$sql.=" and userId!=".$id;

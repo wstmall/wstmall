@@ -206,41 +206,85 @@ function getVerifyCode(){
 		
 		var params = {};
 		params.userPhone = $.trim($("#userPhone").val());
-		$.post(Think.U('Home/Users/getPhoneVerifyCode'),params,function(data,textStatus){
-			var json = WST.toJson(data);
-			if(json.status==-4){
-				WST.msg('手机号码格式错误!', {icon: 5});
-				time = 0;
-				isSend = false;
-			}else if(json.status==-3){
-				WST.msg('该手机号码已注册!', {icon: 5});
-				time = 0;
-				isSend = false;
-			}else if(json.status==-2){
-				WST.msg('您的手机已超过每日最大短信验证数!', {icon: 5});
-				time = 0;
-				isSend = false;
-			}else if(json.status==-1){
-				WST.msg('短信發送失敗!', {icon: 5});
-				time = 0;
-				isSend = false;
-			}else if(json.status==1){
-				time = 120;
-				$('#timeTips').css('width','100px');
-				$('#timeTips').html('获取验证码(120)');
-				//$('#mobileCode').val(json.phoneVerifyCode);
-				var task = setInterval(function(){
-					time--;
-					$('#timeTips').html('获取验证码('+time+")");
-					if(time==0){
-						isSend = false;						
-						clearInterval(task);
-						$('#timeTips').html("重新获取验证码");
-					}
-				},1000);
-			}
-		});
-	}
+		if(WST.SMS_VERFY=='1'){
+			var html = [];
+			html.push('<table class="wst-smsverfy"><tr><td width="80" align="right">');
+			html.push('验证码：</td><td><input type="text" id="smsVerfy" size="12" class="wst-text" maxLength="8">');
+			html.push('<img style="vertical-align:middle;cursor:pointer;height:39px;" class="verifyImg" src="'+WST.DOMAIN+'/Apps/Home/View/default/images/clickForVerify.png" title="刷新验证码" onclick="javascript:getVerify()"/>');
+			html.push('</td></tr></table>');
+			layer.open({
+				title:'请输入验证码',
+			    type: 1,
+			    area: ['420px', '140px'], //宽高
+			    content: html.join(''),
+			    btn: ['发送验证码', '取消'],
+			    success: function(layero, index){
+			    	getVerify();
+			    },
+			    yes: function(index, layero){
+			    	isSend = true;
+			    	params.smsVerfy = $.trim($('#smsVerfy').val());
+			    	if(params.smsVerfy==''){
+   			    		WST.msg('请输入验证码!', {icon: 5});
+   			   			return;
+   			    	}
+			    	$.post(Think.U('Home/Users/getPhoneVerifyCode'),params,function(data,textStatus){
+			   			var json = WST.toJson(data);
+			   			if(json.status!=1){
+							WST.msg(json.msg, {icon: 5});
+							time = 0;
+							isSend = false;
+							getVerify();
+						}if(json.status==1){
+							WST.msg('短信已发送，请注册查收');
+							layer.close(index);
+			   				time = 130;
+			   				$('#timeTips').css('width','100px');
+			   				$('#timeTips').html('获取验证码(130)');
+			   				$('#mobileCode').val(json.phoneVerifyCode);
+			   				var task = setInterval(function(){
+			   					time--;
+			   					$('#timeTips').html('获取验证码('+time+")");
+			   					if(time==0){
+			   						isSend = false;						
+			   						clearInterval(task);
+			   						$('#timeTips').html("重新获取验证码");
+			   					}
+			   				},1000);
+			   			}
+			   		});
+			    },
+			    cancel:function(){
+			    	isSend = false;
+			    }
+			});
+		}else{
+			isSend = true;
+			$.post(Think.U('Home/Users/getPhoneVerifyCode'),params,function(data,textStatus){
+	   			var json = WST.toJson(data);
+	   			if(json.status!=1){
+					WST.msg(json.msg, {icon: 5});
+					time = 0;
+					isSend = false;
+				}if(json.status==1){
+					WST.msg('短信已发送，请注册查收');
+	   				time = 130;
+	   				$('#timeTips').css('width','100px');
+	   				$('#timeTips').html('获取验证码(130)');
+	   				$('#mobileCode').val(json.phoneVerifyCode);
+	   				var task = setInterval(function(){
+	   					time--;
+	   					$('#timeTips').html('获取验证码('+time+")");
+	   					if(time==0){
+	   						isSend = false;						
+	   						clearInterval(task);
+	   						$('#timeTips').html("重新获取验证码");
+	   					}
+	   				},1000);
+	   			}
+	   		});
+		}
+}
 
 function regist(){	
 	
@@ -282,7 +326,7 @@ function regist(){
 		var json = WST.toJson(data);
 		if(json.status>0){
 			WST.msg('注册成功，正在跳转登录!', {icon: 6}, function(){
-				location.href=domainURL +'/index.php';
+				location.href=WST.DOMAIN;
    			});
 		}else if(json.status==-2){
 			WST.msg('用户名已存在!', {icon: 5});

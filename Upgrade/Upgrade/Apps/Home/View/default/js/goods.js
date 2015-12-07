@@ -255,9 +255,9 @@ function favoriteGoods(id){
 				$('#f0_txt').html('已关注');
 				$('#f0_txt').attr('f',json.id);
 			}else if(json.status==-999){
-				WST.msg('关注失败，请先登录!');
+				WST.msg('关注失败，请先登录!',{offset: '200px'});
 			}else{
-				WST.msg('关注失败!');
+				WST.msg('关注失败!',{offset: '200px'});
 			}
 		});
 	}else{
@@ -273,9 +273,9 @@ function favoriteShops(id){
 				$('#f1_txt').html('已关注');
 				$('#f1_txt').attr('f',json.id);
 			}else if(json.status==-999){
-				WST.msg('关注失败，请先登录!');
+				WST.msg('关注失败，请先登录!',{offset: '200px'});
 			}else{
-				WST.msg('关注失败!');
+				WST.msg('关注失败!',{offset: '200px'});
 			}
 		});
 	}else{
@@ -290,7 +290,7 @@ function cancelFavorites(id,type){
 			$('#f'+type+'_txt').html('关注'+((type==1)?'店铺':'商品'));
 			$('#f'+type+'_txt').attr('f',0);
 		}else{
-			WST.msg('取消关注失败!');
+			WST.msg('取消关注失败!',{offset: '100px'});
 		}
 	});
 }

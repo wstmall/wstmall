@@ -301,26 +301,26 @@ function appraiseOrder(id){
 	});
 }
 
-function addGoodsAppraises(shopId,goodsId,orderId){
-	var goodsScore = $('.'+goodsId+'_goodsScore > input[name="score"]').val();
+function addGoodsAppraises(shopId,goodsId,goodsAttrId,orderId){
+	var goodsScore = $('.'+goodsId+'_'+goodsAttrId+'_goodsScore > input[name="score"]').val();
 	if(goodsScore==0){
 		WST.msg('请选择商品评分 !', {icon: 5});
 		return;
 	}
 	
-	var timeScore = $('.'+goodsId+'_timeScore > input[name="score"]').val();
+	var timeScore = $('.'+goodsId+'_'+goodsAttrId+'_timeScore > input[name="score"]').val();
 	if(timeScore==0){
 		WST.msg('请选择时效得分 !', {icon: 5});
 		return;
 	}
 	
-	var serviceScore = $('.'+goodsId+'_serviceScore > input[name="score"]').val();
+	var serviceScore = $('.'+goodsId+'_'+goodsAttrId+'_serviceScore > input[name="score"]').val();
 	if(serviceScore==0){
 		WST.msg('请选择服务得分 !', {icon: 5});
 		return;
 	}
 	
-	var content = $.trim($('#'+goodsId+'_content').val());
+	var content = $.trim($('#'+goodsId+'_'+goodsAttrId+'_content').val());
 	if(content.length<3 || content.length>50){
 		WST.msg('评价内容为3-50个字 !', {icon: 5});
 		return;
@@ -328,14 +328,16 @@ function addGoodsAppraises(shopId,goodsId,orderId){
 	
 	//layer.confirm('您确定要提交该评价吗？',{icon: 3, title:'系统提示'}, function(tips){
 	    var ll = layer.load('数据处理中，请稍候...');
-		$.post(Think.U('Home/GoodsAppraises/addGoodsAppraises'),{shopId:shopId, goodsId:goodsId, orderId:orderId, goodsScore:goodsScore, timeScore:timeScore, serviceScore:serviceScore, content:content },function(data,textStatus){
+		$.post(Think.U('Home/GoodsAppraises/addGoodsAppraises'),{shopId:shopId, goodsId:goodsId, goodsAttrId:goodsAttrId,orderId:orderId, goodsScore:goodsScore, timeScore:timeScore, serviceScore:serviceScore, content:content },function(data,textStatus){
 			//layer.close(tips);
 			layer.close(ll);
 			var json = WST.toJson(data);
 			if(json.status==1){
-				$('#'+goodsId+'_appraise').slideUp();
-				$('#'+goodsId+'_appraise').empty();
-				$('#'+goodsId+'_status').html('评价成功');
+				$('#'+goodsId+'_'+goodsAttrId+'_appraise').slideUp();
+				$('#'+goodsId+'_'+goodsAttrId+'_appraise').empty();
+				$('#'+goodsId+'_'+goodsAttrId+'_status').html('评价成功');
+			}else if(json.status==-1){
+				WST.msg(json.msg, {icon: 5});
 			}else{
 				WST.msg('评价失败，请刷新后再重试 !', {icon: 5});
 			}
@@ -392,245 +394,6 @@ function orderConfirm(id,type){
 		});
 	}
 }
-function getAreaListForOpen(objId,parentId,t,id){
-	   var params = {};
-	   params.parentId = parentId;
-	   params.type = t + 1;
-	   $('#'+objId).empty();
-	   if(t<1){
-		   $('#areaId3').empty();
-		   $('#areaId3').html('<option value="">请选择</option>');
-		   if(t==0 && shopMap && $('#areaId2').find("option:selected").text()!=''){
-			   shopMap.setCity($('#areaId2').find("option:selected").text());
-			   $('#showLevel').val(shopMap.getZoom());
-		   }
-	   }
-	   var html = [];
-	   $.post(Think.U('Home/Areas/queryByList'),params,function(data,textStatus){
-		    html.push('<option value="">请选择</option>');
-			var json = WST.toJson(data);
-			if(json.status=='1' && json.list){
-				var opts = null;
-				for(var i=0;i<json.list.length;i++){
-					opts = json.list[i];
-					html.push('<option value="'+opts.areaId+'" '+((id==opts.areaId)?'selected':'')+'>'+opts.areaName+'</option>');
-				}
-			}
-			$('#'+objId).html(html.join(''));
-			if(t==0)getCommunitysForOpen();
-	   });
-}
-
-// 修改开始2015-4-25
-function getCommunitysForOpen(){
-	  $('#areaTree').empty();
-	  var areaId = $('#areaId2').val();
-	  $.post(Think.U('Home/Areas/getAreaAndCommunitysByList'),{areaId:areaId},function(data,textStatus){
-			var json = data;
-			if(json.list){
-					var html = [];
-					json = json.list;
-					for(var i=0;i<json.length;i++){
-						var isAreaSelected = ($.inArray(json[i]['areaId'],relateArea)>-1)?" checked ":"";
-						communitysCount = 0
-						if (json[i].communitys) {
-							for (var j =json[i].communitys.length - 1; j >= 0; j--) {
-								if ($.inArray(json[i].communitys[j]['communityId'],relateCommunity) > -1 ) {communitysCount++;};
-							};
-						};
-						html.push("<dl class='areaSelect' id='"+json[i]['areaId']+"'>");
-						html.push("<dt class='ATRoot' id='node_"+json[i]['areaId']+"' isshow='0'>"+json[i]['areaName']+"：<span> <input type='checkbox' all='1' class='AreaNode' onclick='javascript:selectArea(this)' id='ck_"+json[i]['areaId']+"' "+isAreaSelected+" value='"+json[i]['areaId']+"'><label for='ck_"+json[i]['areaId']+"' "+isAreaSelected+" value='"+json[i]['areaId']+"'>全区配送</label></span> <small>(已选<span class='count'>"+communitysCount+"</span>个社区)</small></dt>");
-						if(json[i].communitys && json[i].communitys.length){
-							for(var j=0;j<json[i].communitys.length;j++){
-								var isCommunitySelected = ($.inArray(json[i].communitys[j]['communityId'],relateCommunity)>-1)?" checked ":"";
-								isCommunitySelected += (isAreaSelected!='')?" disabled ":"";
-								html.push('<dd>');
-							    html.push("<div class='ATNode' id='node_"+json[i]['areaId']+"_"+json[i].communitys[j]['communityId']+"'><input type='checkbox' id='ck_"+json[i]['areaId']+"_"+json[i].communitys[j]['communityId']+"' all='0' class='AreaNode' "+isCommunitySelected+" onclick='javascript:selectArea(this)' value='"+json[i].communitys[j]['communityId']+"'><label for='ck_"+json[i]['areaId']+"_"+json[i].communitys[j]['communityId']+"'>"+json[i].communitys[j]['communityName']+"</label></div>");
-							    html.push('</dd>');
-							}
-						}
-						html.push("</dl>");
-					}
-					$('#areaTree').html(html.join(''));
-					$('#expendAll').parent().removeClass('Hide');
-					$('#expendAll').attr('checked','checked');
-				}
-		});
-	}
-function selectArea(v){
-		count = 0;
-		if($(v).attr('all')=='1'){
-			$('input[id^="'+$(v).attr('id')+'_"]').each(function(){
-				$(this)[0].checked = $(v)[0].checked;
-				$(this)[0].disabled = $(v)[0].checked;
-				if ($(v)[0].checked) {count++};
-			});
-		}else{
-			$(v).closest('dl').find('input[type="checkbox"]').each(function(){
-				if ($(this).prop('checked') == true) { count++};
-			});
-		}
-		$(v).closest('dl').find('.count:first').html(count);
-	}
-function openShop(){
-	   var params = {};
-	   params.userName = $('#userName').val();
-	   params.shopName = $('#shopName').val();
-	   params.shopCompany = $('#shopCompany').val();
-	   params.shopImg = $('#shopImg').val();
-	   params.shopTel = $('#shopTel').val();
-	   params.qqNo = $('#qqNo').val();
-	   params.areaId1 = $('#areaId1').val();
-	   params.areaId2 = $('#areaId2').val();
-	   params.areaId3 = $('#areaId3').val();
-	   params.goodsCatId1 = $('#goodsCatId1').val();
-	   params.shopAddress = $('#shopAddress').val();
-	   params.deliveryStartMoney = $('#deliveryStartMoney').val();
-	   params.deliveryMoney = $('#deliveryMoney').val();
-	   params.deliveryFreeMoney = $('#deliveryFreeMoney').val();
-	   params.avgeCostMoney = $('#avgeCostMoney').val();
-	   params.bankId = $('#bankId').val();
-	   params.bankNo = $('#bankNo').val();
-	   params.isInvoice = $("input[name='isInvoice']:checked").val();
-	   params.invoiceRemarks = $.trim($('#invoiceRemarks').val());
-	   params.serviceStartTime = $('#serviceStartTime').val();
-	   params.serviceEndTime = $('#serviceEndTime').val();
-	   params.shopAtive = $("input[name='shopAtive']:checked").val();
-	   params.latitude = $('#latitude').val();
-	   params.longitude = $('#longitude').val();
-	   params.mapLevel = $('#mapLevel').val();
-	   params.verify = $('#authcode').val();
-	   if(params.latitude=='' || params.longitude==''){
-		   WST.msg('请标注店铺地址!', {icon: 5});
-		   return;
-	   }
-	   if(params.shopImg==''){
-		   WST.msg('请上传店铺图片!', {icon: 5});
-		   return;
-	   }
-	   var relateArea = [0];
-	   var relateCommunity = [0];
-	   $('.AreaNode').each(function(){
-			if($(this)[0].checked){
-				if($(this).attr('all')==1){
-					relateArea.push($(this).val());
-				}else{
-					relateCommunity.push($(this).val());
-				}
-			}
-	   });
-	   params.relateAreaId=relateArea.join(',');
-	   params.relateCommunityId=relateCommunity.join(',');
-	   if(params.relateAreaId=='0' && params.relateCommunityId=='0'){
-		   WST.msg('请选择配送区域!', {icon: 5});
-		   return;
-	   }
-	   if(params.isInvoice==1 && params.invoiceRemarks==''){
-		   WST.msg('请输入发票说明!', {icon: 5});
-		   return;
-	   }
-	   if(parseInt(params.serviceStartTime,10)>parseInt(params.serviceEndTime,10)){
-		   WST.msg('开始营业时间不能大于结束营业时间!', {icon: 5});
-		   return;
-	   }
-	   if(!document.getElementById('protocol').checked){
-		   WST.msg('必须同意使用协议才允许注册!',{icon: 5});
-		   return;
-	   }
-	   if(params.verify==''){
-		   WST.msg('请输入验证码!',{icon: 5});
-		   return;
-	   }
-	   var ll = layer.load('正在处理，请稍后...', 3);
-	   $.post(Think.U('Home/Shops/openShopByUser'),params,function(data,textStatus){
-			var json = WST.toJson(data);
-			if(json.status=='1'){
-				WST.msg('您的开店申请已提交，请等候商城管理员审核!', {icon: 1}, function(){
-					location.href=Think.U('Home/Orders/queryByPage');
-				});
-			}else if(json.status==-4){
-				WST.msg('验证码错误!', {icon: 5});
-				getVerify();
-			}else if(json.status==-5){
-				WST.msg('验证码已超过有效期!', {icon: 5});
-				getVerify();
-			}else{
-				WST.msg('操作您的开店申请失败，请联系商城管理员!', {icon: 5});
-				getVerify();
-			}
-			layer.close(ll);
-		});
-}
-
-function initTime(objId,val){
-   for(var i=0;i<24;i++){
-	  $('<option value="'+i+'" '+((val==i)?"selected":'')+'>'+i+':00</option>').appendTo($('#'+objId));
-	  $('<option value="'+(i+0.5)+'" '+((val==(i+0.5))?"selected":'')+'>'+i+':30</option>').appendTo($('#'+objId));
-   }
-}
-function isInvoce(v){
-   if(v){
-	  $('#invoiceRemarkstr').show();
-   }else{
-	  $('#invoiceRemarkstr').hide();
-   }
-}
-function showXiey(id){
-		layer.open({
-		    type: 2,
-		    title: '店铺用户注册协议',
-		    shadeClose: true,
-		    shade: 0.8,
-		    area: ['1000px', ($(window).height() - 50) +'px'],
-		    content: [Think.U('Home/Index/toUserProtocol')],
-		    btn: ['同意并注册'],
-		    yes: function(index, layero){
-		    	layer.close(index);
-		    }
-		});
-	}	
-
-var shopMap = null;
-var toolBar = null;
-function ShopMapInit(option){
-	   var opts = {zoom:$('#mapLevel').val(),longitude:$('#longitude').val(),latitude:$('#latitude').val()};
-	   if(shopMap)return;
-	   $('#shopMap').show();
-	   shopMap = new AMap.Map('mapContainer', {
-			view: new AMap.View2D({
-				zoom:opts.zoom
-			})
-	   });
-	   if(opts.longitude!='' && opts.latitude){
-		   shopMap.setZoomAndCenter(opts.zoom, new AMap.LngLat(opts.longitude, opts.latitude));
-		   var marker = new AMap.Marker({
-				position: new AMap.LngLat(opts.longitude, opts.latitude), //基点位置
-				icon:"http://webapi.amap.com/images/marker_sprite.png"
-		   });
-		   marker.setMap(shopMap);
-	   }
-	   shopMap.plugin(["AMap.ToolBar"],function(){		
-			toolBar = new AMap.ToolBar();
-			shopMap.addControl(toolBar);
-			toolBar.show();
-	   });
-	   
-	   AMap.event.addListener(shopMap,'click',function(e){
-			shopMap.clearMap();
-			$('#longitude').val(e.lnglat.getLng());
-			$('#latitude').val(e.lnglat.getLat());
-			var marker = new AMap.Marker({
-				position: e.lnglat, //基点位置
-				icon:"http://webapi.amap.com/images/marker_sprite.png"
-			});
-			marker.setMap(shopMap);
-	   });
-	   AMap.event.addListener(shopMap,'zoomchange',function(e){
-		   $('#mapLevel').val(this.getZoom());
-	   })
-}
-
-
 
 function getOrdersList(type){
 	var params = {};

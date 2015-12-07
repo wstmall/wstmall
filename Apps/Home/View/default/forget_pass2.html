@@ -105,6 +105,7 @@
 	<script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
     <script src="__PUBLIC__/js/common.js"></script>
     <script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/findpass.js"></script>
 	<script type="text/javascript">
 	var resetPassUrl = '';
 	var findPassTime = 0;
@@ -147,53 +148,9 @@
 	        onError : "手机验证码错误！",
 	        onWait : "正在对手机验证码进行合法性校验，请稍候..."
 	    });
-	    $("#getPhoneVerify").click(function(){
-	    	if(findPassTime>0)return;
-	    	if ($("#userPhone").val() == '') {
-	            alert('你没有预留手机号码，不能通过手机号码找回，请尝试用邮箱找回！');
-	        }else{
-	            $.getJSON("<?php echo U('Home/Users/getPhoneVerify');?>", { loginName: $("#loginName").val(), time: Math.random(),userPhone:$("#userPhone").val()},
-	              function(data){
-	                if (data.status=='1'){
-	                	findPassTime = data.time;
-	                    $("#getPhoneVerify").val(data.time).click(function(){return false;});
-	                    resetVerify();
-	                }else if(data.status=='-2'){
-	                	$("#phoneVerifyTip").find('div:first').html('<font color="red">您发送的短信数超过每日限额！</font>');
-		            }else{
-	                    $("#phoneVerifyTip").find('div:first').html('<font color="red">获取失败！请重新获取！</font');
-	                }
-	              });
-	        }
-	    });
-	    $("#sendEmail").click(function(){
-	    	var msg= layer.load('正在发送邮件，请稍后...', 3);
-	        $.getJSON("<?php echo U('Home/Users/getEmailVerify');?>", { loginName: $("#loginName").val(), time: Math.random(),userPhone:$("#userPhone").val()},
-	          function(data){
-	        	layer.close(msg);
-	            if (data.status==1){
-	                $("#sendEmail").val('请查看邮件！并进行激活操作');
-	                $("#sendEmail").click(function(){return false;});
-	            }else{
-	                $("#sendEmail").val('发送邮件失败！请重新发送！');
-	            }
-	          });
-	    })
-	
-	    /**
-	     * 重置手机验证码获取时间
-	     */
-	    function resetVerify(){
-	        var item = $("#getPhoneVerify");      
-	        var flag = setInterval(function(){
-	            if (findPassTime > 0) {
-	                item.val(--findPassTime);
-	            }else{
-	                item.val("点击获取");
-	                clearInterval(flag);
-	            }
-	        },1000)
-	    }
 	});
 	</script>
+	<style>
+   	.layui-layer-btn a{background:#e23c3d;}
+   	</style>
 </html>

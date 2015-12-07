@@ -997,7 +997,7 @@ b, strong {
 .wst-article-main{width: 975px;float: right;border: 1px solid #40CCF5;padding: 4px;}
 .wst-article-main .title{padding-left:4px;font-size: 15px;font-weight: bold;line-height: 30px;background-color:#F7F7F7}
 .wst-article-main .content{padding-left:4}
-#wst-hotsearch-keys{line-height:28px;padding-left:20px;color:#6C6C6C;}
+#wst-hotsearch-keys{line-height:28px;padding-left:20px;color:#6C6C6C;height:25px;overflow:hidden;}
 #wst-hotsearch-keys a{color:#6C6C6C;}
 #wst-hotsearch-keys a:hover{color:red;font-weight:bold;text-decoration: none;}
 
@@ -1152,3 +1152,18 @@ b, strong {
 	    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr="#f7f7f7", endColorstr="#f2f2f2")";
 }
 .wst-list-tbar{border-bottom:1px solid #ddd;padding:5px;}
+.wst-text{
+    border: 1px solid #cccccc;
+    color: #999;
+    float: none;
+    font-family: Arial,"微软雅黑";
+    font-size: 14px;
+    height: 16px;
+    padding: 10px 25px 10px 5px;
+    margin-right:5px;
+}
+.wst-smsverfy{
+    margin:7px 2px ;
+}
+.wst-list-loading{margin:0px auto;margin-top:5px;width:100px;}
+input[type=checkbox],input[type=radio] {margin-right:5px;}

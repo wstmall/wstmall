@@ -124,7 +124,7 @@ class UserAddressModel extends BaseModel {
 	              left join __PREFIX__areas a2 on a2.areaId=ua.areaId2 and a2.isShow=1 and a2.areaFlag=1
 	              left join __PREFIX__areas a3 on a3.areaId=ua.areaId3 and a3.isShow=1 and a3.areaFlag=1
 	              left join __PREFIX__communitys c on c.communityId=ua.communityId and c.isShow=1
-	              where ua.userId=".(int)$userId." and a2.areaId=".$cityId;
+	              where ua.userId=".(int)$userId." and a2.areaId=".$cityId." order by isDefault desc";
 		 return $m->query($sql);
 	  }
 	  

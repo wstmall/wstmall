@@ -10,10 +10,21 @@ dl.areaSelect:hover{border:1px solid #E5CD29;}
 dl.areaSelect:hover dd{display: block;}
 dl.areaSelect dd{margin-left:20px;width:100%;}
 .layui-layer-btn a{background:#e23c3d;}
-
+.abtn {
+    background: #f4f4f4 none repeat scroll 0 0;
+    border: 1px solid #dddddd;
+    color: #333;
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    margin-top: 0;
+    padding: 0;
+    text-align: center;
+    text-decoration: none;
+    width: 106px;
+}
 
 </style>
-
 <script src="__PUBLIC__/plugins/kindeditor/kindeditor.js"></script>
 <script src="__PUBLIC__/plugins/kindeditor/lang/zh_CN.js"></script>
    <script>
@@ -21,35 +32,12 @@ dl.areaSelect dd{margin-left:20px;width:100%;}
    	var relateCommunity = "{$object['relateCommunity']}".split(',');
    	var relateArea = "{$object['relateArea']}".split(',');
    	$(function () {
-  	 	//展开按钮
-   		$("#expendAll").click(function(){
-   			if ($(this).prop('checked')==true) {$("dl.areaSelect dd").removeClass('Hide')}
-   			else{$("dl.areaSelect dd").addClass('Hide')}
-   		})
-	   $.formValidator.initConfig({
-		   theme:'Default',mode:'AutoTip',formID:"myshop",debug:true,submitOnce:true,onSuccess:function(){
-			   openShop();
-			   return false;
-			},onError:function(msg){
-		}});
-	    $("#shopName").formValidator({onShow:"",onFocus:"店铺名称不能超过20个字符",onCorrect:"输入正确"}).inputValidator({min:1,max:40,onError:"店铺名称不符合要求,请确认"});
-		$("#userName").formValidator({onShow:"",onFocus:"请输入店主姓名",onCorrect:"输入正确"}).inputValidator({min:1,max:20,onError:"店主姓名不能为空,请确认"});
-		$("#shopCompany").formValidator({onShow:"",onFocus:"请输入公司名称",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"公司名称不能为空,请确认"});
-		$("#shopTel").formValidator({onShow:"",onFocus:"请输入店铺电话",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"店铺电话不能为空,请确认"});
-		$("#shopAddress").formValidator({onShow:"",onFocus:"请输入店铺地址",onCorrect:"输入正确"}).inputValidator({min:1,max:120,onError:"店铺地址不能为空,请确认"});
-		$("#areaId3").formValidator({onFocus:"请选择所属地区"}).inputValidator({min:1,onError: "请选择所属地区"});
-		$("#goodsCatId1").formValidator({onFocus:"请选择所属行业"}).inputValidator({min:1,onError: "请选择所属行业"});
-		$("#bankId").formValidator({onFocus:"请选择所属银行"}).inputValidator({min:1,onError: "请选择所属银行"});
-		$("#bankNo").formValidator({onShow:"",onFocus:"请输入银行卡号",onCorrect:"输入正确"}).inputValidator({min:16,max:19,onError:"银行卡号格式错误,请确认"});
-		
-		initTime('serviceStartTime','8');
-		initTime('serviceEndTime','20');
-		getAreaListForOpen("areaId2",'{$area["parentId"]}',0,'{$area["areaId"]}');
-		getAreaListForOpen("areaId3",'{$area["areaId"]}',1);
-		getVerify();
-
-		ShopMapInit({});
-  });
+   		userShopInit();
+   		getAreas("areaId2",'{$area["parentId"]}',"{$area['areaId']}","areaId2,areaId3",function(){
+   			getCommunityForOpen();
+ 		   getAreas("areaId3",'{$area["areaId"]}',"","areaId3");
+ 	    });
+    });
 
    </script>	
    <div class="wst-body"> 
@@ -58,7 +46,7 @@ dl.areaSelect dd{margin-left:20px;width:100%;}
        <iframe name="upload" style="display:none"></iframe>
 			<form id="uploadform_Filedata" autocomplete="off" style="position:absolute;top:114px;left:138px;z-index:10;" enctype="multipart/form-data" method="POST" target="upload" action="{:U('Home/Shops/uploadPic')}" >
 				<div style="position:relative;">
-				<input id="shopImg" name="shopImg" type="text" value="" readonly style="margin-right:4px;float:left;margin-left:8px;width:250px;"/>
+				<input id="shopImg" name="shopImg" type="text" class="wstipt" value="" readonly style="margin-right:4px;float:left;margin-left:8px;width:250px;"/>
 				<div class="div1">
 					<div class="div2">浏览</div>
 					<input type="file" class="inputstyle" id="Filedata" name="Filedata" onchange="updfile('Filedata');" >
@@ -79,15 +67,15 @@ dl.areaSelect dd{margin-left:20px;width:100%;}
         <table class="table table-hover table-striped table-bordered wst-form">
            <tr>
              <th width='130' align='right'>店铺名称<font color='red'>*</font>：</th>
-             <td><input type='text' id='shopName' class="form-control wst-ipt" style='width:250px;' maxLength='25'/></td>
+             <td><input type='text' id='shopName' class="wstipt" style='width:250px;' maxLength='25'/></td>
            </tr>
            <tr>
              <th width='120' align='right'>店主姓名<font color='red'>*</font>：</th>
-             <td><input type='text' id='userName' class="form-control wst-ipt" style='width:250px;' maxLength='25' value='{$WST_USER.userName}'/></td>
+             <td><input type='text' id='userName' class="wstipt" style='width:250px;' maxLength='25' value='{$WST_USER.userName}'/></td>
            </tr>
            <tr>
              <th width='120' align='right'>公司名称<font color='red'>*</font>：</th>
-             <td><input type='text' id='shopCompany' class="form-control wst-ipt"  style='width:250px;' maxLength='25'/></td>
+             <td><input type='text' id='shopCompany' class="wstipt"  style='width:250px;' maxLength='25'/></td>
            </tr>
            <tr>
              <th width='120' align='right'>店铺图标<font color='red'>*</font>：</th>
@@ -100,41 +88,41 @@ dl.areaSelect dd{margin-left:20px;width:100%;}
            
            <tr>
              <th width='120' align='right'>店铺电话<font color='red'>*</font>：</th>
-             <td><input type='text' id='shopTel' class="form-control wst-ipt" maxLength='25' value="{$object['shopTel']}"/></td>
+             <td><input type='text' id='shopTel' class="wstipt" maxLength='25' value=""/></td>
            </tr>
            <tr>
              <th width='120' align='right'>QQ：</th>
-             <td><input type='text' id='qqNo' value="{$object['qqNo']}" class="form-control wst-ipt" maxLength='25'/></td>
+             <td><input type='text' id='qqNo' value="" class="wstipt" maxLength='25'/></td>
            </tr>
            <tr>
              <th width='120' align='right'>所属地区<font color='red'>*</font>：</th>
              <td>
-             <select id='areaId1' onchange='javascript:getAreaListForOpen("areaId2",this.value,-1)'>
+             <select id='areaId1' class='wstipt' onchange='javascript:getAreas("areaId2",this.value,"","areaId2,areaId3")'>
                <option value=''>请选择</option>
                <volist name="areaList" id="vo">
                <option value='{$vo['areaId']}' <if condition="$area['parentId'] == $vo['areaId'] ">selected</if>>{$vo['areaName']}</option>
                </volist>
              </select>
-             <select id='areaId2' onchange='javascript:getAreaListForOpen("areaId3",this.value,0);'>
+             <select id='areaId2' class='wstipt' onchange='javascript:getAreas("areaId3",this.value,"","areaId3")'>
                <option value=''>请选择</option>
              </select>
-             <select id='areaId3'>
+             <select id='areaId3' class='wstipt'>
                <option value=''>请选择</option>
              </select>
              </td>
            </tr>
            <tr>
              <th width='120' align='right'>店铺地址<font color='red'>*</font>：</th>
-             <td><input type='text' id='shopAddress' class="form-control wst-ipt" style='width:350px;' maxLength='100'/></td>
+             <td><input type='text' id='shopAddress' class="wstipt" style='width:350px;' maxLength='100'/></td>
            </tr>
            <tr id='shopMap' style='display:none'>
              <td>&nbsp;</td>
              <td>
              <div id="mapContainer" style='height:400px;width:90%;'>等待地图初始化...</div>
              <div style='display:none'>
-             <input type='text' id='latitude' name='latitude' value="{$object['latitude']}"/>
-             <input type='text' id='longitude' name='longitude' value="{$object['longitude']}"/>
-             <input type='text' id='mapLevel' name='mapLevel' value="{$object['mapLevel']}"/>
+             <input type='text' id='latitude' name='latitude' class='wstipt' value=""/>
+             <input type='text' id='longitude' name='longitude' class='wstipt' value=""/>
+             <input type='text' id='mapLevel' name='mapLevel' class='wstipt' value="13"/>
              </div>
              <div style='color:red'>(注意：提交开店申请之后店铺地址将无法修改)</div>
              </td>
@@ -142,7 +130,7 @@ dl.areaSelect dd{margin-left:20px;width:100%;}
            <tr>
              <th align='right'>所属行业<font color='red'>*</font>：</th>
              <td>
-             <select id='goodsCatId1'>
+             <select id='goodsCatId1' class='wstipt'>
                 <option value=''>请选择</option>
                 <volist name="goodsCatsList" id="vo">
                 <option value='{$vo['catId']}' <if condition="$object['goodsCatId1'] == $vo['catId'] ">selected</if>>{$vo['catName']}</option>
@@ -154,10 +142,10 @@ dl.areaSelect dd{margin-left:20px;width:100%;}
              <th align='right'>营业状态<font color='red'>*</font>：</th>
              <td>
              <label>
-             <input type='radio' id='shopAtive1' name='shopAtive' value='1' />营业中&nbsp;&nbsp;
+             <input type='radio' id='shopAtive1' name='shopAtive' value='1' class='wstipt'/>营业中&nbsp;&nbsp;
              </label>
              <label>
-             <input type='radio' id='shopAtive0' name='shopAtive' value='0' checked />休息中
+             <input type='radio' id='shopAtive0' name='shopAtive' value='0' checked class='wstipt'/>休息中
              </label>
              </td>
            </tr>
@@ -171,39 +159,43 @@ dl.areaSelect dd{margin-left:20px;width:100%;}
            </tr>
            <tr>
              <th width='120' align='right'>订单配送起步价<font color='red'>*</font>：</th>
-             <td><input type="text" id="deliveryStartMoney" class="text" value="0.0" onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxlength="8"></td>
+             <td><input type="text" id="deliveryStartMoney" class="wstipt" value="0.0" onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxlength="8"></td>
            </tr>
            <tr>
              <th width='120' align='right'>包邮起步价<font color='red'>*</font>：</th>
-             <td><input type='text' id='deliveryFreeMoney' class="form-control wst-ipt" value="0.0" onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='8'/></td>
+             <td><input type='text' id='deliveryFreeMoney' class="wstipt" value="0.0" onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='8'/></td>
            </tr>
            <tr>
              <th width='120' align='right'>邮费<font color='red'>*</font>：</th>
-             <td><input type='text' id='deliveryMoney' class="form-control wst-ipt" value="0.0" onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='8'/></td>
+             <td><input type='text' id='deliveryMoney' class="wstipt" value="0.0" onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='8'/></td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>平均配送时间<font color='red'>*</font>：</th>
+             <td><input type='text' id='deliveryCostTime' class="wstipt" value="0" onkeypress="return WST.isNumberKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='8'/></td>
            </tr>
            <tr>
              <th width='120' align='right'>平均消费金额<font color='red'>*</font>：</th>
-             <td><input type='text' id='avgeCostMoney' class="form-control wst-ipt" value="0.0" onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='8'/></td>
+             <td><input type='text' id='avgeCostMoney' class="wstipt" value="0.0" onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='8'/></td>
            </tr>
            <tr>
              <th align='right'>能否开发票<font color='red'>*</font>：</th>
              <td>
              <label>
-             <input type='radio' id='isInvoice1' onclick='javascript:isInvoce(true)' name='isInvoice' value='1' />能&nbsp;&nbsp;
+             <input type='radio' id='isInvoice1' class='wstipt' onclick="javascript:WST.showHide(1,'#invoiceRemarkstr')" name='isInvoice' value='1' />能&nbsp;&nbsp;
              </label>
              <label>
-             <input type='radio' id='isInvoice0' onclick='javascript:isInvoce(false)' name='isInvoice' value='0' checked/>否
+             <input type='radio' id='isInvoice0' class='wstipt' onclick="javascript:WST.showHide(0,'#invoiceRemarkstr')" name='isInvoice' value='0' checked/>否
              </label>
              </td>
            </tr>
            <tr id='invoiceRemarkstr' style='display:none'>
              <th width='120' align='right'>发票说明：</th>
-             <td><input type='text' id='invoiceRemarks' class="form-control wst-ipt" value='{$object.invoiceRemarks}' style='width:350px;' maxLength='100'/></td>
+             <td><input type='text' id='invoiceRemarks' class="wstipt" value='' style='width:350px;' maxLength='100'/></td>
            </tr>
            <tr>
              <th width='120' align='right'>转账银行<font color='red'>*</font>：</th>
              <td>
-             <select id='bankId'>
+             <select id='bankId' class='wstipt'>
                 <option value=''>请选择</option>
                 <volist name="bankList" id="vo">
                 <option value='{$vo['bankId']}'>{$vo['bankName']}</option>
@@ -213,14 +205,30 @@ dl.areaSelect dd{margin-left:20px;width:100%;}
            </tr>
            <tr>
              <th width='120' align='right'>银行卡卡号<font color='red'>*</font>：</th>
-             <td><input type='text' id='bankNo' maxLength='25' size='50'/></td>
+             <td><input type='text' id='bankNo' maxLength='25' class='wstipt' size='50'/></td>
            </tr>
            <tr>
              <th width='120' align='right'>营业时间<font color='red'>*</font>：</th>
              <td>
-             <select id='serviceStartTime'></select>
+             <select id='serviceStartTime' class='wstipt'></select>
              至
-             <select id='serviceEndTime'></select>
+             <select id='serviceEndTime' class='wstipt'></select>
+             </td>
+           </tr>
+           <tr>
+             <th align='right'>手机号<font color='red'>*</font>：</th>
+             <td>
+             <input id="userPhone" name="userPhone" class="wstipt" value="{$WST_USER.userPhone}" autocomplete="off" maxlength="11" type="text"/>
+	         <label class="blank invisible"></label>
+	         <a class="abtn" href="javascript:void(0);" onclick="getVerifyCode();" id="sendMobileCode">
+	             <span id="timeTips">获取短信验证码</span>
+	         </a>
+             </td>
+           </tr>
+           <tr>
+             <th align='right'>验证码<font color='red'>*</font>：</th>
+             <td>
+             <input id="mobileCode" style="ime-mode:disabled" name="mobileCode" class="wstipt" tabindex="6" autocomplete="off" maxlength="6" type="text"/>
              </td>
            </tr>
            <tr>
@@ -233,16 +241,6 @@ dl.areaSelect dd{margin-left:20px;width:100%;}
              </td>
            </tr>
            <tr>
-             <th align='right'>验证码<font color='red'>*</font>：</th>
-             <td>
-             <input id="authcode" style="ime-mode:disabled" name="authcode" class="text text-1" tabindex="6" autocomplete="off" maxlength="6" type="text"/>
-	         <label class="img">
-	            <img style='vertical-align:middle;cursor:pointer;height:25px;' class='verifyImg' title='刷新验证码' onclick='javascript:getVerify()'/> 
-			 </label>      	
-	         <label class="ftx23">&nbsp;看不清？<a href="javascript:getVerify()" class="flk13">换一张</a></label>
-             </td>
-           </tr>
-           <tr>
              <td colspan='2' style='padding-left:320px;'>
                  <button class='wst-btn-query' type="submit">保&nbsp;存</button>
                  <button class='wst-btn-query' type="button" onclick='javascript:location.reload();'>重&nbsp;置</button>
@@ -252,5 +250,6 @@ dl.areaSelect dd{margin-left:20px;width:100%;}
        </form>
        </div>
    </div>
+   <script src="__ROOT__/Apps/Home/View/default/js/open_shop.js"></script>
    <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=37f0869604ca86505487639427d52bf6"></script>
 </block>  

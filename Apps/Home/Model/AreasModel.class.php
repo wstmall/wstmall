@@ -32,12 +32,12 @@ class AreasModel extends BaseModel {
 	 	$communitys = array();
 	 	$communitys[$areaId2] = $this->query($sql);
 	 	return $communitys;
-	 }
+	}
 	 
 	 /**
 	  * 获取列表[带社区]
 	  */
-	  public function queryAreaAndCommunitysByList($parentId){
+	 public function queryAreaAndCommunitysByList($parentId){
 	     $m = M('areas');
 		 $rs = $m->where('areaFlag=1 and parentId='.$parentId)->field('areaId,areaName')->select();
 		 if(count($rs)>0){
@@ -48,7 +48,14 @@ class AreasModel extends BaseModel {
 		 	}
 		 }
 		 return $rs;
-	  }
+	 }
+	 /**
+	  * 根据父ID获取子数据
+	  */
+	 public function queryByList($parentId){
+	 	$m = M('areas');
+		return $m->where('areaFlag=1 and isShow=1 and parentId='.$parentId)->field('areaId,areaName')->select();
+	 }
      /**
 	 * 获取区域信息
 	 */

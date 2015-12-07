@@ -50,7 +50,7 @@
 								</div>
 							</div>
 						</div>
-						<div id="{$goods['goodsId']}_status" class="goods-status goods-txt">
+						<div id="{$goods['goodsId']}_{$goods['goodsAttrId']}_status" class="goods-status goods-txt">
 							<if condition='$goods["gaId"] eq ""'>
 							未评价
 							<else/>
@@ -61,41 +61,41 @@
 						<div style="clear: both;"></div>
 					</div>
 					<if condition='$goods["gaId"] eq ""'>
-					<div id="{$goods['goodsId']}_appraise" class="appraise-box">
+					<div id="{$goods['goodsId']}_{$goods['goodsAttrId']}_appraise" class="appraise-box">
 						<div class="main-box">
 							<div class="item">
 								<div class='title'>商品评分：</div>								
 								<div class='content'>
-									<div class="{$goods['goodsId']}_goodsScore" style='float:left'></div>
-									<div id="{$goods['goodsId']}_goodsScore_hint" style='float:left'></div>
+									<div class="{$goods['goodsId']}_{$goods['goodsAttrId']}_goodsScore" style='float:left'></div>
+									<div id="{$goods['goodsId']}_{$goods['goodsAttrId']}_goodsScore_hint" style='float:left'></div>
 								</div>
 								<div style="clear: both;"></div>
 							</div>
 							<div class="item">
 								<div class='title'>时效得分：</div>								
 								<div class='content'>									
-									<div class="{$goods['goodsId']}_timeScore" style='float:left'></div>
-									<div id="{$goods['goodsId']}_timeScore_hint" style='float:left'></div>
+									<div class="{$goods['goodsId']}_{$goods['goodsAttrId']}_timeScore" style='float:left'></div>
+									<div id="{$goods['goodsId']}_{$goods['goodsAttrId']}_timeScore_hint" style='float:left'></div>
 								</div>
 								<div style="clear: both;"></div>
 							</div>
 							<div class="item">
 								<div class='title'>服务得分：</div>								
 								<div class='content'>
-								    <div class="{$goods['goodsId']}_serviceScore" style='float:left'></div>
-								    <div id="{$goods['goodsId']}_serviceScore_hint" style='float:left'></div>									
+								    <div class="{$goods['goodsId']}_{$goods['goodsAttrId']}_serviceScore" style='float:left'></div>
+								    <div id="{$goods['goodsId']}_{$goods['goodsAttrId']}_serviceScore_hint" style='float:left'></div>									
 								</div>
 								<div style="clear: both;"></div>
 							</div>
 							<div class="item">
 								<div class='title'>点评内容：</div>					
 								<div class='content'>									
-									<textarea rows="5" cols="70" style="width:610px;" name="{$goods['goodsId']}_content" id="{$goods['goodsId']}_content" maxlength="50"></textarea>
+									<textarea rows="5" cols="70" style="width:610px;" name="{$goods['goodsId']}_{$goods['goodsAttrId']}_content" id="{$goods['goodsId']}_{$goods['goodsAttrId']}_content" maxlength="50"></textarea>
 								</div>
 								<div style="clear: both;"></div>
 							</div>
 							<div id="checkout" class="btn-box" >						
-								<a class="btn-submit" href="javascript:;" onclick="addGoodsAppraises({$orderInfo['order']['shopId']},{$goods['goodsId']},{$orderInfo['order']['orderId']})">
+								<a class="btn-submit" href="javascript:;" onclick="addGoodsAppraises({$orderInfo['order']['shopId']},{$goods['goodsId']},'{$goods['goodsAttrId']}',{$orderInfo['order']['orderId']})">
 									<button class='wst-btn-query'>评价</button>
 								</a>
 								<div style="clear: both;"></div>
@@ -132,12 +132,12 @@
 	   				    cancelOn: '__PUBLIC__/plugins/raty/img/cancel-on-big.png'
 	   		    }
 	   			<volist name="orderInfo['goodsList']" id="goods" key='key1'>
-	   			options.target='#{$goods['goodsId']}_goodsScore_hint';
-	   			$('.{$goods['goodsId']}_goodsScore').raty(options);
-	   			options.target='#{$goods['goodsId']}_timeScore_hint';
-	   			$('.{$goods['goodsId']}_timeScore').raty(options);
-	   			options.target='#{$goods['goodsId']}_serviceScore_hint';
-	   			$('.{$goods['goodsId']}_serviceScore').raty(options);
+	   			options.target='#{$goods['goodsId']}_{$goods['goodsAttrId']}_goodsScore_hint';
+	   			$('.{$goods['goodsId']}_{$goods['goodsAttrId']}_goodsScore').raty(options);
+	   			options.target='#{$goods['goodsId']}_{$goods['goodsAttrId']}_timeScore_hint';
+	   			$('.{$goods['goodsId']}_{$goods['goodsAttrId']}_timeScore').raty(options);
+	   			options.target='#{$goods['goodsId']}_{$goods['goodsAttrId']}_serviceScore_hint';
+	   			$('.{$goods['goodsId']}_{$goods['goodsAttrId']}_serviceScore').raty(options);
 	   			</volist>
 	   		});
 	   		

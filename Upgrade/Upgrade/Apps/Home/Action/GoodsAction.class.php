@@ -338,14 +338,16 @@ class GoodsAction extends BaseAction {
 		
 		$catgoods = array();		
 		foreach($shopcart as $key=>$cgoods){
-			$temp = explode('_',$key);			
-			$goods = $m->getGoodsInfo((int)$temp[0],(int)$temp[1]);
-			if($goods["isBook"]==1){
-				$goods["goodsStock"] = $goods["goodsStock"]+$goods["bookQuantity"];
+			if($cgoods['ischk']==1){
+				$temp = explode('_',$key);			
+				$goods = $m->getGoodsInfo((int)$temp[0],(int)$temp[1]);
+				if($goods["isBook"]==1){
+					$goods["goodsStock"] = $goods["goodsStock"]+$goods["bookQuantity"];
+				}
+				$goods["cnt"] = $cgoods["cnt"];
+				$totalMoney += $goods["cnt"]*$goods["shopPrice"];			
+				$catgoods[] = $goods;
 			}
-			$goods["cnt"] = $cgoods["cnt"];
-			$totalMoney += $goods["cnt"]*$goods["shopPrice"];			
-			$catgoods[] = $goods;
 		}
 		
 		$this->ajaxReturn($catgoods);

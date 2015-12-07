@@ -107,7 +107,7 @@ class ShopsAction extends BaseAction {
    		$obj["shopName"] = I("shopName");
    		$obj["deliveryStartMoney"] = I("deliveryStartMoney");
    		$obj["deliveryMoney"] = I("deliveryMoney");
-   		$obj["shopAtive"] = (int)I("shopAtive");
+   		$obj["shopAtive"] = (int)I("shopAtive",-1);
    		$ctplist = $mshops->getShopByCommunitys($obj);
    		$pages = $rslist["pages"];
 
@@ -288,14 +288,10 @@ class ShopsAction extends BaseAction {
 		$m = D('Home/Shops');
     	$userId = (int)$USER['userId'];
     	$rs = array('status'=>-1);
-    	if(!$this->checkVerify("1")){			
-			$rs['status'] = -4;
-		}else{
-		 	//如果用户没注册则先建立账号
-		 	if($userId>0){
-	    	    $rs = $m->addByUser($userId);
-	    	    if($rs['status']>0)$USER['shopStatus'] = 0;
-		 	}
+	 	//如果用户没注册则先建立账号
+		if($userId>0){
+	   	    $rs = $m->addByUser($userId);
+	    	if($rs['status']>0)$USER['shopStatus'] = 0;
 		}
     	$this->ajaxReturn($rs);
 	}
@@ -330,14 +326,10 @@ class ShopsAction extends BaseAction {
 	public function openShop(){
 		$m = D('Home/Shops');
     	$rs = array('status'=>-1);
-    	if(!$this->checkVerify("1")){			
-			$rs['status'] = -4;
-		}else{
-	 		$rs = $m->addByVisitor();
-	 		$m = D('Home/Users');
-	 		$user = $m->get($rs['userId']);
-	 		if(!empty($user))session('WST_USER',$user);
-	 	}
+	 	$rs = $m->addByVisitor();
+	 	$m = D('Home/Users');
+	 	$user = $m->get($rs['userId']);
+	 	if(!empty($user))session('WST_USER',$user);
     	$this->ajaxReturn($rs);
 	}
 

@@ -43,6 +43,7 @@ jQuery(function($){
 		$(".quick_links_panel").animate({"right":"0px"},100);
 	},
 	showQuickPop = function(type){
+		
 		if(quickPopXHR && quickPopXHR.abort){
 			quickPopXHR.abort();
 		}
@@ -79,7 +80,7 @@ jQuery(function($){
 							}
 							html.push(  "<div class='cart_item_price'><span class='cart_price'>￥"+goods.shopPrice+"</span></div>" +
 											"<div class='cart-close-box' style=''>" +
-											"<span class='cart-colse' onclick=removeCartGoods(this,'"+goods.goodsId+"')></span></div>	" +
+											"<span class='cart-colse' onclick=removeCartGoods(this,'"+goods.goodsId+"','"+goods.goodsAttrId+"')></span></div>	" +
 											"<div class='cart_goods_box' style='position:absolute;bottom:0px;right:6px;'>" +
 											
 											"<span class='cart-minus'>-</span>" +
@@ -200,8 +201,8 @@ jQuery(function($){
 	resizeHandler();
 	scrollHandler();
 });
-function removeCartGoods(obj,goodsId){
-	jQuery.post(Think.U('Home/Cart/delCartGoods') ,{goodsId:goodsId},function(data) {
+function removeCartGoods(obj,goodsId,goodsAttrId){
+	jQuery.post(Think.U('Home/Cart/delCartGoods') ,{goodsId:goodsId,goodsAttrId:goodsAttrId},function(data) {
 		
 		var vd = WST.toJson(data);
 		$(obj).parent().parent().parent().remove();

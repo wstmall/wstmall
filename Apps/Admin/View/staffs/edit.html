@@ -40,7 +40,7 @@
 		}).ajaxValidator({
 			dataType : "json",
 			async : true,
-			url : "{:U('Admin/Staffs/checkLoginKey')}",
+			url : "{:U('Admin/Staffs/checkLoginKey',array('id'=>$object['staffId']))}",
 			success : function(data){
 				var json = WST.toJson(data);
 	            if( json.status == "1" ) {

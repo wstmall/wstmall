@@ -82,12 +82,13 @@
                     
                     <div id="catgoodsList">
                         <volist name="shopgoods['shopgoods']" key="key2" id="goods">
-                        <input type="hidden" value="<if condition="$goods['goodsStock'] lt $goods['cnt']">-1</if>" class="goodsStockFlag"/>
-							<div class="wst-cartlist-item" id="selgoods_{$goods['goodsId']}" class="selgoods" <if condition="$goods['goodsStock'] lt $goods['cnt']">style="border:2px solid red;"</if>>
+                            
+							<div class="wst-cartlist-item" id="selgoods_{$goods['goodsId']}_{$goods['goodsAttrId']}" class="selgoods" <if condition="$goods['goodsStock'] lt $goods['cnt'] OR $goods['goodsStock'] eq 0">style="border:2px solid red;"</if>>
+		                        <input type="hidden" value="<if condition="$goods['goodsStock'] lt $goods['cnt']">-1</if>" class="goodsStockFlag"/>
 		                        <div class="wst-cartlist-vb">
-		                            <input type="checkbox" id="chk_goods_{$goods['goodsId']}" name="chk_goods_{$goods['shopId']}" value="{$goods['goodsId']}" parent="{$goods['shopId']}" isBook="{$goods['isBook']}" <if condition="$goods['ischk'] eq 1">checked</if>/>
-									<input type="hidden" class="cgoodsId" value="{$goods['goodsId']}" />
-		                            <input type="hidden" id="price_{$goods['goodsId']}" value="{$goods['shopPrice']}" />
+		                            <input type="checkbox" id="chk_goods_{$goods['goodsId']}_{$goods['goodsAttrId']}" name="chk_goods_{$goods['shopId']}" value="{$goods['goodsId']}" parent="{$goods['shopId']}" dataId="{$goods['goodsAttrId']}" isBook="{$goods['isBook']}" <if condition="$goods['ischk'] eq 1">checked</if>/>
+									<input type="hidden" class="cgoodsId" dataId="{$goods['goodsAttrId']}" value="{$goods['goodsId']}" />
+		                            <input type="hidden" id="price_{$goods['goodsId']}_{$goods['goodsAttrId']}" value="{$goods['shopPrice']}" />
 		                        </div>
 		                        <div class="wst-cartlist-item-col1">
 		                            <div>
@@ -108,7 +109,7 @@
 		                        </div>
 		                        <div class="wst-cartlist-item-col3">¥{$goods["shopPrice"]}元</div>
 		                        <div class="wst-cartlist-item-col4" id="stock_{$goods['goodsId']}">			                       
-			                		<if condition="$goods['goodsStock'] egt $goods['cnt']">
+			                		<if condition="$goods['goodsStock'] egt $goods['cnt'] AND $goods['cnt'] gt 0 ">
 	                                                                                                有货
 	                        		<elseif condition="$goods['goodsStock'] eq 0"/>
 	                                   	<span style="color:red;">无货</span>
@@ -118,13 +119,13 @@
 		                        </div>
 		                        <div class="wst-cartlist-item-col5">
 		                            <div class="wrap-input" style="">
-		                                <button id="numl_{$goods['goodsId']}" class="wst-cartlist-plus" onclick="changeCatGoodsnum(1,{$goods['shopId']},{$goods['goodsId']},{$goods['isBook']})">-</button>
-		                                <input id="buy-num_{$goods['goodsId']}" dataId="{$goods['goodsAttrId']}" class="text" style="width: 30px; text-align: center;" maxlength="3" value="{$goods['cnt']}" onkeypress="return WST.isNumberKey(event);" onkeyup="changeCatGoodsnum(0,{$goods['shopId']},{$goods['goodsId']},{$goods['isBook']});" />
-		                                <button id="numr_{$goods['goodsId']}" class="wst-cartlist-add" onclick="changeCatGoodsnum(2,{$goods['shopId']},{$goods['goodsId']},{$goods['isBook']})">+</button>
+		                                <button id="numl_{$goods['goodsId']}_{$goods['goodsAttrId']}" class="wst-cartlist-plus" onclick="changeCatGoodsnum(1,{$goods['shopId']},{$goods['goodsId']},{$goods['goodsAttrId']},{$goods['isBook']})">-</button>
+		                                <input id="buy-num_{$goods['goodsId']}_{$goods['goodsAttrId']}" dataId="{$goods['goodsAttrId']}" class="text" style="width: 30px; text-align: center;" maxlength="3" value="{$goods['cnt']}" onkeypress="return WST.isNumberKey(event);" onkeyup="changeCatGoodsnum(0,{$goods['shopId']},{$goods['goodsId']},{$goods['goodsAttrId']},{$goods['isBook']});" />
+		                                <button id="numr_{$goods['goodsId']}_{$goods['goodsAttrId']}" class="wst-cartlist-add" onclick="changeCatGoodsnum(2,{$goods['shopId']},{$goods['goodsId']},{$goods['goodsAttrId']},{$goods['isBook']})">+</button>
 		                            </div>
 		                        </div>
-		                        <div class="wst-cartlist-item-col7">¥<span id="prc_{$goods['goodsId']}">{$goods["shopPrice"] * $goods["cnt"]}</span>元</div>
-		                        <div class="wst-cartlist-item-col8""><a href="javascript:delCatGoods({$goods['shopId']},{$goods['goodsId']});">删除</a></div>
+		                        <div class="wst-cartlist-item-col7">¥<span id="prc_{$goods['goodsId']}_{$goods['goodsAttrId']}">{$goods["shopPrice"] * $goods["cnt"]}</span>元</div>
+		                        <div class="wst-cartlist-item-col8"><a href="javascript:delCatGoods({$goods['shopId']},{$goods['goodsId']},{$goods['goodsAttrId']});">删除</a></div>
 		                        <div class="wst-clear"></div>
 		                    </div>
                         </volist>

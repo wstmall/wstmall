@@ -141,7 +141,18 @@
                                     </div>
                                     <div style="clear: both;"></div>
                                 </div>
-                                
+                                <div class="wst-chkod-line35">
+                                    <div class="wst-chkod-cg-pno"><span style="color: red;">*</span>是否默认地址：</div>
+                                    <div class="wst-chkod-cg-pno-box">
+                                        <label>
+                                          <input type='radio' name='consignee_add_isDefault' id='consignee_add_isDefault_1' vallue='1'>是
+                                        </label>
+                                        <label>
+                                          <input type='radio' name='consignee_add_isDefault' id='consignee_add_isDefault_0' vallue='0'>否
+                                        </label>
+                                    </div>
+                                    <div style="clear: both;"></div>
+                                </div>
                             </div>
                             
 							<div class="wst-checkout wst-chkod-sbx" id="checkout">
@@ -378,7 +389,7 @@
 			
 			if(idx==-1){
 				$("#areaOk").val("0");	
-				alert("店铺“"+$("#sp_{$key-1}").html()+"”中的商品不在配送区域内！");
+				WST.msg("店铺“"+$("#sp_{$key-1}").html()+"”中的商品不在配送区域内！");
 				return false;
 			}else{
 				$("#areaOk").val("1");
@@ -393,7 +404,7 @@
 			var idx = shopCollege.indexOf(","+communityId+",");
 			if(idx==-1){
 				$("#areaOk").val("0");
-				alert("店铺“"+$("#sp_{$key-1}").html()+"”中的商品不在配送区域内！");
+				WST.msg("店铺“"+$("#sp_{$key-1}").html()+"”中的商品不在配送区域内！");
 				return false;
 			}else{
 				$("#areaOk").val("1");

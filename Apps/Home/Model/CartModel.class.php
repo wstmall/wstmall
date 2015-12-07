@@ -73,6 +73,8 @@ class CartModel extends BaseModel {
 				$goodslist[0]['shopPrice'] = $priceAttrs[0]['attrPrice'];
 				$goodslist[0]['goodsStock'] = $priceAttrs[0]['attrStock'];
 			}
+		}else{
+			$goodslist[0]['goodsAttrId'] = 0;
 		}
 		return $goodslist[0];
 	}
@@ -108,15 +110,15 @@ class CartModel extends BaseModel {
 					$goods['shopPrice'] = $priceAttrs[0]['attrPrice'];
 					$goods['goodsStock'] = $priceAttrs[0]['attrStock'];
 				}
+			}else{
+				$goods['goodsAttrId'] = 0;
 			}
 			if($goods["isBook"]==1){
 				$goods["goodsStock"] = $goods["goodsStock"]+$goods["bookQuantity"];
 			}
 			$goods["cnt"] = $cgoods["cnt"];
 			$goods["ischk"] = $cgoods["ischk"];
-			$totalCnt += $cgoods["cnt"];
-			$totalMoney += $goods["cnt"]*$goods["shopPrice"];
-			$gtotalMoney += $goods["cnt"]*$goods["shopPrice"];
+			if($goods["ischk"]==1)$totalMoney += $goods["cnt"]*$goods["shopPrice"];
 
 			if($startTime<$goods["startTime"]){
 				$startTime = $goods["startTime"];
@@ -130,7 +132,7 @@ class CartModel extends BaseModel {
 			$cartgoods[$goods["shopId"]]["deliveryMoney"] = $goods["deliveryMoney"];//店铺配送费
 			$cartgoods[$goods["shopId"]]["deliveryStartMoney"] = $goods["deliveryStartMoney"];//店铺配送费
 			$cartgoods[$goods["shopId"]]["totalCnt"] = $cartgoods[$goods["shopId"]]["totalCnt"]+$cgoods["cnt"];
-			$cartgoods[$goods["shopId"]]["totalMoney"] = $cartgoods[$goods["shopId"]]["totalMoney"]+($goods["cnt"]*$goods["shopPrice"]);
+			$cartgoods[$goods["shopId"]]["totalMoney"] = $cartgoods[$goods["shopId"]]["totalMoney"]+(($goods["ischk"]==1)?$goods["cnt"]*$goods["shopPrice"]:0);
 		}
 		
 		foreach($catgoods as $key=> $cshop){
@@ -164,6 +166,7 @@ class CartModel extends BaseModel {
 			if($goods["isBook"]==1){
 				$goods["goodsStock"] = $goods["goodsStock"]+$goods["bookQuantity"];
 			}
+			$goods['goodsAttrId'] = $goodsAttrId;
 			$goods["cnt"] = $cgoods["cnt"];
 			$goods["stockStatus"] = ($goods["goodsStock"]>=$goods["cnt"])?1:0;		
 			$cartgoods[] = $goods;
@@ -177,13 +180,12 @@ class CartModel extends BaseModel {
 	 * 删除购物车中的商品
 	 */
 	public function delCartGoods(){
-		
-		$goodsId = (int)I("goodsId");
+		$goodsKey = (int)I("goodsId")."_".(int)I("goodsAttrId");
 		$shopcart = session("WST_CART")?session("WST_CART"):array();
 		session("WST_CART");
 		$newShopcat = array();
 		foreach($shopcart as $key=>$cgoods){	
-			if($goodsId != $cgoods['goodsId']){
+			if($goodsKey != $key){
 				$newShopcat[$key] = $cgoods;
 			}			
 		}
@@ -197,16 +199,15 @@ class CartModel extends BaseModel {
 	 * 
 	 */
 	public function changeCartGoodsnum(){
-		$goodsId = (int)I("goodsId");
-		$goodsAttrId = (int)I("goodsAttrId");
+		$goodsKey = (int)I("goodsId")."_".(int)I("goodsAttrId");
 		$num = abs((int)I("num"));
-		$ischk = I("ischk",0);
+		$ischk = (int)I("ischk",0);
 		$shopcart = session("WST_CART")?session("WST_CART"):array();
 		session("WST_CART",null);
 		$newShopcart = array();
 		foreach($shopcart as $key=>$cgoods){	
 			$cartgoods = $shopcart[$key];
-			if($goodsId == $key){
+			if($goodsKey == $key){
 				$cartgoods["cnt"] = $num;
 				$cartgoods["ischk"] = $ischk;
 			}

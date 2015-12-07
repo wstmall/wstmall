@@ -74,7 +74,6 @@
     <script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
 	<script type="text/javascript">
 	$(document).ready(function(){
-	    
 	    $.formValidator.initConfig({formID:"loginForm",theme:"Default",submitOnce:true,
 	        onError:function(msg,obj,errorlist){
 	            console.log(msg);
@@ -83,7 +82,6 @@
 	    });
 	   $("#loginPwd").formValidator({onShow:"请输入密码",onFocus:"至少6个字符,最多50个字符",onCorrect:"密码合法"}).inputValidator({min:6,max:50,onError:"你输入的密码非法,请确认"});
 	    $("#repassword").formValidator({onShow:"输再次输入密码",onFocus:"至少6个字符,最多50个字符",onCorrect:"密码一致"}).compareValidator({desID:"loginPwd",operateor:"=",onError:"2次密码不一致,请确认"});   
-	    
 	});
 	</script>
 </html>

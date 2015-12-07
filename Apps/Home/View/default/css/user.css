@@ -199,8 +199,12 @@ a:active,a:hover {
 	box-shadow: 2px 2px 2px #f0f0f0 inset;
 	font-family: inherit;
 	font-size: 100%;
-	padding: 2px;
 	vertical-align: middle;
+	margin:3px;
+}
+.wst-form select option{
+	padding: 2px;
+
 }
 .wst-shop-nav {
 	background-color: #333333;

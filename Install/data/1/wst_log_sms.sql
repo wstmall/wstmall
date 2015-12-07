@@ -14,12 +14,8 @@ CREATE TABLE `wst_log_sms` (
   `smsFunc` varchar(50) DEFAULT NULL,
   `createTime` datetime DEFAULT NULL,
   `smsCode` varchar(20) DEFAULT NULL,
+  `smsIP` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`smsId`),
-  KEY `logSrcType` (`smsSrc`,`smsPhoneNumber`),
-  KEY `createTime` (`createTime`),
-  KEY `logFunc` (`smsFunc`)
+  KEY `smsPhoneNumber` (`smsPhoneNumber`),
+  KEY `smsIP` (`smsIP`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_log_sms
--- ----------------------------

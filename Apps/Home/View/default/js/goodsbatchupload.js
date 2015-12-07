@@ -1,6 +1,4 @@
-(function( $ ){
-    // 当domReady的时候开始初始化
-    $(function() {
+function uploadAblumInit() {
         var $wrap = $('#uploader'),
 
             // 图片容器
@@ -583,7 +581,4 @@
 
         $upload.addClass( 'state-' + state );
         updateTotalProgress();
-    });
-
-
-})( jQuery );
+}

@@ -13,7 +13,7 @@ class ShopsModel extends BaseModel {
 	  * 查询登录关键字
 	  */
 	 public function checkLoginKey($val,$id = 0){
-	 	$sql = " (loginName ='%s' or userPhone ='%s' or userEmail='%s') ";
+	 	$sql = " (loginName ='%s' or userPhone ='%s' or userEmail='%s') and userFlag=1";
 	 	$keyArr = array($val,$val,$val);
 	 	if($id>0)$sql.=" and userId!=".(int)$id;
 	 	$m = M('users');

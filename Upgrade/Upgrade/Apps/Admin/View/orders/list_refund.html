@@ -80,12 +80,12 @@
            <volist name="Page['root']" id="vo" key='key'>
            <thead>
              <tr>
-               <th colspan='6'>{$key}.订单：{$vo['orderNo']}<span style='margin-left:100px;'><a href="{:U('Home/Shops/toShopHome',array('shopId'=>$vo['shopId']))}" target='_blank'>{$vo['shopName']}</a></span></th>
+               <th colspan='6'>{$key}.订单：{$vo['orderNo']}<span style='margin-left:100px;'><a href="{:U('Admin/Orders/queryRefundByPage',array('shopName'=>$vo['shopName']))}">{$vo['shopName']}</a></span></th>
              </tr>
            </thead>
            <tbody>
              <tr>
-               <td>
+               <td width='150'>
                <div style='width:150px;'>
                <volist name="vo['goodslist']" id="goods">
 				  <img style='margin:2px;' src="__ROOT__/{$goods['goodsThums']}" height="50" width="50" title='{$goods['goodsName']}'/>

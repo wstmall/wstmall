@@ -67,7 +67,11 @@ function loadAddress(addressId){
 			$("#consignee_add_userPhone").val(addressInfo.userPhone?addressInfo.userPhone:"");
 			$("#consignee_add_userTel").val(addressInfo.userTel);
 			$("#consignee_add_countyId").val(addressInfo.areaId1);
-			
+			if(addressInfo.isDefault==1){
+			    $("#consignee_add_isDefault_1")[0].checked = true;
+			}else{
+				$("#consignee_add_isDefault_0")[0].checked = true;
+			}
 			var countys = addressInfo.area3List;
 			var areaList = new Array();
 			areaList.push("<option value='0'>请选择</option>");
@@ -106,7 +110,7 @@ function saveAddress(){
 	var address = $("#consignee_add_address").val();
 	var userPhone = $("#consignee_add_userPhone").val();
 	var userTel = $("#consignee_add_userTel").val();
-
+    var isDefault = $("#consignee_add_isDefault_1")[0].checked?1:0;
 	var params = {};
 	params.id = addressId;
 	params.userName = jQuery.trim(userName);
@@ -116,7 +120,7 @@ function saveAddress(){
 	params.address = jQuery.trim(address);
 	params.userPhone = jQuery.trim(userPhone);
 	params.userTel = jQuery.trim(userTel);
-	
+	params.isDefault = isDefault;
 	if(addressId<1 && $("#seladdress_0").attr("checked")==false){
 		WST.msg("请选择收货地址", {icon: 5});
 		return ;

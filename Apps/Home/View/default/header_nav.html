@@ -1,13 +1,18 @@
 <script src="__PUBLIC__/js/jquery.min.js"></script>
 <script src="__PUBLIC__/plugins/lazyload/jquery.lazyload.min.js?v=1.9.1"></script>
 <script type="text/javascript">
-var ThinkPHP = window.Think = {
+var WST = ThinkPHP = window.Think = {
         "ROOT"   : "__ROOT__",
         "APP"    : "__APP__",
         "PUBLIC" : "__PUBLIC__",
         "DEEP"   : "{:C('URL_PATHINFO_DEPR')}",
         "MODEL"  : ["{:C('URL_MODEL')}", "{:C('URL_CASE_INSENSITIVE')}", "{:C('URL_HTML_SUFFIX')}"],
-        "VAR"    : ["{:C('VAR_MODULE')}", "{:C('VAR_CONTROLLER')}", "{:C('VAR_ACTION')}"]
+        "VAR"    : ["{:C('VAR_MODULE')}", "{:C('VAR_CONTROLLER')}", "{:C('VAR_ACTION')}"],
+        "DOMAIN" : "{:WSTDomain()}",
+        "CITYID" : "{$currArea['areaId']}",
+        "DEFAULT_IMG": "{:WSTDomain()}/{$CONF['goodsImg']}",
+        "MALL_TITLE" : "{$CONF['mallName']}",
+        "SMS_VERFY"  : "{$CONF['smsVerfy']}"
 }
     var domainURL = "{:WSTDomain()}";
     var publicurl = "__PUBLIC__";
@@ -16,7 +21,7 @@ var ThinkPHP = window.Think = {
     var currDefaultImg = "{:WSTDomain()}/{$CONF['goodsImg']}";
     var wstMallName = "{$CONF['mallName']}";
     $(function() {
-    	$('.lazyImg').lazyload({ effect: "fadeIn",failurelimit : 10,threshold: 200,placeholder:currDefaultImg});
+    	$('.lazyImg').lazyload({ effect: "fadeIn",failurelimit : 10,threshold: 200,placeholder:WST.DEFAULT_IMG});
     });
 </script>
 <script src="__PUBLIC__/js/think.js"></script>

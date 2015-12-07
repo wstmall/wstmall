@@ -1,3 +1,18 @@
+/*
+Navicat MySQL Data Transfer
+
+Source Server         : 127.0.0.1
+Source Server Version : 50520
+Source Host           : localhost:3306
+Source Database       : wstmall
+
+Target Server Type    : MYSQL
+Target Server Version : 50520
+File Encoding         : 65001
+
+Date: 2015-12-06 17:00:15
+*/
+
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
@@ -14,10 +29,10 @@ CREATE TABLE `wst_log_sms` (
   `smsFunc` varchar(50) DEFAULT NULL,
   `createTime` datetime DEFAULT NULL,
   `smsCode` varchar(20) DEFAULT NULL,
+  `smsIP` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`smsId`),
-  KEY `logSrcType` (`smsSrc`,`smsPhoneNumber`),
-  KEY `createTime` (`createTime`),
-  KEY `logFunc` (`smsFunc`)
+  KEY `smsPhoneNumber` (`smsPhoneNumber`),
+  KEY `smsIP` (`smsIP`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ----------------------------

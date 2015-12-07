@@ -14,6 +14,7 @@ class ImportsAction extends BaseAction{
 	 */
     public function index(){
     	$this->isShopLogin();
+    	$this->assign("umark","Imports");
     	$this->display('default/shops/import');
 	}
 };

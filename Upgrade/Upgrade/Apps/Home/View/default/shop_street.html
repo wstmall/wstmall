@@ -74,15 +74,42 @@
 			</div>
 		</div>
 		
-		<!----加载商品楼层start----->
+		<!----加载店铺街start----->
 		<div class="wst-container">
 			
 			<div class="wst-shadow">
+			    <script id="tblist2" type="text/html">
+                {{# for(var i = 0; i < d.length; i++){ }}
+                <li onclick="getShopByCommunitys(this);" data="{{d[i].communityId}}" class="wst-shop-address liselected">
+				      <div style="padding:4px;">{{d[i].communityName}}</div>
+				      <div style="padding:4px;">附近共有 <span style="font-weight:bold;color:red;">{{d[i].spcnt}}</span> 家店铺入驻并提供服务</div>
+				</li>
+                {{# } }}
+                </script>
 				<div class="wst-shop-address-box wst-shadow" ></div>
 				<div class="wst-shop-container">
-					<div class="wst-shop-list">
-						<div>附近没有相关商铺</div>
-					</div>
+				    <script id="tblist" type="text/html">
+                       {{# for(var i = 0; i < d.length; i++){ }}
+                        <div class="wst-shop-box">
+                           <div style="width:80px;height:80px; float:left;">
+                               <a href="{{ Think.U('Home/Shops/toShopHome','shopId='+d[i].shopId)}}">
+                                 <img width="80" class='lazyImg' height="80" title="{{d[i].shopName}}" data-original="__ROOT__/{{d[i].shopImg}}" src="__ROOT__/{$CONF['goodsImg']}" style="display: inline;">
+                               </a>
+                           </div>
+                           <div class="wst-shop-streets-items">
+                               <div style="font-weight:bolder;">
+                                 <a href="{{ Think.U('Home/Shops/toShopHome','shopId='+d[i].shopId)}}">{{d[i].shopName}}</a>
+                               </div>
+                               <div style="">店铺地址：{{d[i].shopAddress}}</div><div style="">{{d[i].deliveryStartMoney}}元起送，配送费{{d[i].deliveryMoney}}元，{{d[i].deliveryFreeMoney}}元起免配送费</div>
+                               <div class="wst-shop-streets-items-status">
+                                  <img style="vertical-align:middle" src="__ROOT__/Apps/Home/View/default/images/icon_menu_01.png">&nbsp;&nbsp;营业中
+                               </div>
+                           </div>
+                          <div class="wst-clear"></div>
+                       </div>
+                       {{# } }}
+                       </script>
+					<div class="wst-shop-list"></div>
 					<div class="wst-page" style="text-align:center;margin-bottom: 10px;padding-right: 15px;">
 						<div id="wst-page-items"></div>
 					</div>

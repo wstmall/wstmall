@@ -18,35 +18,22 @@ function getBrands(){
 	if(!hasPage)return;
 	var areaId3 = $("#areaId").val();
 	var brandName = $.trim($("#brandName").val());
-
 	$.post( Think.U('Home/Brands/getBrands') ,{"pcurr":currPage,"areaId3":areaId3,"brandName":brandName},function(data) {		
 		var json = WST.toJson(data);
-		var html = new Array();
-		var cnt = 0;
-		for(var i=0;i<json.root.length;i++){
-			var brand = json.root[i];
-			var url = Think.U('Home/goods/getGoodsList','brandId='+brand.brandId);
-			html.push('<a href="'+url+'"><li onmouseover="brandsover(this)" onmouseout="brandout(this)" class="wst-brands" data="'+brand.brandId+'">');
-				html.push('<div style="wst-brands-items">');
-				html.push('<img data-original="'+domainURL +"/"+brand.brandIco+'" width="188" title="'+brand.brandName+'"/>');
-				html.push('</div>');
-			html.push('</li></a>');
-			
-		}
-		hasPage = (currPage<json.totalPage);
-        if(hasPage)currPage++;
-        
-		if(html.length>0){
-			html.push('<div class="wst-clear"></div>');
+		if(json.root && json.root.length){
+			var gettpl = document.getElementById('tblist2').innerHTML;
+	       	laytpl(gettpl).render(json.root, function(html){
+	       		hasPage = (currPage<json.totalPage);
+	            if(hasPage)currPage++;
+	    		html=html+'<div class="wst-clear"></div>';
+	       	    $('.wst-brands-box').append(html);
+	       	    $(".lazyBrandImg").lazyload({effect: "fadeIn",failurelimit : 1000,threshold: 200,placeholder:currDefaultImg});
+	       	});
 		}else{
-			html.push('<div style="line-height:300px;text-align:center;font-size:18px;">没有查找到相关品牌</div>');
+			$('.wst-brands-box').append('<div style="line-height:300px;text-align:center;font-size:18px;">没有查找到相关品牌</div>');
 		}
-		$(".wst-brands-box").append(html.join(""));
-		$(".wst-brands-box img").lazyload({effect: "fadeIn",failurelimit : 1000,threshold: 200,placeholder:currDefaultImg});
-	
 		loading = false;
 	});
-	
 }
 
 function changeAreaBrands(){

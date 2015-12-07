@@ -15,6 +15,7 @@ class GoodsAction extends BaseAction{
      */
 	public function toView(){
 		$this->isLogin();
+		$this->checkPrivelege('splb_00');
 		$m = D('Admin/Goods');
 		if(I('id')>0){
 			$object = $m->get();
@@ -29,6 +30,7 @@ class GoodsAction extends BaseAction{
 	 */
 	public function toPenddingView(){
 		$this->isLogin();
+		$this->checkPrivelege('spsh_00');
 		$m = D('Admin/Goods');
 		if(I('id')>0){
 			$object = $m->get();

@@ -292,6 +292,7 @@ class OrdersAction extends BaseAction {
 				//整理及核对购物车数据
 				$paygoods = session('WST_PAY_GOODS');
 				foreach($shopcat as $key=>$cgoods){
+					if($cgoods['ischk']==0)continue;//跳过未选中的商品
 					$temp = explode('_',$key);
 					$goodsId = (int)$temp[0];
 					$goodsAttrId = (int)$temp[1];
@@ -322,7 +323,6 @@ class OrdersAction extends BaseAction {
 						$catgoods[$goods["shopId"]]["totalCnt"] = $catgoods[$goods["shopId"]]["totalCnt"]+$cgoods["cnt"];
 						$catgoods[$goods["shopId"]]["totalMoney"] = $catgoods[$goods["shopId"]]["totalMoney"]+($goods["cnt"]*$goods["shopPrice"]);
 					}
-					
 				}
 				foreach($catgoods as $key=> $cshop){
 					if($cshop["totalMoney"]<$cshop["deliveryFreeMoney"]){

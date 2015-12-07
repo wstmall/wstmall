@@ -45,6 +45,17 @@
 		<!----品牌----->
 		<div class="wst-container">
 			<div >
+			    <script id="tblist2" type="text/html">
+                {{# for(var i = 0; i < d.length; i++){ }}
+                <a href="{{ Think.U('Home/goods/getGoodsList','brandId='+d[i].brandId) }}">
+				    <li data="{{d[i].brandId}}" class="wst-brands" onmouseout="brandout(this)" onmouseover="brandsover(this)" style="opacity: 0.5;">
+				        <div style="wst-brands-items">
+                        <img width="188" class='lazyBrandImg' title="{{d[i].brandName}}" data-original="__ROOT__/{{d[i].brandIco}}" src="" style="display: inline;">
+                        </div>
+				    </li>
+				</a>
+                {{# } }}
+                </script>
 				<div class="wst-brands-box" >
 					<div class="wst-clear"></div>
 				</div>
@@ -56,11 +67,12 @@
 		<include file="./Apps/Home/View/default/right_cart.html" />
    	</body>
    	
-   	<script src="__ROOT__/Apps/Home/View/default/js/brandslist.js"></script>
+   	
 	<script src="__PUBLIC__/js/common.js"></script>
 	<script src="__ROOT__/Apps/Home/View/default/js/head.js" type="text/javascript"></script>
+	<script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
 	<script src="__ROOT__/Apps/Home/View/default/js/common.js" type="text/javascript"></script>
-	
+	<script src="__ROOT__/Apps/Home/View/default/js/brandslist.js"></script>
 </html> 
 
 

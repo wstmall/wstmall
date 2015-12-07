@@ -54,7 +54,7 @@ class UsersModel extends BaseModel {
 	 	$loginName = ($loginName!='')?$loginName:I('loginName');
 	 	$rd = array('status'=>-1);
 	 	if($loginName=='')return $rd;
-	 	$sql = " (loginName ='%s' or userPhone ='%s' or userEmail='%s') ";
+	 	$sql = " (loginName ='%s' or userPhone ='%s' or userEmail='%s') and userFlag=1 ";
 	 	$m = M('users');
 	    if($id>0){
 	 		$sql.=" and userId!=".$id;
@@ -232,11 +232,9 @@ class UsersModel extends BaseModel {
 	/**
 	 * 查询用户手机是否存在
 	 */
-    public function checkUserPhone($userPhone){
-    	$userId = I("userId");
-    	
+    public function checkUserPhone($userPhone,$userId = 0){
+    	$userId = $userId>0?$userId:(int)I("userId");
     	$rd = array('status'=>-3);
-	 	
 	 	$m = M('users');
 		$sql =" userFlag=1 and userPhone='".$userPhone."'";
 		if($userId>0){

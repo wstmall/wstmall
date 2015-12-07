@@ -68,11 +68,13 @@ class GoodsAppraisesModel extends BaseModel {
 	 /**
 	  * 增加商品评论
 	  */
-	public function addGoodsAppraises($obj){	
+	public function addGoodsAppraises($obj){
+		$rd = array('status'=>-1);	
 		$m = M('goods_appraises');
 		$userId = $obj["userId"];
 		$orderId = $obj["orderId"];
 		$goodsId = $obj["goodsId"];
+		$goodsAttrId = $obj["goodsAttrId"];
 		
 		$goodsScore = (int)I("goodsScore");
 		$goodsScore = $goodsScore>5?5:$goodsScore;
@@ -83,14 +85,26 @@ class GoodsAppraisesModel extends BaseModel {
 		$serviceScore = (int)I("serviceScore");
 		$serviceScore = $serviceScore>5?5:$serviceScore;
 		$serviceScore = $serviceScore<1?1:$serviceScore;
-		//检查订单是否已评论
-		$sql="select isAppraises,orderFlag,shopId,goodsId from __PREFIX__orders o, __PREFIX__order_goods og 
-		     where o.orderId=og.orderId and o.orderStatus = 4 and og.goodsId=".$goodsId." and o.orderId=".$orderId." and o.userId=".$userId;
+		//检查订单是否有效
+		$sql="select isAppraises,orderFlag,shopId from __PREFIX__orders o where o.orderStatus = 4 and o.orderId=".$orderId." and o.userId=".$userId;
 		$rs = $this->query($sql);
-		
-		if(empty($rs))return -1;
-		if($rs[0]['isAppraises']==1 || $rs[0]['orderFlag']==-1)return -1;
+		if(empty($rs)){
+			$rd['msg'] = '无效的订单!';
+			return $rd;
+		}
+		if($rs[0]['isAppraises']==1 || $rs[0]['orderFlag']==-1){
+			$rd['msg'] = '订单状态已改变，请刷新后再尝试!';
+			return $rd;
+		}
 		$shopId = $rs[0]['shopId'];
+		//检测商品是否已评价
+		$sql = 'select * from __PREFIX__goods_appraises where goodsId='.$goodsId.' and goodsAttrId='.$goodsAttrId.' and orderId='.$orderId.' and shopId='.$shopId.' and userId='.$userId;
+		$rs = $m->query($sql);
+		if(!empty($rs)){
+			$rd['msg'] = '该商品已评价!';
+			return $rd;
+		}
+		
 		//新增评价记录
 		$data = array();
 		
@@ -101,6 +115,7 @@ class GoodsAppraisesModel extends BaseModel {
 		$data["timeScore"] = $timeScore;
 		$data["serviceScore"] = $serviceScore;
 		$data["content"] = I("content");
+		$data['goodsAttrId'] = $goodsAttrId;
 		$data["isShow"] = 1;
 		$data["createTime"] = date('Y-m-d H:i:s');
 		$data["orderId"] = (int)I("orderId");
@@ -149,10 +164,10 @@ class GoodsAppraisesModel extends BaseModel {
 						WHERE shopId = ".$shopId;		
 			$this->execute($sql);
 			//检查下是不是订单的所有商品都评论完了
-			$sql = "SELECT g.goodsId,og.goodsNums as ogoodsNums,og.goodsPrice as ogoodsPrice ,ga.id as gaId
-					FROM __PREFIX__order_goods og, __PREFIX__goods g 
-					LEFT JOIN __PREFIX__goods_appraises ga ON g.goodsId = ga.goodsId AND ga.orderId = $orderId
-					WHERE og.orderId = $orderId AND og.goodsId = g.goodsId";
+			$sql = "SELECT og.goodsId,ga.id as gaId
+					FROM __PREFIX__order_goods og left join __PREFIX__goods_appraises ga on og.goodsAttrId=ga.goodsAttrId
+					AND og.goodsId = ga.goodsId and ga.orderId=$orderId
+					WHERE og.orderId = $orderId ";
 			$goodslist = $this->query($sql);
 			$gmark = 1;
 			for($i=0;$i<count($goodslist);$i++){
@@ -164,7 +179,8 @@ class GoodsAppraisesModel extends BaseModel {
 				$this->execute($sql);
 			}
 		}
-		return 1;
+		$rd['status'] = 1;
+		return $rd;
 	}
 	/**
 	 * 获取待评价订单
@@ -178,13 +194,12 @@ class GoodsAppraisesModel extends BaseModel {
 		$order = $this->queryRow($sql);
 		$data["order"] = $order;
 		
-		$sql = "SELECT g.*,og.goodsNums as ogoodsNums,og.goodsPrice as ogoodsPrice,og.goodsAttrName ,ga.id as gaId
-				FROM __PREFIX__order_goods og, __PREFIX__goods g 
-				LEFT JOIN __PREFIX__goods_appraises ga ON g.goodsId = ga.goodsId AND ga.orderId = $orderId
-				WHERE og.orderId = $orderId AND og.goodsId = g.goodsId";
+		$sql = "SELECT g.*,og.goodsNums as ogoodsNums,og.goodsPrice as ogoodsPrice,og.goodsAttrName ,ga.id as gaId,og.goodsAttrId
+				FROM __PREFIX__order_goods og 
+				LEFT JOIN __PREFIX__goods_appraises ga ON og.goodsId = ga.goodsId AND og.goodsAttrId=ga.goodsAttrId and ga.orderId = $orderId,
+				__PREFIX__goods g WHERE og.orderId = $orderId AND og.goodsId = g.goodsId";
 		$goods = $this->query($sql);
 		$data["goodsList"] = $goods;
-		
 		$sql = "SELECT * FROM __PREFIX__shop_appraises WHERE orderId = $orderId ";	
 		$appraises = $this->query($sql);
 		$data["shopAppraises"] = $appraises;

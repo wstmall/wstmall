@@ -68,10 +68,9 @@ class GoodsAppraisesAction extends BaseAction{
     	$obj["userId"] = $USER['userId'];
     	$obj["orderId"] = (int)I("orderId");
     	$obj["goodsId"] = (int)I("goodsId");
+    	$obj["goodsAttrId"] = (int)I("goodsAttrId");
 		$rs = $morders->addGoodsAppraises($obj);
-		$data = array();
-		$data["status"] = $rs;
-		$this->ajaxReturn($data);
+		$this->ajaxReturn($rs);
 	}	
 	/**
 	 * 获取评价

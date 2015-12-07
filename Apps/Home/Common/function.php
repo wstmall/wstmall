@@ -75,7 +75,7 @@ function WSTGoodsCats(){
 			$rs1[$i]["catChildren"] = $cats2;
 			$cats[] = $rs1[$i];
 		}
-		S("WST_CACHE_GOODS_CAT_WEB".$areaId2,$cats,31536000);
+		S("WST_CACHE_GOODS_CAT_WEB",$cats,31536000);
 	}
 	return $cats;
 }

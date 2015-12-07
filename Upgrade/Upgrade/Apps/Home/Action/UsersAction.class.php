@@ -123,26 +123,26 @@ class UsersAction extends BaseAction {
 		$userPhone = I("userPhone");
 		$rs = array();
 		if(!preg_match("#^13[\d]{9}$|^14[5,7]{1}\d{8}$|^15[^4]{1}\d{8}$|^17[0,6,7,8]{1}\d{8}$|^18[\d]{9}$#",$userPhone)){
-			$rs["status"] = -4;
+			$rs["msg"] = '手机号格式不正确!';
 			echo json_encode($rs);
 			exit();
 		}
 		$m = D('Home/Users');
-		$rs = $m->checkUserPhone($userPhone);
+		$rs = $m->checkUserPhone($userPhone,(int)session('WST_USER.userId'));
 		if($rs["status"]!=1){
+			$rs["msg"] = '手机号已存在!';
 			echo json_encode($rs);
 			exit();
 		}
 		$phoneVerify = rand(100000,999999);
 		$msg = "欢迎您注册成为".$GLOBALS['CONFIG']['mallName']."会员，您的注册验证码为:".$phoneVerify."，请在30分钟内输入。【".$GLOBALS['CONFIG']['mallName']."】";
 		$rv = D('Home/LogSms')->sendSMS(0,$userPhone,$msg,'getPhoneVerifyByRegister',$phoneVerify);
-		$rs['status']=$rv['status'];
-		if($rs['status']==1){
+		if($rv['status']==1){
 			session('VerifyCode_userPhone',$phoneVerify);
 			session('VerifyCode_userPhone_Time',time());
 			//$rs["phoneVerifyCode"] = $phoneVerify;
 		}
-		echo json_encode($rs);
+		echo json_encode($rv);
 	}
    /**
     * 会员中心页面

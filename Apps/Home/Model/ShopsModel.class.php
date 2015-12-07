@@ -13,7 +13,7 @@ class ShopsModel extends BaseModel {
 	  * 查询登录关键字
 	  */
 	 public function checkLoginKey($val,$id = 0){
-	 	$sql = " (loginName ='%s' or userPhone ='%s' or userEmail='%s') ";
+	 	$sql = " (loginName ='%s' or userPhone ='%s' or userEmail='%s') and userFlag=1 ";
 	 	$keyArr = array($val,$val,$val);
 	 	if($id>0)$sql.=" and userId!=".$id;
 	 	$m = M('users');
@@ -70,77 +70,101 @@ class ShopsModel extends BaseModel {
 	  */
 	 public function addByVisitor(){
 	 	$rd = array('status'=>-1);
+	    $verify = session('VerifyCode_userPhone');
+		$startTime = (int)session('VerifyCode_userPhone_Time');
+		$mobileCode = I("mobileCode");
+		if((time()-$startTime)>120){
+			 $rd['msg'] = '验证码已失效!';
+			 return $rd;
+		}
+		if($mobileCode=="" || $verify != $mobileCode){
+			$rd['msg'] = '验证码错误!';
+			return $rd;
+		}
+	 	$userRules = array(
+		     array('loginName','require','账号不能为空！',1),
+		     array('loginPwd','require','密码不能为空！',1,'',1),
+		     array('userName','require','店主姓名不能为空！',1,'',1),
+		     array('userPhone','require','手机号不能为空！',1),
+		);
+		
+		$shopRules = array(
+		     array('areaId1','integer','请选择所在省份!',1),
+		     array('areaId2','integer','请选择所在城市!',1),
+		     array('areaId3','integer','请选择所在县区!',1),
+		     array('goodsCatId1','integer','请选择行业！',1),
+		     array('shopName','require','请输入店铺名称!',1),
+		     array('shopCompany','require','请输入公司名称!',1),
+		     array('shopTel','require','请输入公司!电话',1),
+		     array('shopImg','require','请上传公司图标!',1),
+		     array('shopAddress','require','请输入公司地址!',1),
+		     array('bankId','integer','请选择银行!',1),
+		     array('bankNo','require','请输入银行卡号!',1),
+		     array('latitude','require','请标记店铺地址!',1),
+		     array('longitude','require','请标记店铺地址!',1),
+		     array('mapLevel','integer','请标记店铺地址!',1),
+		     array('isInvoice',array(0,1),'无效的开发票状态！',1,'in'),
+		     array('serviceStartTime','double','请选择店铺开始时间!'),
+		     array('serviceEndTime','double','请选择电批结束时间!',1)
+		);
 	 	//检测账号是否存在
 	 	$hasLoginName = self::checkLoginKey(I("loginName"));
 	    if($hasLoginName==0){
-	 		$rd = array('status'=>-2);
+	 		$rd = array('status'=>-2,'msg'=>'该账号已存在!');
 	 		return $rd;
 	 	}
 	 	$hasUserPhone = self::checkLoginKey(I("userPhone"));
 	 	if($hasUserPhone==0){
-	 		$rd = array('status'=>-7);
+	 		$rd = array('status'=>-7,'msg'=>'该手机号已存在!');;
 	 		return $rd;
 	 	}
-	 	//新注册账号
-	 	$data = array();
-	 	$data["loginName"] = I("loginName");
-		$data["loginSecret"] = rand(1000,9999);
-		$data["loginPwd"] = md5(I('loginPwd').$data['loginSecret']);
-		$data["userName"] = I("userName");
-		$data["userPhone"] = I("userPhone");
-		//店铺资料
-		$sdata = array();
-		$sdata["areaId1"] = (int)I("areaId1");
-		$sdata["areaId2"] = (int)I("areaId2");
-		$sdata["areaId3"] = (int)I("areaId3");
-		$sdata["goodsCatId1"] = (int)I("goodsCatId1");
-		$sdata["shopName"] = I("shopName");
-		$sdata["shopCompany"] = I("shopCompany");
-		$sdata["shopImg"] = I("shopImg");
-		$sdata["shopAddress"] = I("shopAddress");
-		$sdata["bankId"] = (int)I("bankId");
-		$sdata["bankNo"] = I("bankNo");
-		$sdata["latitude"] = I("latitude");
-		$sdata["longitude"] = I("longitude");
-		$sdata["mapLevel"] = (int)I("mapLevel",13);
-		$sdata["isInvoice"] = (int)I("isInvoice",0);
-		$sdata["serviceStartTime"] = I("serviceStartTime");
-		$sdata["serviceEndTime"] = I("serviceEndTime");
-		$sdata["shopTel"] = I("shopTel");
-		if($this->checkEmpty($data,true) && $this->checkEmpty($sdata,true)){ 
-			$data["userStatus"] = 1;
-			$data["userType"] = 0;
-		    $data["userFlag"] = 1;
-		    $data["createTime"] = date('Y-m-d H:i:s');
-			$m = M('users');
-			$userId = $m->add($data);
-			if(false !== $userId){
-				$sdata["userId"] = $userId;
-				$sdata['deliveryStartMoney'] = (float)I('deliveryStartMoney');
-				$sdata["deliveryFreeMoney"] = (float)I("deliveryFreeMoney",0);
-		        $sdata["deliveryMoney"] = (float)I("deliveryMoney",0);
-		        $sdata["avgeCostMoney"] = (float)I("avgeCostMoney",0);
-		        $sdata["invoiceRemarks"] = I("invoiceRemarks");
-		        $sdata["qqNo"] = I("qqNo");
-				$sdata["shopStatus"] = 0;
-				$sdata["shopAtive"] = (int)I("shopAtive",1);
-				$sdata["shopFlag"] = 1;
-				$sdata["createTime"] = date('Y-m-d H:i:s');
-			   
-				$m = M('shops');
-				$shopId = $m->add($sdata);
-				if(false !== $shopId){
-				    $rd['status']= 1;
-					$rd['userId']= $userId;
-				    //增加商家评分记录
-				    $data = array();
-				    $data['shopId'] = $shopId;
-				    $m = M('shop_scores');
-				    $m->add($data);
-					//建立店铺和社区的关系
-					$relateArea = I('relateAreaId');
-					$relateCommunity = I('relateCommunityId');
-					if($relateArea!=''){
+	 	$u = M('users');
+	 	$s = M('shops');
+		if(!$u->validate($userRules)->create()){
+			$rd['msg'] = $u->getError();
+			return $rd;
+		}
+	    if(!$s->validate($shopRules)->create()){
+			$rd['msg'] = $s->getError();
+			return $rd;
+		}
+		if(I('relateAreaId')=='' && I('relateCommunityId')==''){
+			$rd['msg'] = '请选择配送区域!';
+			return $rd;
+		}
+		$s->shopName = $u->userName;
+		$u->loginSecret = rand(1000,9999);
+		$u->userStatus = 1;
+		$u->userType = 0;
+		$u->userFlag = 1;
+		$u->createTime = date('Y-m-d H:i:s');
+	    $userId = $u->add();
+		if(false !== $userId){
+			$s->userId = $userId;
+			$s->deliveryStartMoney = (float)I('deliveryStartMoney');
+			$s->deliveryFreeMoney = (float)I("deliveryFreeMoney",0);
+		    $s->deliveryMoney = (float)I("deliveryMoney",0);
+		    $s->avgeCostMoney = (float)I("avgeCostMoney",0);
+		    $s->deliveryCostTime = (int)I("deliveryCostTime",0);
+		    $s->invoiceRemarks = I("invoiceRemarks");
+		    $s->qqNo = I("qqNo");
+			$s->shopStatus = 0;
+			$s->shopAtive = (int)I("shopAtive",1)?1:0;
+			$s->shopFlag = 1;
+			$s->createTime = date('Y-m-d H:i:s');
+			$shopId = $s->add();
+			if(false !== $shopId){
+				 $rd['status']= 1;
+				 $rd['userId']= $userId;
+				 //增加商家评分记录
+				 $data = array();
+				 $data['shopId'] = $shopId;
+				 $m = M('shop_scores');
+				 $m->add($data);
+				 //建立店铺和社区的关系
+				 $relateArea = I('relateAreaId');
+				 $relateCommunity = I('relateCommunityId');
+				 if($relateArea!=''){
 						$m = M('shops_communitys');
 						$relateAreas = explode(',',$relateArea);
 						foreach ($relateAreas as $v){
@@ -153,8 +177,8 @@ class ShopsModel extends BaseModel {
 							$tmp['communityId'] = 0;
 							$ra = $m->add($tmp);
 						}
-					}
-				    if($relateCommunity!=''){
+				 }
+				 if($relateCommunity!=''){
 					    $m = M('communitys');
 						$lc = $m->where('communityFlag=1 and (communityId in(0,'.$relateCommunity.") or areaId3 in(0,".$relateArea."))")->select();
 						if(count($lc)>0){
@@ -169,15 +193,14 @@ class ShopsModel extends BaseModel {
 								$ra = $m->add($tmp);
 							}
 						}
-					}
-					
-					//记录登录日志
-					$data = array();
-					$data["userId"] = $userId;
-					$data["loginTime"] = date('Y-m-d H:i:s');
-					$data["loginIp"] = get_client_ip();
-					M('log_user_logins')->add($data);
 				}
+					
+				//记录登录日志
+				$data = array();
+				$data["userId"] = $userId;
+				$data["loginTime"] = date('Y-m-d H:i:s');
+				$data["loginIp"] = get_client_ip();
+				M('log_user_logins')->add($data);
 			}
 		}
 		
@@ -189,98 +212,128 @@ class ShopsModel extends BaseModel {
 	  */
 	 public function addByUser($userId){
 	 	$rd = array('status'=>-1);
+	 	//检测用户是否已经有开店申请或者开店了
+		$sql = "select count(*) counts from __PREFIX__shops s where s.shopFlag=1 and userId=".$userId;
+		$checkRs = $this->queryRow($sql);
+		if($checkRs['counts']>0){
+			$rd['msg'] = '店铺申请已存在，请勿重复申请!';
+			return $rd;
+		}
+	 	$verify = session('VerifyCode_userPhone');
+		$startTime = (int)session('VerifyCode_userPhone_Time');
+		$mobileCode = I("mobileCode");
+		if((time()-$startTime)>120){
+			 $rd['msg'] = '验证码已失效!';
+			 return $rd;
+		}
+		if($mobileCode=="" || $verify != $mobileCode){
+			$rd['msg'] = '验证码错误!';
+			return $rd;
+		}
+	 	$userRules = array(
+		     array('userName','require','店主姓名不能为空！',1,'',1),
+		     array('userPhone','require','手机号不能为空！',1),
+		);
 	 	//新注册账号
-	 	$data = array();
-		$data["userName"] = I("userName");
-		if($this->checkEmpty($data,true)){ 
-			$m = M('users');
-			$rs = $m->where('userId='.$userId)->save($data);
-			if(false !== $rs){
+	 	$shopRules = array(
+		     array('areaId1','integer','请选择所在省份!',1),
+		     array('areaId2','integer','请选择所在城市!',1),
+		     array('areaId3','integer','请选择所在县区!',1),
+		     array('goodsCatId1','integer','请选择行业！',1),
+		     array('shopName','require','请输入店铺名称!',1),
+		     array('shopCompany','require','请输入公司名称!',1),
+		     array('shopTel','require','请输入公司!电话',1),
+		     array('shopImg','require','请上传公司图标!',1),
+		     array('shopAddress','require','请输入公司地址!',1),
+		     array('bankId','integer','请选择银行!',1),
+		     array('bankNo','require','请输入银行卡号!',1),
+		     array('latitude','require','请标记店铺地址!',1),
+		     array('longitude','require','请标记店铺地址!',1),
+		     array('mapLevel','integer','请标记店铺地址!',1),
+		     array('isInvoice',array(0,1),'无效的开发票状态！',1,'in'),
+		     array('serviceStartTime','double','请选择店铺开始时间!'),
+		     array('serviceEndTime','double','请选择电批结束时间!',1)
+		);
+	 	$hasUserPhone = self::checkLoginKey(I("userPhone"),$userId);
+	 	if($hasUserPhone==0){
+	 		$rd = array('status'=>-7,'msg'=>'该手机号已存在!');;
+	 		return $rd;
+	 	}
+	 	$u = M('users');
+	 	$s = M('shops');
+		if(!$u->validate($userRules)->create()){
+			$rd['msg'] = $u->getError();
+			return $rd;
+		}
+	    if(!$s->validate($shopRules)->create()){
+			$rd['msg'] = $s->getError();
+			return $rd;
+		}
+		if(I('relateAreaId')=='' && I('relateCommunityId')==''){
+			$rd['msg'] = '请选择配送区域!';
+			return $rd;
+		}
+		$s->shopName = $u->userName;
+		$rs = $u->where('userId='.$userId)->save();
+		if(false !== $rs){
+			$s->userId = $userId;
+			$s->isSelf = 0;
+			$s->deliveryType = 0;
+			$s->deliveryStartMoney = (float)I('deliveryStartMoney',0);
+			$s->deliveryFreeMoney = (float)I("deliveryFreeMoney",0);
+		    $s->deliveryMoney = (float)I("deliveryMoney",0);
+			$s->avgeCostMoney = (float)I("avgeCostMoney",0);
+			$s->deliveryCostTime = (int)I("deliveryCostTime",0);
+			$s->shopStatus = 0;
+			$s->shopAtive = (int)I("shopAtive",1)?1:0;
+			$s->shopFlag = 1;
+			$s->createTime = date('Y-m-d H:i:s');
+			$s->qqNo = I("qqNo");
+			$s->invoiceRemarks = I("invoiceRemarks");
+		    $shopId = $s->add();
+			if(false !== $shopId){
+
+				$rd['status']= 1;
+				//增加商家评分记录
 				$data = array();
-				$data["userId"] = $userId;
-				$data["areaId1"] = (int)I("areaId1");
-				$data["areaId2"] = (int)I("areaId2");
-				$data["areaId3"] = (int)I("areaId3");
-				$data["goodsCatId1"] = (int)I("goodsCatId1");
-				$data["isSelf"] = (int)I("isSelf",0);
-				if($data["isSelf"]==1){
-					$data["deliveryType"] = 1;
-				}else{
-					$data["deliveryType"] = 0;
+				$data['shopId'] = $shopId;
+				$m = M('shop_scores');
+				$m->add($data);
+			    //建立店铺和社区的关系
+				$relateArea = I('relateAreaId');
+				$relateCommunity = I('relateCommunityId');
+				if($relateArea!=''){
+					$m = M('shops_communitys');
+					$relateAreas = explode(',',$relateArea);
+					foreach ($relateAreas as $v){
+						if($v=='' || $v=='0')continue;
+						$tmp = array();
+						$tmp['shopId'] = $shopId;
+						$tmp['areaId1'] = (int)I("areaId1");
+						$tmp['areaId2'] = (int)I("areaId2");
+						$tmp['areaId3'] = $v;
+						$tmp['communityId'] = 0;
+						$ra = $m->add($tmp);
+					}
 				}
-				$data["shopName"] = I("shopName");
-				$data["shopCompany"] = I("shopCompany");
-				$data["shopImg"] = I("shopImg");
-				$data["shopAddress"] = I("shopAddress");
-				$data['deliveryStartMoney'] = (float)I('deliveryStartMoney');
-				$data["deliveryFreeMoney"] = (float)I("deliveryFreeMoney",0);
-		        $data["deliveryMoney"] = (float)I("deliveryMoney",0);
-				$data["avgeCostMoney"] = (float)I("avgeCostMoney",0);
-				$data["bankId"] = (int)I("bankId");
-				$data["bankNo"] = I("bankNo");
-				$data["isInvoice"] = (int)I("isInvoice",0);
-				$data["serviceStartTime"] = I("serviceStartTime");
-				$data["serviceEndTime"] = I("serviceEndTime");
-				$data["shopStatus"] = 0;
-				$data["shopAtive"] = (int)I("shopAtive",1);
-				$data["shopFlag"] = 1;
-				$data["latitude"] = I("latitude");
-		        $data["longitude"] = I("longitude");
-		        $data["mapLevel"] = (int)I("mapLevel",13);
-				$data["createTime"] = date('Y-m-d H:i:s');
-				$data["shopTel"] = I("shopTel");
-			    if($this->checkEmpty($data,true)){
-			    	$data["qqNo"] = I("qqNo");
-			    	$data["invoiceRemarks"] = I("invoiceRemarks");
-					$m = M('shops');
-					$shopId = $m->add($data);
-				    if(false !== $shopId){
-						$rd['status']= 1;
-						//增加商家评分记录
-				    	$data = array();
-				    	$data['shopId'] = $shopId;
-				    	$m = M('shop_scores');
-				    	$m->add($data);
-						//建立店铺和社区的关系
-						$relateArea = I('relateAreaId');
-						$relateCommunity = I('relateCommunityId');
-						if($relateArea!=''){
-							$m = M('shops_communitys');
-							$relateAreas = explode(',',$relateArea);
-							foreach ($relateAreas as $v){
-								if($v=='' || $v=='0')continue;
-								$tmp = array();
-								$tmp['shopId'] = $shopId;
-								$tmp['areaId1'] = (int)I("areaId1");
-								$tmp['areaId2'] = (int)I("areaId2");
-								$tmp['areaId3'] = $v;
-								$tmp['communityId'] = 0;
-								$ra = $m->add($tmp);
-							}
-						}
-				        if($relateCommunity!=''){
-					        $m = M('communitys');
-						    $lc = $m->where('communityFlag=1 and (communityId in(0,'.$relateCommunity.") or areaId3 in(0,".$relateArea."))")->select();
-						    if(count($lc)>0){
-						    	$m = M('shops_communitys');
-								foreach ($lc as $key => $v){
-									$tmp = array();
-									$tmp['shopId'] = $shopId;
-									$tmp['areaId1'] = $v['areaId1'];
-									$tmp['areaId2'] = $v['areaId2'];
-									$tmp['areaId3'] = $v['areaId3'];
-									$tmp['communityId'] = $v['communityId'];
-									$ra = $m->add($tmp);
-								}
-							}
+				if($relateCommunity!=''){
+					$m = M('communitys');
+					$lc = $m->where('communityFlag=1 and (communityId in(0,'.$relateCommunity.") or areaId3 in(0,".$relateArea."))")->select();
+					if(count($lc)>0){
+						$m = M('shops_communitys');
+						foreach ($lc as $key => $v){
+							$tmp = array();
+							$tmp['shopId'] = $shopId;
+							$tmp['areaId1'] = $v['areaId1'];
+							$tmp['areaId2'] = $v['areaId2'];
+							$tmp['areaId3'] = $v['areaId3'];
+							$tmp['communityId'] = $v['communityId'];
+							$ra = $m->add($tmp);
 						}
 					}
 				}
-				
-			}
-			
-		}
-		
+		    }	
+		}	
 		return $rd;
 	 } 
     /**
@@ -575,9 +628,7 @@ class ShopsModel extends BaseModel {
 			$community["spcnt"] = $spcnt;
 			if($spcnt>0)$ctsplist[] = $community;
 		}
-		$districts["ctlist"] = $ctsplist;
-		if(count($ctsplist)>0)$dsplist[] = $districts;
-		return $dsplist;
+		return $ctsplist;
 	}
 	
 	/**
@@ -659,7 +710,7 @@ class ShopsModel extends BaseModel {
 			$sql .= " AND deliveryMoney < $mdeliveryEnd";
 		}
 		
-		if($shopAtive!="" && $shopAtive >=0){
+		if($shopAtive >-1){
 			$sql .= " AND shopAtive = $shopAtive";
 		}
 		$dslist = $this->pageQuery($sql,$pcurr);

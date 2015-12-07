@@ -3,8 +3,8 @@ $.browser.mozilla = /firefox/.test(navigator.userAgent.toLowerCase());
 $.browser.webkit = /webkit/.test(navigator.userAgent.toLowerCase()); 
 $.browser.opera = /opera/.test(navigator.userAgent.toLowerCase()); 
 $.browser.msie = /msie/.test(navigator.userAgent.toLowerCase());
-var WST = {};
-WST.v = '1.4.0';
+var WST = WST?WST:{};
+WST.v = '1.4.1';
 WST.pageHeight = function(){
 	if($.browser.msie){ 
 		return document.compatMode == "CSS1Compat"? document.documentElement.clientHeight : 
@@ -475,4 +475,68 @@ WST.getChks = function(obj){
 	});
 	return ids;
 }
-
+WST.showHide = function(t,str){
+	var s = str.split(',');
+	if(t){
+		for(var i=0;i<s.length;i++){
+		   $(s[i]).show();
+		}
+	}else{
+		for(var i=0;i<s.length;i++){
+		   $(s[i]).hide();
+		}
+	}
+	s = null;
+}
+WST.blank = function(str,defaultVal){
+	if(str=='0000-00-00')str = '';
+	if(str=='0000-00-00 00:00:00')str = '';
+	if(!str)str = '';
+	if(typeof(str)=='null')str = '';
+	if(typeof(str)=='undefined')str = '';
+	if(str=='' && defaultVal)str = defaultVal;
+	return str;
+}
+WST.tips = function(content, selector, options){
+	var opts = {};
+	opts = $.extend(opts, {tips:1, time:2000, maxWidth: 260}, options);
+	return layer.tips(content, selector, opts);
+}
+WST.open = function(options){
+	var opts = {};
+	opts = $.extend(opts, {}, options);
+	return layer.open(opts);
+}
+WST.limitDecimal = function(obj,len){
+	var s = obj.value;
+ 	if(s.indexOf(".")>-1){
+	 	if((s.length - s.indexOf(".")-1)>len){
+	 		obj.value = s.substring(0,s.indexOf(".")+len+1);
+	 	}
+	}
+ 	s = null;
+}
+WST.fillForm = function(obj){
+	var params = {};
+	var chk = {},s;
+	$(obj).each(function(){
+		if($(this)[0].type=='hidden' || $(this)[0].type=='number' || $(this)[0].type=='tel' || $(this)[0].type=='password' || $(this)[0].type=='select-one' || $(this)[0].type=='textarea' || $(this)[0].type=='text'){
+			params[$(this).attr('id')] = $.trim($(this).val());
+		}else if($(this)[0].type=='radio'){
+			if($(this).attr('name')){
+				params[$(this).attr('name')] = $('input[name='+$(this).attr('name')+']:checked').val();
+			}
+		}else if($(this)[0].type=='checkbox'){
+			if($(this).attr('name') && !chk[$(this).attr('name')]){
+				s = [];
+				chk[$(this).attr('name')] = 1;
+				$('input[name='+$(this).attr('name')+']:checked').each(function(){
+					s.push($(this).val());
+				});
+				params[$(this).attr('name')] = s.join(',');
+			}
+		}
+	});
+	chk=null,s=null;
+	return params;
+}

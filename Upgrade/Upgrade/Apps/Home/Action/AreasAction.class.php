@@ -13,19 +13,8 @@ class AreasAction extends BaseAction{
 	 * 列表查询
 	 */
     public function queryByList(){
-    	$cityId = (int)I('parentId',0);
-    	//如果是游客注册开店则取当前城市;
-    	$USER = session('WST_USER');
-    	if(empty($USER) && $cityId==0){
-    		$cityId = $this->getDefaultCity();
-    	}
 		$m = D('Home/Areas');
-		$list = array();
-		if((int)I('type')==0){
-		    $list = $m->getCityListByProvince($cityId);
-		}else{
-			$list = $m->getDistricts($cityId);
-		}
+		$list = $m->queryByList((int)I('parentId'));
 		$rs = array();
 		$rs['status'] = 1;
 		$rs['list'] = $list;

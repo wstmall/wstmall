@@ -1,5 +1,5 @@
 <link rel="stylesheet" type="text/css" href="__ROOT__/Apps/Home/View/default/css/cart.css" />
-<script src="__ROOT__/Apps/Home/View/default/js/login.js"></script>
+<script src="__ROOT__/Apps/Home/View/default/js/userlogin.js"></script>
 <script type="text/javascript" src="__ROOT__/Apps/Home/View/default/js/cart/common.js?v=725"></script>
 <script type="text/javascript" src="__ROOT__/Apps/Home/View/default/js/cart/quick_links.js"></script>
 <!--[if lte IE 8]>
@@ -103,6 +103,7 @@
 	var numberItem = {:WSTCartNum()};
 	$('.cart_num').html(numberItem);
 	$(".quick_links_panel li").mouseenter(function() {
+		getVerify();
 		$(this).children(".mp_tooltip").animate({
 			left : -92,
 			queue : true

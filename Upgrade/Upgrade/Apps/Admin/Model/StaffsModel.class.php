@@ -118,10 +118,13 @@ class StaffsModel extends BaseModel {
 	  */
 	 public function checkLoginKey(){
 	 	$rd = array('status'=>-1);
+	 	$id = (int)I('id');
 	 	$key = I('clientid');
 	 	if($key!=''  && I($key)=='')return $rd;
 	 	$m = M('staffs');
-	 	$rs = $m->where(" loginName ='%s'",array(I("loginName")))->count();
+	 	$sql = " loginName ='%s'";
+	 	if($id>0)$sql.=" and staffId!=".$id;
+	 	$rs = $m->where($sql,array(I("loginName")))->count();
 	    if($rs==0)$rd['status'] = 1;
 	    return $rd;
 	 }
