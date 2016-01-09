@@ -81,7 +81,7 @@ function WSTSendMail($to, $subject, $content) {
  * @param string $phoneNumer  手机号码
  * @param string $content     短信内容
  */
-function WSTSendSMS($phoneNumer,$content){
+function WSTSendSMS2($phoneNumer,$content){
 	$url = 'http://223.4.21.214:8180/service.asmx/SendMessage?Id='.$GLOBALS['CONFIG']['smsOrg']."&Name=".$GLOBALS['CONFIG']['smsKey']."&Psw=".$GLOBALS['CONFIG']['smsPass']."&Timestamp=0&Message=".$content."&Phone=".$phoneNumer;
 	$ch=curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//设置否输出到页面
@@ -90,6 +90,20 @@ function WSTSendSMS($phoneNumer,$content){
     $data=curl_exec($ch);
     curl_close($ch);
     return "$data";
+}
+/**
+ * @param unknown_type $phoneNumer
+ * @param unknown_type $content
+ */
+function WSTSendSMS($phoneNumer,$content){
+	$url = 'http://utf8.sms.webchinese.cn/?Uid='.$GLOBALS['CONFIG']['smsKey'].'&Key='.$GLOBALS['CONFIG']['smsPass'].'&smsMob='.$phoneNumer.'&smsText='.$content;
+	$ch=curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//设置否输出到页面
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30 ); //设置连接等待时间
+    curl_setopt($ch, CURLOPT_ENCODING, "gzip" );
+    $data=curl_exec($ch);
+    curl_close($ch);
+    return $data;
 }
 /**
  * 字符串替换

@@ -5,11 +5,8 @@ var emailList = new Array("","163.com","126.com","qq.com","sina.com","gmail.com"
 
 function optionsOver(idx){	
 	$(".options").css("background-color","white");
-	//obj.style.backgroundColor = "#E9E5E1";	
-//alert(document.getElementById("nopt"+idx));
 	$("#nopt"+idx).css("background-color","#E9E5E1");
 	curRowIndex = idx;	
-	//jQuery("#tt").val(curRowIndex);
 }
 
 function selectOpt(optionId){
@@ -18,108 +15,108 @@ function selectOpt(optionId){
 }
 
 var orgva = "";
-	function onfocusName(obj){
-		var keywords = jQuery.trim(obj.value);
-		
-		if(keywords=='邮箱/用户名/手机号'){
-			obj.value='';
-			obj.style.color='#333';
-		}else{
-			if(keywords.length>0){
-				var html = new Array();
-				if(keywords.indexOf("@")>=0){
-					var works = keywords.split("@");
-					var rworks = keywords.split("@")[0];
-					var lworks = keywords.split("@")[1];					
-					for(var i=0;i<emailList.length;i++){
-						if(emailList[i].indexOf(lworks)==0){
-							html.push("<div class='options' idx='"+i+"' id='nopt"+i+"' onmouseover='optionsOver("+i+");' onclick='selectOpt("+i+")'>"+rworks+(i==0?"":"@")+emailList[i]+"</div>");
-						}
+function onfocusName(obj){
+	var keywords = jQuery.trim(obj.value);
+	if(keywords=='邮箱/用户名/手机号'){
+		obj.value='';
+		obj.style.color='#333';
+	}else{
+		if(keywords.length>0){
+			var html = new Array();
+			if(keywords.indexOf("@")>=0){
+				var works = keywords.split("@");
+				var rworks = keywords.split("@")[0];
+				var lworks = keywords.split("@")[1];					
+				for(var i=0;i<emailList.length;i++){
+					if(emailList[i].indexOf(lworks)==0){
+						html.push("<div class='options' idx='"+i+"' id='nopt"+i+"' onmouseover='optionsOver("+i+");' onclick='selectOpt("+i+")'>"+rworks+(i==0?"":"@")+emailList[i]+"</div>");
 					}
-				}else{
-					for(var i=0;i<emailList.length;i++){						
-						html.push("<div class='options' idx='"+i+"' id='nopt"+i+"' onmouseover='optionsOver("+i+");' onclick='selectOpt("+i+")'>"+keywords+(i==0?"":"@")+emailList[i]+"</div>");		
-					}
-				}				
-				$("#namelist").show();
-				$("#namelist").html(html.join(""));
-				optionsOver(0);
-			}
+				}
+			}else{
+				for(var i=0;i<emailList.length;i++){						
+					html.push("<div class='options' idx='"+i+"' id='nopt"+i+"' onmouseover='optionsOver("+i+");' onclick='selectOpt("+i+")'>"+keywords+(i==0?"":"@")+emailList[i]+"</div>");		
+				}
+			}				
+			$("#namelist").show();
+			$("#namelist").html(html.join(""));
+			optionsOver(0);
 		}
-		orgva = obj.value;
-		jQuery("#loginNameTip").removeClass();
-		jQuery("#loginNameTip").addClass("onFocus");
-		jQuery("#loginNameTip").html("<span>请输入邮箱/用户名/手机号</span>");
 	}
+	orgva = obj.value;
+	jQuery("#loginNameTip").removeClass();
+	jQuery("#loginNameTip").addClass("onFocus");
+	jQuery("#loginNameTip").html("<span>请输入邮箱/用户名/手机号</span>");
+}
 
-	function onblurName(obj){
-		if(document.getElementById("nopt"+curRowIndex)){
+function onblurName(obj){
+	if(document.getElementById("nopt"+curRowIndex)){
 			$("#loginName").val($("#nopt"+curRowIndex).html())
-		}
-		$("#namelist").hide();
-		var uname = $.trim(obj.value);
-		if(uname=='') {
-			obj.value='邮箱/用户名/手机号';
-			obj.style.color='#999999';
-			jQuery("#loginNameTip").removeClass();
-			jQuery("#loginNameTip").addClass("onError");
-			jQuery("#loginNameTip").html("<span>请输入邮箱/用户名/手机号</span>");
-			jQuery("#nameType").val(2);
-			return;
-		}else{
-		
-			if(uname.indexOf("@")>=0){
-				jQuery("#loginNameTip").removeClass();			
-				if(new RegExp(regexEnum.email).test(uname)){
-					jQuery("#userEmail").val(uname);
-					jQuery("#userPhone").val("");
-					jQuery("#nameType").val(1);
-					jQuery("#loginNameTip").removeClass();
-					if(uname==orgva){
-						//jQuery("#loginNameTip").addClass("onCorrect");
-						//jQuery("#loginNameTip").html("<span>输入正确</span>");
-						
-					}else{
-						jQuery("#loginNameTip").addClass("onFocus");
-						jQuery("#loginNameTip").html("<span>请稍候...</span>");
-					}
-					jQuery("#authcodeDiv").show();
-					jQuery("#mobileCodeDiv").hide();
-					changeName();
-					
-				}else{
-					jQuery("#loginNameTip").addClass("onError");
-					jQuery("#loginNameTip").html("<span>输入的邮箱格式不正确</span>");
-					return;
-				}			
-			}else if(new RegExp(regexEnum.mobile).test(uname) && uname.length==11){
-				jQuery("#userEmail").val("");
-				jQuery("#userPhone").val(uname);
+	}
+	$("#namelist").hide();
+	var uname = $.trim(obj.value);
+	if(uname=='') {
+		obj.value='邮箱/用户名/手机号';
+		obj.style.color='#999999';
+		jQuery("#loginNameTip").removeClass();
+		jQuery("#loginNameTip").addClass("onError");
+		jQuery("#loginNameTip").html("<span>请输入邮箱/用户名/手机号</span>");
+		jQuery("#nameType").val(2);
+		return;
+	}else{
+		if(uname.indexOf("@")>=0){
+			jQuery("#loginNameTip").removeClass();			
+			if(new RegExp(regexEnum.email).test(uname)){
+				jQuery("#userEmail").val(uname);
+				jQuery("#userPhone").val("");
+				jQuery("#nameType").val(1);
 				jQuery("#loginNameTip").removeClass();
-				jQuery("#nameType").val(3);
-				if(uname==orgva){
-					//jQuery("#loginNameTip").addClass("onCorrect");
-					//jQuery("#loginNameTip").html("<span>输入正确</span>");
-					
-				}else{
+				if(uname!=orgva){
 					jQuery("#loginNameTip").addClass("onFocus");
 					jQuery("#loginNameTip").html("<span>请稍候...</span>");
 				}
+				jQuery("#authcodeDiv").show();
+				jQuery("#mobileCodeDiv").hide();
 				changeName();
-				jQuery("#authcodeDiv").hide();
-				jQuery("#mobileCodeDiv").show();
-			}else if(new RegExp(regexEnum.num).test(uname)){
+			}else{
 				jQuery("#loginNameTip").addClass("onError");
-				jQuery("#loginNameTip").html("<span>用户名不能是纯数字,请确认输入的是手机号或者重新输入</span>");
+				jQuery("#loginNameTip").html("<span>输入的邮箱格式不正确</span>");
 				return;
+			}			
+		}else{
+			if(WST.PHONE_VERFY=='1'){
+				if(new RegExp(regexEnum.mobile).test(uname) && uname.length==11){
+					jQuery("#userEmail").val("");
+					jQuery("#userPhone").val(uname);
+					jQuery("#loginNameTip").removeClass();
+					jQuery("#nameType").val(3);
+					if(uname!=orgva){
+						jQuery("#loginNameTip").addClass("onFocus");
+						jQuery("#loginNameTip").html("<span>请稍候...</span>");
+					}
+					changeName();
+					jQuery("#authcodeDiv").hide();
+					jQuery("#mobileCodeDiv").show();
+				}else{
+					jQuery("#userEmail").val("");
+					jQuery("#userPhone").val("");
+					jQuery("#nameType").val(2);
+					jQuery("#loginNameTip").removeClass();
+					if(uname==orgva){
+							changeName();
+					}else{
+							jQuery("#loginNameTip").addClass("onFocus");
+							jQuery("#loginNameTip").html("<span>请稍候...</span>");
+					}
+					changeName();
+					jQuery("#authcodeDiv").show();
+					jQuery("#mobileCodeDiv").hide();
+				}
 			}else{
 				jQuery("#userEmail").val("");
 				jQuery("#userPhone").val("");
 				jQuery("#nameType").val(2);
 				jQuery("#loginNameTip").removeClass();
 				if(uname==orgva){
-					//jQuery("#loginNameTip").addClass("onCorrect");
-					//jQuery("#loginNameTip").html("<span>输入正确</span>");
 					changeName();
 				}else{
 					jQuery("#loginNameTip").addClass("onFocus");
@@ -128,31 +125,31 @@ var orgva = "";
 				changeName();
 				jQuery("#authcodeDiv").show();
 				jQuery("#mobileCodeDiv").hide();
-			}
+			}	
 		}
+	}
 		
-	}
+}
 function changeName(){
-		var params = {};
-			params.loginName = $.trim($('#loginName').val());
-			
-			if(params.loginName!="" && params.loginName!="邮箱/用户名/手机号"){
-				jQuery.post(Think.U('Home/Users/checkLoginName') ,params,function(rsp) {
-					var json = WST.toJson(rsp);
-					if( json.status == "1" ) {
-						jQuery("#loginNameTip").removeClass();
-						jQuery("#loginNameTip").addClass("onCorrect");
-						jQuery("#loginNameTip").html("输入正确");
-						return true;
-					} else {
-						jQuery("#loginNameTip").removeClass();
-						jQuery("#loginNameTip").addClass("onError");
-						jQuery("#loginNameTip").html("账号已存在");
-						return false;
-					}
-				});	
+	var params = {};
+	params.loginName = $.trim($('#loginName').val());
+	if(params.loginName!="" && params.loginName!="邮箱/用户名/手机号"){
+		jQuery.post(Think.U('Home/Users/checkLoginName') ,params,function(rsp) {
+			var json = WST.toJson(rsp);
+			if( json.status == "1" ) {
+				jQuery("#loginNameTip").removeClass();
+				jQuery("#loginNameTip").addClass("onCorrect");
+				jQuery("#loginNameTip").html("输入正确");
+				return true;
+			} else {
+				jQuery("#loginNameTip").removeClass();
+				jQuery("#loginNameTip").addClass("onError");
+				jQuery("#loginNameTip").html("账号已存在");
+				return false;
 			}
+		});	
 	}
+}
 $(function(){
 	getVerify();
 	 $.formValidator.initConfig({
@@ -187,10 +184,6 @@ $(function(){
 	loadSearchList("loginName","namelist");
 
 });
-
-
-
-
 
 var time = 0;
 var isSend = false;
@@ -228,6 +221,7 @@ function getVerifyCode(){
    			    		WST.msg('请输入验证码!', {icon: 5});
    			   			return;
    			    	}
+			    	WST.msg('正在发送短信，请稍后...',{time:600000});
 			    	$.post(Think.U('Home/Users/getPhoneVerifyCode'),params,function(data,textStatus){
 			   			var json = WST.toJson(data);
 			   			if(json.status!=1){
@@ -260,6 +254,7 @@ function getVerifyCode(){
 			});
 		}else{
 			isSend = true;
+			WST.msg('正在发送短信，请稍后...',{time:600000});
 			$.post(Think.U('Home/Users/getPhoneVerifyCode'),params,function(data,textStatus){
 	   			var json = WST.toJson(data);
 	   			if(json.status!=1){
@@ -288,17 +283,16 @@ function getVerifyCode(){
 
 function regist(){	
 	
-	if($("#nameType").val()==3){
+	if($("#nameType").val()==3 && WST.PHONE_VERFY=='1'){
 		if($.trim($("#mobileCode").val())==""){		
 			WST.msg('请输入验证码!', {icon: 5});
 			$("#mobileCode").focus();
 			return;
 		}
 	}else{
-	
-		if($.trim($("#authcode").val())==""){		
+		if($.trim($("#authCode").val())==""){		
 			WST.msg('请输入验证码!', {icon: 5});
-			$("#mobileCode").focus();
+			$("#authCode").focus();
 			return;
 		}
 	}
@@ -318,7 +312,7 @@ function regist(){
 	params.userPhone = $.trim($('#userPhone').val());
 	params.mobileCode = $.trim($('#mobileCode').val());
 	
-	params.verify = $.trim($('#authcode').val());
+	params.verify = $.trim($('#authCode').val());
 	params.nameType = $("#nameType").val();
 	params.protocol = document.getElementById("protocol").checked?1:0;	
 	

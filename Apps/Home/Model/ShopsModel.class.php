@@ -70,17 +70,7 @@ class ShopsModel extends BaseModel {
 	  */
 	 public function addByVisitor(){
 	 	$rd = array('status'=>-1);
-	    $verify = session('VerifyCode_userPhone');
-		$startTime = (int)session('VerifyCode_userPhone_Time');
-		$mobileCode = I("mobileCode");
-		if((time()-$startTime)>120){
-			 $rd['msg'] = '验证码已失效!';
-			 return $rd;
-		}
-		if($mobileCode=="" || $verify != $mobileCode){
-			$rd['msg'] = '验证码错误!';
-			return $rd;
-		}
+	    
 	 	$userRules = array(
 		     array('loginName','require','账号不能为空！',1),
 		     array('loginPwd','require','密码不能为空！',1,'',1),
@@ -217,17 +207,6 @@ class ShopsModel extends BaseModel {
 		$checkRs = $this->queryRow($sql);
 		if($checkRs['counts']>0){
 			$rd['msg'] = '店铺申请已存在，请勿重复申请!';
-			return $rd;
-		}
-	 	$verify = session('VerifyCode_userPhone');
-		$startTime = (int)session('VerifyCode_userPhone_Time');
-		$mobileCode = I("mobileCode");
-		if((time()-$startTime)>120){
-			 $rd['msg'] = '验证码已失效!';
-			 return $rd;
-		}
-		if($mobileCode=="" || $verify != $mobileCode){
-			$rd['msg'] = '验证码错误!';
 			return $rd;
 		}
 	 	$userRules = array(

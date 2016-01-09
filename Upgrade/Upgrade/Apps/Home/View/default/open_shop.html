@@ -272,7 +272,7 @@
 	                            <label id="userPhone_succeed" ></label>	                           
 	                        </div>
 	                    </div>
-	                     
+	                    <if condition="$CONF['phoneVerfy'] eq 1">
 	                  	<div class="item" id="mobileCodeDiv" >
 	                        <span class="label"><b class="ftx04">*</b>短信验证码：</span>	
 	                        <div class="fl item-ifo">
@@ -284,7 +284,18 @@
 	                        </div>
 	                        <span class="clr"></span>
 	                    </div>		
-	                 	 
+	                 	<else/>
+	                 	<div class="item" id="authcodeDiv">
+	                         <span class="label"><b class="ftx04">*</b>验证码：</span>	
+	                         <div class="fl item-ifo">
+	                             <input id="verify" style="ime-mode:disabled" name="verify" class="text text-1 wstipt" tabindex="6" autocomplete="off" maxlength="6" type="text"/>
+	                             <label class="img">
+	                                 <img style='vertical-align:middle;cursor:pointer;height:39px;' class='verifyImg' src='' title='刷新验证码' onclick='javascript:getVerify()'/> 
+							     </label>      	
+	                             <label class="ftx23">&nbsp;看不清？<a href="javascript:getVerify()" onclick="setTimeout(verc,50);" class="flk13">换一张</a></label>
+	                         </div>
+	                 	</div>
+	                 	</if> 
 	                </div>
 	                <input name="qVoCgWxtvu" value="EqaRK" type="hidden"/>	
 	                <div class="item item-new">

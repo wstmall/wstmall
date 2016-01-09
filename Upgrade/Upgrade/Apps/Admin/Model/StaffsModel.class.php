@@ -122,7 +122,7 @@ class StaffsModel extends BaseModel {
 	 	$key = I('clientid');
 	 	if($key!=''  && I($key)=='')return $rd;
 	 	$m = M('staffs');
-	 	$sql = " loginName ='%s'";
+	 	$sql = " loginName ='%s' and staffFlag=1 ";
 	 	if($id>0)$sql.=" and staffId!=".$id;
 	 	$rs = $m->where($sql,array(I("loginName")))->count();
 	    if($rs==0)$rd['status'] = 1;

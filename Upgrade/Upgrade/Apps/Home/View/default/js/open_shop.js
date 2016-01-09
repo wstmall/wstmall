@@ -1,5 +1,5 @@
 function visitorShopInit(){
-    	 getVerify();
+    	 if(WST.PHONE_VERFY=='0')getVerify();
     	 initTime('serviceStartTime','8');
  		 initTime('serviceEndTime','20');
     	 $.formValidator.initConfig({
@@ -184,6 +184,7 @@ function getVerifyCode(){
   			    yes: function(index, layero){
   			    	isSend = true;
   			    	params.smsVerfy = $.trim($('#smsVerfy').val());
+  			    	WST.msg('正在发送短信，请稍后...',{time:600000});
   			    	$.post(Think.U('Home/Users/getPhoneVerifyCode'),params,function(data,textStatus){
   			   			var json = WST.toJson(data);
   			   			if(json.status!=1){
@@ -216,6 +217,7 @@ function getVerifyCode(){
   			});
   		}else{
   			isSend = true;
+  			WST.msg('正在发送短信，请稍后...',{time:600000});
   			$.post(Think.U('Home/Users/getPhoneVerifyCode'),params,function(data,textStatus){
 		   			var json = WST.toJson(data);
 		   			if(json.status!=1){
@@ -243,11 +245,19 @@ function getVerifyCode(){
   	}
 
 function visitorOpenShop(){	
-   	if($.trim($("#mobileCode").val())==""){		
-   		WST.msg('请输入验证码!', {icon: 5});
-   		$("#mobileCode").focus();
-   		return;
-   	}
+	if(WST.PHONE_VERFY=='1'){
+	   	if($.trim($("#mobileCode").val())==""){		
+	   		WST.msg('请输入验证码!', {icon: 5});
+	   		$("#mobileCode").focus();
+	   		return;
+	   	}
+	}else{
+		if($.trim($("#verify").val())==""){		
+	   		WST.msg('请输入验证码!', {icon: 5});
+	   		$("#verify").focus();
+	   		return;
+	   	}
+	}
 
    	if(!document.getElementById("protocol").checked){		
    		WST.msg('必须同意使用协议才允许注册!', {icon: 5});
@@ -295,7 +305,7 @@ function visitorOpenShop(){
 	   			location.href=WST.DOMAIN +'/index.php';
 	   		});
 	   	}else{
-	   		getVerify();
+	   		if(WST.PHONE_VERFY=='0')getVerify();
 	   		WST.msg(json.msg, {icon: 5});
 	   	}
 	   		
@@ -360,10 +370,28 @@ function userShopInit(){
 	$("#goodsCatId1").formValidator({onFocus:"请选择所属行业"}).inputValidator({min:1,onError: "请选择所属行业"});
 	$("#bankId").formValidator({onFocus:"请选择所属银行"}).inputValidator({min:1,onError: "请选择所属银行"});
 	$("#bankNo").formValidator({onShow:"",onFocus:"请输入银行卡号",onCorrect:"输入正确"}).inputValidator({min:16,max:19,onError:"银行卡号格式错误,请确认"});
-	
+	$("#userPhone").inputValidator({min:0,max:11,onError:"你输入的手机号码非法,请确认"}).regexValidator({
+			regExp:"mobile",dataType:"enum",onError:"手机号码格式错误"
+		}).ajaxValidator({
+			dataType : "json",
+			async : true,
+			url : Think.U('Home/Users/checkLoginKey'),
+			success : function(data){
+				var json = WST.toJson(data);
+	            if( json.status == "1" ) {
+	                return true;
+				} else {
+	                return false;
+				}
+				return "该手机号码已被使用";
+			},
+			buttons: $("#dosubmit"),
+			onError : "该手机号码已存在。",
+			onWait : "请稍候..."
+		});
 	initTime('serviceStartTime','8');
 	initTime('serviceEndTime','20');
-	getVerify();
+	if(WST.PHONE_VERFY=='0')getVerify();
 
 	ShopMapInit({});
 }
@@ -419,7 +447,7 @@ function userOpenShop(){
 			});
 		}else{
 			WST.msg(json.msg, {icon: 5});
-			getVerify();
+			if(WST.PHONE_VERFY=='0')getVerify();
 		}
 		layer.close(ll);
    });

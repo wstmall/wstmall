@@ -107,7 +107,7 @@ class ShopsAction extends BaseAction {
    		$obj["shopName"] = I("shopName");
    		$obj["deliveryStartMoney"] = I("deliveryStartMoney");
    		$obj["deliveryMoney"] = I("deliveryMoney");
-   		$obj["shopAtive"] = (int)I("shopAtive");
+   		$obj["shopAtive"] = (int)I("shopAtive",-1);
    		$ctplist = $mshops->getShopByCommunitys($obj);
    		$pages = $rslist["pages"];
 
@@ -284,15 +284,32 @@ class ShopsAction extends BaseAction {
 	 */
 	public function openShopByUser(){
 		$this->isUserAjaxLogin();
-		$USER = session('WST_USER');
-		$m = D('Home/Shops');
-    	$userId = (int)$USER['userId'];
-    	$rs = array('status'=>-1);
-	 	//如果用户没注册则先建立账号
-		if($userId>0){
-	   	    $rs = $m->addByUser($userId);
-	    	if($rs['status']>0)$USER['shopStatus'] = 0;
-		}
+		$rs = array('status'=>-1);
+		if($GLOBALS['CONFIG']['phoneVerfy']==1){
+			$verify = session('VerifyCode_userPhone');
+			$startTime = (int)session('VerifyCode_userPhone_Time');
+			$mobileCode = I("mobileCode");
+			if((time()-$startTime)>120){
+				 $rs['msg'] = '验证码已失效!';
+			}
+			if($mobileCode=="" || $verify != $mobileCode){
+				$rs['msg'] = '验证码错误!';
+			}
+    	}else{
+	    	if(!$this->checkVerify("1")){			
+				$rs['msg'] = '验证码错误!';
+			}
+    	}
+    	if($rs['msg']==''){
+			$USER = session('WST_USER');
+			$m = D('Home/Shops');
+	    	$userId = (int)$USER['userId'];
+		 	//如果用户没注册则先建立账号
+			if($userId>0){
+		   	    $rs = $m->addByUser($userId);
+		    	if($rs['status']>0)$USER['shopStatus'] = 0;
+			}
+    	}
     	$this->ajaxReturn($rs);
 	}
 	
@@ -326,10 +343,27 @@ class ShopsAction extends BaseAction {
 	public function openShop(){
 		$m = D('Home/Shops');
     	$rs = array('status'=>-1);
-	 	$rs = $m->addByVisitor();
-	 	$m = D('Home/Users');
-	 	$user = $m->get($rs['userId']);
-	 	if(!empty($user))session('WST_USER',$user);
+    	if($GLOBALS['CONFIG']['phoneVerfy']==1){
+	    	$verify = session('VerifyCode_userPhone');
+			$startTime = (int)session('VerifyCode_userPhone_Time');
+			$mobileCode = I("mobileCode");
+			if((time()-$startTime)>120){
+			    $rs['msg'] = '验证码已失效!';
+		    }
+			if($mobileCode=="" || $verify != $mobileCode){
+				$rs['msg'] = '验证码错误!';
+			}
+    	}else{
+	    	if(!$this->checkVerify("1")){			
+				$rs['msg'] = '验证码错误!';
+			}
+    	}
+    	if($rs['msg']==''){
+			$rs = $m->addByVisitor();
+			$m = D('Home/Users');
+			$user = $m->get($rs['userId']);
+			if(!empty($user))session('WST_USER',$user);
+    	}
     	$this->ajaxReturn($rs);
 	}
 

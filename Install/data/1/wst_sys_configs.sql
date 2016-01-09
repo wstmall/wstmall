@@ -1,8 +1,5 @@
 SET FOREIGN_KEY_CHECKS=0;
 
--- ----------------------------
--- Table structure for `wst_sys_configs`
--- ----------------------------
 DROP TABLE IF EXISTS `wst_sys_configs`;
 CREATE TABLE `wst_sys_configs` (
   `configId` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增ID',
@@ -17,11 +14,8 @@ CREATE TABLE `wst_sys_configs` (
   `fieldSort` int(11) DEFAULT '0' COMMENT '字段排序',
   PRIMARY KEY (`configId`),
   KEY `parentId` (`parentId`)
-) ENGINE=MyISAM AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=37 DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Records of wst_sys_configs
--- ----------------------------
 INSERT INTO `wst_sys_configs` VALUES ('1', '0', '商城名称', 'mallName', 'text', null, '', 'WSTMall开源商城', null, '1'),
 ('2', '0', '商城标题', 'mallTitle', 'text', null, null, 'WSTMall开源商城', null, '2'),
 ('3', '0', '商城描述', 'mallDesc', 'text', null, null, 'WSTMall开源商城,本地O2O商城,多商户,PHP多用户开源商城,O2O开源商城', null, '3'),
@@ -40,7 +34,7 @@ INSERT INTO `wst_sys_configs` VALUES ('1', '0', '商城名称', 'mallName', 'tex
 ('19', '1', 'SMTP登录账号', 'mailUserName', 'text', null, null, 'username', null, '5'),
 ('20', '1', 'SMTP登录密码', 'mailPassword', 'text', null, null, 'password', null, '6'),
 ('21', '1', '发件人名称', 'mailSendTitle', 'text', null, null, 'WSTMall', null, '7'),
-('22', '2', '短信账号', 'smsKey', 'text', null, null, 'WSTMall', null, '1'),
+('22', '2', '短信账号', 'smsKey', 'text', null, null, 'WSTMall', '&nbsp;<a href=\'http://www.webchinese.com.cn\' target=\'_blank\'>点击充值</a>', '1'),
 ('23', '2', '短信密码', 'smsPass', 'text', null, null, 'WSTMall', null, '2'),
 ('24', '2', '号码每日发送数', 'smsLimit', 'text', null, null, '20', '避免恶意浪费短信的行为', '3'),
 ('26', '0', '授权码', 'mallLicense', 'hidden', null, null, null, null, '0'),
@@ -52,4 +46,4 @@ INSERT INTO `wst_sys_configs` VALUES ('1', '0', '商城名称', 'mallName', 'tex
 ('32', '0', '默认城市', 'defaultCity', 'other', null, null, '440100', null, '5'),
 ('33', '0', '热搜索词', 'hotSearchs', 'text', null, null, '进口水果，三文鱼，零食，牛肉，压缩袋', '以，号分隔', '12'),
 ('34', '2', '开启短信发送验证码', 'smsVerfy', 'radio', '是||否', '1,0', '1', '', '4'),
-('35', '2', '机构代码', 'smsOrg', 'text', null, null, '', null, '0');
+('36', '2', '开启手机验证', 'phoneVerfy', 'radio', '是||否', '1,0', '0', '', '5');

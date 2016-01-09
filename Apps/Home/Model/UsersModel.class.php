@@ -155,7 +155,7 @@ class UsersModel extends BaseModel {
 	    }
 	    $nameType = I("nameType");
 	    $mobileCode = I("mobileCode");
-		if($nameType==3){//手机号码
+		if($nameType==3 && $GLOBALS['CONFIG']['phoneVerfy']==1){//手机号码
 			$verify = session('VerifyCode_userPhone');
 			$startTime = (int)session('VerifyCode_userPhone_Time');
 			if((time()-$startTime)>120){

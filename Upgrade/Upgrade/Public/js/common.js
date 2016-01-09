@@ -4,7 +4,7 @@ $.browser.webkit = /webkit/.test(navigator.userAgent.toLowerCase());
 $.browser.opera = /opera/.test(navigator.userAgent.toLowerCase()); 
 $.browser.msie = /msie/.test(navigator.userAgent.toLowerCase());
 var WST = WST?WST:{};
-WST.v = '1.4.1';
+WST.v = '1.4.2';
 WST.pageHeight = function(){
 	if($.browser.msie){ 
 		return document.compatMode == "CSS1Compat"? document.documentElement.clientHeight : 
@@ -97,6 +97,9 @@ WST.getWSTMAllVersion = function(url){
 			   $('.wstmall-version-tips').show();
 			   $('#wstmall_version').html(json.version);
 			   $('#wstmall_down').attr('href',json.downloadUrl);
+		   }
+		   if(json.accredit=='no'){
+			   $('.wstmall-accredit-tips').show();
 		   }
 		   if(json.licenseStatus)$('#licenseStatus').html(json.licenseStatus);
 	   }

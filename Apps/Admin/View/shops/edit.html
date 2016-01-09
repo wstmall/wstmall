@@ -472,7 +472,7 @@ dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
              <th align='right'>店铺图标<font color='red'>*</font>：</th>
              <td>
 	             <div id="preview_Filedata" style="margin-top: 70px;">
-	             	<img id='preview' src='__ROOT__/{$object.shopImg}' ref='__ROOT__/{$object.shopImg}' height="152" <if condition="$object['shopImg'] =='' ">style='display:none'</if>/>
+	             	<img id='preview' src='__ROOT__/{$object.shopImg}' ref='__ROOT__/{$object.shopImg}' style='width:152px;height:152px;max-width:152px;' <if condition="$object['shopImg'] =='' ">style='display:none'</if>/>
 	             </div>
              </td>
            </tr>

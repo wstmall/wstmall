@@ -3582,9 +3582,9 @@ label{display:inline;}
 .wst-tbar{margin-bottom:5px;height:auto;}
 .form-control{height:25px;padding:3px;display :inline-block;}
 .btn{padding:2px 8px;margin-right:0px;font-weight:bold;vertical-align:top;}
-.wstmall-version-tips{border-bottom:1px solid #ddd; box-shadow: 0 1px 3px #ddd;display:none;background:url('../img/ico_5.png') no-repeat;font-weight:bold;height:25px;line-height:23px;padding-left:30px;}
-.wstmall-version-tips a{color:#E9754F;}
-.wstmall-version-tips a:hover{color:#FE9C3D;}
+.wstmall-version-tips,.wstmall-accredit-tips{border-bottom:1px solid #ddd; box-shadow: 0 1px 3px #ddd;display:none;background:url('../img/ico_5.png') no-repeat;font-weight:bold;height:25px;line-height:23px;padding-left:30px;}
+.wstmall-version-tips a,.wstmall-accredit-tips a{color:#E9754F;}
+.wstmall-version-tips a:hover,.wstmall-accredit-tips a:hover{color:#FE9C3D;}
 .wstmall-login-tips{line-height:30px;padding-left:10px;border-bottom:1px solid #dddddd;box-shadow: 0 1px 3px #ddd;}
 .wstmall-login-tips p{margin:0px;}
 .wstmall-intro{color:#E9754F;}

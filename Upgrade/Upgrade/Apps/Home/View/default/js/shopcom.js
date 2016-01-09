@@ -1317,7 +1317,7 @@ function addGoodsCat(obj,p,catNo){
 		html.push("<input class='catname' type='text' style='width:400px;height:22px;margin-left:6px;' dataId=''/>");
 		html.push("</td>"); 
 		html.push("<td><input class='catsort' type='text' style='width:35px;' value='0' onkeyup='javascript:WST.isChinese(this,1)' onkeypress='return WST.isNumberKey(event)'/></td>");
-		html.push("<td style='cursor:pointer;'><input class='catshow' type='checkbox'/></td>");    
+		html.push("<td style='cursor:pointer;'><input class='catshow' type='checkbox' checked/></td>");    
 		html.push("<td>");
 		html.push("<span onclick='addGoodsCat(this,0,0);' class='add btn' title='新增'></span>"); 
 		html.push("<span class='del btn' title='删除' onclick='delGoodsCatObj(this,1)'></span>&nbsp;");
@@ -1333,7 +1333,7 @@ function addGoodsCat(obj,p,catNo){
 		html.push("<input class='catname' type='text' style='width:400px;height:22px;' dataId=''/>");
 		html.push("</td>"); 
 		html.push("<td><input class='catsort' type='text' style='width:35px;' value='0' onkeyup='javascript:WST.isChinese(this,1)' onkeypress='return WST.isNumberKey(event)'/></td>");
-		html.push("<td style='cursor:pointer;' ><input class='catshow' type='checkbox' /></td>");    
+		html.push("<td style='cursor:pointer;' ><input class='catshow' type='checkbox' checked /></td>");    
 		html.push("<td>");
 		html.push("<span class='del btn' title='删除' onclick='delGoodsCatObj(this,2)'></span>&nbsp;");
 		html.push("</td>");  

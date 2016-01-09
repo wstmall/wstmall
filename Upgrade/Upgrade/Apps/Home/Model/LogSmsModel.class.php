@@ -60,8 +60,7 @@ class LogSmsModel extends BaseModel {
 		$data['smsFunc'] = $smsFunc;
 		$data['createTime'] = date('Y-m-d H:i:s');
 		$m->add($data);
-		$xml = simplexml_load_string($code);
-		if($xml->State==1){
+		if(intval($code)>0){
 			return array('status'=>1,'msg'=>'短信发送成功!');
 		}else{
 			return array('status'=>-1,'msg'=>'短信发送失败!');

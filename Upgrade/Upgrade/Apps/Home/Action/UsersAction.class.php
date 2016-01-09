@@ -284,9 +284,8 @@ class UsersAction extends BaseAction {
         session('findPass',$USER);
 		$msg = "您正在重置登录密码，验证码为:".$phoneVerify."，请在30分钟内输入。【".$GLOBALS['CONFIG']['mallName']."】";
 		$rv = D('Home/LogSms')->sendSMS(0,session('findPass.userPhone'),$msg,'getPhoneVerify',$phoneVerify);
-		$rs['status']=$rv['status'];
-		$rs['time']=30*60;
-		$this->ajaxReturn($rs);
+		$rv['time']=30*60;
+		$this->ajaxReturn($rv);
 	}
 
 	/**

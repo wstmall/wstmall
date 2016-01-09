@@ -1,0 +1,1 @@
+INSERT INTO `wst_sys_configs`(parentId,fieldName,fieldCode,fieldType,valueRangeTxt,valueRange,fieldValue,fieldTips,fieldSort) VALUES ('2', '开启手机验证', 'phoneVerfy', 'radio','是||否','1,0','1','',5);
