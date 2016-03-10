@@ -30,11 +30,12 @@ class LogLoginsAction extends BaseAction{
 		$this->checkPrivelege('dlrz_00');
 		$m = D('Admin/LogLogins');
     	$page = $m->queryByPage();
-    	$pager = new \Think\Page($page['total'],$page['pageSize']);
+    	$pager = new \Think\Page($page['total'],$page['pageSize'],I());
     	$page['pager'] = $pager->show();
     	$this->assign('Page',$page);
     	$this->assign('startDate',I('startDate',date('Y-m-d',strtotime('-30 days'))));
     	$this->assign('endDate',I('endDate',date('Y-m-d')));
+    	$this->assign('key',I('key'));
         $this->display("/loglogins/list");
 	}
 };

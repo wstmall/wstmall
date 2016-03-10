@@ -60,7 +60,7 @@ class GoodsAction extends BaseAction{
 		$this->assign('goodsCatsList',$m->queryByList());
 		$m = D('Admin/Goods');
     	$page = $m->queryByPage();
-    	$pager = new \Think\Page($page['total'],$page['pageSize']);// 实例化分页类 传入总记录数和每页显示的记录数
+    	$pager = new \Think\Page($page['total'],$page['pageSize'],I());// 实例化分页类 传入总记录数和每页显示的记录数
     	$page['pager'] = $pager->show();
     	$this->assign('Page',$page);
     	$this->assign('shopName',I('shopName'));
@@ -88,7 +88,7 @@ class GoodsAction extends BaseAction{
 		$this->assign('goodsCatsList',$m->queryByList());
 		$m = D('Admin/Goods');
     	$page = $m->queryPenddingByPage();
-    	$pager = new \Think\Page($page['total'],$page['pageSize']);// 实例化分页类 传入总记录数和每页显示的记录数
+    	$pager = new \Think\Page($page['total'],$page['pageSize'],I());// 实例化分页类 传入总记录数和每页显示的记录数
     	$pager->setConfig('header','个会员');
     	$page['pager'] = $pager->show();
     	$this->assign('Page',$page);

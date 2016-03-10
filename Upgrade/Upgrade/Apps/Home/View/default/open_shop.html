@@ -335,7 +335,13 @@
     		   getCommunityForOpen();
     		   getAreas("areaId3",'{$area["areaId"]}',"","areaId3");
     	   });
-    	   
+    	   $('#areaId1').change(function(){
+    		   getAreas("areaId2",this.value,"","areaId2,areaId3");
+    	   });
+    	   $('#areaId2').change(function(){
+	    		getCommunityForOpen();
+	    		getAreas("areaId3",$(this).val(),"","areaId3");
+    	   });
        })
    </script>
    <style>

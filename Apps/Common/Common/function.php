@@ -57,7 +57,7 @@ function WSTSendMail($to, $subject, $content) {
     $mail->Password = $GLOBALS['CONFIG']['mailPassword'];
     $mail->CharSet = 'utf-8';
     // 装配邮件头信息
-    $mail->From = $GLOBALS['CONFIG']['mailUserName'];
+    $mail->From = $GLOBALS['CONFIG']['mailAddress'];
     $mail->AddAddress($to);
     $mail->FromName = $GLOBALS['CONFIG']['mailSendTitle'];
     $mail->IsHTML(true);

@@ -178,6 +178,12 @@ a:hover {
 	z-index: 1;
 	padding-left:25px;
 	border-left:1px solid #e4e4e4;border-right:1px solid #e4e4e4;
+	width:145px;
+	overflow:hidden;
+}
+#wst-shortcut .fl .fore3  {
+	width:165px;
+	overflow:hidden;
 }
 #wst-shortcut .fl b {
 	top: 8px;

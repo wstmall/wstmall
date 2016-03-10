@@ -54,7 +54,7 @@ class GoodsAppraisesAction extends BaseAction{
 		$this->assign('areaList',$m->queryShowByList(0));
 		$m = D('Admin/Goods_appraises');
     	$page = $m->queryByPage();
-    	$pager = new \Think\Page($page['total'],$page['pageSize']);
+    	$pager = new \Think\Page($page['total'],$page['pageSize'],I());
     	$page['pager'] = $pager->show();
     	$this->assign('Page',$page);
     	$this->assign('shopName',I('shopName'));

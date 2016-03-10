@@ -88,5 +88,22 @@ function WSTCartNum(){
 	return count($shopcart);
 }
 
+/**
+ * 根据IP获取城市
+ */
+function WSTIPAddress(){
+	$url = 'http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=json&ip='.$queryIP; 
+    $ch = curl_init($url); 
+    curl_setopt($ch, CURLOPT_ENCODING ,'utf8'); 
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10); 
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $location = curl_exec($ch); 
+    curl_close($ch);
+    if($location){
+    	$location = json_decode($location);
+    	return array('province'=>$location->province,'city'=>$location->city,'district'=>$location->district);
+    }
+    return array();
+}
 
 

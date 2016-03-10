@@ -35,8 +35,15 @@ dl.areaSelect dd{margin-left:20px;width:100%;}
    		userShopInit();
    		getAreas("areaId2",'{$area["parentId"]}',"{$area['areaId']}","areaId2,areaId3",function(){
    			getCommunityForOpen();
- 		   getAreas("areaId3",'{$area["areaId"]}',"","areaId3");
+ 		    getAreas("areaId3",'{$area["areaId"]}',"","areaId3");
  	    });
+   		$('#areaId1').change(function(){
+   			getAreas("areaId2",$(this).val(),"","areaId2,areaId3");
+   		});
+   		$('#areaId2').change(function(){
+   			getAreas("areaId3",$(this).val(),"","areaId3");
+   			getCommunityForOpen();
+   		});
     });
 
    </script>	
@@ -97,13 +104,13 @@ dl.areaSelect dd{margin-left:20px;width:100%;}
            <tr>
              <th width='120' align='right'>所属地区<font color='red'>*</font>：</th>
              <td>
-             <select id='areaId1' class='wstipt' onchange='javascript:getAreas("areaId2",this.value,"","areaId2,areaId3")'>
+             <select id='areaId1' class='wstipt'>
                <option value=''>请选择</option>
                <volist name="areaList" id="vo">
                <option value='{$vo['areaId']}' <if condition="$area['parentId'] == $vo['areaId'] ">selected</if>>{$vo['areaName']}</option>
                </volist>
              </select>
-             <select id='areaId2' class='wstipt' onchange='javascript:getAreas("areaId3",this.value,"","areaId3")'>
+             <select id='areaId2' class='wstipt'>
                <option value=''>请选择</option>
              </select>
              <select id='areaId3' class='wstipt'>

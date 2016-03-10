@@ -115,10 +115,9 @@ class AreasModel extends BaseModel {
 	  	if($areaId2==0){
 	  		$areaId2 = (int)session('areaId2');
 	  	}
-
+        $m = D('Home/Areas');
 	  	//检验城市有效性
 	  	if($areaId2>0){
-	  		$m = D('Home/Areas');
 	  		$sql ="SELECT areaId FROM __PREFIX__areas WHERE isShow=1 AND areaFlag = 1 AND areaType=1 AND areaId=".$areaId2;
 	  		$rs = $m->query($sql);
 	  		if($rs[0]['areaId']=='')$areaId2 = 0;
@@ -128,14 +127,16 @@ class AreasModel extends BaseModel {
 	  	//定位城市
 	  	if($areaId2==0){
 	  		//IP定位
-	  		$Ip = new \Org\Net\IpLocation('UTFWry.dat'); // 实例化类 参数表示IP地址库文件
-	  		$area = $Ip->getlocation(get_client_ip());
-	  		if($area['area']!=""){
-	  			$m = D('Home/Areas');
-	  			$sql ="SELECT areaId FROM __PREFIX__areas WHERE isShow=1 AND areaFlag = 1 AND areaType=1 AND areaName like '$cityName'";
-	  			$rs = $m->query($sql);
-	  			if($rs[0]["areaId"]>0){
-	  				$areaId2 = $rs[0]["areaId"];
+	  		$iparea = WSTIPAddress();
+	  		if(!empty($iparea)){
+	  			$where = array();
+	  			$where['areaName'] = array('like', '%'.$iparea['city'].'%');
+	  			$where['isShow'] = 1;
+	  			$where['areaFlag'] = 1;
+	  			$where['areaType'] = 1;
+	  			$rs = $m->where($where)->getField('areaId');
+	  			if(intval($rs)>0){
+	  				$areaId2 = intval($rs);
 	  			}else{
 	  				$areaId2 = $GLOBALS['CONFIG']['defaultCity'];
 	  			}

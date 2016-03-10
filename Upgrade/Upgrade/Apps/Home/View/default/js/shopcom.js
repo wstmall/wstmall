@@ -1420,12 +1420,16 @@ function getShopMsgTips(){
 			}else{
 				$("#wst-msg-li-"+i+" .wst-order-tips-box").hide();
 			}
+			if((i==0 && json[i]>0) || json['100']>0){
+				playsound();
+			}
 			$("#wst-msg-li-"+i+" .wst-order-tips-box").html(json[i]);
 		}
 	});
 }
 
 $(function() {
+	loadAudio();
 	getShopMsgTips();
 	setInterval("getShopMsgTips()",30000);
 });

@@ -122,7 +122,6 @@ class ShopsModel extends BaseModel {
 			$rd['msg'] = '请选择配送区域!';
 			return $rd;
 		}
-		$s->shopName = $u->userName;
 		$u->loginSecret = rand(1000,9999);
 		$u->userStatus = 1;
 		$u->userType = 0;
@@ -252,7 +251,6 @@ class ShopsModel extends BaseModel {
 			$rd['msg'] = '请选择配送区域!';
 			return $rd;
 		}
-		$s->shopName = $u->userName;
 		$rs = $u->where('userId='.$userId)->save();
 		if(false !== $rs){
 			$s->userId = $userId;

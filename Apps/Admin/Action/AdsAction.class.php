@@ -72,7 +72,7 @@ class AdsAction extends BaseAction{
 		$this->assign('goodsCatList',$m->queryByList(0));
 		$m = D('Admin/Ads');
     	$page = $m->queryByPage();
-    	$pager = new \Think\Page($page['total'],$page['pageSize']);
+    	$pager = new \Think\Page($page['total'],$page['pageSize'],I());
     	$pager->setConfig('header','个会员');
     	$page['pager'] = $pager->show();
     	$this->assign('Page',$page);

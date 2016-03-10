@@ -70,7 +70,7 @@ class NavsAction extends BaseAction{
 		$this->checkAjaxPrivelege('dhgl_00');
 		$m = D('Admin/Navs');
     	$page = $m->queryByPage();
-    	$pager = new \Think\Page($page['total'],$page['pageSize']);
+    	$pager = new \Think\Page($page['total'],$page['pageSize'],I());
     	$page['pager'] = $pager->show();
     	$this->assign('Page',$page);
     	$a = D('Admin/Areas');

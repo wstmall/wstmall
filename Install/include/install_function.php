@@ -76,6 +76,7 @@ function dir_writeable($dir) {
 }
 function initConfig($db_host,$db_user,$db_pass,$db_prefix,$db_name){
 	$code = "return array(
+	    'URL_CASE_INSENSITIVE'  =>  false,
 	    'VAR_PAGE'=>'p',
 	    'PAGE_SIZE'=>15,
 		'DB_TYPE'=>'mysql',
