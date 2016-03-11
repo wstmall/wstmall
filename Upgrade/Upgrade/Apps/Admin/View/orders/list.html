@@ -94,20 +94,20 @@
            </thead>
            <tbody>
              <tr>
-               <td width='150'>
-               <div style='width:150px;'>
+               <td width='350'>
+               <div style='width:350px;'>
                <volist name="vo['goodslist']" id="goods">
 				  <img style='margin:2px;' src="__ROOT__/{$goods['goodsThums']}" height="50" width="50" title='{$goods['goodsName']}'/>
 			   </volist>
 			   </div>
                </td>
                <td>{$vo['userName']}</td>
-               <td>
+               <td width='120'>
                                              ￥{$vo['totalMoney']+$vo['deliverMoney']}<br/>
                <if condition="$vo['payType'] ==1 ">在线支付<else/>货到付款</if>
                </td>
-               <td>{$vo['createTime']}</td>
-               <td>
+               <td width='150'>{$vo['createTime']}</td>
+               <td width='120'>
                <if condition='$vo["orderStatus"] eq -3'>用户拒收
                <elseif condition='$vo["orderStatus"] eq -5'/>店铺不同意拒收
                <elseif condition='$vo["orderStatus"] eq -4'/>店铺同意拒收
@@ -120,7 +120,7 @@
 			   <elseif condition='$vo["orderStatus"] eq 4'/>已到货
 			   </if>
                </td>
-               <td>
+               <td width='60'>
                <a class="btn btn-primary glyphicon" href="{:U('Admin/Orders/toView',array('id'=>$vo['orderId']))}"">查看</a>&nbsp;
                </td>
              </tr>

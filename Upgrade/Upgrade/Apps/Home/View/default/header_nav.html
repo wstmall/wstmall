@@ -9,18 +9,14 @@ var WST = ThinkPHP = window.Think = {
         "MODEL"  : ["{:C('URL_MODEL')}", "{:C('URL_CASE_INSENSITIVE')}", "{:C('URL_HTML_SUFFIX')}"],
         "VAR"    : ["{:C('VAR_MODULE')}", "{:C('VAR_CONTROLLER')}", "{:C('VAR_ACTION')}"],
         "DOMAIN" : "{:WSTDomain()}",
-        "CITYID" : "{$currArea['areaId']}",
+        "CITY_ID" : "{$currArea['areaId']}",
+        "CITY_NAME" : "{$currArea['areaName']}",
         "DEFAULT_IMG": "{:WSTDomain()}/{$CONF['goodsImg']}",
-        "MALL_TITLE" : "{$CONF['mallName']}",
+        "MALL_NAME" : "{$CONF['mallName']}",
         "SMS_VERFY"  : "{$CONF['smsVerfy']}",
-        "PHONE_VERFY"  : "{$CONF['phoneVerfy']}"
+        "PHONE_VERFY"  : "{$CONF['phoneVerfy']}",
+        "IS_LOGIN" :"{$WST_IS_LOGIN}"
 }
-    var domainURL = "{:WSTDomain()}";
-    var publicurl = "__PUBLIC__";
-    var currCityId = "{$currArea['areaId']}";
-    var currCityName = "{$currArea['areaName']}";
-    var currDefaultImg = "{:WSTDomain()}/{$CONF['goodsImg']}";
-    var wstMallName = "{$CONF['mallName']}";
     $(function() {
     	$('.lazyImg').lazyload({ effect: "fadeIn",failurelimit : 10,threshold: 200,placeholder:WST.DEFAULT_IMG});
     });

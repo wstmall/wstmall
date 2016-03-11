@@ -45,7 +45,7 @@ class LogLoginsModel extends BaseModel {
 	  */
      public function queryByPage(){
         $m = M('log_logins');
-        $key = I('key');
+        $key = WSTAddslashes(I('key'));
 	 	$sql = "select loginName,staffName,loginTime,loginIp from __PREFIX__log_staff_logins l,__PREFIX__staffs s where l.staffId=s.staffId 
 	 	        and loginTime between'".I('startDate',date('Y-m-d',strtotime('-30 days')))." 00:00:00' and '".I('endDate',date('Y-m-d'))." 23:59:59'";
 	 	if($key!='')$sql.=" (loginName like '%".$key."%' or staffName like '".$key."')";

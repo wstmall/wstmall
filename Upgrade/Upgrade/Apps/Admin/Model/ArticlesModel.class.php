@@ -70,7 +70,7 @@ class ArticlesModel extends BaseModel {
 	 	$sql = "select a.articleTitle,a.articleId,a.isShow,a.createTime,c.catName,s.staffName
 	 	    from __PREFIX__articles a,__PREFIX__article_cats c,__PREFIX__staffs s 
 	 	    where a.catId=c.catId and a.staffId = s.staffId ";
-	 	if(I('articleTitle')!='')$sql.=" and articleTitle like '%".I('articleTitle')."%'";
+	 	if(I('articleTitle')!='')$sql.=" and articleTitle like '%".WSTAddslashes(I('articleTitle'))."%'";
 	 	$sql.=' order by articleId desc';
 		return $m->pageQuery($sql);
 	 }

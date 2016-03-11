@@ -2,6 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        <link rel="shortcut icon" href="favicon.ico"/>
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 		<meta http-equiv="Expires" content="0">
@@ -193,8 +194,23 @@
                                 <php>if(in_array('ddlb_00',$WST_STAFF['grant'])){</php>
                                 <li><a href="{:U('Admin/Orders/index')}" target='pageContent' >订单列表</a></li>
                                 <php>}</php>
+                                <php>if(in_array('ddts_00',$WST_STAFF['grant'])){</php>
+                                <li><a href="{:U('Admin/OrderComplains/index')}" target='pageContent' >订单投诉</a></li>
+                                <php>}</php>
                                 <php>if(in_array('tk_00',$WST_STAFF['grant'])){</php>
                                 <li><a href="{:U('Admin/Orders/queryRefundByPage')}" target='pageContent' >退款列表</a></li>
+                                <php>}</php>
+                            </ul>
+                        </li>
+                        <php>}</php>
+                        <php>if(in_array('bbtj_00',$WST_STAFF['grant'])){</php>
+                        <li class="treeview">
+                            <a href="#">
+                                <span>报表统计</span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <php>if(in_array('dttj_00',$WST_STAFF['grant'])){</php>
+                                <li><a href="{:U('Admin/OrderRpts/index')}" target='pageContent' >订单统计</a></li>
                                 <php>}</php>
                             </ul>
                         </li>

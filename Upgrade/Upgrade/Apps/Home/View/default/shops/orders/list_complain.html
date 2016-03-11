@@ -1,0 +1,94 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+    <div class="wst-body"> 
+       <div class='wst-page-header'>卖家中心 > 投诉订单</div>
+       <div class='wst-page-content'>
+        <div style="padding-bottom:4px;">
+       		订单编号:<input id="orderNo" value="{$params['orderNo']}" style="width:80px;" autocomplete="off"/>
+       		<button class="wst-btn-query" onclick="javascript:getComplainList()">查询</button>
+       	</div>
+        <table class='wst-list' style="font-size:13px;">
+           <thead>
+             <tr>
+               <th width='80'>订单编号</th>
+               <th width='100'>投诉方</th>
+               <th width='*'>投诉原因</th>
+               <th width='130'>投诉时间</th>
+               <th width='120'>投诉状态</th>
+               <th width='90'>&nbsp;</th>
+             </tr>
+           </thead>
+           <tbody>
+            <volist name="Page['root']" id="order" key='key1'>
+             <tr>
+             	<td style="padding-top:10px;vertical-align:top;">
+             	<a onclick="showOrder({$order['orderId']})" href="javascript:;">{$order["orderNo"]}</a>
+             	</td>
+				<td style="padding-top:10px;vertical-align:top;">{$order["userName"]?$order["userName"]:$order["loginName"]}</td>
+               	<td>{:WSTMSubstr($order["complainContent"],0,28)}</td>
+               	<td><div style="line-height:20px;">{$order["complainTime"]}</div></td>
+               	<td>
+               	    <PHP> if($order["complainStatus"]==0){ </PHP>
+               	    等待处理
+               	    <PHP>}else if($order["complainStatus"]==1){</PHP>
+               	    等待被投诉方回应
+               	    <PHP>}else if($order["complainStatus"]==2 || $order["complainStatus"]==3){</PHP>
+               	    等待仲裁
+	               	<PHP>}else if($order["complainStatus"]==4){</PHP>
+               	    已仲裁
+               	    <PHP>}</PHP>
+               	</td>
+               	<td>
+					<a href="{:U('Home/OrderComplains/getShopComplainDetail',array('id'=>$order['complainId']))}">查看</a>
+					<if condition="$order['complainStatus'] eq 1">
+					<a href='{:U("Home/OrderComplains/respond",array("id"=>$order["complainId"]))}'>应诉</a>
+					</if>
+				</td>
+             </tr>
+             </volist>
+             <if condition="$receiveOrders['totalPage'] gt 1">
+             <tfoot>
+             <tr>
+                <td colspan='8' align='center' style="height:30px;border-bottom: 0px;">
+					<div class="wst-page" style="float:right;padding-bottom:10px;">
+						<div id="wst-page-items">
+						</div>
+					</div>
+				</td>
+             </tr>
+             </tfoot>
+             </if>
+           </tbody>
+        </table>
+        </div>
+    </div>
+    <script>
+    <if condition="$receiveOrders['totalPage'] gt 1">
+    $(document).ready(function(){
+		laypage({
+		    cont: 'wst-page-items',
+		    pages: {$receiveOrders['totalPage']}, //总页数
+		    skip: true, //是否开启跳页
+		    skin: '#e23e3d',
+		    groups: 3, //连续显示分页数
+		    curr: function(){ //通过url获取当前页，也可以同上（pages）方式获取
+		        var page = location.search.match(/pcurr=(\d+)/);
+		        return page ? page[1] : 1;
+		    }(), 
+		    jump: function(e, first){ //触发分页后的回调
+		        if(!first){ //一定要加此判断，否则初始时会无限刷新
+		        	var nuewurl = WST.splitURL("pcurr");
+		        	var ulist = nuewurl.split("?");
+		        	if(ulist.length>1){
+		        		location.href = nuewurl+'&pcurr='+e.curr;
+		        	}else{
+		        		location.href = '?pcurr='+e.curr;
+		        	}
+		            
+		        }
+		    }
+		});
+    });
+	</if>
+	</script>
+</block> 

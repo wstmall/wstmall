@@ -51,7 +51,7 @@ function checkCartPay(shopId,goodsId,num,ischk,isBook,goodsAttrId){
 				$("#buy-num_"+goodsId+"_"+goodsAttrId).val(num);
 				$("#buy-num_"+goodsId+"_"+goodsAttrId).css({"border":""});
 				var price = parseFloat($("#price_"+goodsId+"_"+goodsAttrId).val(),10);
-				$("#prc_"+goodsId+"_"+goodsAttrId).html((num*price).toFixed(1));
+				$("#prc_"+goodsId+"_"+goodsAttrId).html((num*price).toFixed(2));
 				//店铺下的商品
 				var shopTotalMoney = 0;
 				$("input[name='chk_goods_"+shopId+"']").each(function(){
@@ -63,7 +63,7 @@ function checkCartPay(shopId,goodsId,num,ischk,isBook,goodsAttrId){
 						shopTotalMoney += gnum*gprice;
 					}
 				});
-				$("#shop_totalMoney_"+shopId).html(shopTotalMoney.toFixed(1));
+				$("#shop_totalMoney_"+shopId).html(shopTotalMoney.toFixed(2));
 				//所有商品
 				$(".cgoodsId").each(function(){
 					var goodsAttrId = $(this).attr('dataId');
@@ -76,14 +76,14 @@ function checkCartPay(shopId,goodsId,num,ischk,isBook,goodsAttrId){
 					}
 				});			
 				
-				$("#wst_cart_totalmoney").html(totalMoney.toFixed(1));
+				$("#wst_cart_totalmoney").html(totalMoney.toFixed(2));
 			}
 		});
 	});
 }
 
 function toContinue(){
-	location.href= domainURL ;
+	location.href= WST.DOMAIN ;
 }
 
 //去结算
@@ -92,7 +92,10 @@ function goToPay(){
 	var cflag = true;
 	var chkId;
 	var payGoodsNum = 0;
-	
+	if(WST.IS_LOGIN==0){
+		loginWin();
+		return;
+	}
 	$("input[id^='buy-num_']").each(function(){
 		chkId = $(this).attr('id').replace('buy-num_','chk_goods_');
 		if($("#"+chkId).prop('checked'))payGoodsNum++;

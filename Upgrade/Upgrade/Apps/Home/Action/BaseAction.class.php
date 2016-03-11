@@ -16,17 +16,14 @@ class BaseAction extends Controller {
 		$m = D('Home/System');
 		$GLOBALS['CONFIG'] = $m->loadConfigs();
 		$this->assign("WST_USER",session('WST_USER'));
+		$this->assign("WST_IS_LOGIN",(session('WST_USER.userId')>0)?1:0);
 		$areas= D('Home/Areas');
-   		$areaList = $areas->getCityListByProvince();
 		$areaId2 = $this->getDefaultCity();
 		$currArea = $areas->getArea($areaId2);
 		$this->assign('currArea',$currArea);
    		$this->assign('searchType',(int)I("searchType",1));
-   		
-   		//$this->assign('currCity',$areaList[$areaId2]);
-   		$this->assign('areaId2',$areaId2);
-   		$this->assign('template_path',$template_path);
    		$this->assign('CONF',$GLOBALS['CONFIG']);
+   		$this->assign('WST_REFERE',$_SERVER['HTTP_REFERER']);
 		$this->footer(); //加入底部
 	}
 	

@@ -72,7 +72,6 @@ class PaymentsModel extends BaseModel {
         $extend_param = '';
         $orderIds = I("orderIds");
         $orderAmount = I("needPay");
-        
         $USER = session('WST_USER');
         $userId = (int)$USER['userId'];
         $obj["userId"] = $userId;
@@ -82,14 +81,13 @@ class PaymentsModel extends BaseModel {
         foreach ($orders as $key => $order) {
         	$orderNoList[] = $order["orderNo"];
         }
-        $return_url = WSTRootDomain().U('Payments/response');
-        $notify_url = WSTRootDomain().U('Payments/notify');
+        $return_url = WSTDomain().'/Wstapi/payment/return_alipay.php';
+        $notify_url = WSTDomain().'/Wstapi/payment/notify_alipay.php';
         $orderNos = implode(",",$orderNoList);
         $parameter = array(
         	'extra_common_param'=> $userId,
             'service'           => $service,
             'partner'           => $payment['parterID'],
- 
             '_input_charset'    => "utf-8",
             'notify_url'        => $notify_url,
             'return_url'        => $return_url,
@@ -107,26 +105,19 @@ class PaymentsModel extends BaseModel {
             /* 买卖双方信息 */
             'seller_email'      => $payment['payAccount']
         );
-
-        
         ksort($parameter);
         reset($parameter);
-
         $param = '';
         $sign  = '';
-
         foreach ($parameter AS $key => $val){
             $param .= "$key=" .urlencode($val). "&";
             $sign  .= "$key=$val&";
         }
-
         $param = substr($param, 0, -1);
         $sign  = substr($sign, 0, -1). $payment['parterKey'];
-
         return 'https://mapi.alipay.com/gateway.do?'.$param. '&sign='.md5($sign).'&sign_type=MD5';
     }
-    
-    
+
     /**
      * 获取支付订单信息
      */
@@ -135,12 +126,9 @@ class PaymentsModel extends BaseModel {
     	$orderIds = $obj["orderIds"];
     	$sql = "SELECT orderId,orderNo,orderStatus FROM __PREFIX__orders WHERE userId = $userId AND orderId in ($orderIds) AND orderFlag = 1 AND needPay>0 AND orderStatus = -2 AND isPay = 0 AND payType = 1";
     	$rsv = $this->query($sql);
-    
     	return $rsv;
     }
-    
-    
-    
+
     /**
      * 完成支付订单
      */
@@ -150,23 +138,19 @@ class PaymentsModel extends BaseModel {
 		$orderIds = $obj["out_trade_no"];
 		$total_fee = $obj["total_fee"];
 		$userId = $obj["userId"];
-			
 		$sql = "select og.orderId,og.goodsId,og.goodsNums,og.goodsAttrId from __PREFIX__order_goods og, __PREFIX__orders o where og.orderId = o.orderId AND o.orderId in ($orderIds) and o.payType = 1 and o.needPay > 0 and o.orderFlag=1 and o.orderStatus=-2";
 		$goodslist = $this->query($sql);
-		
 		$data = array();
 		$data["needPay"] = 0;
 		$data["isPay"] = 1;
 		$data["orderStatus"] = 0;
 		$data["tradeNo"] = $trade_no;
-			
 		$rd = array('status'=>-1);
 		$om = M('orders');
 		$rs = $om->where("orderId in ($orderIds) and payType = 1 and needPay > 0 and orderFlag=1 and orderStatus=-2")->save($data);
 			
 		if(false !== $rs){
 			$rd['status']= 1;
-			
 			//修改库存
 			foreach ($goodslist as $key=> $sgoods){
 				$goodsId = $sgoods['goodsId'];
@@ -179,7 +163,6 @@ class PaymentsModel extends BaseModel {
 					$this->execute($sql);
 				}
 			}
-			
 			$orderIdArr = explode(",",$orderIds);
 			foreach ($orderIdArr as $key => $orderId) {
 				$data = array();
@@ -207,7 +190,6 @@ class PaymentsModel extends BaseModel {
     		'info'=>'',
     		'status'=>false,
     	);
-    
     	$request = $this->argSort($request);
     	/* 检查数字签名是否正确 */
     	$isSign = $this->getSignVeryfy($request);
@@ -216,9 +198,7 @@ class PaymentsModel extends BaseModel {
     		return $return_res;
     	}
     	if ($request['trade_status'] == 'TRADE_SUCCESS' || $request['trade_status'] == 'TRADE_FINISHED' || $request['trade_status'] == 'WAIT_SELLER_SEND_GOODS' || $request['trade_status'] == 'WAIT_BUYER_CONFIRM_GOODS'){
-    
     		$return_res['status'] = true;
-    
     	}
     	return $return_res;
     }
@@ -270,7 +250,6 @@ class PaymentsModel extends BaseModel {
     	}
     	//去掉最后一个&字符
     	$arg = substr($arg,0,count($arg)-2);
-    
     	//如果存在转义字符，那么去掉转义
     	if(get_magic_quotes_gpc()){$arg = stripslashes($arg);}
     
@@ -299,8 +278,5 @@ class PaymentsModel extends BaseModel {
     	reset($para);
     	return $para;
     }
-    
-    
-    
 };
 ?>

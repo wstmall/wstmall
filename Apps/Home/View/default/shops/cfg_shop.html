@@ -1,9 +1,7 @@
 <extend name="./Apps/Home/View/default/shops/layout.html" />
 <block name="content">
-
 <link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/webuploader/style.css" />
 <link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/webuploader/webuploader.css" />
-<script type="text/javascript" src="__PUBLIC__/plugins/webuploader/webuploader.js"></script>
 <script type="text/javascript" src="__ROOT__/Apps/Home/View/default/js/shopsbatchupload.js"></script>
 <style>
 
@@ -11,15 +9,28 @@
 </style>
 <script>
 $(function () {
-	   $.formValidator.initConfig({
+	$.formValidator.initConfig({
 		   theme:'Default',mode:'AutoTip',formID:"myform",debug:true,submitOnce:true,onSuccess:function(){
 			   setShop();
 			   return false;
 			},onError:function(msg){
-		}});
-	   
-	    $("#shopKeywords").formValidator({onShow:"",onFocus:"请输入店铺SEO关键字",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"店铺SEO关键字不能为空,请确认"});
-	    
+	}});
+	$("#shopKeywords").formValidator({onShow:"",onFocus:"请输入店铺SEO关键字",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"店铺SEO关键字不能为空,请确认"});
+	var uploading = null;
+	uploadFile({
+    	  server:Think.U('Home/shops/uploadPic'),pick:'#shopBannerPicker',
+    	  formData: {dir:'shops'},
+    	  callback:function(f){
+    		  layer.close(uploading);
+    		  var json = WST.toJson(f);
+    		  $('#shopBannerPreview').attr('src',WST.DOMAIN+"/"+json.file.savepath+json.file.savethumbname);
+    		  $('#shopBanner').val(json.file.savepath+json.file.savename);
+    		  $('#shopBannerPreview').show();
+	      },
+	      progress:function(rate){
+	    	  uploading = WST.msg('正在上传图片，请稍后...');
+	      }
+    });    
 });
 
 function imglimouseover(obj){
@@ -41,29 +52,8 @@ function imglidel(obj){
 		return;
 	}
 }
-var filetypes = ["gif","jpg","png","jpeg"];
-
 </script>
    <div class="wst-body" style="position:relative;"> 
-   		<iframe name="upload" style="display:none"></iframe>
-		<form id="uploadform_Filedata" autocomplete="off" style="position:absolute;top:140px;left:129px;z-index:10;" enctype="multipart/form-data" method="POST" target="upload" action="{:U('Home/Shops/uploadPic')}" >
-			<div style="position:relative;">
-			<input id="shopBanner" name="shopBanner" type="text" value="{$object.shopBanner}" readonly style="margin-right:4px;float:left;margin-left:8px;width:250px;"/>
-			<div class="div1">
-				<div class="div2">浏览</div>
-				<input type="file" class="inputstyle" id="Filedata" name="Filedata" onchange="updfile('Filedata');" >
-			</div>
-			<div style="clear:both;"></div>
-			<div >&nbsp;图片大小:1400 x 120 (px)(格式为 gif, jpg, jpeg, png)</div>
-			<input type="hidden" name="dir" value="shops">
-			<input type="hidden" name="width" value="150">
-			<input type="hidden" name="folder" value="Filedata">
-			<input type="hidden" name="sfilename" value="Filedata">
-			<input type="hidden" name="fname" value="shopBanner">
-			<input type="hidden" id="s_Filedata" name="s_Filedata" value="">
-			
-			</div>
-		</form>
        <div class='wst-page-header'>卖家中心 > 店铺设置</div>
        <div class='wst-page-content'>
        
@@ -88,8 +78,10 @@ var filetypes = ["gif","jpg","png","jpeg"];
            <tr style="height:80px">
              <th width='120' align='right' valign='top'>顶部广告：</th>
              <td>
-             	<div id="preview_Filedata" style="margin-top: 70px;">
-             		<img height="60" <if condition="$object.shopBanner neq ''">src="__ROOT__/{$object.shopBanner}"<else />src="__ROOT__/Apps/Home/View/default/images/s.gif"</if>/>
+                <div id="shopBannerPicker" style='margin-left:0px;margin-top:5px;height:30px;overflow:hidden'>上传顶部广告图片</div>
+             	<div>图片大小:1400 x 120 (px)(格式为 gif, jpg, jpeg, png)</div>
+             	<div style="margin-top:5px;">
+             		<img height="60" id='shopBannerPreview' <if condition="$object.shopBanner neq ''">src="__ROOT__/{$object.shopBanner}"<else />src="__ROOT__/Apps/Home/View/default/images/s.gif"</if>/>
              	</div>
              </td>
            </tr>

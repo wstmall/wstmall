@@ -2,6 +2,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="shortcut icon" href="favicon.ico"/>
   		<title>卖家中心 - {$CONF['mallTitle']}</title>
   		<meta name="keywords" content="{$CONF['mallKeywords']}" />
       	<meta name="description" content="{$CONF['mallDesc']},卖家中心" />
@@ -12,12 +13,6 @@
   		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/shop.css">
     	<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/webuploader/webuploader.css" />
-      	<script>
-		var publicurl = '__PUBLIC__/';
-		var shopId = '{$orderInfo["order"]["shopId"]}';
-		var pageCount='{$receiveOrders["totalPage"]}';
-		var current='{$receiveOrders["currPage"]}';
-		</script>
 		{:WSTLoginTarget(1)}
     </head>
     <body>
@@ -55,6 +50,7 @@
             	<span class='wst-menu-title'><span></span>交易管理</span>
             
               	<a href='{:U("Home/Orders/toShopOrdersList")}'><li id='li_toShopOrdersList' <if condition='$umark eq "toShopOrdersList"'> class='liselect'</if>>订单管理<span style="display:none;" class="wst-msg-tips-box"></span></li></a>
+            	<a href="{:U('Home/OrderComplains/queryShopComplainByPage/')}"><li <if condition='$umark eq "queryShopComplainByPage"'> class='selected'</if>>投诉订单</li></a>
             	<span class='wst-menu-title' style='border-top:0px;'><span></span>商品管理</span>
             
                	<a href="{:U('Home/ShopsCats/index/')}"><li <if condition='$umark eq "index"'> class='liselect'</if>>商品分类</li></a>
@@ -105,4 +101,5 @@
       	<script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
       	<script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
       	<script src="__ROOT__/Apps/Home/View/default/js/audio.js"></script>
+      	<script type="text/javascript" src="__PUBLIC__/plugins/webuploader/webuploader.js"></script>
 </html>

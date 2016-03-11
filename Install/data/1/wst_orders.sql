@@ -12,8 +12,8 @@ CREATE TABLE `wst_orders` (
   `areaId3` int(11) NOT NULL,
   `shopId` int(11) NOT NULL,
   `orderStatus` tinyint(4) NOT NULL DEFAULT '-2',
-  `totalMoney` float(11,1) NOT NULL,
-  `deliverMoney` float(11,1) NOT NULL,
+  `totalMoney` decimal(11,2) NOT NULL DEFAULT '0.00',
+  `deliverMoney` decimal(11,2) NOT NULL DEFAULT '0.00',
   `payType` tinyint(4) NOT NULL DEFAULT '0',
   `isSelf` tinyint(4) NOT NULL DEFAULT '0',
   `isPay` tinyint(4) NOT NULL DEFAULT '0',
@@ -38,7 +38,7 @@ CREATE TABLE `wst_orders` (
   `orderunique` varchar(20) NOT NULL,
   `orderSrc` tinyint(4) NOT NULL DEFAULT '0',
   `orderFlag` tinyint(4) NOT NULL DEFAULT '1',
-  `needPay` float(11,1) DEFAULT '0.0',
+  `needPay` decimal(11,2) DEFAULT '0.00',
   `tradeNo` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`orderId`),
   KEY `shopId` (`shopId`,`orderFlag`),
@@ -49,6 +49,4 @@ CREATE TABLE `wst_orders` (
 -- ----------------------------
 -- Records of wst_orders
 -- ----------------------------
-INSERT INTO `wst_orders` VALUES ('1', '11', '440000', '440100', '440106', '4', '-2', '108.0', '0.0', '1', '1', '0', '0', '9', '马生', '15', '红花岗', '020-46787622', null, '512000', '108', '0', '', '111', '2015-05-21 00:00:00', '0', '2015-05-19 23:29:11', '0', '0', null, '1432049292155', '0', '1', '0.0'),
- ('2', '22', '440000', '440100', '440106', '4', '-4', '36.0', '0.0', '0', '0', '0', '0', '9', '马生', '15', '红花岗', '020-46787622', null, '512000', '36', '1', '江门移动', '757', '2015-05-20 04:00:00', '0', '2015-05-19 23:35:48', '0', '0', null, '1432049687902', '0', '1', '0.0'),
- ('3', '33', '440000', '440100', '440106', '4', '0', '144.0', '0.0', '0', '0', '0', '0', '9', '马生', '15', '红花岗', '020-46787622', null, '512000', '144', '0', '', '', '2015-05-24 17:00:00', '0', '2015-05-24 15:59:46', '0', '0', null, '1432454386374', '0', '1', '0.0');
+INSERT INTO `wst_orders` VALUES ('4', '1000000013', '440000', '440100', '440106', '4', '4', '72.00', '0.00', '0', '0', '0', '1', '9', '马生', '17', '广州市 天河区 华南理工大学社区 桑德菲杰卡拉斯的减肥', '1591867199', null, '', '72', '0', '', '

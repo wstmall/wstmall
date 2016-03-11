@@ -9,6 +9,22 @@
  * 店铺服务类
  */
 class ShopsModel extends BaseModel {
+	
+	/**
+	 * 查询店铺关键字
+	 */
+	public function checkShopName($val,$id = 0){
+		$rd = array('status'=>-1);
+		$sql = " shopName ='%s' and shopFlag=1 ";
+		$keyArr = array($val);
+		if($id>0)$sql.=" and shopId!=".$id;
+		$rs = $this->where($sql,$keyArr)->count();
+		if($rs==0){
+			$rd['status'] = 1;
+		}
+		return $rd;
+	}
+	
      /**
 	  * 查询登录关键字
 	  */
@@ -101,8 +117,9 @@ class ShopsModel extends BaseModel {
 				    $m = M('shop_scores');
 				    $m->add($data);
 					//建立店铺和社区的关系
-					$relateArea = I('relateAreaId');
-					$relateCommunity = I('relateCommunityId');
+					
+					$relateArea = self::formatIn(",", I('relateAreaId'));
+					$relateCommunity = self::formatIn(",", I('relateCommunityId'));
 					if($relateArea!=''){
 						$m = M('shops_communitys');
 						$relateAreas = explode(',',$relateArea);
@@ -235,8 +252,9 @@ class ShopsModel extends BaseModel {
 				$rd['status']= 1;
 				
 		        //建立店铺和社区的关系
-				$relateArea = I('relateAreaId');
-				$relateCommunity = I('relateCommunityId');
+				$relateArea = self::formatIn(",", I('relateAreaId'));
+				$relateCommunity = self::formatIn(",", I('relateCommunityId'));
+				
 				$m = M('shops_communitys');
 				$m->where('shopId='.$shopId)->delete();
 				if($relateArea!=''){
@@ -353,8 +371,8 @@ class ShopsModel extends BaseModel {
      	$areaId2 = (int)I('areaId2',0);
 	 	$sql = "select shopId,shopSn,shopName,u.userName,shopAtive,shopStatus,gc.catName from __PREFIX__shops s,__PREFIX__users u ,__PREFIX__goods_cats gc 
 	 	     where gc.catId=s.goodsCatId1 and s.userId=u.userId and shopStatus=1 and shopFlag=1 ";
-	 	if(I('shopName')!='')$sql.=" and shopName like '%".I('shopName')."%'";
-	 	if(I('shopSn')!='')$sql.=" and shopSn like '%".I('shopSn')."%'";
+	 	if(I('shopName')!='')$sql.=" and shopName like '%".WSTAddslashes(I('shopName'))."%'";
+	 	if(I('shopSn')!='')$sql.=" and shopSn like '%".WSTAddslashes(I('shopSn'))."%'";
 	 	if($areaId1>0)$sql.=" and areaId1=".$areaId1;
 	 	if($areaId2>0)$sql.=" and areaId2=".$areaId2;
 	 	$sql.=" order by shopId desc";
@@ -369,8 +387,8 @@ class ShopsModel extends BaseModel {
      	$areaId2 = (int)I('areaId2',0);
 	 	$sql = "select shopId,shopSn,shopName,u.userName,shopAtive,shopStatus,gc.catName from __PREFIX__shops s,__PREFIX__users u ,__PREFIX__goods_cats gc 
 	 	     where gc.catId=s.goodsCatId1 and s.userId=u.userId and shopStatus<=0 and shopFlag=1";
-	 	if(I('shopName')!='')$sql.=" and shopName like '%".I('shopName')."%'";
-	 	if(I('shopSn')!='')$sql.=" and shopSn like '%".I('shopSn')."%'";
+	 	if(I('shopName')!='')$sql.=" and shopName like '%".WSTAddslashes(I('shopName'))."%'";
+	 	if(I('shopSn')!='')$sql.=" and shopSn like '%".WSTAddslashes(I('shopSn'))."%'";
 	 	if(I('shopStatus',-999)!=-999)$sql.=" and shopStatus =".(int)I('shopStatus');
 	 	if($areaId1>0)$sql.=" and areaId1=".$areaId1;
 	 	if($areaId2>0)$sql.=" and areaId2=".$areaId2;

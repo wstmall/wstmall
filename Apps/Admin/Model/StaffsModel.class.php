@@ -83,8 +83,8 @@ class StaffsModel extends BaseModel {
      public function queryByPage(){
         $m = M('staffs');
 	 	$sql = "select s.*,r.roleName from __PREFIX__staffs s left join  __PREFIX__roles r on s.staffRoleId=r.roleId where staffFlag=1 ";
-	 	if(I('loginName')!='')$sql.=" and loginName LIKE '%".I('loginName')."%'";
-	 	if(I('staffName')!='')$sql.=" and staffName LIKE '%".I('staffName')."%'";
+	 	if(I('loginName')!='')$sql.=" and loginName LIKE '%".WSTAddslashes(I('loginName'))."%'";
+	 	if(I('staffName')!='')$sql.=" and staffName LIKE '%".WSTAddslashes(I('staffName'))."%'";
 	 	$sql .=" order by staffId desc ";
 		return $m->pageQuery($sql);
 	 }

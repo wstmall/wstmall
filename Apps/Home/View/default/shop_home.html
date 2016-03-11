@@ -3,6 +3,7 @@
 	<head>
   		<meta charset="utf-8">
       	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+      	<link rel="shortcut icon" href="favicon.ico"/>
       	<meta name="viewport" content="width=device-width, initial-scale=1">
       	<title>{$shops['shopName']} - {$CONF['mallTitle']}</title>
       	<meta name="keywords" content="{$shops['shopKeywords']},首页" />
@@ -33,7 +34,7 @@
 			<div class="wst-shophome-nav-box">
 				<a href="{:U('Home/Shops/toShopHome/',array('shopId'=>$shopId,'ct1'=>-1))}"><li <if condition="$ct1 eq -1">class="liselected"</if>>本店所有商品</li></a>
 				<a href="{:U('Home/Shops/toShopHome/',array('shopId'=>$shopId,'ct1'=>0))}"><li <if condition="$ct1 eq 0">class="liselected"</if>>店铺首页</li></a>
-				<volist name="shopscates" key="k" id="vo">
+				<volist name="shopscates" key="k" id="vo" offset="0" length='7'>
 				<a href="{:U('Home/Shops/toShopHome/',array('shopId'=>$vo['shopId'],'ct1'=>$vo['catId']))}"><li <if condition="$ct1 eq $vo['catId']">class="liselected"</if>>{$vo["catName"]}</li></a>
 				</volist>
 			</div>

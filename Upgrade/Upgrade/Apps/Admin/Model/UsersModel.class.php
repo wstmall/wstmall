@@ -118,9 +118,9 @@ class UsersModel extends BaseModel {
         $m = M('users');
         $map = array();
 	 	$sql = "select * from __PREFIX__users where userFlag=1 ";
-	 	if(I('loginName')!='')$sql.=" and loginName LIKE '%".I('loginName')."%'";
-	 	if(I('userPhone')!='')$sql.=" and userPhone LIKE '%".I('userPhone')."%'";
-	 	if(I('userEmail')!='')$sql.=" and userEmail LIKE '%".I('userEmail')."%'";
+	 	if(I('loginName')!='')$sql.=" and loginName LIKE '%".WSTAddslashes(I('loginName'))."%'";
+	 	if(I('userPhone')!='')$sql.=" and userPhone LIKE '%".WSTAddslashes(I('userPhone'))."%'";
+	 	if(I('userEmail')!='')$sql.=" and userEmail LIKE '%".WSTAddslashes(I('userEmail'))."%'";
 	 	if(I('userType',-1)!=-1)$sql.=" and userType=".I('userType',-1);
 	 	$sql.="  order by userId desc";
 		$rs = $m->pageQuery($sql);
@@ -202,9 +202,9 @@ class UsersModel extends BaseModel {
 	 public function queryAccountByPage(){
         $m = M('users');
 	 	$sql = "select * from __PREFIX__users where userFlag=1 ";
-	 	if(I('loginName')!='')$sql.=" and loginName LIKE '%".I('loginName')."%'";
-	 	if(I('userStatus',-1)!=-1)$sql.=" and userStatus=".I('userStatus',-1);
-	 	if(I('userType',-1)!=-1)$sql.=" and userType=".I('userType',-1);
+	 	if(I('loginName')!='')$sql.=" and loginName LIKE '%".WSTAddslashes(I('loginName'))."%'";
+	 	if(I('userStatus',-1)!=-1)$sql.=" and userStatus=".(int)I('userStatus',-1);
+	 	if(I('userType',-1)!=-1)$sql.=" and userType=".(int)I('userType',-1);
 	 	$sql.="  order by userId desc";
 		$rs = $m->pageQuery($sql);
 		//计算等级

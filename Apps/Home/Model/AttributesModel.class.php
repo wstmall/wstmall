@@ -118,7 +118,7 @@ class AttributesModel extends BaseModel {
 	    $shopId = (int)session('WST_USER.shopId');
 	    $m = M('goods_attributes');
 		//删除相关商品的属性
-		$m->where("shopId=".$shopId." and attrId in(".implode(',',$ids).")")->delete();
+		$m->where("shopId=".$shopId." and attrId=$id")->delete();
 	    //删除属性
 	    $m = M('attributes');
 	    $rs = $m->execute("update __PREFIX__attributes set attrFlag=-1 where shopId=".$shopId." and attrId=".$id);

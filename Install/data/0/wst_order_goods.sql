@@ -24,7 +24,7 @@ CREATE TABLE `wst_order_goods` (
   `orderId` int(11) NOT NULL,
   `goodsId` int(11) NOT NULL,
   `goodsNums` int(11) NOT NULL DEFAULT '0',
-  `goodsPrice` float(11,1) NOT NULL DEFAULT '0.0',
+  `goodsPrice` decimal(11,2) NOT NULL DEFAULT '0.00',
   `goodsAttrId` int(11) DEFAULT '0',
   `goodsAttrName` varchar(255) DEFAULT '',
   `goodsName` varchar(50) DEFAULT NULL,

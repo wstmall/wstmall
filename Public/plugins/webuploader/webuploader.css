@@ -11,14 +11,16 @@
 	display: inline-block;
 	cursor: pointer;
 	background: #00b7ee;
-	padding: 10px 15px;
-	color: #fff;
+	padding:0px 10px;
+	background:#e23e3d;
 	text-align: center;
 	border-radius: 3px;
 	overflow: hidden;
+	color:#ffffff;
 }
 .webuploader-pick-hover {
-	background: #00a2d4;
+	background: #e23e3d;
+	color:#ffffff;
 }
 
 .webuploader-pick-disable {

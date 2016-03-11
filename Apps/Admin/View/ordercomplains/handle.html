@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>{$CONF['shopTitle']['fieldValue']}后台管理中心</title>
+      <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
+      <!--[if lt IE 9]>
+      <script src="__PUBLIC__/js/html5shiv.min.js"></script>
+      <script src="__PUBLIC__/js/respond.min.js"></script>
+      <![endif]-->
+      <script src="__PUBLIC__/js/jquery.min.js"></script>
+      <script src="__PUBLIC__/plugins/bootstrap/js/bootstrap.min.js"></script>
+      <script src="__PUBLIC__/js/common.js"></script>
+      <script src="__PUBLIC__/plugins/plugins/plugins.js"></script>
+      <script src="__PUBLIC__/plugins/formValidator/formValidator-4.1.3.js"></script>
+   </head>
+   <script>
+   function finalHandle(id){
+	   var params = {};
+	   params.id = id;
+	   params.finalResult = $.trim($('#finalResult').val());
+	   if(params.finalResult==''){
+		   Plugins.Tips({title:'信息提示',icon:'error',content:'请输入仲裁结果!',timeout:1000});
+		   return;
+	   }
+	   Plugins.confirm({title:'信息提示',content:'您确定仲裁该订单投诉记录吗?',okText:'确定',cancelText:'取消',okFun:function(){
+		   Plugins.closeWindow();
+		   Plugins.waitTips({title:'信息提示',content:'正在操作，请稍后...'});
+		   $.post("{:U('Admin/OrderComplains/finalHandle')}",params,function(data,textStatus){
+					var json = WST.toJson(data);
+					if(json.status=='1'){
+						Plugins.setWaitTipsMsg({content:json.msg,timeout:1000,callback:function(){
+							location.reload();
+						}});
+					}else{
+						Plugins.setWaitTipsMsg({content:json.msg,timeout:1000});
+					}
+				});
+	   }});
+   }
+   function deliverNext(id){
+	   Plugins.confirm({title:'信息提示',content:'您确定要转交给应诉人应诉吗?',okText:'确定',cancelText:'取消',okFun:function(){
+		   Plugins.closeWindow();
+		   Plugins.waitTips({title:'信息提示',content:'正在操作，请稍后...'});
+		   $.post("{:U('Admin/OrderComplains/deliverRespond')}",{id:id},function(data,textStatus){
+					var json = WST.toJson(data);
+					if(json.status=='1'){
+						Plugins.setWaitTipsMsg({content:json.msg,timeout:1000,callback:function(){
+							location.reload();
+						}});
+					}else{
+						Plugins.setWaitTipsMsg({content:json.msg,timeout:1000});
+					}
+				});
+	   }});
+   }
+   </script>
+   <body class="wst-page">
+       <form name="myform" method="post" id="myform">
+        <input type='hidden' id='id' value='{$object["order"].bankId}'/>
+        <table class="table table-hover table-striped table-bordered wst-form">
+           <tr>
+             <td style='font-weight:bold;'>订单详情
+             <a id="showBtn" href='javascript:WST.showHide(1,"#hideBtn,#orderDiv");WST.showHide(0,"#showBtn");' style='float:right'>显示订单详情&nbsp;</a>
+             <a id="hideBtn" href='javascript:WST.showHide(1,"#showBtn");WST.showHide(0,"#hideBtn,#orderDiv");' style='float:right;display:none'>隐藏订单详情</a>&nbsp;</td>
+           </tr>
+           <tbody id='orderDiv' style='display:none'>
+           <tr>
+             <td>
+             <span style='font-weight:bold;'>订单号：{$object["order"]['orderNo']}</span>
+             <span style='margin-left:100px;'>
+                                       状态：<if condition='$object["order"]["orderStatus"] eq -3'>用户拒收
+               <elseif condition='$object["order"]["orderStatus"] eq -5'/>店铺不同意拒收
+               <elseif condition='$object["order"]["orderStatus"] eq -4'/>店铺同意拒收
+			   <elseif condition='$object["order"]["orderStatus"] eq -2'/>未付款
+			   <elseif condition='($object["order"]["orderStatus"] eq -6) OR ($vo["orderStatus"] eq -7)'/>用户取消
+			   <elseif condition='$object["order"]["orderStatus"] eq 0'/>未受理
+			   <elseif condition='$object["order"]["orderStatus"] eq 1'/>已受理
+			   <elseif condition='$object["order"]["orderStatus"] eq 2'/>打包中
+			   <elseif condition='$object["order"]["orderStatus"] eq 3'/>配送中
+			   <elseif condition='$object["order"]["orderStatus"] eq 4'/>已到货
+			   </if>
+             </span></td>
+           </tr>
+           <tr>
+              <td style='font-weight:bold;'>订单日志</td>
+           </tr>
+           <tr>
+              <td>
+                <table width='700'>
+                <tr>
+                  <td width='220'>操作时间</td>
+                  <td width='350'>操作信息</td>
+                  <td width='230'>操作人</td>
+                </tr>
+                <volist name="object['order']['log']" id="log">
+                <tr>
+                  <td>{$log['logTime']}</td>
+                  <td>{$log['logContent']}</td>
+                  <td>{$log['loginName']}<notempty name="log['shopName']">({$log['shopName']})</notempty></td>
+                </tr>
+                </volist>
+                </table>
+              </td>
+           </tr>
+           <tr>
+             <td style='font-weight:bold;'>订单信息</td>
+           </tr>
+           <tr>
+             <td>
+             <table width='700'>
+                <tr>
+                  <td width='120' style='text-align:right'>支付方式：</td>
+                  <td>
+                  <if condition='$object["order"]["payType"] eq 1'>在线支付<else/>货到付款</if>
+                  </td>
+                </tr>
+                <tr>
+                  <td style='text-align:right'>配送方式：</td>
+                  <td>
+                  <if condition='$object["order"]["isSelf"] eq 1'>
+                                                                  自提
+                  <else/>
+                  	<if condition='$object["order"]["deliverType"] eq 1'>店铺配送<else/>商城配送</if>
+                  </if>                                                
+                  </td>
+                </tr>
+                <tr>
+                  <td style='text-align:right'>送货时间：</td>
+                  <td>{$object["order"]['requireTime']}</td>
+                </tr>
+                <tr>
+                  <td style='text-align:right'>买家留言：</td>
+                  <td>{$object["order"]['orderRemarks']}</td>
+                </tr>
+                </table>
+             </td>
+           </tr>
+           <if condition='$object["order"]["isRefund"] eq 1'>
+           <tr>
+             <td style='font-weight:bold;'>退款说明</td>
+           </tr>
+           <tr>
+             <td>
+             <table width='100%'>
+                <tr>
+                  <td width='120' style='text-align:right'>说明：</td>
+                  <td>
+                  {$object["order"]['refundRemark']}
+                  </td>
+                </tr>
+                </table>
+             </td>
+           </tr>
+           </if>
+           <if condition='$object["order"]["isInvoice"] eq 1'>
+           <tr>
+             <td style='font-weight:bold;'>发票信息</td>
+           </tr>
+           <tr>
+             <td>
+             <table width='100%'>
+                <tr>
+                  <td width='120' style='text-align:right'>发票抬头：</td>
+                  <td>
+                  {$object["order"]['invoiceClient']}
+                  </td>
+                </tr>
+                </table>
+             </td>
+           </tr>
+           </if>
+           <tr>
+             <td style='font-weight:bold;'>收货人信息</td>
+           </tr>
+           <tr>
+             <td>
+                <table width='100%'>
+                <tr>
+                  <td width='120' style='text-align:right'>收货人：</td>
+                  <td>{$object["order"]['userName']}</td>
+                </tr>
+                <tr>
+                  <td style='text-align:right'>地址：</td>
+                  <td>{$object["order"]['userAddress']}</td>
+                </tr>
+                <tr>
+                  <td style='text-align:right'>联系方式：</td>
+                  <td>
+                  <notmpty name='object['userPhone']'>
+                  {$object["order"]['userPhone']}
+                  </notmpty>
+                  <notmpty name='object['userTel']'>
+                  {$object["order"]['userTel']}
+                  </notmpty>
+                  </td>
+                </tr>
+                </table>
+             </td>
+           </tr>
+           <tr>
+              <td style='font-weight:bold;'>商品信息</td>
+           </tr>
+           <tr>
+              <td>
+                <table>
+                <tr>
+                  <td width='450' colspan='2'>商品</td>
+                  <td width='350'>价格</td>
+                  <td width='130'>数量</td>
+                  <td width='130'>总金额</td>
+                </tr>
+                <volist name="object['order']['goodslist']" id="goods">
+                <tr>
+                  <td width='50'><img src='__ROOT__/{$goods["goodsThums"]}' style='margin:2px;' width='50' height='50'/></td>
+                  <td width='400'>{$goods["goodsName"]}<if condition="$goods['goodsAttrName'] neq ''">【{$goods['goodsAttrName']}】</if></td>
+                  <td width='350'>￥{$goods["goodsPrice"]}</td>
+                  <td width='130'>{$goods["goodsNums"]}</td>
+                  <td width='130'>￥{$goods["goodsPrice"]*$goods["goodsNums"]}</td>
+                </tr>
+                </volist>
+                </table>
+              </td>
+           </tr>
+           <tr>
+              <td style='text-align:right;padding-right:10px;'>商品总金额：￥{$object["order"]['totalMoney']}<br/>+ 运费：￥{$object["order"]['deliverMoney']}<br/><span style='font-weight:bold;font-size:20px'>订单金额：</span><span style='font-weight:bold;font-size:20px;color:red;'>￥{$object["order"]['totalMoney']+$object["order"]['deliverMoney']}</span></td>
+           </tr>
+           </tbody>
+           <tr>
+             <td>
+             <span style='font-weight:bold;'>投诉信息</span>
+             </td>
+           </tr>
+           <tr>
+             <td>
+             <table>
+               <tr>
+                  <td width='120' align='right'>订单号：</td>
+                  <td>{$object['order']['orderNo']}</td>
+               </tr>
+               <tr>
+                  <td width='120' align='right'>投诉人：</td>
+                  <td>{$object['userName']}</td>
+               </tr>
+               <tr>
+                  <td align='right'>投诉类型：</td>
+                  <td>
+                  <if condition="$object['complainType'] eq 1">
+	                                          承诺的没有做到
+	              <elseif condition="$object['complainType'] eq 2"/>
+	                                          未按约定时间发货
+	              <elseif condition="$object['complainType'] eq 3"/>
+	                                          未按成交价格进行交易
+	              <elseif condition="$object['complainType'] eq 4"/>
+	                                          恶意骚扰                           
+	              </if>
+                  </td>
+               </tr>
+               <tr>
+                  <td align='right'>投诉内容：</td>
+                  <td>{$object['complainContent']}</td>
+               </tr>
+               <tr>
+                  <td align='right' valign='top'>附件：</td>
+                  <td>
+                  <volist name="object['complainAnnex']" id="annex">
+				  <a target='_blank' href="__ROOT__/{$annex}">
+					<img src="__ROOT__/{$annex}" height="100" width="100"/>
+				  </a>
+			   </volist>
+                  </td>
+               </tr>
+               <tr>
+                  <td align='right'>投诉时间：</td>
+                  <td>{$object['complainTime']}</td>
+               </tr>
+             </table>
+             </td>
+           </tr>
+           <if condition='$object["needRespond"] eq 1 AND $object["complainContent"] neq ""'>
+           <tr>
+             <td>
+             <span style='font-weight:bold;'>应诉信息</span>
+             </td>
+           </tr>
+           <tr>
+             <td>
+             <table>
+               <tr>
+                  <td width='120' align='right'>移交应付时间：</td>
+                  <td>{$object['deliverRespondTime']}</td>
+               </tr>
+               <tr>
+                  <td width='120' align='right'>应诉人：</td>
+                  <td>{$object['order']['shopName']}</td>
+               </tr>
+               <tr>
+                  <td align='right'>应诉内容：</td>
+                  <td>{$object['respondContent']}</td>
+               </tr>
+               <tr>
+                  <td align='right' valign='top'>附件：</td>
+                  <td>
+                  <volist name="object['respondAnnex']" id="annex">
+				  <a target='_blank' href="__ROOT__/{$annex}">
+					<img src="__ROOT__/{$annex}" height="100" width="100"/>
+				  </a>
+			   </volist>
+                  </td>
+               </tr>
+               <tr>
+                  <td align='right'>应诉时间：</td>
+                  <td>{$object['respondTime']}</td>
+               </tr>
+             </table>
+             </td>
+             </tr>
+             </if>
+             <tr>
+                <td><span style='font-weight:bold;'>仲裁结果</span></td>
+             </tr>
+             <tr>
+                <td>
+                   <table width='100%'>
+		               <tr>
+		                  <td align='right' valign='right' width='120'>仲裁结果：</td>
+		                  <td>
+		                    <if condition="$object['complainStatus'] neq 4">
+		                    <textarea id='finalResult' style='height:150px;width:100%'></textarea>
+		                    <else/>
+		                    {$object['finalResult']}
+		                    </if>
+		                  </td>
+		               </tr>
+		           </table>
+                </td>
+           </tr>
+           <tr>
+             <td colspan='2' align='center'>
+                <if condition="$object['complainStatus'] neq 4"> 
+                <if condition="$object['complainStatus'] eq 0"> 
+                   <button type="button" class="btn btn-primary" onclick='javascript:deliverNext({$object["complainId"]})'>转交应诉人应诉</button>
+                </if>
+                <button type="button" class="btn btn-primary" onclick='javascript:finalHandle({$object["complainId"]})'>仲&nbsp;裁</button>
+                </if>
+                <button type="button" class="btn btn-primary" onclick='javascript:location.href="{$referer}"'>返&nbsp;回</button>
+             </td>
+           </tr>
+        </table>
+       </form>
+   </body>
+</html>

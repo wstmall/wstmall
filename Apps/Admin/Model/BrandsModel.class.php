@@ -127,7 +127,7 @@ class BrandsModel extends BaseModel {
 	 		$sql .= " and b.brandId = cb.brandId and cb.catId = $catId";
 	 	}
 	 	if($brandName!=""){
-	 		$sql .= " and brandName like '%$brandName%'";
+	 		$sql .= " and brandName like '%".WSTAddslashes($brandName)."%'";
 	 	}
 	 	$sql .= " order by b.brandId desc";
 		return $m->pageQuery($sql);

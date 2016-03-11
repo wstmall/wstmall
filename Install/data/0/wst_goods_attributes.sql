@@ -25,7 +25,7 @@ CREATE TABLE `wst_goods_attributes` (
   `goodsId` int(11) NOT NULL,
   `attrId` int(11) NOT NULL,
   `attrVal` text NOT NULL,
-  `attrPrice` float(11,1) DEFAULT '0.0',
+  `attrPrice` decimal(11,2) DEFAULT '0.00',
   `attrStock` int(11) DEFAULT '0',
   `isRecomm` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`id`),

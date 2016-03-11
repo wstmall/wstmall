@@ -15,41 +15,32 @@ class PaymentsAction extends BaseAction{
 	 */
     public function getAlipayURL(){
     	$this->isUserLogin();
-    	
     	$morders = D('Home/Orders');
 		$USER = session('WST_USER');
 		$obj["userId"] = (int)$USER['userId'];
 		$obj["orderIds"] = I("orderIds");
 		$data = $morders->checkOrderPay($obj);
-		
     	if($data["status"]==1){
     		$m = D('Home/Payments');
     		$url =  $m->getAlipayUrl();
     		$data["url"] = $url;
     	}
-
 		$this->ajaxReturn($data);
-		
 	}
-	
-	
+
 	public function getWeixinURL(){
 		$this->isUserLogin();
-			
 		$morders = D('Home/Orders');
 		$USER = session('WST_USER');
 		$obj["userId"] = (int)$USER['userId'];
 		$obj["orderIds"] = I("orderIds");
 		$data = $morders->checkOrderPay($obj);
-	
 		if($data["status"]==1){
 			$m = D('Home/Payments');
 			$pkey = $obj["userId"]."@".$obj["orderIds"];
-			$data["url"] = U('Home/WxNative2/createQrcode',array("pkey"=>base64_encode($pkey)));
+			$data["url"] = U('Home/WxPay/createQrcode',array("pkey"=>base64_encode($pkey)));
 		}
-	
 		$this->ajaxReturn($data);
-	
 	}
 	
 	/**
@@ -75,9 +66,6 @@ class PaymentsAction extends BaseAction{
 		$this->display('default/payment/order_pay');
 	}
 	
-	
-
-	
 	/**
 	 * 支付结果同步回调
 	 */
@@ -86,7 +74,7 @@ class PaymentsAction extends BaseAction{
 		unset($request['_URL_']);
 		$pay_res = D('Payments')->notify($request);
 		if($pay_res['status']){
-			$this->redirect("Orders/queryByPage");
+			header('Location:../../index.php?m=Home&c=Orders&a=queryByPage',false);
 			//支付成功业务逻辑
 		}else{
 			$this->error('支付失败');
@@ -101,7 +89,6 @@ class PaymentsAction extends BaseAction{
 		$request = $_POST;
 		$pay_res = $pm->notify($request);
 		if($pay_res['status']){
-			
 			//商户订单号
 			$obj = array();
 			$obj["trade_no"] = $_POST['trade_no'];
@@ -109,18 +96,11 @@ class PaymentsAction extends BaseAction{
 			$obj["total_fee"] = $_POST['total_fee'];
 			$obj["userId"] = $_POST['extra_common_param'];
 			//支付成功业务逻辑
-			
 			$payments = $pm->complatePay($obj);
 			echo 'success';
 		}else{
-			
 			echo 'fail';
 		}
 	}
-	
-	
-	
-	
-	
 };
 ?>

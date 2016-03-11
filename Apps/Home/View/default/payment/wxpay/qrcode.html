@@ -1,0 +1,173 @@
+<!DOCTYPE>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$CONF['mallTitle']} - 微信支付</title>
+<meta name="keywords" content="{$CONF['mallKeywords']},微信支付" />
+<meta name="description" content="{$CONF['mallDesc']},微信支付" />
+<link rel="stylesheet"
+	href="__ROOT__/Apps/Home/View/default/css/common.css" />
+<link rel="stylesheet"
+	href="__ROOT__/Apps/Home/View/default/css/ordersuccess.css" />
+<link rel="stylesheet"
+	href="__ROOT__/Apps/Home/View/default/css/base.css" />
+<link rel="stylesheet"
+	href="__ROOT__/Apps/Home/View/default/css/head.css" />
+<link rel="stylesheet"
+	href="__ROOT__/Apps/Home/View/default/css/pslocation.css" />
+<link rel="stylesheet"
+	href="__ROOT__/Apps/Home/View/default/css/magnifier.css" />
+<style type="text/css">
+</style>
+
+<style>
+.impowerBox {display: inline-block;line-height: 1.6;position: relative;text-align: center;vertical-align: middle;width: 100%;z-index: 1;}
+.impowerBox .title {font-size: 20px;text-align: center;}
+.impowerBox .qrcode {border: 1px solid #e2e2e2;margin-top: 15px;width: 280px;}
+.impowerBox .info {margin: 0 auto;width: 280px;}
+.impowerBox .status {padding: 7px 14px;text-align: left;}
+.impowerBox .status.normal {background-color: #E23C3D;border-radius: 100px;box-shadow: 0 5px 10px -5px #191919 inset, 0 1px 0 0 #444444;margin-top: 15px;}
+.impowerBox .status.status_browser {text-align: center;}
+.impowerBox .status p {font-size: 13px;}
+.impowerBox .status_txt p {position: relative;top: -2px;}
+.impowerBox .status_icon {display: inline-block;margin-right: 5px;vertical-align: middle;}
+.impowerBox .status_txt {display: inline-block;vertical-align: middle;}
+.impowerBox .status_txt p {margin: 0;position: relative;}
+.impowerBox .icon38_msg {display: inline-block;height: 38px;width: 38px;}
+#qrcode img{width:300px;height:300px;border:1px solid #dddddd;}
+</style>
+</head>
+
+<body class="root61">
+	<include file="./Apps/Home/View/default/header_common.html" />
+	<div class="w">
+		<div>
+			<div>
+                <div id="succeed" class="wst-ods-success">
+                    <div class="success2" style="margin: 0 auto;">
+                        <div class="wst-ods-success-blank"></div>
+                        <div class="wst-ods-success-step">
+                            <img src="__ROOT__/Apps/Home/View/default/images/step2.png" alt="" /><br />
+                            <span class="wst-pay-success-step1">1.在线支付</span>
+                            <span class="wst-pay-success-step2 wst-pay-curr-step">2.收银台</span>
+                            <span class="wst-pay-success-step3">3.支付成功</span>
+                        </div>
+                        <div class="wst-clear"></div>
+                    </div>
+                </div>
+            </div>
+			<div>
+				<div id="succeed" class="wst-ods-success">
+					<div class="success2" style="margin: 0 auto;text-align:left;font-size: 25px;font-weight:bold; padding-left:10px;">收银台</div>
+				</div>
+			</div>
+
+			<div class="wst-ods-success-tb" style="margin-top: 40px;">
+				<form autocomplete="off" method="get">
+					<div class="wst-ods-success-tc" style="background-color: #F8F8F8;">
+						
+						<div class="wst-ods-success-tf" style="width:1150px;">
+							<div class="wst-ods-success-l25">
+								<input type="hidden" id="orderIds" name="orderIds"
+									value="{$orderIds}" /> <input type="hidden" id="payCode"
+									name="payCode" value="{$payCode}" /> <input type="hidden"
+									id="needPay" name="needPay" value="{$needPay}" />
+								<if condition="count($orders) gt 0">
+								<div class="wst-ods-success-tg">请你尽快支付，以便订单快速处理！</div>
+								<div>
+									共{$orderCnt}张订单， <span id="wst-order-details"
+										style="color: #1D94D7; cursor: pointer;">订单详情</span>。
+								</div>
+								<div id="wst-orders-box"
+									style="margin-left: 75px; display: none;">
+									<volist name="orders" id="order">
+									<div>订单：{$key}</div>
+									<volist name="order" id="goods">
+									<div>{$goods["goodsName"]}&nbsp;&nbsp;{$goods["goodsAttrName"]}</div>
+									</volist> </volist>
+								</div>
+								待付金额：<span class="wst-ods-success-ti">￥{$needPay}</span> 元
+								
+								<div class="main impowerBox" style="background-color:#ffffff;">
+									<if condition="$out_trade_no != ''">
+									<div align="center">
+										<p>
+											
+										</p>
+									</div>
+									<div class="wrp_code" style="position:relative;">
+										<div>
+											<div style="float:left;width:500px;height:322px;text-align: right;padding-top:20px;" id="qrcode"></div>
+											<div style="float:right;width:650px;">
+												<img src="__ROOT__/Apps/Home/View/default/images/wxphone.png"/>
+											</div>
+											<div style="clear:both;"></div>
+										</div>
+										<div class="info" style="position:absolute;bottom:50px;left:209px;color:#ffffff;">
+											<div class="status status_browser js_status normal"
+												id="wx_default_tip">
+												<p>请使用微信扫描二维码进行支付</p>											
+											</div>
+										</div>
+									</div>
+									
+									<else/>
+									<div>订单信息不正确，不能进行支付!</div>
+									</if>
+								</div>
+								
+								<else />
+								<div class="wst-ods-success-tj">您的订单已支付!</div>
+								</if>
+							</div>
+						</div>
+						<div class="wst-clear"></div>
+					</div>
+				</form>
+				<div class="wst-clear"></div>
+				
+			</div>
+		</div>
+	</div>
+
+	<div class="wst-clear"></div>
+	<div style="height: 20px;"></div>
+
+	<include file="./Apps/Home/View/default/footer.html" />
+
+	<script src="__PUBLIC__/js/common.js"></script>
+	<script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
+	<script src="__ROOT__/Apps/Home/View/default/js/index.js"></script>
+	<script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
+	<script src="__ROOT__/Apps/Home/View/default/js/orders.js"></script>
+
+	<script src="__PUBLIC__/js/qrcode.js"></script>
+	<script>
+	<if condition="$out_trade_no != ''">
+	if (<?php echo $wxQrcodePayResult["code_url"] != NULL; ?>) {
+		var url = "<?php echo $code_url;?>";
+		//参数1表示图像大小，取值范围1-10；参数2表示质量，取值范围'L','M','Q','H'
+		var qr = qrcode(10, 'M');
+			qr.addData(url);
+			qr.make();
+		$("#qrcode").html(qr.createImgTag());
+	}
+	</if>
+	setInterval(function(){
+	var params = {};
+	params.trade_no = "{$out_trade_no}";
+	$.ajax({
+		url:"{:U('Home/WxPay/getPayStatus')}",
+		data:params,
+		type:"POST",
+		dataType:"json",
+		success:function(data){
+			if(data.status==1){
+				location.href = "{:U('Home/WxPay/paySuccess')}";
+			}
+		}
+	});
+},1500);
+</script>
+</body>
+</html>

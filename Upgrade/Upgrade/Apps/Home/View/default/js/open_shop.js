@@ -54,14 +54,44 @@ function visitorShopInit(){
   		});
   		$("#shopCompany").formValidator({onShow:"",onFocus:"请输入公司名称",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"公司名称不能为空,请确认"});
   		$("#shopTel").formValidator({onShow:"",onFocus:"请输入店铺电话",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"店铺电话不能为空,请确认"});
-  		$("#shopName").formValidator({onShow:"",onFocus:"店铺名称不能超过20个字符",onCorrect:"输入正确"}).inputValidator({min:1,max:40,onError:"店铺名称不符合要求,请确认"});
+  		$("#shopName").formValidator({onShow:"",onFocus:"店铺名称不能超过20个字符",onCorrect:"输入正确"}).inputValidator({min:1,max:40,onError:"店铺名称长度不符合要求,请确认"}).ajaxValidator({
+			dataType : "json",
+			async : true,
+			url : Think.U('Home/Shops/checkShopName'),
+			success : function(data){
+				var json = WST.toJson(data);
+	            if( json.status == "1" ) {
+	                return true;
+				} else {
+	                return false;
+				}
+
+			},
+			buttons: $("#dosubmit"),
+			onError : "该店铺名称已被使用",
+			onWait : "请稍候..."
+		});
   		$("#userName").formValidator({onShow:"",onFocus:"请输入店主姓名",onCorrect:"输入正确"}).inputValidator({min:1,max:20,onError:"店主姓名不能为空,请确认"});
   		$("#shopAddress").formValidator({onShow:"",onFocus:"请输入店铺地址",onCorrect:"输入正确"}).inputValidator({min:1,max:120,onError:"店铺地址不能为空,请确认"});
   		$("#areaId3").formValidator({onFocus:"请选择所属地区"}).inputValidator({min:1,onError: "请选择所属地区"});
   		$("#goodsCatId3").formValidator({onFocus:"请选择所属行业"}).inputValidator({min:1,onError: "请选择所属行业"});
   		$("#bankId").formValidator({onFocus:"请选择所属银行"}).inputValidator({min:1,onError: "请选择所属银行"});
 		$("#bankNo").formValidator({onShow:"",onFocus:"请输入银行卡号",onCorrect:"输入正确"}).inputValidator({min:16,max:19,onError:"银行卡号格式错误,请确认"});
-		
+		var uploading = null;
+		uploadFile({
+	    	  server:Think.U('Home/Shops/uploadPic'),pick:'#filePicker',
+	    	  formData: {dir:'shops'},
+	    	  callback:function(f){
+	    		  layer.close(uploading);
+	    		  var json = WST.toJson(f);
+	    		  $('#preview').attr('src',WST.DOMAIN+"/"+json.file.savepath+json.file.savethumbname);
+	    		  $('#shopImg').val(json.file.savepath+json.file.savename);
+	    		  $('#preview').show();
+		      },
+		      progress:function(rate){
+		    	  uploading = WST.msg('正在上传图片，请稍后...');
+		      }
+	    });
 	    ShopMapInit({});
 }
 function initTime(objId,val){
@@ -170,12 +200,12 @@ function getVerifyCode(){
   			var html = [];
   			html.push('<table class="wst-smsverfy"><tr><td width="80" align="right">');
   			html.push('验证码：</td><td><input type="text" id="smsVerfy" size="12" class="wst-text" maxLength="8">');
-  			html.push('<img style="vertical-align:middle;cursor:pointer;height:39px;" class="verifyImg" src="'+domainURL+'/Apps/Home/View/default/images/clickForVerify.png" title="刷新验证码" onclick="javascript:getVerify()"/>');
+  			html.push('<img style="vertical-align:middle;cursor:pointer;height:39px;" class="verifyImg" src="'+WST.DOMAIN+'/Apps/Home/View/default/images/clickForVerify.png" title="刷新验证码" onclick="javascript:getVerify()"/>');
   			html.push('</td></tr></table>');
   			layer.open({
   				title:'请输入验证码',
   			    type: 1,
-  			    area: ['420px', '150px'], //宽高
+  			    area: ['420px', '160px'], //宽高
   			    content: html.join(''),
   			    btn: ['发送验证码', '取消'],
   			    success: function(layero, index){
@@ -361,7 +391,23 @@ function userShopInit(){
 		   return false;
 		},onError:function(msg){
 	}});
-    $("#shopName").formValidator({onShow:"",onFocus:"店铺名称不能超过20个字符",onCorrect:"输入正确"}).inputValidator({min:1,max:40,onError:"店铺名称不符合要求,请确认"});
+    $("#shopName").formValidator({onShow:"",onFocus:"店铺名称不能超过20个字符",onCorrect:"输入正确"}).inputValidator({min:1,max:40,onError:"店铺名称长度不符合要求,请确认"}).ajaxValidator({
+			dataType : "json",
+			async : true,
+			url : Think.U('Home/Shops/checkShopName'),
+			success : function(data){
+				var json = WST.toJson(data);
+	            if( json.status == "1" ) {
+	                return true;
+				} else {
+	                return false;
+				}
+
+			},
+			buttons: $("#dosubmit"),
+			onError : "该店铺名称已被使用",
+			onWait : "请稍候..."
+		});
 	$("#userName").formValidator({onShow:"",onFocus:"请输入店主姓名",onCorrect:"输入正确"}).inputValidator({min:1,max:20,onError:"店主姓名不能为空,请确认"});
 	$("#shopCompany").formValidator({onShow:"",onFocus:"请输入公司名称",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"公司名称不能为空,请确认"});
 	$("#shopTel").formValidator({onShow:"",onFocus:"请输入店铺电话",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"店铺电话不能为空,请确认"});
@@ -392,7 +438,21 @@ function userShopInit(){
 	initTime('serviceStartTime','8');
 	initTime('serviceEndTime','20');
 	if(WST.PHONE_VERFY=='0')getVerify();
-
+	var uploading = null;
+	uploadFile({
+    	  server:Think.U('Home/Shops/uploadPic'),pick:'#filePicker',
+    	  formData: {dir:'shops'},
+    	  callback:function(f){
+    		  layer.close(uploading);
+    		  var json = WST.toJson(f);
+    		  $('#preview').attr('src',WST.DOMAIN+"/"+json.file.savepath+json.file.savethumbname);
+    		  $('#shopImg').val(json.file.savepath+json.file.savename);
+    		  $('#preview').show();
+	      },
+	      progress:function(rate){
+	    	  uploading = WST.msg('正在上传图片，请稍后...');
+	      }
+    });
 	ShopMapInit({});
 }
 function userOpenShop(){

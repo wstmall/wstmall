@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="shortcut icon" href="favicon.ico"/>
 <title>首页 - {$CONF['mallTitle']}</title>
 <meta name="keywords" content="{$CONF['mallKeywords']}" />
 <meta name="description" content="{$CONF['mallDesc']}" />
@@ -17,7 +18,7 @@
 	<!----加载广告start----->
 	<div class="wst-ad">
 		<div class="wst-slide" id="wst-slide">
-			<ul class="wst-slide-items">
+			<ul class="wst-slide-items" style="min-width:1210px;">
 				<volist name="indexAds" id="vo" key="k">
 				<li style="z-index: 1;"><a target="_blank" onclick="addAccess({$vo['adId']})" href="{$vo['adURL']}">
 						<img src="__ROOT__/{$vo['adFile']}" height="360" width="100%" title="{$vo['adName']}" />

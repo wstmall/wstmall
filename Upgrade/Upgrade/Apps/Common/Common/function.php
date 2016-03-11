@@ -311,4 +311,77 @@ function WSTReadExcel($file){
 	Vendor("PHPExcel.PHPExcel.IOFactory");
 	return PHPExcel_IOFactory::load(WSTRootPath()."/Upload/".$file);
 }
+/**
+ * 处理转义字符
+ * @param $str 需要处理的字符串
+ */
+function WSTAddslashes($str){
+	if (!get_magic_quotes_gpc()){
+		if (!is_array($str)){
+			$str = addslashes($str);
+		}else{
+			foreach ($str as $key => $val){
+				$str[$key] = WSTAddslashes($val);
+			}
+		}
+	}
+	return $str;
+}
 
+/**
+ * 检测字符串不否包含
+ * @param $srcword 被检测的字符串
+ * @param $filterWords 禁用使用的字符串列表
+ * @return boolean true-检测到,false-未检测到
+ */
+function WSTCheckFilterWords($srcword,$filterWords){
+	$flag = true;
+	$filterWords = str_replace("，",",",$filterWords);
+	$words = explode(",",$filterWords);
+	for($i=0;$i<count($words);$i++){
+		if(strpos($srcword,$words[$i]) !== false){
+			$flag = false;
+			break;
+		}
+	}
+	return $flag;
+}
+
+/**
+ * 比较两个日期相差的天数
+ * @param $date1 开始日期  Y-m-d
+ * @param $date2 结束日期  Y-m-d
+ */
+function WSTCompareDate($date1,$date2){
+	$time1 = strtotime($date1);
+	$time2 = strtotime($date2);
+	return ceil(($time1-$time2)/86400);
+}
+/**
+ * 截取字符串
+ */
+function WSTMSubstr($str, $start = 0, $length, $charset = "utf-8", $suffix = true) {
+	$newStr = '';
+	if (function_exists ( "mb_substr" )) {
+		if ($suffix)
+			$newStr = mb_substr ( $str, $start, $length, $charset );
+		else
+			$newStr = mb_substr ( $str, $start, $length, $charset );
+	} elseif (function_exists ( 'iconv_substr' )) {
+		if ($suffix)
+			$newStr = iconv_substr ( $str, $start, $length, $charset );
+		else
+			$newStr = iconv_substr ( $str, $start, $length, $charset );
+	}
+	if($newStr==''){
+	$re ['utf-8'] = "/[\x01-\x7f]|[\xc2-\xdf][\x80-\xbf]|[\xe0-\xef][\x80-\xbf]{2}|[\xf0-\xff][\x80-\xbf]{3}/";
+	$re ['gb2312'] = "/[\x01-\x7f]|[\xb0-\xf7][\xa0-\xfe]/";
+	$re ['gbk'] = "/[\x01-\x7f]|[\x81-\xfe][\x40-\xfe]/";
+	$re ['big5'] = "/[\x01-\x7f]|[\x81-\xfe]([\x40-\x7e]|\xa1-\xfe])/";
+	preg_match_all ( $re [$charset], $str, $match );
+	$slice = join ( "", array_slice ( $match [0], $start, $length ) );
+	if ($suffix)
+		$newStr = $slice;
+	}
+	return (strlen($str)>strlen($newStr))?$newStr."...":$newStr;
+}

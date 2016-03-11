@@ -259,7 +259,7 @@ var page_load = true;
 		townaContainer.show();
 	});
 	
-	chooseCity(currCityId,currCityName);
+	chooseCity(WST.CITY_ID,WST.CITY_NAME);
 })();
 
 function getCookie(name) {

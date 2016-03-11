@@ -42,7 +42,6 @@ $(function() {
 			li.eq(index).css("z-index", 1);
 			li.eq(index).removeClass("hide");
 			index++;
-			//$(".wst-slide-items img").lazyload({effect: "fadeIn",failurelimit : 1000,threshold: 200,placeholder:domainURL +'/Apps/Home/View/default/images/store_default_signlist.png'});
 			if (index >= span.length)
 				index = 0;
 		}, 4000);
@@ -60,7 +59,7 @@ function gpanelOver(obj){
 	
 	$("div[id^="+preid+"_]").hide();
 	$("#"+sid+"_pl").show();
-	$("#"+sid+"_pl img").lazyload({effect: "fadeIn",failurelimit : 1000,threshold: 200,placeholder:currDefaultImg});
+	$("#"+sid+"_pl img").lazyload({effect: "fadeIn",failurelimit : 1000,threshold: 200,placeholder:WST.DEFAULT_IMG});
 }
 
 

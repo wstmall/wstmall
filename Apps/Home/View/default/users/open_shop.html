@@ -28,7 +28,6 @@ dl.areaSelect dd{margin-left:20px;width:100%;}
 <script src="__PUBLIC__/plugins/kindeditor/kindeditor.js"></script>
 <script src="__PUBLIC__/plugins/kindeditor/lang/zh_CN.js"></script>
    <script>
-	var filetypes = ["gif","jpg","png","jpeg"];
    	var relateCommunity = "{$object['relateCommunity']}".split(',');
    	var relateArea = "{$object['relateArea']}".split(',');
    	$(function () {
@@ -50,31 +49,12 @@ dl.areaSelect dd{margin-left:20px;width:100%;}
    <div class="wst-body"> 
        <div class='wst-page-header'>买家中心 > 我要开店</div>
        <div class='wst-page-content' style="position:relative;">
-       <iframe name="upload" style="display:none"></iframe>
-			<form id="uploadform_Filedata" autocomplete="off" style="position:absolute;top:114px;left:138px;z-index:10;" enctype="multipart/form-data" method="POST" target="upload" action="{:U('Home/Shops/uploadPic')}" >
-				<div style="position:relative;">
-				<input id="shopImg" name="shopImg" type="text" class="wstipt" value="" readonly style="margin-right:4px;float:left;margin-left:8px;width:250px;"/>
-				<div class="div1">
-					<div class="div2">浏览</div>
-					<input type="file" class="inputstyle" id="Filedata" name="Filedata" onchange="updfile('Filedata');" >
-				</div>
-				<div style="clear:both;"></div>
-				<div >&nbsp;图片大小:150 x 150 (px)(格式为 gif, jpg, jpeg, png)</div>
-				<input type="hidden" name="dir" value="shops">
-				<input type="hidden" name="width" value="150">
-				<input type="hidden" name="folder" value="Filedata">
-				<input type="hidden" name="sfilename" value="Filedata">
-				<input type="hidden" name="fname" value="shopImg">
-				<input type="hidden" id="s_Filedata" name="s_Filedata" value="">
-				
-				</div>
-			</form>
        <form name="myshop" method="post" id="myshop" autocomplete="off">
         <input type='hidden' id='id' value='0'/>
         <table class="table table-hover table-striped table-bordered wst-form">
            <tr>
              <th width='130' align='right'>店铺名称<font color='red'>*</font>：</th>
-             <td><input type='text' id='shopName' class="wstipt" style='width:250px;' maxLength='25'/></td>
+             <td><input type='text' id='shopName' name='shopName' class="wstipt" style='width:250px;' maxLength='25'/></td>
            </tr>
            <tr>
              <th width='120' align='right'>店主姓名<font color='red'>*</font>：</th>
@@ -87,9 +67,14 @@ dl.areaSelect dd{margin-left:20px;width:100%;}
            <tr>
              <th width='120' align='right'>店铺图标<font color='red'>*</font>：</th>
              <td>
-             <div id="preview_Filedata" style="margin-top: 70px;">
-             	<img id='preview' src='__ROOT__/{$CONF['mallLogo']}' height='150' />
-             </div>
+                <div>
+             	    <div id="filePicker" style='margin-left:0px;float:left'>上传店铺图标</div>
+             	    <div style='margin-left:5px;float:left'>图片大小:150 x 150 (px)，格式为 gif, jpg, jpeg, png</div>
+             	</div>
+             	<div style='clear:both;'>
+                <img id='preview' src='' ref='' width='100' height='100' style='display:none'/> 
+                <input id="shopImg" name="shopImg" class="text wstipt" tabindex="3" autocomplete="off" style="" type="hidden"/>
+                </div>
              </td>
            </tr>
            

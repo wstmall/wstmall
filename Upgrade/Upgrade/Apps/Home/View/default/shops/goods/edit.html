@@ -56,7 +56,22 @@ $(function () {
 	   getCatListForEdit("goodsCatId3",{$object.goodsCatId2},1,{$object.goodsCatId3});
 	   getShopCatListForEdit({$object.shopCatId1},{$object.shopCatId2});
 	   </if>
-	
+	   var uploading = null;
+	   uploadFile({
+	    	  server:Think.U('Home/Goods/uploadPic'),pick:'#goodImgPicker',
+	    	  formData: {dir:'goods'},
+	    	  callback:function(f){
+	    		  layer.close(uploading);
+	    		  var json = WST.toJson(f);
+	    		  $('#goodsImgPreview').attr('src',WST.DOMAIN+"/"+json.file.savepath+json.file.savethumbname);
+	    		  $('#goodsImg').val(json.file.savepath+json.file.savename);
+	    		  $('#goodsThums').val(json.file.savepath+json.file.savethumbname);
+	    		  $('#goodsImgPreview').show();
+		      },
+		      progress:function(rate){
+		    	  uploading = WST.msg('正在上传图片，请稍后...');
+		      }
+	   });
 });
 
 function imglimouseover(obj){
@@ -86,10 +101,8 @@ function imgmouseout(obj){
 	$(obj).find('.wst-gallery-goods-del').hide();
 }
 function delImg(obj){
-	   $(obj).parent().remove();
+    $(obj).parent().remove();
 }
-
-var filetypes = ["gif","jpg","png","jpeg"];
 </script>
        <div class="wst-body"> 
        <div class='wst-page-header'>卖家中心 > <if condition="$object['goodsId'] ==0 ">新增<else/>编辑</if>商品资料</div>
@@ -105,90 +118,75 @@ var filetypes = ["gif","jpg","png","jpeg"];
     	
     	<!-- 商品基础信息 -->
     	<div class='wst-tab-item' style="position: relative;style='display:none'">
-    		<iframe name="upload" style="display:none"></iframe>
-			<form id="uploadform_Filedata" autocomplete="off" style="position:absolute;top:155px;left:417px;z-index:10;" enctype="multipart/form-data" method="POST" target="upload" action="{:U('Home/Shops/uploadPic')}" >
-				<div style="position:relative;">
-				<input id="goodsImg" name="goodsImg" type="text" value="{$object.goodsImg}" readonly style="margin-right:4px;float:left;margin-left:8px;width:140px;"/>
-				<div class="div1">
-					<div class="div2">浏览</div>
-					<input type="file" class="inputstyle" id="Filedata" name="Filedata" onchange="updfile('Filedata');" >
-				</div>
-				<div style="clear:both;"></div>
-				<div >&nbsp;图片大小:150 x 120 (px)(格式为 gif, jpg, jpeg, png)</div>
-				<input type="hidden" name="dir" value="goods">
-				<input type="hidden" name="width" value="500">
-				<input type="hidden" name="folder" value="Filedata">
-				<input type="hidden" name="sfilename" value="Filedata">
-				<input type="hidden" name="fname" value="goodsImg">
-				<input type="hidden" id="s_Filedata" name="s_Filedata" value="">
-				
-				</div>
-			</form>
 	       <form name="myform" method="post" id="myform" autocomplete="off">
-	        <input type='hidden' id='id' value='{$object.goodsId}'/>
+	        <input type='hidden' id='id' class='wstipt' value='{$object.goodsId}'/>
 	      
 	        <input type='hidden' id='goodsThumbs' value='{$object.goodsThums}'/>
 	        <table class="wst-form" >
 	           <tr>
 	             <th width='120'>商品编号<font color='red'>*</font>：</th>
 	             <td width='300'>
-	             <input type='text' id='goodsSn' name='goodsSn' class="form-control wst-ipt" value='{$object.goodsSn}' maxLength='25'/>
+	             <input type='text' id='goodsSn' name='goodsSn' class="wst-ipt wstipt" value='{$object.goodsSn}' maxLength='25'/>
 	             </td>
 	             <td rowspan='7' valign='top'>
-	               <div id="preview_Filedata">
+	               <div>
 		           <img id='goodsImgPreview' src='<if condition="$object['goodsImg'] =='' ">__ROOT__/{$CONF['goodsImg']}<else/>__ROOT__/{$object['goodsImg']}</if>' height='152'/><br/>
 	               </div>
+	               <input type='hidden' id='goodsImg' class='wstipt' value='{$object.goodsImg}'/>
+	               <input type='hidden' id='goodsThums' class='wstipt' value='{$object.goodsThums}'/>
+             	   <div id="goodImgPicker" style='margin-left:0px;margin-top:5px;height:30px;overflow:hidden'>上传商品图片</div>
+             	   <div>图片大小:150 x 150 (px)，格式为 gif, jpg, jpeg, png</div>
 	             </td>
 	           </tr>
 	           <tr>
 	             <th width='120'>商品名称<font color='red'>*</font>：</th>
-	             <td><input type='text' id='goodsName' name='goodsName' class="form-control wst-ipt" value='{$object.goodsName}' maxLength='100'/></td>
+	             <td><input type='text' id='goodsName' name='goodsName' class="wst-ipt wstipt" value='{$object.goodsName}' maxLength='100'/></td>
 	           </tr>
 	            <tr>
 	             <th width='120'>市场价格<font color='red'>*</font>：</th>
 	             <td>
-	             	<input type='text' id='marketPrice' name='marketPrice' class="form-control wst-ipt" value='{$object.marketPrice}' onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='10'/>
+	             	<input type='text' id='marketPrice' name='marketPrice' class="wstipt wst-ipt" value='{$object.marketPrice}' onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='10'/>
 	             </td>
 	           </tr>
 	            <tr>
 	             <th width='120'>店铺价格<font color='red'>*</font>：</th>
 	             <td>
 	             	<if condition="$object.recommPrice gt 0">
-	             		<input type='text' id='shopPrice' name='shopPrice' disabled="disabled" class="form-control wst-ipt" value='{$object.recommPrice}' onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='10'/>
+	             		<input type='text' id='shopPrice' name='shopPrice' disabled="disabled" class="wstipt wst-ipt" value='{$object.recommPrice}' onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='10'/>
 	             	<else/>
-	             		<input type='text' id='shopPrice' name='shopPrice' class="form-control wst-ipt" value='{$object.shopPrice}' onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='10'/>
+	             		<input type='text' id='shopPrice' name='shopPrice' class="wstipt wst-ipt" value='{$object.shopPrice}' onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='10'/>
 	             	</if>
 	             	
 	             </td>
 	           </tr>
 	            <tr>
 	             <th width='120'>商品库存<font color='red'>*</font>：</th>
-	             <td><input type='text' id='goodsStock' name='goodsStock' class="form-control wst-ipt" value='{$object.goodsStock}' onkeypress="return WST.isNumberKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='25' <if condition="count($object['priceAttrs']) gt 0 ">disabled</if> /></td>
+	             <td><input type='text' id='goodsStock' name='goodsStock' class="wstipt wst-ipt" value='{$object.goodsStock}' onkeypress="return WST.isNumberKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='25' <if condition="count($object['priceAttrs']) gt 0 ">disabled</if> /></td>
 	           </tr>
 	           <tr>
 	             <th width='120'>单位<font color='red'>*</font>：</th>
-	             <td><input type='text' id='goodsUnit' name='goodsUnit' class="form-control wst-ipt" value='{$object.goodsUnit}'  maxLength='25'/></td>
+	             <td><input type='text' id='goodsUnit' name='goodsUnit' class="wstipt wst-ipt" value='{$object.goodsUnit}'  maxLength='25'/></td>
 	           </tr>
 	           <tr>
 	             <th width='120'>商品SEO关键字：</th>
 	             <td colspan='3'>
-	             <input type='text' style="width:788px" id='goodsKeywords' name='goodsKeywords' value='{$object.goodsKeywords}' maxlength="100">
+	             <input type='text' style="width:788px" id='goodsKeywords' class='wstipt' name='goodsKeywords' value='{$object.goodsKeywords}' maxlength="100">
 	             </td>
 	           </tr>
 	           <tr>
 	             <th width='120'>商品信息：</th>
 	             <td colspan='3'>
-	             <textarea rows="2" style="width:788px" id='goodsSpec' name='goodsSpec'>{$object.goodsSpec}</textarea>
+	             <textarea rows="2" style="width:788px" id='goodsSpec' class='wstipt' name='goodsSpec'>{$object.goodsSpec}</textarea>
 	             </td>
 	           </tr>
 	           <tr>
 	             <th width='120'>商品状态<font color='red'>*</font>：</th>
 	             <td colspan='3'>
 	             <label>
-	             <input type='radio' id='isSale1' name='isSale' <if condition="$object['isSale'] ==1 ">checked</if> value='1'/>上架
+	             <input type='radio' id='isSale1' name='isSale' class='wstipt' <if condition="$object['isSale'] ==1 ">checked</if> value='1'/>上架
 	             </label>
 	             <label>
-	             <input type='radio' id='isSale0' name='isSale' <if condition="$object['isSale'] ==0 ">checked</if> value='0'/>下架
+	             <input type='radio' id='isSale0' name='isSale' class='wstipt' <if condition="$object['isSale'] ==0 ">checked</if> value='0'/>下架
 	             </label>
 	             </td>
 	           </tr>
@@ -196,32 +194,32 @@ var filetypes = ["gif","jpg","png","jpeg"];
 	             <th width='120'>商品属性：</th>
 	             <td colspan='3'>
 	             <label>
-	             <input type='checkbox' id='isRecomm' name='isRecomm' <if condition="$object['isRecomm'] ==1 ">checked</if> value='1'/>推荐
+	             <input type='checkbox' id='isRecomm' name='isRecomm' class='wstipt' <if condition="$object['isRecomm'] ==1 ">checked</if> value='1'/>推荐
 	             </label>
 	             <label>
-	             <input type='checkbox' id='isBest' name='isBest' <if condition="$object['isBest'] ==1 ">checked</if> value='1'/>精品
+	             <input type='checkbox' id='isBest' name='isBest' class='wstipt' <if condition="$object['isBest'] ==1 ">checked</if> value='1'/>精品
 	             </label>
 	             <label>
-	             <input type='checkbox' id='isNew' name='isNew' <if condition="$object['isNew'] ==1 ">checked</if> value='1'/>新品
+	             <input type='checkbox' id='isNew' name='isNew' class='wstipt' <if condition="$object['isNew'] ==1 ">checked</if> value='1'/>新品
 	             </label>
 	             <label>
-	             <input type='checkbox' id='isHot' name='isHot' <if condition="$object['isHot'] ==1 ">checked</if> value='1'/>热销
+	             <input type='checkbox' id='isHot' name='isHot' class='wstipt' <if condition="$object['isHot'] ==1 ">checked</if> value='1'/>热销
 	             </label>
 	             </td>
 	           </tr>
 	           <tr>
 	             <th width='120'>商城分类<font color='red'>*</font>：</th>
 	             <td colspan='3'>
-	             <select id='goodsCatId1' onchange='javascript:getCatListForEdit("goodsCatId2",this.value,0)'>
+	             <select id='goodsCatId1' class='wstipt' onchange='javascript:getCatListForEdit("goodsCatId2",this.value,0)'>
 	                <option value=''>请选择</option>
 	                <volist name="goodsCatsList" id="vo">
 	                <option value='{$vo['catId']}' <if condition="$object['goodsCatId1'] == $vo['catId'] ">selected</if>>{$vo['catName']}</option>
 	                </volist>
 	             </select>
-	             <select id='goodsCatId2' onchange='javascript:getCatListForEdit("goodsCatId3",this.value,1);'>
+	             <select id='goodsCatId2' class='wstipt' onchange='javascript:getCatListForEdit("goodsCatId3",this.value,1);'>
 	                <option value=''>请选择</option>
 	             </select>
-	             <select id='goodsCatId3'>
+	             <select id='goodsCatId3' class='wstipt'>
 	                <option value=''>请选择</option>
 	             </select>
 	             </td>
@@ -229,13 +227,13 @@ var filetypes = ["gif","jpg","png","jpeg"];
 	           <tr>
 	             <th width='120'>本店分类<font color='red'>*</font>：</th>
 	             <td colspan='3'>
-	             <select id='shopCatId1' onchange='javascript:getShopCatListForEdit(this.value,"{$object['shopCatId2']}")'>
+	             <select id='shopCatId1' class='wstipt' onchange='javascript:getShopCatListForEdit(this.value,"{$object['shopCatId2']}")'>
 	                <option value='0'>请选择</option>
 	                <volist name="shopCatsList" id="vo">
 	                <option value='{$vo['catId']}' <if condition="$object['shopCatId1'] == $vo['catId'] ">selected</if>>{$vo['catName']}</option>
 	                </volist>
 	             </select>
-	             <select id='shopCatId2'>
+	             <select id='shopCatId2' class='wstipt'>
 	                <option value='0'>请选择</option>
 	             </select>
 	             </td>
@@ -243,7 +241,7 @@ var filetypes = ["gif","jpg","png","jpeg"];
 	           <tr>
 	             <th width='120' align='right'>品牌：</th>
 	             <td>
-	             <select id='brandId' dataVal='{$object["brandId"]}'>
+	             <select id='brandId' class='wstipt' dataVal='{$object["brandId"]}'>
 	                <option value='0'>请选择</option>
 	             </select>
 	             </td>
@@ -251,7 +249,7 @@ var filetypes = ["gif","jpg","png","jpeg"];
 	           <tr>
 	             <th width='120'>商品描述<font color='red'>*</font>：</th>
 	             <td colspan='3'>
-	             <textarea rows="2" cols="60" id='goodsDesc' name='goodsDesc'>{$object.goodsDesc}</textarea>
+	             <textarea rows="2" cols="60" id='goodsDesc' class='wstipt' name='goodsDesc'>{$object.goodsDesc}</textarea>
 	             </td>
 	           </tr>
 	           <tr>
@@ -267,7 +265,7 @@ var filetypes = ["gif","jpg","png","jpeg"];
 	      </div>
 	     
 	      <div class='wst-tab-item'>
-	      商品类型：<select id='attrCatId' onchange='javascript:getAttrList(this.value)'>
+	      商品类型：<select id='attrCatId' class='wstipt' onchange='javascript:getAttrList(this.value)'>
 	         <option value='0'>请选择</option>
 	         <volist name="attributeCatsCatsList" id="vo">
 	         <option value='{$vo["catId"]}' <if condition="$object['attrCatId'] == $vo['catId'] ">selected</if>>{$vo["catName"]}</option>
@@ -281,7 +279,7 @@ var filetypes = ["gif","jpg","png","jpeg"];
 	             <thead><tr><th>属性</th><th>规格</th><th>价格</th><th>推荐</th><th>库存</th><th>操作</th></tr></thead>
 	             <tbody id="priceConent">
 	             <volist name="object['priceAttrs']" id="vo" key='i'>
-	               <tr>
+	               <tr id='attr_{$i}'>
 		              <td style="text-align:right">{$vo['attrName']}：</td>
 		              <td><input type="text" id="price_name_{$vo['attrId']}_{$i}" value="{$vo['attrVal']}"/></td>
 		              <td><input type="text" id="price_price_{$vo['attrId']}_{$i}" value="{$vo['attrPrice']}" onblur="checkAttPrice({$vo['attrId']},{$i});" onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength="10"/></td>

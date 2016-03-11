@@ -24,7 +24,7 @@ function getShopByCommunitys(obj,p){
 	       	laytpl(gettpl).render(json.root, function(html){
 	       	    $('.wst-shop-list').html(html);
 	       	});
-	       	$('.lazyImg').lazyload({ effect: "fadeIn",failurelimit : 10,threshold: 200,placeholder:currDefaultImg});
+	       	$('.lazyImg').lazyload({ effect: "fadeIn",failurelimit : 10,threshold: 200,placeholder:WST.DEFAULT_IMG});
 	       	if(json.totalPage>1){
 	       		laypage({
 		        	 cont: 'wst-page-items', 

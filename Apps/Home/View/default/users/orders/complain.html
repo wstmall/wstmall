@@ -1,0 +1,78 @@
+<extend name="./Apps/Home/View/default/users/layout.html" />
+<block name="content">
+<style>
+.webuploader-pick{height:25px;line-height:25px;}
+</style>
+       <div style='width:990px;overflow:hidden;'>
+            <if condition="$data['complainStatus'] eq 0">
+            <input type='hidden' id='orderId' class='wstipt' value="{$data['order']['orderId']}"/>
+        	<div class='wst-complain-left'>
+        	   <div class='wst-complain-order-head'>订单商品</div>
+        	   <div class='wst-complain-order-goods'>
+        	   <volist name="data['order']['goodsList']" id="goods" key='key2'>
+				  <a target='_blank' href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}" title="{$goods['goodsName']}">
+					<img src="__ROOT__/{$goods['goodsThums']}" height="55" width="55" class='wst-goods-tb'/>
+				  </a>
+			   </volist>
+        	   </div>
+        	   <div class='wst-complain-order-head'>订单信息</div>
+        	   <div class='wst-complain-order-info'>
+	        	   <dl>
+	        	       <dt>订单编号：</dt>
+	        	       <dd>{$data['order']['orderNo']}</dd>
+	        	       <dt>订单金额：</dt>
+	        	       <dd>{$data['order']['totalMoney']}</dd>
+	        	       <dt>运&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;费：</dt>
+	        	       <dd>{$data['order']['deliverMoney']}</dd>
+	        	       <dt>下单时间：</dt>
+	        	       <dd>{$data['order']['createTime']}</dd>
+	        	       <dt>要求时间：</dt>
+	        	       <dd>{$data['order']['requireTime']}</dd>
+	        	       <dt>商&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家：</dt>
+	        	       <dd>{$data['order']['shopName']}</dd>
+	        	    </dl>
+        	    </div>
+        	</div>
+        	<div class='wst-complain-main'>
+        	    <div class='wst-complain-order-head' style='width:735px;'>投诉信息</div>
+        	    <div class='wst-complain-box'>
+        	    <table>
+        	      <tr>
+        	        <td>投诉类型：</td>
+        	        <td>
+        	          <label><input type='radio' name='complainType' class='wstipt' autocomplete="off" value='1' checked>承诺的没有做到</label>
+        	          <label><input type='radio' name='complainType' class='wstipt' autocomplete="off" value='2'>未按约定时间发货</label>
+        	          <label><input type='radio' name='complainType' class='wstipt' autocomplete="off" value='3'>未按成交价格进行交易</label>
+        	          <label><input type='radio' name='complainType' class='wstipt' autocomplete="off" value='4'>恶意骚扰</label>
+        	        </td>
+        	      </tr>
+        	      <tr>
+        	         <td colspan='2'>
+        	            <textarea id='complainContent' class='wstipt' autocomplete="off" style='width:700px;height:162px;' placeholder='请输入投诉内容'></textarea>
+        	         </td>
+        	      </tr>
+        	      <tr>
+        	         <td colspan='2'>
+        	             <div id="filePicker" style='margin-left:0px;width:250px;overflow:hidden;height:25px;'>上传附件(最多5张)</div>
+        	         </td>
+        	       </tr>
+        	       <tr>
+        	         <td colspan='2'>
+        	             <div id='picBox' style='height:120px;width:735px;padding:5px;'>
+        	         </td>
+        	       </tr>
+        	    </table>
+        	    </div>
+        	</div>
+        	<div class='wst-complain-footer'>
+        	   <button onclick="javascript:saveComplain('{$WST_REFERE}')" class="wst-btn-query">提交</button>
+        	   <button onclick="javascript:location.href='{$WST_REFERE}'" class="wst-btn-query">返回</button>
+        	</div>
+        	</if>
+       </div>
+  <script>
+   $(function(){
+	   complainInit();
+   });
+  </script>
+</block>

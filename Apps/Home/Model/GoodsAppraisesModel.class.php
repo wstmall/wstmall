@@ -16,7 +16,7 @@ class GoodsAppraisesModel extends BaseModel {
         $m = M('goods_appraises');
         $shopCatId1 = (int)I('shopCatId1',0);
 		$shopCatId2 = (int)I('shopCatId2',0);
-		$goodsName = I('goodsName');
+		$goodsName = WSTAddslashes(I('goodsName'));
         $pcurr = (int)I("pcurr",0);
 	 	$sql = "select gp.*,g.goodsName,g.goodsThums,u.loginName from 
 	 	           __PREFIX__goods_appraises gp ,__PREFIX__goods g, __PREFIX__users u

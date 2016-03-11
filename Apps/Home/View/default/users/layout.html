@@ -3,6 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
          <title>买家中心 - {$CONF['mallTitle']}</title>
+         <link rel="shortcut icon" href="favicon.ico"/>
          <meta name="keywords" content="{$CONF['mallKeywords']}" />
       	 <meta name="description" content="{$CONF['mallDesc']},买家中心" />
          <meta http-equiv="Expires" content="0">
@@ -11,6 +12,7 @@
 		 <meta http-equiv="Cache" content="no-cache">
          <link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
          <link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/user.css">
+         <link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/webuploader/webuploader.css" />
     </head>
 	{:WSTLoginTarget(0)}
     <body>
@@ -54,6 +56,7 @@
                <span class='wst-menu-title'><span></span>交易操作</span>
            
                <a href="{:U('Home/Orders/queryRefundByPage/')}"><li <if condition='$umark eq "queryRefundByPage"'> class='selected'</if>>拒收/退款</li></a>
+               <a href="{:U('Home/OrderComplains/queryUserComplainByPage/')}"><li <if condition='$umark eq "queryUserComplainByPage"'> class='selected'</if>>投诉订单</li></a>
                <a href="{:U('Home/UserAddress/queryByPage/')}"><li <if condition='$umark eq "addressQueryByPage"'> class='selected'</if>>收货地址</li></a>
                <a  href="{:U('Home/GoodsAppraises/getAppraisesList/')}"><li <if condition='$umark eq "getAppraisesList"'> class='selected'</if>>评价管理</li></a>
                <a  href="{:U('Home/Favorites/queryByPage/')}"><li <if condition='$umark eq "queryFavoritesByPage"'> class='selected'</if>>我的关注</li></a>
@@ -83,9 +86,9 @@
    	<script src="__ROOT__/Apps/Home/View/default/js/usercom.js"></script>
    	<script src="__ROOT__/Apps/Home/View/default/js/head.js"></script>
    	<script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
+   	<script type="text/javascript" src="__PUBLIC__/plugins/webuploader/webuploader.js"></script>
   	<script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
-     <script type="text/javascript">
-		var publicurl = '__PUBLIC__/';
+    <script type="text/javascript">
 		var shopId = '{$orderInfo["order"]["shopId"]}';
 		checkLogin();
 	</script>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>{$CONF['shopTitle']}后台管理中心</title>
+      <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
+      <link rel="stylesheet" href="__ROOT__/Apps/Admin/View/css/daterangepicker/daterangepicker-bs3.css">
+      <!--[if lt IE 9]>
+      <script src="__PUBLIC__/js/html5shiv.min.js"></script>
+      <script src="__PUBLIC__/js/respond.min.js"></script>
+      <![endif]-->
+      <script src="__PUBLIC__/js/jquery.min.js"></script>
+      <script src="__PUBLIC__/plugins/bootstrap/js/bootstrap.min.js"></script>
+      <script src="__ROOT__/Apps/Admin/View/js/daterangepicker.js"></script>
+      <script src="__PUBLIC__/js/common.js"></script>
+      <script type="text/javascript" src="__PUBLIC__/plugins/echarts/echarts.common.min.js"></script>
+   </head>
+   <script>
+   function getAreaList(objId,parentId,t,id){
+	   var params = {};
+	   params.parentId = parentId;
+	   $('#'+objId).empty();
+	   if(t<1){
+		   $('#areaId3').empty();
+		   $('#areaId3').html('<option value="">请选择</option>');
+	   }
+	   var html = [];
+	   $.post("{:U('Admin/Areas/queryByList')}",params,function(data,textStatus){
+		    html.push('<option value="">请选择</option>');
+			var json = WST.toJson(data);
+			if(json.status=='1' && json.list.length>0){
+				var opts = null;
+				for(var i=0;i<json.list.length;i++){
+					opts = json.list[i];
+					html.push('<option value="'+opts.areaId+'" '+((id==opts.areaId)?'selected':'')+'>'+opts.areaName+'</option>');
+				}
+			}
+			$('#'+objId).html(html.join(''));
+	   });
+   }
+   function queryByMonthAndDays(){
+	   var style,option;
+	   var params = {};
+	   var date = $('#queryDate').val().split(' -> ');
+	   params.statType = $('#statType').val();
+	   params.startDate = date[0];
+	   params.endDate = date[1];
+	   params.areaId1 = $('#areaId1').val();
+	   params.areaId2 = $('#areaId2').val();
+	   params.areaId3 = $('#areaId3').val();
+	   var myChart = echarts.init(document.getElementById('container')); 
+	   style = {
+				  normal: {
+		              label: {
+		                      show: true,
+		                      position: 'top',
+		                      formatter: '{c}'
+		               }
+				  }
+	   }
+	   $('#container').show();
+	   $.post("{:U('Admin/OrderRpts/queryByMonthAndDays')}",params,function(data,textStatus){
+			 var json = WST.toJson(data);
+		     if(json.status=='1'){
+		    	 if(json.list){
+		    		 var days = [];
+		    		 var ur = [];
+		    		 var sr = [];
+		    		 for(var key in json.list){
+		    		     days.push(key);
+		    			 if(json.list[key]['o_0']){
+		    				 ur.push(parseFloat(json.list[key]['o_0'],10));
+		    			 }else{
+		    				 ur.push(0);
+		    			 }
+		    		 }
+		    		 option = {
+		   			        	title : {
+		   			        	    text: '订单统计'
+		   			        	},
+		   			        	tooltip : {
+		   			        	    trigger: 'axis'
+		   			        	},
+		   			        	legend: {
+		   			        	    data:['有效订单']
+		   			        	},
+		   			        	calculable : true,
+		   			        	xAxis : [
+		   			        	    {
+		   			        	         type : 'category',
+		   			        	         data : days,
+		   			        	         boundaryGap : false
+		   			        	    }
+		   			        	],
+		   			        	yAxis : [
+		   			        	    {
+		   			        	         type : 'value',
+		   			        	         axisLabel : {
+							                formatter: '{value}'
+							             }
+		   			        	    }
+		   			        	],
+		   			        	series : [
+		   			        	    {
+		   			        	        name:'订单',
+		   			        	        type:'line',
+		   			        	        data:ur,
+		   			        	        itemStyle:style,
+		 			        	        markPoint : {
+		   			                       data :ur
+		   			                    },
+		   			                    markLine : {
+		       			                   data : [
+		       			                      {type : 'average', name : '平均值'}
+		       			                   ]
+		       			                }
+		   			        	    }
+		   			            ]
+		   			      }; 
+		     			  myChart.setOption(option); 
+		    	 }else{
+		    		 $('#container').empty();
+		    	 }		    	 
+		     }
+		});
+	    
+   }
+   $(function(){
+	   $('#queryDate').daterangepicker({format:'YYYY-MM-DD',separator:' -> '});
+	   queryByMonthAndDays();
+   });
+   </script>
+   <body class='wst-page'>
+      <form method="post" action='{:U("Admin/Orders/index")}'>
+       <div class='wst-tbar'>
+                             地区：<select name='areaId1' id='areaId1' onchange='javascript:getAreaList("areaId2",this.value,0)'>
+             <option value=''>请选择</option>
+             <volist name="areaList" id="vo">
+             <option value='{$vo['areaId']}' <if condition="$areaId1 == $vo['areaId'] ">selected</if>>{$vo['areaName']}</option>
+             </volist>
+          </select>
+          <select name='areaId2' id='areaId2' onchange='javascript:getAreaList("areaId3",this.value,1);'>
+             <option value=''>请选择</option>
+          </select>
+          <select name='areaId3' id='areaId3'>
+             <option value=''>请选择</option>
+          </select>
+          <select id='statType'>
+             <option value='0'>按日统计</option>
+             <option value='1'>按月统计</option>
+          </select>
+          <input type='text' id='queryDate' class="form-control" readonly='true' style='width:200px' value='{$startDate} -> {$endDate}'/>
+          <input type="button" class="btn btn-primary glyphicon glyphicon-search" onclick='javascript:queryByMonthAndDays()' value='查询'/>
+       </div>
+       </form>
+       <div class="wst-body"> 
+	       <div id="container" style="min-width:700px;height:400px"></div>
+       </div>
+   </body>
+</html>

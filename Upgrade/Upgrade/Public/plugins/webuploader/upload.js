@@ -107,7 +107,7 @@
                         delete window['expressinstallcallback'];
                     };
 
-                    var swf = publicurl +'/plugins/webuploader/expressInstall.swf';
+                    var swf = WST.PUBLIC +'/plugins/webuploader/expressInstall.swf';
                     // insert flash object
                     var html = '<object type="application/' +
                             'x-shockwave-flash" data="' +  swf + '" ';
@@ -148,10 +148,10 @@
             },
           
             paste: '#uploader',
-            swf: publicurl +'/plugins/webuploader/Uploader.swf',
+            swf: WST.PUBLIC +'/plugins/webuploader/Uploader.swf',
             chunked: false,
             chunkSize: 512 * 1024,
-            server: domainURL  + Think.U('Home/shops/uploadPic'),
+            server: WST.DOMAIN  + Think.U('Home/shops/uploadPic'),
             // runtimeOrder: 'flash',
             fileVal:'Filedata',
              accept: {
@@ -262,7 +262,7 @@
                      
                        
                     } else {
-                        $.ajax(publicurl +'/plugins/webuploader/preview.php', {
+                        $.ajax(WST.PUBLIC +'/plugins/webuploader/preview.php', {
                             method: 'POST',
                             data: src,
                             dataType:'json'

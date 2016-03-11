@@ -53,7 +53,7 @@ jQuery(function($){
 			if(fn && fn.msgtype==1){
 				$(".quick_links_wrap").animate({"width":"280px"},100);
 				$(".quick_links_panel").animate({"right":"280px"},100);
-				fn.content = "<div class='ibar_plugin_content' style='height:100%;padding-top:100%;padding-left:80px;'><img src='"+domainURL +"/Apps/Home/View/default/images/loading.gif' width='20'/>数据加载中...</div>";
+				fn.content = "<div class='ibar_plugin_content' style='height:100%;padding-top:100%;padding-left:80px;'><img src='"+WST.DOMAIN +"/Apps/Home/View/default/images/loading.gif' width='20'/>数据加载中...</div>";
 				quickPop.html(ds.tmpl(popTmpl, fn));
 				jQuery.post(Think.U('Home/Cart/getCartInfo') ,{"axm":1},function(data) {
 					var cart = WST.toJson(data);	
@@ -67,11 +67,11 @@ jQuery(function($){
 							var goods = shop.shopgoods[goodsId];
 							goodsnum++;
 							totalmoney = totalmoney + parseFloat(goods.shopPrice * goods.cnt);
-							totalmoney = totalmoney.toFixed(1);
+							totalmoney = totalmoney.toFixed(2);
 							var url = Think.U("Home/Goods/getGoodsDetails","goodsId="+goods.goodsId);
 							html.push(  "<li class='cart_item'>" +
 										"<div class='cart_item_pic'>" +
-											"<!--input type='checkbox' class='cart-goods-check'-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='"+url+"'><img src='"+domainURL +"/"+goods.goodsThums+"' /></a>" +
+											"<!--input type='checkbox' class='cart-goods-check'-->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href='"+url+"'><img src='"+WST.DOMAIN +"/"+goods.goodsThums+"' /></a>" +
 										"</div>" +
 										"<div class='cart_item_desc'>" +
 											"<a href='"+url+"' class='cart_item_name'>"+goods.goodsName+"</a>" );

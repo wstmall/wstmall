@@ -52,4 +52,5 @@ INSERT INTO `wst_sys_configs` VALUES ('1', '0', '商城名称', 'mallName', 'tex
 ('32', '0', '默认城市', 'defaultCity', 'other', null, null, '440100', null, '5'),
 ('33', '0', '热搜索词', 'hotSearchs', 'text', null, null, 'WSTMall，O2O开源商城', '以，号分隔', '12'),
 ('34', '2', '开启短信发送验证码', 'smsVerfy', 'radio', '是||否', '1,0', '1', '', '4'),
-('36', '2', '开启手机验证', 'phoneVerfy', 'radio', '是||否', '1,0', '1', '', '5');
+('36', '2', '开启手机验证', 'phoneVerfy', 'radio', '是||否', '1,0', '1', '', '5'),
+('37', '0', '注册禁用关键字', 'limitAccountKeys', 'textarea', null, null, 'admin，system', null, '13');

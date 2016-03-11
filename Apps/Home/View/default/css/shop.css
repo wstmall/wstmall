@@ -500,3 +500,17 @@ text-decoration
 .wst-goods-price-table tr th{border:0px;text-align:left;background:#eee;padding-left:5px}
 .wst-goods-fieldset{border:2px double #ddd;padding:5px;display:none;}
 .wst-goods-fieldset legend{margin-left:10px;}
+.wst-complain-detail{width:100%;border-collapse: collapse;}
+.wst-complain-detail tr{height: 25px;line-height: 25px;}
+.wst-complain-detail tr th{color: #707070;text-align: right;font-size:12px;}
+.wst-complain-detail tr td {text-align: left;color: #707070;}
+.wst-complain-detail .head{font-weight:bold;border-bottom:1px dotted #ddd;}
+.wst-complain-left{width:250px;height:100%;border:1px solid #ddd;text-align:left;background:#ffffff;float:left;}
+.wst-complain-order-head{width:240px;height:25px;line-height:25px;border-bottom:1px solid #ddd;font-weight:bold;padding:5px;background:#f5f5f5;}
+.wst-complain-order-goods{width:240px;height:180px;line-height:30px;padding:5px;border-bottom:1px solid #ddd;overflow-y:auto}
+.wst-complain-main{float:right;width:735px;overflow:hidden;border:1px solid #ddd;}
+.wst-complain-order-info{padding:5px;display: block;height:100%;}
+.wst-complain-order-info dt {float: left;width: 70px;color: #999;padding: 1px 0;display: block;height:20px;}
+.wst-complain-order-info dd{overflow: hidden;color: #666;padding: 1px 0;width:170px;display: block;height:20px;}
+.wst-complain-box{border-bottom:1px solid #ddd;width:735px;padding:5px;}
+.wst-complain-footer{clear:both;width:100%;text-align:center;padding:5px 0;}

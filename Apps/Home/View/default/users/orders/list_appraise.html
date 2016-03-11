@@ -57,6 +57,9 @@
 					<else/>
 					<a  href="javascript:;" onclick="appraiseOrder({$order['orderId']})">评价</a>
 					</if>
+					<if condition="$order['complainId'] eq ''">
+					<a href='{:U("Home/OrderComplains/complain",array("orderId"=>$order["orderId"]))}'>投诉</a>
+					</if>
 				</td>
              </tr>
              </volist>

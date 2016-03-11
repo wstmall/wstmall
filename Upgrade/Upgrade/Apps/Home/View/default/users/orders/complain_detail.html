@@ -1,0 +1,111 @@
+<extend name="./Apps/Home/View/default/users/layout.html" />
+<block name="content">
+    <div class="wst-body"> 
+       <div class='wst-page-header'>买家中心 > 投诉详情</div>
+       <div class='wst-page-content'>
+        <table border='0' class='wst-complain-detail'>
+           <tr>
+              <td colspan='2' class='head'>投诉信息</td>
+           </tr>
+           <tr>
+              <th width='80'>订单号：</th>
+              <td>{$data['orderNo']}</td>
+           </tr>
+           <tr>
+              <th>投诉类型：</th>
+              <td>
+              <if condition="$data['complainType'] eq 1">
+                                          承诺的没有做到
+              <elseif condition="$data['complainType'] eq 2"/>
+                                          未按约定时间发货
+              <elseif condition="$data['complainType'] eq 3"/>
+                                          未按成交价格进行交易
+              <elseif condition="$data['complainType'] eq 4"/>
+                                          恶意骚扰                           
+              </if>
+              </td>
+           </tr>
+           <tr>
+              <th>投诉内容：</th>
+              <td>{$data['complainContent']}</td>
+           </tr>
+           <tr>
+              <th valign='top'>附件：</th>
+              <td>
+               <volist name="data['complainAnnex']" id="annex">
+				  <a target='_blank' href="__ROOT__/{$annex}">
+					<img src="__ROOT__/{$annex}" height="100" width="100"/>
+				  </a>
+			   </volist>
+              </td>
+           </tr>
+           <tr>
+              <th>投诉时间：</th>
+              <td>{$data['complainTime']}</td>
+           </tr>
+        </table>
+        <if condition="$data['needRespond'] eq 1 AND $data['respondContent'] neq ''">
+        <table border='0' class='wst-complain-detail'>
+           <tr>
+              <td colspan='2' class='head'>应诉信息</td>
+           </tr>
+           <tr>
+              <th width='80'>应诉内容：</th>
+              <td>{$data['respondContent']}</td>
+           </tr>
+           <tr>
+              <th valign='top'>附件：</th>
+              <td>
+               <volist name="data['respondAnnex']" id="annex2">
+				  <a target='_blank' href="__ROOT__/{$annex2}">
+					<img src="__ROOT__/{$annex2}" height="100" width="100"/>
+				  </a>
+			   </volist>
+              </td>
+           </tr>
+           <tr>
+              <th>投诉时间：</th>
+              <td>{$data['complainTime']}</td>
+           </tr>
+        </table>
+        </if>
+        <table border='0' class='wst-complain-detail' style='margin-top:15px;'>
+           <tr>
+              <td colspan='2' class='head'>仲裁结果</td>
+           </tr>
+           <tr>
+              <th width='80'>仲裁结果：</th>
+              <td>
+              <if condition="$data['complainStatus'] eq 0">
+                                          等待处理
+              <elseif condition="$data['complainStatus'] eq 1"/>
+                                          等待应诉人回应
+              <elseif condition="$data['complainStatus'] eq 2 OR $data['complainStatus'] eq 3"/>
+                                          等待仲裁
+              <elseif condition="$data['complainStatus'] eq 4"/>
+                                          已仲裁                        
+              </if>
+              </td>
+           </tr>
+           <if condition="$data['complainStatus'] eq 4">
+           <tr>
+              <th valign='top'>仲裁结果：</th>
+              <td>
+               {$data['finalResult']}
+              </td>
+           </tr>
+           </if>
+           <if condition="$data['complainStatus'] eq 4">
+           <tr>
+              <th>仲裁时间：</th>
+              <td>{$data['finalResultTime']}&nbsp;</td>
+           </tr>
+           </if>
+           <tr>
+              <td colspan='2' style='text-align:center;'><button onclick="javascript:location.href='{$WST_REFERE}'" class="wst-btn-query">返回</button></td>
+           </tr>
+        </table>
+        
+       </div>
+    </div>
+</block> 

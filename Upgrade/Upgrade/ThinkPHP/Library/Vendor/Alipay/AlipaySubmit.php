@@ -6,7 +6,6 @@ var $alipay_config;
 	/**
 	 *支付宝网关地址
 	 */
-	//var $alipay_gateway_new = 'https://mapi.alipay.com/gateway.do?';
 	var $alipay_gateway_new = 'http://wappaygw.alipay.com/service/rest.htm?';
 
 	function __construct($alipay_config){
@@ -24,7 +23,6 @@ var $alipay_config;
 	function buildRequestMysign($para_sort) {
 		//把数组所有元素，按照“参数=参数值”的模式用“&”字符拼接成字符串
 		$prestr = createLinkstring($para_sort);
-		
 		$mysign = "";
 		switch (strtoupper(trim($this->alipay_config['sign_type']))) {
 			case "MD5" :
@@ -39,7 +37,6 @@ var $alipay_config;
 			default :
 				$mysign = "";
 		}
-		
 		return $mysign;
 	}
 
@@ -51,19 +48,15 @@ var $alipay_config;
 	function buildRequestPara($para_temp) {
 		//除去待签名参数数组中的空值和签名参数
 		$para_filter = paraFilter($para_temp);
-
 		//对待签名参数数组排序
 		$para_sort = argSort($para_filter);
-
 		//生成签名结果
 		$mysign = $this->buildRequestMysign($para_sort);
-		
 		//签名结果与签名方式加入请求提交参数组中
 		$para_sort['sign'] = $mysign;
 		if($para_sort['service'] != 'alipay.wap.trade.create.direct' && $para_sort['service'] != 'alipay.wap.auth.authAndExecute') {
 			$para_sort['sign_type'] = strtoupper(trim($this->alipay_config['sign_type']));
 		}
-		
 		return $para_sort;
 	}
 
@@ -75,7 +68,6 @@ var $alipay_config;
 	function buildRequestParaToString($para_temp) {
 		//待请求参数数组
 		$para = $this->buildRequestPara($para_temp);
-		
 		//把参数组中所有元素，按照“参数=参数值”的模式用“&”字符拼接成字符串，并对字符串做urlencode编码
 		$request_data = createLinkstringUrlencode($para);
 		
@@ -97,7 +89,6 @@ var $alipay_config;
 		while (list ($key, $val) = each ($para)) {
             $sHtml.= "<input type='hidden' name='".$key."' value='".$val."'/>";
         }
-
 		//submit按钮控件请不要含有name属性
         $sHtml = $sHtml."<input style='display:none;' type='submit' value='".$button_name."'></form>";
 		$sHtml = $sHtml."<script>document.forms['alipaysubmit'].submit();</script>";
@@ -115,10 +106,8 @@ var $alipay_config;
 		
 		//待请求参数数组字符串
 		$request_data = $this->buildRequestPara($para_temp);
-
 		//远程获取数据
 		$sResult = getHttpResponsePOST($this->alipay_gateway_new, $this->alipay_config['cacert'],$request_data,trim(strtolower($this->alipay_config['input_charset'])));
-
 		return $sResult;
 	}
 	
@@ -130,14 +119,11 @@ var $alipay_config;
      * @return 支付宝返回处理结果
      */
 	function buildRequestHttpInFile($para_temp, $file_para_name, $file_name) {
-		
 		//待请求参数数组
 		$para = $this->buildRequestPara($para_temp);
 		$para[$file_para_name] = "@".$file_name;
-		
 		//远程获取数据
 		$sResult = getHttpResponsePOST($this->alipay_gateway_new, $this->alipay_config['cacert'],$para,trim(strtolower($this->alipay_config['input_charset'])));
-
 		return $sResult;
 	}
 	
@@ -174,7 +160,6 @@ var $alipay_config;
 			$doc->loadXML($para_text['res_data']);
 			$para_text['request_token'] = $doc->getElementsByTagName( "request_token" )->item(0)->nodeValue;
 		}
-		
 		return $para_text;
 	}
 	
@@ -186,12 +171,10 @@ var $alipay_config;
 	function query_timestamp() {
 		$url = $this->alipay_gateway_new."service=query_timestamp&partner=".trim(strtolower($this->alipay_config['partner']))."&_input_charset=".trim(strtolower($this->alipay_config['input_charset']));
 		$encrypt_key = "";		
-
 		$doc = new \DOMDocument();
 		$doc->load($url);
 		$itemEncrypt_key = $doc->getElementsByTagName( "encrypt_key" );
 		$encrypt_key = $itemEncrypt_key->item(0)->nodeValue;
-		
 		return $encrypt_key;
 	}
 }

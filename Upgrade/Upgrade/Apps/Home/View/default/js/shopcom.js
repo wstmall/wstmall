@@ -160,7 +160,7 @@ $.fn.imagePreview = function(options){
 	yOffset = 20;
 	if(!$('#preview')[0])$("body").append("<div id='preview'><img width='200' src=''/></div>");
 	$(this).hover(function(e){
-		   $('#preview img').attr('src',domainURL+ "/" +$(this).attr('img'));      
+		   $('#preview img').attr('src',WST.DOMAIN+ "/" +$(this).attr('img'));      
 		   $("#preview").css("top",(e.pageY - xOffset) + "px").css("left",(e.pageX + yOffset) + "px").show();      
 	  },
 	  function(){
@@ -233,62 +233,37 @@ function getCatListForEdit(objId,parentId,t,id){
 	   });
 }
 function editGoods(menuId){
-	   
-	   var params = {};
-	   params.id = $('#id').val();
-	   params.goodsSn = $('#goodsSn').val();
-	   params.goodsName = $('#goodsName').val();
-	   params.goodsImg = $('#goodsImg').val();
-	   params.goodsThumbs = $('#goodsThumbs').val();
-	   params.marketPrice = $('#marketPrice').val();
-	   params.shopPrice = $('#shopPrice').val();
-	   params.goodsStock = $('#goodsStock').val();
-	   params.brandId = $('#brandId').val();
-	   params.goodsUnit = $('#goodsUnit').val();
-	   params.goodsSpec = $('#goodsSpec').val();
-	   params.goodsCatId1 = $('#goodsCatId1').val();
-	   params.goodsCatId2 = $('#goodsCatId2').val();
-	   params.goodsCatId3 = $('#goodsCatId3').val();
-	   params.shopCatId1 = $('#shopCatId1').val();
-	   params.shopCatId2 = $('#shopCatId2').val();
-	   params.isSale = $('input[name="isSale"]:checked').val();
-	   params.isNew = $('input[name="isNew"]:checked').val();;
-	   params.isBest = $('input[name="isBest"]:checked').val();;
-	   params.isHot = $('input[name="isHot"]:checked').val();;
-	   params.isRecomm = $('input[name="isRecomm"]:checked').val();;
-	   params.goodsDesc = $('#goodsDesc').val();
-	   params.attrCatId = $('#attrCatId').val();
-	   params.goodsKeywords = $('#goodsKeywords').val();
-	   if(params.attrCatId>0){
-		   params.priceAttrId = $('.hiddenPriceAttr').attr('dataId');
-		   params.goodsPriceNo = $('.hiddenPriceAttr').attr('dataNo');
-		   if(params.priceAttrId>0){
-			   var isPriceRecomm = false;
-			   for(var i=0;i<=params.goodsPriceNo;i++){
-				   if(document.getElementById('price_name_'+params.priceAttrId+'_'+i)){
-					   params['price_name_'+params.priceAttrId+'_'+i] = $.trim($('#price_name_'+params.priceAttrId+'_'+i).val());
-					   params['price_price_'+params.priceAttrId+'_'+i] = $.trim($('#price_price_'+params.priceAttrId+'_'+i).val());
-					   params['price_isRecomm_'+params.priceAttrId+'_'+i] = $('#price_isRecomm_'+params.priceAttrId+'_'+i).prop('checked')?1:0;
-					   if(params['price_isRecomm_'+params.priceAttrId+'_'+i]==1)isPriceRecomm = true;
-					   params['price_stock_'+params.priceAttrId+'_'+i] = $.trim($('#price_stock_'+params.priceAttrId+'_'+i).val());
-					   if(params['price_name_'+params.priceAttrId+'_'+i]==''){
-						   WST.msg('请输入商品规格！',{icon: 5});
-						   $('#price_name_'+params.priceAttrId+'_'+i).focus();
-						   return;
-					   }
-					   if(params['price_stock_'+params.priceAttrId+'_'+i]==''){
-						   WST.msg('请输入商品库存！',{icon: 5});
-						   $('#price_stock_'+params.priceAttrId+'_'+i).focus();
-						   return;
-					   }
-				   }
-			   }
-			   if(!isPriceRecomm){
+	var params = WST.fillForm('.wstipt');
+	if(params.attrCatId!=0){
+		params.priceAttrId = $('.hiddenPriceAttr').attr('dataId');
+		params.goodsPriceNo = $('.hiddenPriceAttr').attr('dataNo');
+		if(params.priceAttrId>0){
+			 var isPriceRecomm = false;
+			 for(var i=0;i<=params.goodsPriceNo;i++){
+				 if(document.getElementById('price_name_'+params.priceAttrId+'_'+i)){
+					  params['price_name_'+params.priceAttrId+'_'+i] = $.trim($('#price_name_'+params.priceAttrId+'_'+i).val());
+					  params['price_price_'+params.priceAttrId+'_'+i] = $.trim($('#price_price_'+params.priceAttrId+'_'+i).val());
+					  params['price_isRecomm_'+params.priceAttrId+'_'+i] = $('#price_isRecomm_'+params.priceAttrId+'_'+i).prop('checked')?1:0;
+					  if(params['price_isRecomm_'+params.priceAttrId+'_'+i]==1)isPriceRecomm = true;
+					  params['price_stock_'+params.priceAttrId+'_'+i] = $.trim($('#price_stock_'+params.priceAttrId+'_'+i).val());
+					  if(params['price_name_'+params.priceAttrId+'_'+i]==''){
+						  WST.msg('请输入商品规格！',{icon: 5});
+						  $('#price_name_'+params.priceAttrId+'_'+i).focus();
+						  return;
+					  }
+					  if(params['price_stock_'+params.priceAttrId+'_'+i]==''){
+						  WST.msg('请输入商品库存！',{icon: 5});
+						  $('#price_stock_'+params.priceAttrId+'_'+i).focus();
+						  return;
+					  }
+				 }
+			 }
+			 if(!isPriceRecomm){
 				   WST.msg('请选择一个推荐的价格，以便在商城展示！',{icon: 5,time:3000});
 				   return;
-			   }
-		   }
-		   $('.attrList').each(function(){
+			 }
+		}
+		$('.attrList').each(function(){
 			   //多选项处理
 			   if($(this).attr('dataType')==1){
 				   var chk = [];
@@ -365,9 +340,9 @@ function editGoods(menuId){
 					});
 				}
 			}else{
-				WST.msg('操作失败!', {icon: 5});
+				WST.msg(json.msg, {icon: 5});
 			}
-	   });
+	 });
 }
 function getAttrList(catId){
 	$('#priceContainer').hide();
@@ -775,7 +750,7 @@ function shopOrderRefund(id,type){
 		    shade: [0.6, '#000'],
 		    border: [0],
 		    content: '<textarea id="rejectionRemarks" rows="8" style="width:96%" maxLength="100"></textarea>',
-		    area: ['500px', '250px'],
+		    area: ['500px', '260px'],
 		    btn: ['提交', '关闭窗口'],
 	        yes: function(index, layero){
 	        	var rejectionRemarks = $.trim($('#rejectionRemarks').val());
@@ -1402,6 +1377,74 @@ function delGoodsCatObj(obj,vk){
 	}
 	if($(".tr_0").size()==0 && $(".tbody_new").size()==0)$('.wst-btn-query').hide();
 }
+function respondInit(){
+	var uploading = null;
+	var uploader = WebUploader.create({
+	      auto: true,
+	      swf: WST.PUBLIC +'/plugins/webuploader/Uploader.swf',
+  	  server:Think.U('Home/OrderComplains/uploadPic'),
+  	  pick:'#filePicker',
+  	  accept: {
+		    title: 'Images',
+		    extensions: 'gif,jpg,jpeg,bmp,png',
+		    mimeTypes: 'image/*'
+	      },
+	      fileNumLimit:5,
+  	  formData: {dir:'complains'}
+ });
+ uploader.on('uploadSuccess', function( file,response ) {
+	    var json = WST.toJson(response._raw);
+	    layer.close(uploading);
+	    if(json.status==1){
+	    	var html = [];
+			html.push("<div style='width:100px;float:left;margin-right:5px;'>");
+			html.push("<img class='complain_pic' width='100' height='100' src='"+WST.DOMAIN+"/"+json.file.savepath+json.file.savename+"'>");
+			html.push('<div style="position:relative;top:-100px;left:80px;cursor:pointer;" onclick="javascript:delComplainPic(this)"><img src="'+WST.DOMAIN+'/Apps/Home/View/default/images/action_delete.gif"></div>');
+			html.push('</div>');
+			$('#picBox').append(html.join(''));
+	    }
+	});
+	uploader.on('uploadError', function( file ) {
+		WST.msg('上传图片失败!', {icon: 5});
+	});
+	uploader.on( 'uploadProgress', function( file, percentage ) {
+		uploading = WST.msg('正在上传图片，请稍后...');
+	});
+}
+function delRespondPic(obj){
+	$(obj).parent().remove();
+}
+function getComplainList(){
+	location.href=Think.U('Home/OrderComplains/queryShopComplainByPage','orderNo='+$.trim($('#orderNo').val()));
+}
+function saveRespond(historyUrl){
+	var params = WST.fillForm('.wstipt');
+	var img = [];
+	$('.complain_pic').each(function(){
+		img.push($(this).attr('src').replace(WST.DOMAIN+"/",""));
+	});
+	params.respondAnnex = img.join(',');
+	if(params.complainContent==''){
+		WST.msg('应诉内容不能为空！', {icon: 5});
+		return;
+	}
+	var ll = WST.msg('正在提交应诉信息，请稍候...', {icon: 16,shade: [0.5, '#B3B3B3']});
+	jQuery.post(Think.U('Home/OrderComplains/saveRespond') ,params,function(data) {
+		 layer.close(ll);
+		 var json = WST.toJson(data);	
+		 if(json.status==1){
+			 WST.msg('您的应诉已提交，请留意信息回复', {icon: 6},function(){
+				 location.href=historyUrl;
+			 });
+		 }else{
+			 WST.msg(json.msg, {icon: 5});
+		 }
+    });
+}
+function closeComplainBox(){
+	var index = parent.layer.getFrameIndex(window.name);
+	parent.layer.close(index);
+}
 
 function getShopMsgTips(){
 	$.post(Think.U('Home/Orders/getShopMsgTips'),{},function(data,textStatus){
@@ -1428,8 +1471,11 @@ function getShopMsgTips(){
 	});
 }
 
+
 $(function() {
 	loadAudio();
 	getShopMsgTips();
 	setInterval("getShopMsgTips()",30000);
 });
+
+

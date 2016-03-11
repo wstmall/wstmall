@@ -96,9 +96,94 @@ class OrdersModel extends BaseModel {
 	
 	}
 	
+	/**
+	 * 下单
+	 */
+	public function submitOrder(){
+		$rd = array('status'=>-1);
+		$USER = session('WST_USER');
+		$goodsmodel = D('Home/Goods');
+		$morders = D('Home/Orders');
+		$totalMoney = 0;
+		$totalCnt = 0;
+		$userId = (int)$USER['userId'];
+		
+		$consigneeId = (int)I("consigneeId");
+		$payway = (int)I("payway");
+		$isself = (int)I("isself");
+		$needreceipt = (int)I("needreceipt");
+		$orderunique = WSTAddslashes(I("orderunique"));
+		$shopcat = session("WST_CART")?session("WST_CART"):array();	
+		
+		$catgoods = array();	
+		$order = array();
+		if(empty($shopcat)){
+			$rd['msg'] = '购物车为空!';
+			return $rd;
+		}else{
+			//整理及核对购物车数据
+			$paygoods = session('WST_PAY_GOODS');
+			foreach($shopcat as $key=>$cgoods){
+				if($cgoods['ischk']==0)continue;//跳过未选中的商品
+				$temp = explode('_',$key);
+				$goodsId = (int)$temp[0];
+				$goodsAttrId = (int)$temp[1];
+				if(in_array($goodsId, $paygoods)){
+					$goods = $goodsmodel->getGoodsSimpInfo($goodsId,$goodsAttrId);
+					//核对商品是否符合购买要求
+					if(empty($goods)){
+						$rd['msg'] = '找不到指定的商品!';
+						return $rd;
+					}
+					if($goods['goodsStock']<=0){
+						$rd['msg'] = '对不起，商品'.$goods['goodsName'].'库存不足!';
+						return $rd;
+					}
+					if($goods['isSale']!=1){
+						$rd['msg'] = '对不起，商品库'.$goods['goodsName'].'已下架!';
+						return $rd;
+					}
+					$goods["cnt"] = $cgoods["cnt"];
+					$totalCnt += $cgoods["cnt"];
+					$totalMoney += $goods["cnt"]*$goods["shopPrice"];
+					$catgoods[$goods["shopId"]]["shopgoods"][] = $goods;
+					$catgoods[$goods["shopId"]]["deliveryFreeMoney"] = $goods["deliveryFreeMoney"];//店铺免运费最低金额
+					$catgoods[$goods["shopId"]]["deliveryMoney"] = $goods["deliveryMoney"];//店铺免运费最低金额
+					$catgoods[$goods["shopId"]]["totalCnt"] = $catgoods[$goods["shopId"]]["totalCnt"]+$cgoods["cnt"];
+					$catgoods[$goods["shopId"]]["totalMoney"] = $catgoods[$goods["shopId"]]["totalMoney"]+($goods["cnt"]*$goods["shopPrice"]);
+				}
+			}
+			foreach($catgoods as $key=> $cshop){
+				if($cshop["totalMoney"]<$cshop["deliveryFreeMoney"]){
+					if($isself==0){
+						$totalMoney = $totalMoney + $cshop["deliveryMoney"];
+					}
+				}
+			}
+			$morders->startTrans();	
+			try{
+				$ordersInfo = $morders->addOrders($userId,$consigneeId,$payway,$needreceipt,$catgoods,$orderunique,$isself);
+				$newcart = array();
+				foreach($shopcat as $key=>$cgoods){
+					if(!in_array($key, $paygoods)){
+						$newcart[$key] = $cgoods;
+					}
+				}
+				$morders->commit();	
+				session("WST_CART",empty($newcart)?null:$newcart);
+				$rd['orderIds'] = implode(",",$ordersInfo["orderIds"]);
+				$rd['status'] = 1;
+				
+			}catch(Exception $e){
+				$morders->rollback();
+				$rd['msg'] = '下单出错，请联系管理员!';
+			}
+			return $rd;
+		}		
+	}
 	
 	/**
-	 * 提交订单
+	 * 生成订单
 	 */
 	public function addOrders($userId,$consigneeId,$payway,$needreceipt,$catgoods,$orderunique,$isself){	
 		
@@ -109,7 +194,7 @@ class OrdersModel extends BaseModel {
 		
 		$addressInfo = UserAddressModel::getAddressDetails($consigneeId);
         $m = M('orderids');
-        $m->startTrans();
+        
 		foreach ($catgoods as $key=> $shopgoods){
 			//生成订单ID
 			$orderSrcNo = $m->add(array('rnd'=>microtime(true)));
@@ -163,10 +248,7 @@ class OrdersModel extends BaseModel {
 			$data["isPay"] = 0;
 			$morders = M('orders');
 			$orderId = $morders->add($data);	
-			
-			
-			$orderNos[] = $data["orderNo"];
-			$orderInfos[] = array("orderId"=>$orderId,"orderNo"=>$data["orderNo"]) ;
+
 			//订单创建成功则建立相关记录
 			if($orderId>0){
 				$orderIds[] = $orderId;
@@ -235,16 +317,38 @@ class OrdersModel extends BaseModel {
 					$mlogo->add($data);
 				}
 			}
-			
-			
 		}
-		if(count($orderIds)>0){
-			$m->commit();
-		}else{
-			$m->rollback();
-		}
-		return array("orderIds"=>$orderIds,"orderInfos"=>$orderInfos,"orderNos"=>$orderNos);
 		
+		return array("orderIds"=>$orderIds);
+		
+	}
+	
+	/**
+	 * 获取订单参数
+	 */
+	public function getOrderListByIds(){
+		 $ids = explode(',',I('orderIds'));
+		 $id = array();
+		 foreach ($ids as $v) {
+		 	if(trim($v)!='')$id[] = $v;
+		 }
+		 $orderInfos = array('totalMoney'=>0,'isMoreOrder'=>0,'list'=>array());
+		 if(empty($id))return $orderInfos;
+		 $sql = "select orderId,orderNo,totalMoney,deliverMoney 
+		         from __PREFIX__orders where userId=".(int)session('WST_USER.userId')." 
+		         and orderunique='".I('orderunique')."' and orderId in (".implode(',',$id).") and orderFlag=1 ";
+	     $rs = $this->query($sql);
+	     
+	     if(!empty($rs)){
+	     	$totalMoney = 0;
+	     	foreach ($rs as $key =>$v){
+	     		$orderInfos['list'][] = array('orderId'=>$v['orderId'],'orderNo'=>$v['orderNo']);
+	     		$totalMoney = $v['totalMoney'] + $v['deliverMoney'];
+	     	}
+	     	$orderInfos['totalMoney'] = $totalMoney;
+	     	$orderInfos['isMoreOrder'] = (count($rs)>0)?1:0;
+	     }
+	     return $orderInfos;
 	}
 	
 	/**
@@ -287,11 +391,11 @@ class OrdersModel extends BaseModel {
 	 */
 	public function queryPayByPage($obj){
 		$userId = (int)$obj["userId"];
-		$orderNo = I("orderNo");
+		$orderNo = WSTAddslashes(I("orderNo"));
 		$orderStatus = (int)I("orderStatus",0);
-		$goodsName = I("goodsName");
-		$shopName = I("shopName");
-		$userName = I("userName");
+		$goodsName = WSTAddslashes(I("goodsName"));
+		$shopName = WSTAddslashes(I("shopName"));
+		$userName = WSTAddslashes(I("userName"));
 		$sdate = I("sdate");
 		$edate = I("edate");
 		$pcurr = (int)I("pcurr",0);
@@ -350,13 +454,13 @@ class OrdersModel extends BaseModel {
 	 */
 	public function queryReceiveByPage($obj){
 		$userId = (int)$obj["userId"];
-		$orderNo = I("orderNo");
+		$orderNo = WSTAddslashes(I("orderNo"));
 		$orderStatus = (int)I("orderStatus",0);
-		$goodsName = I("goodsName");
-		$shopName = I("shopName");
-		$userName = I("userName");
-		$sdate = I("sdate");
-		$edate = I("edate");
+		$goodsName = WSTAddslashes(I("goodsName"));
+		$shopName = WSTAddslashes(I("shopName"));
+		$userName = WSTAddslashes(I("userName"));
+		$sdate = WSTAddslashes(I("sdate"));
+		$edate = WSTAddslashes(I("edate"));
 		$pcurr = (int)I("pcurr",0);
 
 		$sql = "SELECT o.orderId,o.orderNo,o.shopId,o.orderStatus,o.userName,o.totalMoney,
@@ -409,13 +513,13 @@ class OrdersModel extends BaseModel {
 	 */
 	public function queryDeliveryByPage($obj){
 		$userId = (int)$obj["userId"];
-		$orderNo = I("orderNo");
+		$orderNo = WSTAddslashes(I("orderNo"));
 		$orderStatus = (int)I("orderStatus",0);
-		$goodsName = I("goodsName");
-		$shopName = I("shopName");
-		$userName = I("userName");
-		$sdate = I("sdate");
-		$edate = I("edate");
+		$goodsName = WSTAddslashes(I("goodsName"));
+		$shopName = WSTAddslashes(I("shopName"));
+		$userName = WSTAddslashes(I("userName"));
+		$sdate = WSTAddslashes(I("sdate"));
+		$edate = WSTAddslashes(I("edate"));
 		$pcurr = (int)I("pcurr",0);
 
 		$sql = "SELECT o.orderId,o.orderNo,o.shopId,o.orderStatus,o.userName,o.totalMoney,
@@ -470,19 +574,19 @@ class OrdersModel extends BaseModel {
 	 */
 	public function queryRefundByPage($obj){
 		$userId = (int)$obj["userId"];
-		$orderNo = I("orderNo");
+		$orderNo = WSTAddslashes(I("orderNo"));
 		$orderStatus = (int)I("orderStatus",0);
-		$goodsName = I("goodsName");
-		$shopName = I("shopName");
-		$userName = I("userName");
-		$sdate = I("sdate");
-		$edate = I("edate");
+		$goodsName = WSTAddslashes(I("goodsName"));
+		$shopName = WSTAddslashes(I("shopName"));
+		$userName = WSTAddslashes(I("userName"));
+		$sdate = WSTAddslashes(I("sdate"));
+		$edate = WSTAddslashes(I("edate"));
 		$pcurr = (int)I("pcurr",0);
 		//必须是在线支付的才允许退款
 
 		$sql = "SELECT o.orderId,o.orderNo,o.shopId,o.orderStatus,o.userName,o.totalMoney,
-		        o.createTime,o.payType,o.isRefund,o.isAppraises,sp.shopName 
-		        FROM __PREFIX__orders o,__PREFIX__shops sp 
+		        o.createTime,o.payType,o.isRefund,o.isAppraises,sp.shopName ,oc.complainId
+		        FROM __PREFIX__orders o left join __PREFIX__order_complains oc on oc.orderId=o.orderId,__PREFIX__shops sp 
 		        WHERE o.userId = $userId AND (o.orderStatus in (-3,-4,-5) or (o.orderStatus in (-1,-4,-6,-7) and payType =1 AND o.isPay =1)) AND o.shopId=sp.shopId ";
 		if($orderNo!=""){
 			$sql .= " AND o.orderNo like '%$orderNo%'";
@@ -500,7 +604,6 @@ class OrdersModel extends BaseModel {
 			$sql .= " AND o.createTime <= $edate";
 		}
 		$sql .= " order by o.orderId desc";
-		
 		$pages = $this->pageQuery($sql,$pcurr);	
 		$orderList = $pages["root"];
 		if(count($orderList)>0){
@@ -533,13 +636,13 @@ class OrdersModel extends BaseModel {
 	 */
 	public function queryCancelOrders($obj){
 		$userId = (int)$obj["userId"];
-		$orderNo = I("orderNo");
+		$orderNo = WSTAddslashes(I("orderNo"));
 		$orderStatus = (int)I("orderStatus",0);
-		$goodsName = I("goodsName");
-		$shopName = I("shopName");
-		$userName = I("userName");
-		$sdate = I("sdate");
-		$edate = I("edate");
+		$goodsName = WSTAddslashes(I("goodsName"));
+		$shopName = WSTAddslashes(I("shopName"));
+		$userName = WSTAddslashes(I("userName"));
+		$sdate = WSTAddslashes(I("sdate"));
+		$edate = WSTAddslashes(I("edate"));
 		$pcurr = (int)I("pcurr",0);
 
 		$sql = "SELECT o.orderId,o.orderNo,o.shopId,o.orderStatus,o.userName,o.totalMoney,
@@ -594,16 +697,16 @@ class OrdersModel extends BaseModel {
 	 */
 	public function queryAppraiseByPage($obj){
 		$userId = (int)$obj["userId"];
-		$orderNo = I("orderNo");
-		$goodsName = I("goodsName");
-		$shopName = I("shopName");
-		$userName = I("userName");
-		$sdate = I("sdate");
-		$edate = I("edate");
+		$orderNo = WSTAddslashes(I("orderNo"));
+		$goodsName = WSTAddslashes(I("goodsName"));
+		$shopName = WSTAddslashes(I("shopName"));
+		$userName = WSTAddslashes(I("userName"));
+		$sdate = WSTAddslashes(I("sdate"));
+		$edate = WSTAddslashes(I("edate"));
 		$pcurr = (int)I("pcurr",0);
 		$sql = "SELECT o.orderId,o.orderNo,o.shopId,o.orderStatus,o.userName,o.totalMoney,
-		        o.createTime,o.payType,o.isRefund,o.isAppraises,sp.shopName 
-		        FROM __PREFIX__orders o,__PREFIX__shops sp WHERE o.userId = $userId AND o.shopId=sp.shopId ";	
+		        o.createTime,o.payType,o.isRefund,o.isAppraises,sp.shopName ,oc.complainId
+		        FROM __PREFIX__orders o left join __PREFIX__order_complains oc on oc.orderId=o.orderId,__PREFIX__shops sp WHERE o.userId = $userId AND o.shopId=sp.shopId ";	
 		if($orderNo!=""){
 			$sql .= " AND o.orderNo like '%$orderNo%'";
 		}
@@ -841,9 +944,9 @@ class OrdersModel extends BaseModel {
 		$pcurr = (int)I("pcurr",0);
 		$orderStatus = (int)I("statusMark");
 		
-		$orderNo = I("orderNo");
-		$userName = I("userName");
-		$userAddress = I("userAddress");
+		$orderNo = WSTAddslashes(I("orderNo"));
+		$userName = WSTAddslashes(I("userName"));
+		$userAddress = WSTAddslashes(I("userAddress"));
 		$rsdata = array();
 		$sql = "SELECT orderNo,orderId,userId,userName,userAddress,totalMoney,orderStatus,createTime FROM __PREFIX__orders WHERE shopId = $shopId ";
 		if($orderStatus==5){
@@ -1161,7 +1264,7 @@ class OrdersModel extends BaseModel {
 	 */
 	public function checkOrderPay ($obj){
 		$userId = (int)$obj["userId"];
-		$orderIds = $obj["orderIds"];
+		$orderIds = self::formatIn(",", $obj["orderIds"]);
 		$sql = "SELECT count(orderId) counts FROM __PREFIX__orders WHERE userId = $userId AND orderId in ($orderIds) AND orderFlag = 1 AND orderStatus = -2 AND isPay = 0 AND payType = 1";
 		$rsv = $this->query($sql);
 		$ocnt = count(explode(",",$orderIds));

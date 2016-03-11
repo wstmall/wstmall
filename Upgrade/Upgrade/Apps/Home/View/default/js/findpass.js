@@ -11,12 +11,12 @@ $("#getPhoneVerify").click(function(){
 			var html = [];
 			html.push('<table class="wst-smsverfy"><tr><td width="80" align="right">');
 			html.push('验证码：</td><td><input type="text" id="smsVerfy" size="12" class="wst-text" maxLength="8">');
-			html.push('<img style="vertical-align:middle;cursor:pointer;height:39px;" class="verifyImg" src="'+domainURL+'/Apps/Home/View/default/images/clickForVerify.png" title="刷新验证码" onclick="javascript:getVerify()"/>');
+			html.push('<img style="vertical-align:middle;cursor:pointer;height:39px;" class="verifyImg" src="'+WST.DOMAIN+'/Apps/Home/View/default/images/clickForVerify.png" title="刷新验证码" onclick="javascript:getVerify()"/>');
 			html.push('</td></tr></table>');
 			layer.open({
 				title:'请输入验证码',
 			    type: 1,
-			    area: ['420px', '150px'], //宽高
+			    area: ['420px', '160px'], //宽高
 			    content: html.join(''),
 			    btn: ['发送验证码', '取消'],
 			    success: function(layero, index){

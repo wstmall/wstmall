@@ -67,8 +67,8 @@ class GoodsModel extends BaseModel {
 	  */
      public function queryPenddingByPage(){
         $m = M('goods');
-        $shopName = I('shopName');
-     	$goodsName = I('goodsName');
+        $shopName = WSTAddslashes(I('shopName'));
+     	$goodsName = WSTAddslashes(I('goodsName'));
      	$areaId1 = (int)I('areaId1',0);
      	$areaId2 = (int)I('areaId2',0);
      	$goodsCatId1 = (int)I('goodsCatId1',0);
@@ -93,8 +93,8 @@ class GoodsModel extends BaseModel {
 	  */
      public function queryByPage(){
         $m = M('goods');
-        $shopName = I('shopName');
-     	$goodsName = I('goodsName');
+        $shopName = WSTAddslashes(I('shopName'));
+     	$goodsName = WSTAddslashes(I('goodsName'));
      	$areaId1 = (int)I('areaId1',0);
      	$areaId2 = (int)I('areaId2',0);
      	$goodsCatId1 = (int)I('goodsCatId1',0);
@@ -176,6 +176,7 @@ class GoodsModel extends BaseModel {
 	 	$rd = array('status'=>-1);
 	 	$m = M('goods');
 	 	$id = I('id',0);
+	 	$id = self::formatIn(",", $id);
 	 	$m->isAdminBest = (int)I('status',0);
 		$rs = $m->where('goodsId in('.$id.")")->save();
 		if(false !== $rs){
@@ -190,6 +191,7 @@ class GoodsModel extends BaseModel {
 	 	$rd = array('status'=>-1);
 	 	$m = M('goods');
 	 	$id = I('id',0);
+	 	$id = self::formatIn(",", $id);
 	 	$m->isAdminRecom = (int)I('status',0);
 		$rs = $m->where('goodsId in('.$id.")")->save();
 		if(false !== $rs){

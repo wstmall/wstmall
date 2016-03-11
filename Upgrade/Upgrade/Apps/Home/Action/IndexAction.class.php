@@ -69,4 +69,5 @@ class IndexAction extends BaseAction {
     public function reChangeCity(){
     	$this->getDefaultCity();
     }
+    
 }

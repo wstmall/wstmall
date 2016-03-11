@@ -52,7 +52,7 @@
 								<div class="wst-ods-success-tg">请你尽快支付，以便订单快速处理！</div>	
 								<div >共{$orderCnt}张订单， <span id="wst-order-details" style="color:#1D94D7;cursor:pointer;">订单详情</span>。 </div>				
 								<div id="wst-orders-box" style="margin-left: 75px;display:none;">
-									<volist name="orders" key="key" id="order">
+									<volist name="orders" id="order">
 									    <div>订单：{$key}</div>
 									    <volist name="order" id="goods">
 									    	<div>{$goods["goodsName"]}&nbsp;&nbsp;{$goods["goodsAttrName"]}</div>
@@ -63,7 +63,7 @@
 								 <div style="border:1px dotted #dddddd;padding:10px;">
 								 	<div style="width:80px;float:left;">支付方式：</div>
 								 	<div style="width:700px;float:left;">
-								 	<volist name="payments" key="key" id="payment">
+								 	<volist name="payments" id="payment">
                                 		<if condition="$payment['isOnline'] eq 1">
                                 		<div class="wst-payCode" data="{$payment['payCode']}"><img src="__ROOT__/{$payment['payIcon']}" width="160" height="45"/></div>
                                 		</if>

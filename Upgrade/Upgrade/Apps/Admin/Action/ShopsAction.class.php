@@ -38,6 +38,16 @@ class ShopsAction extends BaseAction{
     	$this->assign('src',I('src','index'));
 		$this->view->display('/shops/edit');
 	}
+	
+	/**
+	 * 查询店铺名称是否存在
+	 */
+	public function checkShopName(){
+		$m = D('Admin/Shops');
+		$rs = $m->checkShopName(I('shopName'),(int)I('id'));
+		echo json_encode($rs);
+	}
+	
 	/**
 	 * 新增/修改操作
 	 */

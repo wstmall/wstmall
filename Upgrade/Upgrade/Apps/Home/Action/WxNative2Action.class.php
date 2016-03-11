@@ -19,16 +19,19 @@ class WxNative2Action extends BaseAction {
 		vendor ( 'WxPayPubHelper.WxPayPubHelper' );
 		vendor ( 'WxPayPubHelper.SDKRuntimeException' );
 		
-		$m = D ( 'Home/Payments' );
-		$this->wxpay = $m->getPayment ( "Weixin" );
-		
-		// print_r($this->wxpay );
 		$this->wxpayConfig = C ( 'WxPayConf_pub' );
 		
+		$m = D ( 'Home/Payments' );
+		$this->wxpay = $m->getPayment ( "Weixin" );
 		$this->wxpayConfig ['appid'] = $this->wxpay ['appId']; // 微信公众号身份的唯一标识
 		$this->wxpayConfig ['appsecret'] = $this->wxpay ['appsecret']; // JSAPI接口中获取openid
 		$this->wxpayConfig ['mchid'] = $this->wxpay ['mchId']; // 受理商ID
 		$this->wxpayConfig ['key'] = $this->wxpay ['apiKey']; // 商户支付密钥Key
+		
+		//$this->wxpayConfig ['appid'] = $this->wxpayConfig ['APPID']; // 微信公众号身份的唯一标识
+		//$this->wxpayConfig ['appsecret'] = $this->wxpayConfig ['APPSECRET']; // JSAPI接口中获取openid
+		//$this->wxpayConfig ['mchid'] = $this->wxpayConfig ['MCHID']; // 受理商ID
+		//$this->wxpayConfig ['key'] = $this->wxpayConfig ['KEY']; // 商户支付密钥Key
 		$this->wxpayConfig ['notifyurl'] = $this->wxpayConfig ['NOTIFY_URL'];
 		$this->wxpayConfig ['returnurl'] = "";
 		
@@ -36,6 +39,7 @@ class WxNative2Action extends BaseAction {
 		$wxpaypubconfig = new \WxPayConf_pub ( $this->wxpayConfig );
 		// print_r($this->wxpayConfig);
 	}
+	
 	public function createQrcode() {
 		$pkey = base64_decode ( I ( "pkey" ) );
 		$pkeys = explode ( "@", $pkey );

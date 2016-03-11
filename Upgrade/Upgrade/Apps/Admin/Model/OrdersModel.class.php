@@ -54,8 +54,8 @@ class OrdersModel extends BaseModel {
 	  */
      public function queryByPage(){
         $m = M('goods');
-        $shopName = I('shopName');
-     	$orderNo = I('orderNo');
+        $shopName = WSTAddslashes(I('shopName'));
+     	$orderNo = WSTAddslashes(I('orderNo'));
      	$areaId1 = (int)I('areaId1',0);
      	$areaId2 = (int)I('areaId2',0);
      	$areaId3 = (int)I('areaId3',0);
@@ -95,8 +95,8 @@ class OrdersModel extends BaseModel {
 	  */
      public function queryRefundByPage(){
         $m = M('goods');
-        $shopName = I('shopName');
-     	$orderNo = I('orderNo');
+        $shopName = WSTAddslashes(I('shopName'));
+     	$orderNo = WSTAddslashes(I('orderNo'));
      	$isRefund = (int)I('isRefund',-1);
      	$areaId1 = (int)I('areaId1',0);
      	$areaId2 = (int)I('areaId2',0);
@@ -130,6 +130,7 @@ class OrdersModel extends BaseModel {
 		}
 		return $page;
 	 }
+	 
 	 /**
 	  * 退款
 	  */

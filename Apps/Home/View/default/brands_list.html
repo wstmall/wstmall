@@ -3,6 +3,7 @@
 	<head>
   		<meta charset="utf-8">
       	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+      	<link rel="shortcut icon" href="favicon.ico"/>
       	<meta name="viewport" content="width=device-width, initial-scale=1">
       	<title>品牌汇 - {$CONF['mallTitle']}</title>
       	<meta name="keywords" content="{$CONF['mallKeywords']}" />
@@ -48,7 +49,7 @@
 			    <script id="tblist2" type="text/html">
                 {{# for(var i = 0; i < d.length; i++){ }}
                 <a href="{{ Think.U('Home/goods/getGoodsList','brandId='+d[i].brandId) }}">
-				    <li data="{{d[i].brandId}}" class="wst-brands" onmouseout="brandout(this)" onmouseover="brandsover(this)" style="opacity: 0.5;">
+				    <li data="{{d[i].brandId}}" class="wst-brands" onmouseout="brandout(this)" onmouseover="brandsover(this)" style="opacity: 1;">
 				        <div style="wst-brands-items">
                         <img width="188" class='lazyBrandImg' title="{{d[i].brandName}}" data-original="__ROOT__/{{d[i].brandIco}}" src="" style="display: inline;">
                         </div>

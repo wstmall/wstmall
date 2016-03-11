@@ -9,6 +9,8 @@ namespace Home\Action;
  * 商品控制器
  */
 class GoodsAction extends BaseAction {
+	
+	
 	/**
 	 * 商品列表
 	 */
@@ -397,7 +399,8 @@ class GoodsAction extends BaseAction {
      */
     public function getKeyList(){
     	$m = D('Home/Goods');
-    	$rs = $m->getKeyList();
+    	$areaId2 = $this->getDefaultCity();
+    	$rs = $m->getKeyList($areaId2);
     	$this->ajaxReturn($rs);
     }
     

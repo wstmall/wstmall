@@ -1,0 +1,100 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+<style>
+.webuploader-pick{height:25px;line-height:25px;}
+</style>
+       <div style='width:990px;overflow:hidden;'>
+            <input type='hidden' id='complainId' class='wstipt' value="{$data['complainId']}"/>
+        	<div class='wst-complain-left'>
+        	   <div class='wst-complain-order-head'>订单商品</div>
+        	   <div class='wst-complain-order-goods'>
+        	   <volist name="data['goodsList']" id="goods" key='key2'>
+				  <a target='_blank' href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}" title="{$goods['goodsName']}">
+					<img src="__ROOT__/{$goods['goodsThums']}" height="55" width="55" class='wst-goods-tb'/>
+				  </a>
+			   </volist>
+        	   </div>
+        	   <div class='wst-complain-order-head'>订单信息</div>
+        	   <div class='wst-complain-order-info'>
+	        	   <dl>
+	        	       <dt>订单编号：</dt>
+	        	       <dd>{$data['orderNo']}</dd>
+	        	       <dt>订单金额：</dt>
+	        	       <dd>{$data['totalMoney']}</dd>
+	        	       <dt>运&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;费：</dt>
+	        	       <dd>{$data['deliverMoney']}</dd>
+	        	       <dt>下单时间：</dt>
+	        	       <dd>{$data['createTime']}</dd>
+	        	       <dt>要求时间：</dt>
+	        	       <dd>{$data['requireTime']}</dd>
+	        	       <dt>商&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;家：</dt>
+	        	       <dd>{$data['shopName']}</dd>
+	        	    </dl>
+        	    </div>
+        	</div>
+        	<div class='wst-complain-main'>
+        	    <div class='wst-complain-order-head' style='width:735px;'>投诉信息</div>
+        	    <div class='wst-complain-box'>
+        	    <table width='100%'>
+        	       <tr>
+        	         <td width='70' align='right'>投诉类型：</td>
+        	         <td>
+        	         <if condition="$data['complainType'] eq 1">
+		                                          承诺的没有做到
+		            <elseif condition="$data['complainType'] eq 2"/>
+		                                          未按约定时间发货
+		            <elseif condition="$data['complainType'] eq 3"/>
+		                                          未按成交价格进行交易
+		            <elseif condition="$data['complainType'] eq 4"/>
+		                                          恶意骚扰                           
+		            </if>
+        	         </td>
+        	       </tr>
+        	       <tr>
+        	         <td align='right'>详情：</td>
+        	         <td>{$data['complainContent']}</td>
+        	       </tr>
+        	       <tr>
+        	         <td align='right'>附件：</td>
+        	         <td>
+        	         <volist name="data['complainAnnex']" id="annex">
+					  <a target='_blank' href="__ROOT__/{$annex}">
+						<img src="__ROOT__/{$annex}" height="100" width="100"/>
+					  </a>
+				     </volist>
+        	         </td>
+        	       </tr>
+        	    </table>
+        	    </div>
+        	    <div class='wst-complain-order-head' style='width:735px;'>应诉信息</div>
+        	    <div class='wst-complain-box'>
+        	    <table width='100%'>
+        	       <tr>
+        	         <td>
+        	         <textarea id='respondContent' class='wstipt' autocomplete="off" style='width:700px;height:162px;' placeholder='请输入应诉内容'></textarea>
+        	         </td>
+        	       </tr>
+        	       <tr>
+        	         <td>
+        	             <div id="filePicker" style='margin-left:0px;overflow:hidden;height:25px;magin-left:5px;'>上传附件(最多5张)</div>
+        	         </td>
+        	       </tr>
+        	       <tr>
+        	         <td>
+        	             <div id='picBox' style='height:120px;width:710px;padding:5px;'>
+        	         </td>
+        	       </tr>
+        	    </table>
+        	    </div>
+        	</div>
+        	<div class='wst-complain-footer'>
+        	   <button onclick="javascript:saveRespond('{$WST_REFERE}')" class="wst-btn-query">提交</button>
+        	   <button onclick="javascript:location.href='{$WST_REFERE}'" class="wst-btn-query">返回</button>
+        	</div>
+       </div>
+<script>
+$(function(){
+	respondInit();
+});
+</script>
+</block>

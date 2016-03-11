@@ -138,7 +138,7 @@
 		curvature : 0.0012, //控制抛物线弧度
 		complete : function() {
 			eleFlyElement.style.visibility = "hidden";
-			jQuery.post(domainURL +"/index.php/Home/Cart/getCartGoodCnt/" ,{"axm":1},function(data) {
+			jQuery.post(WST.DOMAIN +"/index.php/Home/Cart/getCartGoodCnt/" ,{"axm":1},function(data) {
 				var cart = WST.toJson(data);
 				eleShopCart.querySelector("span").innerHTML = cart.goodscnt;
 			});

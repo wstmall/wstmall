@@ -39,6 +39,5 @@ function checkLoginInfo(){
 			getVerify();
 		}
 	});
-	
 	return true;
 }

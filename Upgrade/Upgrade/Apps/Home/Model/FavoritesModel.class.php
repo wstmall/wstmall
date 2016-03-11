@@ -91,7 +91,7 @@ class FavoritesModel extends BaseModel {
 	 * 获取关注列表
 	 */
 	public function queryGoodsByPage(){
-		$key = I('key');
+		$key = WSTAddslashes(I('key'));
 		$sql = "select f.favoriteId,g.goodsId,g.goodsThums,g.goodsName,g.isSale,g.shopPrice,g.saleCount,ga.id goodsAttrId 
 			from __PREFIX__favorites f ,__PREFIX__goods g left join __PREFIX__goods_attributes ga on g.goodsId=ga.goodsId and ga.isRecomm=1
 			where f.targetId = g.goodsId and g.goodsStatus=1 and g.goodsFlag=1 
@@ -105,7 +105,7 @@ class FavoritesModel extends BaseModel {
 	 * 获取关注列表
 	 */
 	public function queryShopsByPage(){
-		$key = I('key');
+		$key = WSTAddslashes(I('key'));
 		$sql = "select f.favoriteId,p.shopId,p.shopName,p.shopImg
 			from __PREFIX__favorites f ,__PREFIX__shops p
 			where f.targetId = p.shopId and p.shopStatus=1 and p.shopFlag=1 

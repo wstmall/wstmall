@@ -50,17 +50,25 @@ class UsersModel extends BaseModel {
  	/**
 	  * 查询登录名是否存在
 	  */
-	 public function checkLoginKey($loginName,$id = 0){
+	 public function checkLoginKey($loginName,$id = 0,$isCheckKeys = true){
 	 	$loginName = ($loginName!='')?$loginName:I('loginName');
 	 	$rd = array('status'=>-1);
 	 	if($loginName=='')return $rd;
+	 	if($isCheckKeys){
+		 	if(!WSTCheckFilterWords($loginName,$GLOBALS['CONFIG']['limitAccountKeys'])){
+		 		$rd['status'] = -2;
+		 		return $rd;
+		 	}
+	 	}
 	 	$sql = " (loginName ='%s' or userPhone ='%s' or userEmail='%s') and userFlag=1 ";
 	 	$m = M('users');
 	    if($id>0){
 	 		$sql.=" and userId!=".$id;
 	 	}
 	 	$rs = $m->where($sql,array($loginName,$loginName,$loginName))->count();
-	    if($rs==0)$rd['status'] = 1;
+	    if($rs==0){
+	    	$rd['status'] = 1;
+	    }
 	    return $rd;
 	 }
 	 
@@ -133,26 +141,30 @@ class UsersModel extends BaseModel {
     	$data['reUserPwd'] = I("reUserPwd");
     	$data['protocol'] = I("protocol");
     	$loginName = $data['loginName'];
+        //检测账号是否存在
+        $crs = $this->checkLoginKey($loginName);
+        if($crs['status']!=1){
+	    	$rd['status'] = -2;
+	    	$rd['msg'] = ($crs['status']==-2)?"不能使用该账号":"该账号已存在";
+	    	return $rd;
+	    }
     	if($data['loginPwd']!=$data['reUserPwd']){
     		$rd['status'] = -3;
+    		$rd['msg'] = '两次输入密码不一致!';
     		return $rd;
     	}
     	if($data['protocol']!=1){
     		$rd['status'] = -6;
+    		$rd['msg'] = '必须同意使用协议才允许注册!';
     		return $rd;
     	}
     	foreach ($data as $v){
     		if($v ==''){
     			$rd['status'] = -7;
+    			$rd['msg'] = '注册信息不完整!';
     			return $rd;
     		}
     	}
-        //检测账号是否存在
-        $crs = $this->checkLoginKey($loginName);
-        if($crs['status']!=1){
-	    	$rd['status'] = -2;
-	    	return $rd;
-	    }
 	    $nameType = I("nameType");
 	    $mobileCode = I("mobileCode");
 		if($nameType==3 && $GLOBALS['CONFIG']['phoneVerfy']==1){//手机号码
@@ -160,10 +172,12 @@ class UsersModel extends BaseModel {
 			$startTime = (int)session('VerifyCode_userPhone_Time');
 			if((time()-$startTime)>120){
 				$rd['status'] = -5;
+				$rd['msg'] = '验证码已超过有效期!';
 				return $rd;
 			}
 			if($mobileCode=="" || $verify != $mobileCode){
 				$rd['status'] = -4;
+				$rd['msg'] = '验证码错误!';
 				return $rd;
 			}
 			$loginName = $this->randomLoginName($loginName);
@@ -279,13 +293,13 @@ class UsersModel extends BaseModel {
 		$userEmail = I("userEmail");
 		$userId = (int)$obj["userId"];
 	    //检测账号是否存在
-        $crs = $this->checkLoginKey($userPhone,$userId);
+        $crs = $this->checkLoginKey($userPhone,$userId,false);
         if($crs['status']!=1){
 	    	$rd['status'] = -2;
 	    	return $rd;
 	    }
 	    //检测邮箱是否存在
-        $crs = $this->checkLoginKey($userEmail,$userId);
+        $crs = $this->checkLoginKey($userEmail,$userId,false);
         if($crs['status']!=1){
 	    	$rd['status'] = -3;
 	    	return $rd;

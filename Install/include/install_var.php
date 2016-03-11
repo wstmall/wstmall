@@ -32,6 +32,7 @@ $dir_items = array
 $func_items = array(
   'mysql_connect'=>array(),
   'file_get_contents'=>array(),
-  'curl_init'=>array()
+  'curl_init'=>array(),
+  'mb_strlen'=>array()
 );
 ?>

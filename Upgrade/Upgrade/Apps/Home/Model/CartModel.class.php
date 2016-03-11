@@ -57,26 +57,24 @@ class CartModel extends BaseModel {
 	public function getGoodsInfo($goodsId,$goodsAttrId = 0){
 		$sql = "SELECT g.attrCatId,g.goodsId,g.goodsSn,g.goodsName,g.goodsThums,g.shopId,g.marketPrice,g.shopPrice,g.goodsStock,g.bookQuantity,g.isBook,sp.shopName
 				FROM __PREFIX__goods g ,__PREFIX__shops sp WHERE g.shopId=sp.shopId AND goodsFlag=1 and isSale=1 and goodsStatus=1 and g.goodsId = $goodsId";
-		$goodslist = $this->query($sql);
+		$goodslist = $this->queryRow($sql);
 		//如果商品有价格属性的话则获取其价格属性
-		if(!empty($goodslist) && $goodslist[0]['attrCatId']>0){
+		if(!empty($goodslist) && $goodslist['attrCatId']>0){
 			$sql = "select ga.id,ga.attrPrice,ga.attrStock,a.attrName,ga.attrVal,ga.attrId from __PREFIX__attributes a,__PREFIX__goods_attributes ga
-			        where a.attrId=ga.attrId and a.catId=".$goodslist[0]['attrCatId']." and a.isPriceAttr=1 
-			        and ga.goodsId=".$goodslist[0]['goodsId']." and id=".$goodsAttrId;
-			
-			$priceAttrs = $this->query($sql);
+			        where a.attrId=ga.attrId and a.catId=".$goodslist['attrCatId']." and a.isPriceAttr=1 
+			        and ga.goodsId=".$goodslist['goodsId']." and id=".$goodsAttrId;
+			$priceAttrs = $this->queryRow($sql);
 			if(!empty($priceAttrs)){
-				$goodslist[0]['attrId'] = $priceAttrs[0]['attrId'];
-				$goodslist[0]['goodsAttrId'] = $priceAttrs[0]['id'];
-				$goodslist[0]['attrName'] = $priceAttrs[0]['attrName'];
-				$goodslist[0]['attrVal'] = $priceAttrs[0]['attrVal'];
-				$goodslist[0]['shopPrice'] = $priceAttrs[0]['attrPrice'];
-				$goodslist[0]['goodsStock'] = $priceAttrs[0]['attrStock'];
+				$goodslist['attrId'] = $priceAttrs['attrId'];
+				$goodslist['goodsAttrId'] = $priceAttrs['id'];
+				$goodslist['attrName'] = $priceAttrs['attrName'];
+				$goodslist['attrVal'] = $priceAttrs['attrVal'];
+				$goodslist['shopPrice'] = $priceAttrs['attrPrice'];
+				$goodslist['goodsStock'] = $priceAttrs['attrStock'];
 			}
-		}else{
-			$goodslist[0]['goodsAttrId'] = 0;
 		}
-		return $goodslist[0];
+		$goodslist['goodsAttrId'] = (int)$goodslist['goodsAttrId'];
+		return $goodslist;
 	}
 	
 	/**
@@ -102,17 +100,17 @@ class CartModel extends BaseModel {
 			    $sql = "select ga.id,ga.attrPrice,ga.attrStock,a.attrName,ga.attrVal,ga.attrId from __PREFIX__attributes a,__PREFIX__goods_attributes ga
 			             where a.attrId=ga.attrId and a.catId=".$cgoods['attrCatId']." and a.isPriceAttr=1 and ga.attrId=".$cgoods['attrId']." 
 			             and ga.goodsId=".$goodsId." and id=".$goodsAttrId;
-				$priceAttrs = $this->query($sql);
+				$priceAttrs = $this->queryRow($sql);
 				if(!empty($priceAttrs)){
-					$goods['goodsAttrId'] = $priceAttrs[0]['id'];
-					$goods['attrName'] = $priceAttrs[0]['attrName'];
-					$goods['attrVal'] = $priceAttrs[0]['attrVal'];
-					$goods['shopPrice'] = $priceAttrs[0]['attrPrice'];
-					$goods['goodsStock'] = $priceAttrs[0]['attrStock'];
+					$goods['goodsAttrId'] = $priceAttrs['id'];
+					$goods['attrName'] = $priceAttrs['attrName'];
+					$goods['attrVal'] = $priceAttrs['attrVal'];
+					$goods['shopPrice'] = $priceAttrs['attrPrice'];
+					$goods['goodsStock'] = $priceAttrs['attrStock'];
 				}
-			}else{
-				$goods['goodsAttrId'] = 0;
 			}
+			$goods['goodsAttrId'] = (int)$goods['goodsAttrId'];
+			
 			if($goods["isBook"]==1){
 				$goods["goodsStock"] = $goods["goodsStock"]+$goods["bookQuantity"];
 			}

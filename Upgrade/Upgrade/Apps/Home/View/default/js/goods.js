@@ -146,7 +146,7 @@ function addCart(goodsId,type,goodsThums){
 	params.gcount = parseInt($("#buy-num").val(),10);
 	params.rnd = Math.random();
 	params.goodsAttrId = $('#shopGoodsPrice_'+goodsId).attr('dataId');
-	$("#flyItem img").attr("src",domainURL  +"/"+ goodsThums)
+	$("#flyItem img").attr("src",WST.DOMAIN  +"/"+ goodsThums)
 	jQuery.post(Think.U('Home/Cart/addToCartAjax') ,params,function(data) {
 		if(type==1){
 			location.href= Think.U('Home/Cart/toCart');
@@ -208,17 +208,17 @@ function getGoodsappraises(goodsId,p){
 				    html.push('<td width="180">');
 				    html.push('<div>商品评分：');
 					for(var i=0;i<appraises.goodsScore;i++){
-						html.push('<img src="'+domainURL +'/Apps/Home/View/default/images/icon_score_yes.png"/>');
+						html.push('<img src="'+WST.DOMAIN +'/Apps/Home/View/default/images/icon_score_yes.png"/>');
 					}
 					html.push('</div>');
 					html.push('<div>时效评分：');
 					for(var i=0;i<appraises.timeScore;i++){
-						html.push('<img src="'+domainURL +'/Apps/Home/View/default/images/icon_score_yes.png"/>');
+						html.push('<img src="'+WST.DOMAIN +'/Apps/Home/View/default/images/icon_score_yes.png"/>');
 					}
 					html.push('</div>');
 					html.push('<div>服务评分：');
 					for(var i=0;i<appraises.serviceScore;i++){
-						html.push('<img src="'+domainURL +'/Apps/Home/View/default/images/icon_score_yes.png"/>');
+						html.push('<img src="'+WST.DOMAIN +'/Apps/Home/View/default/images/icon_score_yes.png"/>');
 					}
 					html.push('</div>');
 					html.push('</td>');

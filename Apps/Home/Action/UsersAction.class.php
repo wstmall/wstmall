@@ -95,6 +95,7 @@ class UsersAction extends BaseAction {
 		$nameType = (int)I("nameType");
 		if($nameType!=3 && !$this->checkVerify("3")){			
 			$res['status'] = -4;
+			$res['msg'] = '验证码错误!';
 		}else{			
 			$res = $m->regist();
 			if($res['userId']>0){//注册成功			
@@ -107,15 +108,7 @@ class UsersAction extends BaseAction {
 		echo json_encode($res);
 
 	}
-
-	//检查登录名是否存在
-	public function checkLoginName(){
-		$m = D('Home/Users');
-		$rs = $m->checkLoginKey();
-		echo json_encode($rs);
-	}
     
-	
  	/**
 	 * 获取验证码
 	 */
@@ -205,6 +198,13 @@ class UsersAction extends BaseAction {
 		$key = I('clientid');
 		$userId = (int)session('WST_USER.userId');
 		$rs = $m->checkLoginKey(I($key),$userId);
+		if($rs['status']==1){
+			$rs['msg'] = "该账号可用";
+		}else if($rs['status']==-2){
+			$rs['msg'] = "不能使用该账号";
+		}else{
+			$rs['msg'] = "该账号已存在";
+		}
 		$this->ajaxReturn($rs);
 	}
 	/**
@@ -346,5 +346,12 @@ class UsersAction extends BaseAction {
 		session('REST_Time',$key[2]);
 		session('REST_success','1');
 		$this->display('default/forget_pass3');
+    }
+    
+    /**
+     * 跳去用户登录的页面
+     */
+    public function toLoginBox(){
+    	$this->display('default/login_box');
     }
 }

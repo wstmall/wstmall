@@ -3,6 +3,7 @@
 	<head>
   		<meta charset="utf-8">
       	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+      	<link rel="shortcut icon" href="favicon.ico"/>
       	<meta http-equiv="cache-control" content="no-cache">
       	<meta name="viewport" content="width=device-width, initial-scale=1">
       	<title>填写核对订单信息 - {$CONF['mallTitle']}</title>
@@ -107,7 +108,7 @@
 								</div>
                             </div>
                             <div id="address_form" style="">
-                                <input type='hidden' id='consignee_add_cityId' name='consignee_add_cityId' value='{$areaId2}'/>
+                                <input type='hidden' id='consignee_add_cityId' name='consignee_add_cityId' value="{$currArea['areaId']}"/>
                                 <input type='hidden' id='consignee_add_cityName' name='consignee_add_cityName'/>
                                 <div class="wst-chkod-line35">
                                     <div class="wst-chkod-cg-pp"><span style="color: red;">*</span>收货人：</div>

@@ -14,7 +14,7 @@ class OrdersAction extends BaseAction{
 	 */
 	public function index(){
 		$this->isLogin();
-		$this->checkAjaxPrivelege('ddlb_00');
+		$this->checkPrivelege('ddlb_00');
 		//获取地区信息
 		$m = D('Admin/Areas');
 		$this->assign('areaList',$m->queryShowByList(0));
@@ -37,7 +37,7 @@ class OrdersAction extends BaseAction{
 	 */
 	public function queryRefundByPage(){
 		$this->isLogin();
-		$this->checkAjaxPrivelege('tk_00');
+		$this->checkPrivelege('tk_00');
 		//获取地区信息
 		$m = D('Admin/Areas');
 		$this->assign('areaList',$m->queryShowByList(0));

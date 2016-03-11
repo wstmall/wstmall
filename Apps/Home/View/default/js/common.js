@@ -182,7 +182,7 @@ function checkCart(){
 				//}【{$goods['attrName']}:{$goods['attrVal']}】
 				var url = Think.U('Home/Goods/getGoodsDetails','goodsId='+goods.goodsId);
 				html.push(  "<div style='float:left;'>" +
-									"<a href='"+url+"'><img src='"+domainURL +"/"+goods.goodsThums+"' width='65' height='65'/></a>" +
+									"<a href='"+url+"'><img src='"+WST.DOMAIN +"/"+goods.goodsThums+"' width='65' height='65'/></a>" +
 									"</div>" +
 							"<div style='float:left;width:280px;padding:4px;overflow: hidden;'>");
 				html.push(  "<a target='_blank' href='"+url+"'>"+goods.goodsName+"</a><br/>");
@@ -226,7 +226,7 @@ function changeCity(areaId2){
 		var currurl = location.href;
 			currurl = currurl.toLowerCase();
 		if(currurl.indexOf("changecity")!=-1){
-			location.href = domainURL +"/index.php";
+			location.href = WST.DOMAIN +"/index.php";
 		}else{
 			location.href = location.href;
 		}
@@ -236,8 +236,8 @@ function changeCity(areaId2){
 
 
 function addToFavorite(){
-	var a=domainURL ,b="收藏"+wstMallName;
-	document.all?window.external.AddFavorite(a,b):window.sidebar&&window.sidebar.addPanel?window.sidebar.addPanel(b,a,""):alert("\u5bf9\u4e0d\u8d77\uff0c\u60a8\u7684\u6d4f\u89c8\u5668\u4e0d\u652f\u6301\u6b64\u64cd\u4f5c!\n\u8bf7\u60a8\u4f7f\u7528\u83dc\u5355\u680f\u6216Ctrl+D\u6536\u85cf\u672c\u7ad9\u3002"),createCookie("_fv","1",30,"/;domain="+domainURL)
+	var a=WST.DOMAIN ,b="收藏"+WST.MALL_NAME;
+	document.all?window.external.AddFavorite(a,b):window.sidebar&&window.sidebar.addPanel?window.sidebar.addPanel(b,a,""):alert("\u5bf9\u4e0d\u8d77\uff0c\u60a8\u7684\u6d4f\u89c8\u5668\u4e0d\u652f\u6301\u6b64\u64cd\u4f5c!\n\u8bf7\u60a8\u4f7f\u7528\u83dc\u5355\u680f\u6216Ctrl+D\u6536\u85cf\u672c\u7ad9\u3002"),createCookie("_fv","1",30,"/;domain="+WST.DOMAIN)
 }
 
 
@@ -370,50 +370,9 @@ function addAccess(aid){
 	});
 }
 
-
-//上傳文件
-
-function getUploadFilename(sfilename,srcpath,thumbpath,fname){
-	if(srcpath!="fail"){
-		$("#s_"+sfilename).val(srcpath);
-		$("#"+fname).val(srcpath);
-		if(fname=="goodsImg"){
-			$("#goodsThumbs").val(thumbpath);
-		}
-		$("#preview_"+sfilename+" img").attr("src",ThinkPHP.ROOT+"/"+thumbpath);
-		$("#preview_"+sfilename+" img").show();
-	}else{
-		$("#s_"+sfilename).val("");
-		$("#"+fname).val("");
-	}
-}
-
-function updfile(filename){
-	
-	var filepath = jQuery("#"+filename).val();
-	var patharr = filepath.split("\\");
-	var fnames = patharr[patharr.length-1].split(".");
-	var ext = (fnames[fnames.length-1]);
-		ext = ext.toLocaleLowerCase();	
-	var flag = false;
-	for(var i=0;i<filetypes.length;i++){
-		if(filetypes[i]==ext){
-			flag = true;
-			break;
-		}
-	}
-	
-	if(flag){	
-		jQuery("#uploadform_"+filename).submit();
-	}else{		
-		WST.msg("上传文件类型错误 (文档支持格式："+filetypes.join(",")+")", {icon: 5});		
-		jQuery('#uploadform_'+filename)[0].reset();
-		return;
-	}	
-}
 function uploadFile(opts){
 	var _opts = {};
-	_opts = $.extend(_opts,{auto: true,swf: publicurl +'/plugins/webuploader/Uploader.swf'},opts);
+	_opts = $.extend(_opts,{auto: true,swf: WST.PUBLIC +'/plugins/webuploader/Uploader.swf'},opts);
 	var uploader = WebUploader.create(_opts);
 	uploader.on('uploadSuccess', function( file,response ) {
 	    var json = WST.toJson(response._raw);
@@ -424,5 +383,54 @@ function uploadFile(opts){
 	});
 	uploader.on( 'uploadProgress', function( file, percentage ) {
 		if(_opts.progress)_opts.progress(percentage);
+	});
+}
+function loginWin(){
+	var loading = layer.load(0, {shade: false,offset:'250px'});
+	$.post(Think.U('Home/Users/toLoginBox'),{},function(data,textStatus){
+		layer.close(loading);
+	    WST.open({type:1,area:['520px','280px'],offset:'150px',title:'用户登录',content:data, 
+	    	success: function(layero, index){
+	    	getVerify();
+	    }});
+	});
+}
+function checkUserLogin(){	
+	var param = {};
+	param.loginName = $.trim($('#loginName').val());
+	param.loginPwd = $.trim($('#loginPwd').val());
+	param.verify = $.trim($('#verify').val());
+	if(param.loginName==""){
+		$("#loginName-tips").html("请输入账户名");
+		return;
+	}else{
+		$("#loginName-tips").empty();
+	}
+	if(param.loginPwd==""){
+		$("#loginPwd-tips").html("请输入密码");
+		return;
+	}else{
+		$("#loginPwd-tips").empty();
+	}
+	if(param.verify==""){
+		$("#verify-tips").html("请输入验证码");
+		return;
+	}else{
+		$("#verify-tips").empty();
+	}
+	var loading = layer.load(0, {shade: false,offset:'250px'});
+	$.post(Think.U('Home/Users/checkLogin'),param,function(data,textStatus){
+		layer.close(loading);
+		var json = WST.toJson(data);
+		if(json.status=='1'){
+			WST.msg('登录成功...',{offset:'250px'});
+			location.reload();
+		}else if(json.status=='-1'){
+			$("#verify-tips").html("验证码错误");
+			getVerify();
+		}else if(json.status=='-2'){
+			$("#loginPwd-tips").html("账号或密码错误");
+			getVerify();
+		}
 	});
 }

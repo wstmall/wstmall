@@ -64,43 +64,41 @@ $(function () {
 				  $("#userEmail").unFormValidator(false);
 			  }
 		});
-	   
+		var uploading = null;
+		uploadFile({
+		    server:Think.U('Home/users/uploadPic'),pick:'#userPhotoPicker',
+		    formData: {dir:'users'},
+		    callback:function(f){
+		    	layer.close(uploading);
+		    	var json = WST.toJson(f);
+		    	$('#userPhotoPreview').attr('src',WST.DOMAIN+"/"+json.file.savepath+json.file.savethumbname);
+		    	$('#userPhoto').val(json.file.savepath+json.file.savename);
+		    	$('#userPhotoPreview').show();
+			},
+			progress:function(rate){
+			    uploading = WST.msg('正在上传图片，请稍后...');
+			}
+		});
 });
-
-var filetypes = ["gif","jpg","png","jpeg"];
 </script>
 	
    	<div class="wst-body"> 
        <div class='wst-page-header'>买家中心 > 个人资料</div>
        <div class='wst-page-content' style="position:relative;">
-       		<iframe name="upload" style="display:none"></iframe>
-			<form id="uploadform_Filedata" autocomplete="off" style="position:absolute;left:388px;z-index:10;" enctype="multipart/form-data" method="POST" target="upload" action="{:U('Home/Shops/uploadPic')}" >
-				<div id="preview_Filedata" >
-             	<img id='preview' src='<if condition="$user['userPhoto'] =='' ">__ROOT__/{$CONF['goodsImg']}<else/>__ROOT__/{$user.userPhoto}</if>' height='150' />
-                </div>
-				<div style="position:relative;left: -4px;">
-				<input id="userPhoto" name="userPhoto" type="text" value="{$user.userPhoto}" readonly style="float:left;width:140px;"/>
-				<div class="div1">
-					<div class="div2">浏览</div>
-					<input type="file" class="inputstyle" id="Filedata" name="Filedata" onchange="updfile('Filedata');" >
-				</div>
-				<div style="clear:both;"></div>
-				<div >&nbsp;图片大小:150 x 150 (px)(格式为 gif, jpg, jpeg, png)</div>
-				<input type="hidden" name="dir" value="users">
-				<input type="hidden" name="width" value="150">
-				<input type="hidden" name="folder" value="Filedata">
-				<input type="hidden" name="sfilename" value="Filedata">
-				<input type="hidden" name="fname" value="userPhoto">
-				<input type="hidden" id="s_Filedata" name="s_Filedata" value="">
-				
-				</div>
-			</form>
        <form name="myform" method="post" id="myform" autocomplete="off">
         <table class="table table-hover table-striped table-bordered wst-form" style='margin-top:10px;'>
            <tr>
              <th align='right' width="80">昵称 <font color='red'>*</font>：</th>
              <td>
              <input type='text' id='userName' name='userName' value="{$user['userName']}"/>
+             </td>
+             <td rowspan='5'>
+                <div>
+		           <img id='userPhotoPreview' src='<if condition="$user['userPhoto'] =='' ">__ROOT__/{$CONF['goodsImg']}<else/>__ROOT__/{$user['userPhoto']}</if>' height='100'/><br/>
+	            </div>
+	            <input type='hidden' id='userPhoto' class='wstipt' value='{$object.userPhoto}'/>
+             	<div id="userPhotoPicker" style='margin-left:0px;margin-top:5px;height:30px;overflow:hidden'>上传用户头像</div>
+             	<div>图片大小:150 x 150 (px)，格式为 gif, jpg, jpeg, png</div>
              </td>
            </tr>
            <tr>

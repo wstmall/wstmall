@@ -266,7 +266,7 @@ function submitOrder(){
 		WST.msg("抱歉，您的订单金额未达到该店铺的配送订单起步价，不能提交订单。", {icon: 5});
 		return;
 	}
-	var ll = layer.msg('正在保存数据，请稍候...', {icon: 16,shade: [0.5, '#B3B3B3']});
+	var ll = layer.msg('正在提交订单，请稍候...', {icon: 16,shade: [0.5, '#B3B3B3']});
 	jQuery.post(Think.U('Home/Goods/checkGoodsStock') ,{},function(data) {
 		var goodsInfo = WST.toJson(data);	
 		layer.close(ll);
@@ -278,31 +278,33 @@ function submitOrder(){
 			}
 		}
 		if(flag){
-			var consigneeId = $("#consigneeId").val();	
+			var params = {};
+			params.consigneeId = $("#consigneeId").val();	
 			if(!$("#consignee2").is(":hidden")){
 				WST.msg("请先保存收货人信息",{icon: 5});
 				return;
 			}	
-			var invoiceClient = $.trim($("#invoiceClient").val());	
+			if(params.consigneeId<1){
+				WST.msg("请填写收货人地址", {icon: 5});
+				return ;
+			}
+			params.invoiceClient = $.trim($("#invoiceClient").val());	
 			var rdate = $("#requestdate").val();
 			var rtime = $("#requesttime").val();
-			var requireTime = rdate+" "+rtime+":00";
-			var payway = $('input:radio[name="payway"]:checked').val();
-			var needreceipt = $('input:radio[name="needreceipt"]:checked').val();
-			var isself = $('input:radio[name="isself"]:checked').val();
-			var remarks = $.trim($("#remarks").val());
-			var d1 = requireTime;	
+			params.requireTime = rdate+" "+rtime+":00";
+			params.payway = $('input:radio[name="payway"]:checked').val();
+			params.needreceipt = $('input:radio[name="needreceipt"]:checked').val();
+			params.isself = $('input:radio[name="isself"]:checked').val();
+			params.remarks = $.trim($("#remarks").val());
+			var d1 = params.requireTime;	
 			d1 = d1.replace(/-/g,"/");
 			var date1 = new Date(d1);
 			var d2 = addHour(1);	
 			d2 = d2.replace(/-/g,"/");
 			var date2 = new Date(d2);
 			
-			if(consigneeId<1){
-				WST.msg("请填写收货人地址", {icon: 5});
-				return ;
-			}
-			if(needreceipt==1 && invoiceClient==""){
+			
+			if(params.needreceipt==1 && params.invoiceClient==""){
 				WST.msg("请输入抬头", {icon: 5});
 				return ;		
 			}
@@ -314,10 +316,21 @@ function submitOrder(){
 				WST.msg("您选的商品不在配送区域内！", {icon: 5});
 				return ;
 			}
+			params.orderunique = new Date().getTime();
 			
-			
-			var orderunique = new Date().getTime();
-			location.href= Think.U('Home/Orders/submitOrder','consigneeId='+consigneeId+"&payway="+payway+"&isself="+isself+"&invoiceClient="+invoiceClient+"&needreceipt="+needreceipt+"&remarks="+remarks+"&requireTime="+requireTime+"&orderunique="+orderunique);
+			var ll = layer.msg('提交订单，请稍候...', {icon: 16,shade: [0.5, '#B3B3B3']});
+			jQuery.post(Think.U('Home/Orders/submitOrder') ,params,function(data) {
+				 var json = WST.toJson(data);	
+				 if(json.status==1){
+					 if(params.payway==1){
+						 location.href=Think.U('Home/Payments/toPay','orderIds='+json.orderIds);
+					 }else{
+						 location.href=Think.U('Home/Orders/orderSuccess','orderIds='+json.orderIds+"&orderunique="+params.orderunique);
+					 }
+				 }else{
+					 WST.msg(json.msg, {icon: 5});
+				 }  
+			});
 		}else{
 			if(goods.isSale<1){
 				WST.msg('商品'+goods.goodsName+'已下架，请返回重新选购!', {icon: 5});

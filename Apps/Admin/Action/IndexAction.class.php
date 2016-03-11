@@ -67,10 +67,14 @@ class IndexAction extends BaseAction {
      */
     public function login(){
     	$m = D('Admin/Staffs');
-    	$rs = $m->login();
-    	if($rs['status']==1){
-    		session('WST_STAFF',$rs['staff']);
-    		unset($rs['staff']);
+    	if($this->checkVerify()){
+	    	$rs = $m->login();
+	    	if($rs['status']==1){
+	    		session('WST_STAFF',$rs['staff']);
+	    		unset($rs['staff']);
+	    	}
+    	}else{
+    		$rs["status"]= -2;//验证码错误
     	}
     	$this->ajaxReturn($rs);
     }

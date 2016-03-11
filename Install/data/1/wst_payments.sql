@@ -21,4 +21,5 @@ CREATE TABLE `wst_payments` (
 -- Records of wst_payments
 -- ----------------------------
 INSERT INTO `wst_payments` VALUES ('1', 'cod', '货到付款', '开通城市', '1', '', '1', '0'),
- ('2', 'alipay', '支付宝', '', '2', '', '0', '1');
+ ('2', 'alipay', '支付宝', '', '2', '', '0', '1'),
+('3', 'Weixin', '微信支付', '微信支付', '0', '', '0', '1');

@@ -99,4 +99,18 @@ class BaseAction extends Controller {
     	$this->assign("params",$params);
     }
     
+	/**
+	 * 产生验证码图片
+	 * 
+	 */
+	public function getVerify(){
+		// 导入Image类库
+    	$Verify = new \Think\Verify();
+    	$Verify->entry();
+    }
+    
+    public function checkVerify(){
+	    $verify = new \Think\Verify();
+	    return $verify->check(I('verify'));
+    }
 }

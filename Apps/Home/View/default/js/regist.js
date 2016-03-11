@@ -133,18 +133,19 @@ function onblurName(obj){
 function changeName(){
 	var params = {};
 	params.loginName = $.trim($('#loginName').val());
+	params.clientid = 'loginName';
 	if(params.loginName!="" && params.loginName!="邮箱/用户名/手机号"){
-		jQuery.post(Think.U('Home/Users/checkLoginName') ,params,function(rsp) {
+		jQuery.post(Think.U('Home/Users/checkLoginKey') ,params,function(rsp) {
 			var json = WST.toJson(rsp);
 			if( json.status == "1" ) {
 				jQuery("#loginNameTip").removeClass();
 				jQuery("#loginNameTip").addClass("onCorrect");
-				jQuery("#loginNameTip").html("输入正确");
+				jQuery("#loginNameTip").html(json.msg);
 				return true;
 			} else {
 				jQuery("#loginNameTip").removeClass();
 				jQuery("#loginNameTip").addClass("onError");
-				jQuery("#loginNameTip").html("账号已存在");
+				jQuery("#loginNameTip").html(json.msg);
 				return false;
 			}
 		});	
@@ -208,7 +209,7 @@ function getVerifyCode(){
 			layer.open({
 				title:'请输入验证码',
 			    type: 1,
-			    area: ['420px', '140px'], //宽高
+			    area: ['420px', '150px'], //宽高
 			    content: html.join(''),
 			    btn: ['发送验证码', '取消'],
 			    success: function(layero, index){
@@ -322,20 +323,8 @@ function regist(){
 			WST.msg('注册成功，正在跳转登录!', {icon: 6}, function(){
 				location.href=WST.DOMAIN;
    			});
-		}else if(json.status==-2){
-			WST.msg('用户名已存在!', {icon: 5});
-		}else if(json.status==-3){
-			WST.msg('两次输入密码不一致!', {icon: 5});
-		}else if(json.status==-4){
-			WST.msg('验证码错误!', {icon: 5});
-		}else if(json.status==-6){
-			WST.msg('必须同意使用协议才允许注册!', {icon: 5});
-		}else if(json.status==-5){
-			WST.msg('验证码已超过有效期!', {icon: 5});
-		}else if(json.status==-7){
-			WST.msg('注册信息不完整!', {icon: 5});
 		}else{
-			WST.msg('注册失败!', {icon: 5});
+			WST.msg(json.msg, {icon: 5});
 		}
 		getVerify();
 	});

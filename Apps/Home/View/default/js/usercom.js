@@ -245,7 +245,7 @@ function orderCancel(id,type){
 		    shade: [0.6, '#000'],
 		    border: [0],
 		    content: '<textarea id="rejectionRemarks" rows="8" style="width:96%" maxLength="100"></textarea>',
-		    area: ['500px', '250px'],
+		    area: ['500px', '260px'],
 		    btn: ['提交', '关闭窗口'],
 	        yes: function(index, layero){
 	        	var rejectionRemarks = $.trim($('#rejectionRemarks').val());
@@ -300,7 +300,70 @@ function appraiseOrder(id){
 	    }
 	});
 }
-
+function complainInit(){
+	var uploading = null;
+	var uploader = WebUploader.create({
+	      auto: true,
+	      swf: WST.PUBLIC +'/plugins/webuploader/Uploader.swf',
+  	  server:Think.U('Home/OrderComplains/uploadPic'),
+  	  pick:'#filePicker',
+  	  accept: {
+		    title: 'Images',
+		    extensions: 'gif,jpg,jpeg,bmp,png',
+		    mimeTypes: 'image/*'
+	      },
+	      fileNumLimit:5,
+  	  formData: {dir:'complains'}
+ });
+ uploader.on('uploadSuccess', function( file,response ) {
+	    var json = WST.toJson(response._raw);
+	    layer.close(uploading);
+	    if(json.status==1){
+	    	var html = [];
+			html.push("<div style='width:100px;float:left;margin-right:5px;'>");
+			html.push("<img class='complain_pic' width='100' height='100' src='"+WST.DOMAIN+"/"+json.file.savepath+json.file.savename+"'>");
+			html.push('<div style="position:relative;top:-100px;left:80px;cursor:pointer;" onclick="javascript:delComplainPic(this)"><img src="'+WST.DOMAIN+'/Apps/Home/View/default/images/action_delete.gif"></div>');
+			html.push('</div>');
+			$('#picBox').append(html.join(''));
+	    }
+	});
+	uploader.on('uploadError', function( file ) {
+		WST.msg('上传图片失败!', {icon: 5});
+	});
+	uploader.on( 'uploadProgress', function( file, percentage ) {
+		uploading = WST.msg('正在上传图片，请稍后...');
+	});
+}
+function delComplainPic(obj){
+	$(obj).parent().remove();
+}
+function getComplainList(){
+	location.href=Think.U('Home/OrderComplains/queryUserComplainByPage','orderNo='+$.trim($('#orderNo').val()));
+}
+function saveComplain(historyURL){
+	var params = WST.fillForm('.wstipt');
+	var img = [];
+	$('.complain_pic').each(function(){
+		img.push($(this).attr('src').replace(WST.DOMAIN+"/",""));
+	});
+	params.complainAnnex = img.join(',');
+	if(params.complainContent==''){
+		WST.msg('投诉内容不能为空！', {icon: 5});
+		return;
+	}
+	var ll = WST.msg('正在提交投诉信息，请稍候...', {icon: 16,shade: [0.5, '#B3B3B3']});
+	jQuery.post(Think.U('Home/OrderComplains/saveComplain') ,params,function(data) {
+		 layer.close(ll);
+		 var json = WST.toJson(data);	
+		 if(json.status==1){
+			 WST.msg('您的投诉已提交，请留意信息回复', {icon: 6},function(){
+				 location.href = historyURL;
+			 });
+		 }else{
+			 WST.msg(json.msg, {icon: 5});
+		 }
+    });
+}
 function addGoodsAppraises(shopId,goodsId,goodsAttrId,orderId){
 	var goodsScore = $('.'+goodsId+'_'+goodsAttrId+'_goodsScore > input[name="score"]').val();
 	if(goodsScore==0){
@@ -369,7 +432,7 @@ function orderConfirm(id,type){
 		    shade: [0.6, '#000'],
 		    border: [0],
 		    content: '<textarea id="rejectionRemarks" rows="8" style="width:96%" maxLength="100"></textarea>',
-		    area: ['500px', '250px'],
+		    area: ['500px', '260px'],
 		    btn: ['拒收订单', '关闭窗口'],
 	        yes: function(index, layero){
 	        	var rejectionRemarks = $.trim($('#rejectionRemarks').val());
@@ -511,7 +574,7 @@ function queryFavoriteGoods(p){
 	       	laytpl(gettpl).render(json.data.root, function(html){
 	       	    $('.wst-goods-page').html(html);
 	       	});
-	       	$('.lazyImg').lazyload({ effect: "fadeIn",failurelimit : 10,threshold: 200,placeholder:currDefaultImg});
+	       	$('.lazyImg').lazyload({ effect: "fadeIn",failurelimit : 10,threshold: 200,placeholder:WST.DEFAULT_IMG});
 	       	if(json.data.totalPage>1){
 	       		laypage({
 		        	 cont: 'wst-page-0', 
@@ -540,7 +603,7 @@ function addCart(goodsId,type,goodsThums){
 	params.gcount = parseInt($("#buy-num").val(),10);
 	params.rnd = Math.random();
 	params.goodsAttrId = $('#shopGoodsPrice_'+goodsId).attr('dataId');
-	$("#flyItem img").attr("src",domainURL  +"/"+ goodsThums)
+	$("#flyItem img").attr("src",WST.DOMAIN  +"/"+ goodsThums)
 	jQuery.post(Think.U('Home/Cart/addToCartAjax') ,params,function(data) {
 		if(type==1){
 			location.href= Think.U('Home/Cart/toCart');
@@ -578,7 +641,7 @@ function queryFavoriteShops(p){
 	       	laytpl(gettpl).render(json.data.root, function(html){
 	       	    $('.wst-shops-page').html(html);
 	       	});
-	       	$('.lazyImg').lazyload({ effect: "fadeIn",failurelimit : 10,threshold: 200,placeholder:currDefaultImg});
+	       	$('.lazyImg').lazyload({ effect: "fadeIn",failurelimit : 10,threshold: 200,placeholder:WST.DEFAULT_IMG});
 	       	if(json.data.totalPage>1){
 	       		laypage({
 		        	 cont: 'wst-page-1', 

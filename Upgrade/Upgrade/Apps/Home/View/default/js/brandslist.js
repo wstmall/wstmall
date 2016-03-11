@@ -27,7 +27,7 @@ function getBrands(){
 	            if(hasPage)currPage++;
 	    		html=html+'<div class="wst-clear"></div>';
 	       	    $('.wst-brands-box').append(html);
-	       	    $(".lazyBrandImg").lazyload({effect: "fadeIn",failurelimit : 1000,threshold: 200,placeholder:currDefaultImg});
+	       	    $(".lazyBrandImg").lazyload({effect: "fadeIn",failurelimit : 1000,threshold: 200,placeholder:WST.DEFAULT_IMG});
 	       	});
 		}else{
 			$('.wst-brands-box').append('<div style="line-height:300px;text-align:center;font-size:18px;">没有查找到相关品牌</div>');

@@ -10,16 +10,22 @@ namespace Home\Model;
  */
 class ShopsModel extends BaseModel {
      /**
-	  * 查询登录关键字
+	  * 查询店铺关键字
 	  */
-	 public function checkLoginKey($val,$id = 0){
-	 	$sql = " (loginName ='%s' or userPhone ='%s' or userEmail='%s') and userFlag=1 ";
-	 	$keyArr = array($val,$val,$val);
-	 	if($id>0)$sql.=" and userId!=".$id;
-	 	$m = M('users');
-	 	$rs = $m->where($sql,$keyArr)->count();
-	    if($rs==0)return 1;
-	    return 0;
+	 public function checkShopName($val,$id = 0){
+	 	$rd = array('status'=>-1);
+	    if(!WSTCheckFilterWords($val,$GLOBALS['CONFIG']['limitAccountKeys'])){
+	 		$rd['status'] = -2;
+	 		return $rd;
+	 	}
+	 	$sql = " shopName ='%s' and shopFlag=1 ";
+	 	$keyArr = array($val);
+	 	if($id>0)$sql.=" and shopId!=".$id;
+	 	$rs = $this->where($sql,$keyArr)->count();
+	    if($rs==0){
+	    	$rd['status'] = 1;
+	    }
+	    return $rd;
 	 }
    /**
     * 商家登录验证
@@ -94,18 +100,24 @@ class ShopsModel extends BaseModel {
 		     array('longitude','require','请标记店铺地址!',1),
 		     array('mapLevel','integer','请标记店铺地址!',1),
 		     array('isInvoice',array(0,1),'无效的开发票状态！',1,'in'),
-		     array('serviceStartTime','double','请选择店铺开始时间!'),
-		     array('serviceEndTime','double','请选择电批结束时间!',1)
+		     array('serviceStartTime','double','请选择店铺开始时间!',1),
+		     array('serviceEndTime','double','请选择店铺结束时间!',1)
 		);
+		$duser = D('Home/Users');
 	 	//检测账号是否存在
-	 	$hasLoginName = self::checkLoginKey(I("loginName"));
-	    if($hasLoginName==0){
-	 		$rd = array('status'=>-2,'msg'=>'该账号已存在!');
+	 	$hasLoginName = $duser->checkLoginKey(I("loginName"));
+	    if($hasLoginName['status']!=1){
+	 		$rd = array('status'=>-2,'msg'=>($hasLoginName['status']==-2)?"不能使用该账号":"该账号已存在");
 	 		return $rd;
 	 	}
-	 	$hasUserPhone = self::checkLoginKey(I("userPhone"));
-	 	if($hasUserPhone==0){
-	 		$rd = array('status'=>-7,'msg'=>'该手机号已存在!');;
+	 	$hasUserPhone = $duser->checkLoginKey(I("userPhone"),0,false);
+	 	if($hasUserPhone['status']!=1){
+	 		$rd = array('status'=>-7,'msg'=>"该手机号已存在");;
+	 		return $rd;
+	 	}
+	 	$hasShopName = $this->checkShopName(I('shopName'),0);
+	 	if($hasShopName['status']!=1){
+	 		$rd = array('status'=>-8,'msg'=>($hasShopName['status']==-2)?"不能使用该店铺名称":"该店铺名称已存在");;
 	 		return $rd;
 	 	}
 	 	$u = M('users');
@@ -151,8 +163,8 @@ class ShopsModel extends BaseModel {
 				 $m = M('shop_scores');
 				 $m->add($data);
 				 //建立店铺和社区的关系
-				 $relateArea = I('relateAreaId');
-				 $relateCommunity = I('relateCommunityId');
+				 $relateArea = self::formatIn(",", I('relateAreaId')) ;
+				 $relateCommunity = self::formatIn(",",I('relateCommunityId'));
 				 if($relateArea!=''){
 						$m = M('shops_communitys');
 						$relateAreas = explode(',',$relateArea);
@@ -232,8 +244,13 @@ class ShopsModel extends BaseModel {
 		     array('serviceStartTime','double','请选择店铺开始时间!'),
 		     array('serviceEndTime','double','请选择电批结束时间!',1)
 		);
-	 	$hasUserPhone = self::checkLoginKey(I("userPhone"),$userId);
-	 	if($hasUserPhone==0){
+	    $hasShopName = $this->checkShopName(I('shopName'),0);
+	 	if($hasShopName['status']!=1){
+	 		$rd = array('status'=>-8,'msg'=>($hasShopName['status']==-2)?"不能使用该店铺名称":"该店铺名称已存在");;
+	 		return $rd;
+	 	}
+	 	$hasUserPhone = D('Admin/Users')->checkLoginKey(I("userPhone"),$userId,false);
+	 	if($hasUserPhone['status']!=1){
 	 		$rd = array('status'=>-7,'msg'=>'该手机号已存在!');;
 	 		return $rd;
 	 	}
@@ -322,6 +339,15 @@ class ShopsModel extends BaseModel {
 	 	$m = M('shops');
 	 	//加载商店信息
 	 	$shops = $m->where('shopId='.$shopId)->find();
+	    $hasShopName = $this->checkShopName(I('shopName'),$shopId);
+	 	if($hasShopName['status']==0){
+	 		$rd = array('status'=>-8,'msg'=>'该店铺名称已存在!');;
+	 		return $rd;
+	 	}
+	    if(!WSTCheckFilterWords(I('shopName'),$GLOBALS['CONFIG']['limitAccountKeys'])){
+	 		$rd['msg'] = '不能使用该店铺名称';
+	 		return $rd;
+	 	}
 	    $data = array();
 		$data["shopName"] = I("shopName");
 		$data["shopCompany"] = I("shopCompany");
@@ -521,8 +547,8 @@ class ShopsModel extends BaseModel {
 	public function getDistrictsShops($obj){
 		$m = M('areas');
 		$areaId3 = (int)$obj["areaId3"];
-		$shopName = $obj["shopName"];
-		$keyWords = I("keyWords");
+		$shopName = WSTAddslashes($obj["shopName"]);
+		$keyWords = WSTAddslashes(I("keyWords"));
    		$deliveryStartMoney = $obj["deliveryStartMoney"];
    		if($deliveryStartMoney != -1){
    			$deliverys = explode("-",$deliveryStartMoney);
@@ -810,9 +836,13 @@ class ShopsModel extends BaseModel {
 	 */
 	public function getKeyList($areaId2){
 		$keywords = I("keywords");
-		$sql="select DISTINCT shopName as searchKey from __PREFIX__shops where areaId2=".$areaId2." and shopFlag=1 and shopStatus = 1 and shopName like '%$keywords%' Order by shopName asc limit 10";
-		$rs = $this->query($sql);
-		return $rs;
+		$data =array();
+		$data['shopStatus'] = 1;
+		$data['areaId2'] = $areaId2;
+		$data['shopFlag'] = 1;
+		$data['shopName'] = array('like','%'.$keywords.'%');
+		$rs = $this->where($data)->distinct(true)->field('shopName as searchKey')->limit(10)->select();
+		return $rs?$rs:array();
 	}
 	 
 }

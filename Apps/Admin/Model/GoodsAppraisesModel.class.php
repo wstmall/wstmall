@@ -45,8 +45,8 @@ class GoodsAppraisesModel extends BaseModel {
 	  * 分页列表
 	  */
      public function queryByPage(){
-     	$shopName = I('shopName');
-     	$goodsName = I('goodsName');
+     	$shopName = WSTAddslashes(I('shopName'));
+     	$goodsName = WSTAddslashes(I('goodsName'));
      	$areaId1 = (int)I('areaId1',0);
      	$areaId2 = (int)I('areaId2',0);
         $m = M('goods_appraises');

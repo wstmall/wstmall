@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>{$CONF['shopTitle']['fieldValue']}后台管理中心</title>
+      <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
+      <!--[if lt IE 9]>
+      <script src="__PUBLIC__/js/html5shiv.min.js"></script>
+      <script src="__PUBLIC__/js/respond.min.js"></script>
+      <![endif]-->
+      <script src="__PUBLIC__/js/jquery.min.js"></script>
+      <script src="__PUBLIC__/plugins/bootstrap/js/bootstrap.min.js"></script>
+      <script src="__PUBLIC__/js/common.js"></script>
+      <script src="__PUBLIC__/plugins/formValidator/formValidator-4.1.3.js"></script>
+      <script src="__PUBLIC__/plugins/plugins/plugins.js"></script>
+   </head>
+   <script>
+   function getAreaList(objId,parentId,t,id){
+	   var params = {};
+	   params.parentId = parentId;
+	   $('#'+objId).empty();
+	   if(t<1){
+		   $('#areaId3').empty();
+		   $('#areaId3').html('<option value="">请选择</option>');
+	   }
+	   var html = [];
+	   $.post("{:U('Admin/Areas/queryByList')}",params,function(data,textStatus){
+		    html.push('<option value="">请选择</option>');
+			var json = WST.toJson(data);
+			if(json.status=='1' && json.list.length>0){
+				var opts = null;
+				for(var i=0;i<json.list.length;i++){
+					opts = json.list[i];
+					html.push('<option value="'+opts.areaId+'" '+((id==opts.areaId)?'selected':'')+'>'+opts.areaName+'</option>');
+				}
+			}
+			$('#'+objId).html(html.join(''));
+	   });
+   }
+   $(function(){
+	   getAreaList("areaId2",'{$areaId1}',0,'{$areaId2}');
+	   getAreaList("areaId3",'{$areaId2}',1,'{$areaId3}');
+   });
+   function refund(url){
+	   Plugins.Modal({url:url,title:'订单退款',width:600});
+   }
+   </script>
+   <body class='wst-page'>
+     <form method='post' action="{:U('Admin/OrderComplains/index')}">
+       <div class='wst-tbar'>
+          地区：<select id='areaId1' name='areaId1' onchange='javascript:getAreaList("areaId2",this.value,0)'>
+             <option value=''>请选择</option>
+             <volist name="areaList" id="vo">
+             <option value='{$vo['areaId']}' <if condition="$areaId1 == $vo['areaId'] ">selected</if>>{$vo['areaName']}</option>
+             </volist>
+          </select>
+          <select id='areaId2' name='areaId2' onchange='javascript:getAreaList("areaId3",this.value,1);getCommunitys()'>
+             <option value=''>请选择</option>
+          </select>
+          <select id='areaId3' name='areaId3'>
+             <option value=''>请选择</option>
+          </select>
+       </div>
+       <div class='wst-tbar'> 
+       订单：<input type='text' id='orderNo' name='orderNo' value='{$orderNo}'/>
+       投诉处理状态 ：<select id='complainStatus' name='complainStatus'>
+             <option value='-1'>全部</option>
+             <option value='0' <if condition="$complainStatus ==0 ">selected</if>>未处理</option>
+             <option value='1' <if condition="$complainStatus ==1 ">selected</if>>等待应诉人回应</option>
+             <option value='2' <if condition="$complainStatus ==2 ">selected</if>>应诉人回应</option>
+             <option value='3' <if condition="$complainStatus ==3 ">selected</if>>等待仲裁</option>
+             <option value='4' <if condition="$complainStatus ==4 ">selected</if>> 已仲裁</option>
+         </select>
+       <button type="submit" class="btn btn-primary glyphicon glyphicon-search">查询</button> 
+       </div>
+       </form>
+       <div class="wst-body"> 
+        <table class="table table-hover table-striped table-bordered wst-list">
+           <thead>
+             <tr>
+                <th width='40'>序号</th>
+                <th>投诉人</th>
+                <th width='100'>投诉订单号</th>
+                <th>被投诉人</th>
+                <th width='150'>投诉类型</th>
+                <th width='150'>投诉时间</th>
+                <th width='120'>状态</th>
+                <th width='130'>操作</th>
+             </tr>
+           </thead>
+           <volist name="Page['root']" id="vo" key='key'>
+           <tbody>
+             <tr>
+               <td>{$key}</td>
+               <td>{$vo['userName']}</td>
+               <td>{$vo['orderNo']}</td>
+               <td>{$vo['shopName']}</td>
+               <td>
+               <if condition="$vo['complainType'] eq 1">
+                                          承诺的没有做到
+              <elseif condition="$vo['complainType'] eq 2"/>
+                                          未按约定时间发货
+              <elseif condition="$vo['complainType'] eq 3"/>
+                                          未按成交价格进行交易
+              <elseif condition="$vo['complainType'] eq 4"/>
+                                          恶意骚扰                           
+              </if>
+               </td>
+               <td>{$vo["complainTime"]}</td>
+               <td>
+               <if condition="$vo['complainStatus'] eq 0">
+                                          等待处理
+              <elseif condition="$vo['complainStatus'] eq 1"/>
+                                          等待应诉人回应
+              <elseif condition="$vo['complainStatus'] eq 2"/>
+                                          应诉人回应
+              <elseif condition="$vo['complainStatus'] eq 3"/>
+                                          等待仲裁
+              <elseif condition="$vo['complainStatus'] eq 4"/>
+                                           已仲裁                         
+              </if>
+               </td>
+               <td>
+               <a class="btn btn-primary glyphicon" href="{:U('Admin/OrderComplains/toView',array('id'=>$vo['complainId']))}">查看</a>
+               <if condition="$vo['complainStatus'] lt 4">
+               <php>if(in_array('ddts_04',$WST_STAFF['grant'])){</php>
+               <if condition="in_array($vo['complainStatus'],array(0,1,2,3))">
+               <a class="btn btn-primary glyphicon" href='{:U('Admin/OrderComplains/toHandle',array('id'=>$vo['complainId']))}'>处理</a>
+               </if>
+               <php>}</php>
+               </if>
+               </td>
+             </tr>
+             </volist>
+             <tr>
+                <td colspan='8' align='center'>{$Page['pager']}</td>
+             </tr>
+           </tbody>
+        </table>
+       </div>
+   </body>
+</html>

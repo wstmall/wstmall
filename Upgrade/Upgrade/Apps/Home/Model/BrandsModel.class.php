@@ -14,7 +14,7 @@ class BrandsModel extends BaseModel {
 	  */
 	public function queryBrandsByDistrict(){
 		$areaId3 = (int)I("areaId3");
-		$brandName = I("brandName");
+		$brandName = WSTAddslashes(I("brandName"));
 		$pcurr = (int)I("pcurr");
 		
 		$sql = "SELECT bs.brandId,bs.brandName,bs.brandIco FROM __PREFIX__brands bs,__PREFIX__shops sp,__PREFIX__goods g,__PREFIX__goods_cat_brands gcb
@@ -38,7 +38,7 @@ class BrandsModel extends BaseModel {
 	  	 $rs = array('status'=>1);
 	  	 $list = S("WST_BRANDS_002_".$catId);
 	  	 if(!$list){
-		     $sql = "select b.brandId,b.brandName from __PREFIX__goods_cat_brands cb,__PREFIX__brands b where cb.brandId=b.brandId and catId=".$catId;
+		     $sql = "select b.brandId,b.brandName from __PREFIX__goods_cat_brands cb,__PREFIX__brands b where cb.brandId=b.brandId and b.brandFlag=1 and catId=".$catId;
 		     $rs['list'] = $this->query($sql);
 		     S("WST_BRANDS_002_".$catId,$list,2592000);
 	  	 }

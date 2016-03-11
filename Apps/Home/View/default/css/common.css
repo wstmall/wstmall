@@ -1173,3 +1173,15 @@ b, strong {
 }
 .wst-list-loading{margin:0px auto;margin-top:5px;width:100px;}
 input[type=checkbox],input[type=radio] {margin-right:5px;}
+.wst-login-box{margin:12px 15px;}
+.wst-login-box .item{height: 42px;line-height: 26px;overflow: visible;position: relative;width: 320px;}
+.wst-login-box .item .label{color: #999999;display:inline-block;height:20px;width:55px;line-height:20px;margin-top:1px;text-align:right;}
+.wst-login-box .item label{color: #999999;display:inline-block;height:20px;line-height:20px;margin-top:1px;}
+.wst-login-box .item label a{color: #999999;}
+.wst-login-box .tips{color:red;position:absolute;top:0px;left:335px;width:100px;}
+.wst-login-box .item-ifo{position: relative;width: 380px;}
+.wst-login-box .text{ border: 1px solid #cccccc;float: none;font-family: arial,"宋体";font-size: 14px;height: 30px;line-height: 24px;padding: 4px 20px 4px 3px;width: 270px;}
+.wst-login-box .ico{position: absolute;right: 60px;height: 16px;top: 8px;width: 16px;}
+.wst-login-box .name{background: #fff url("../../../View/default/images/login-all-bg.png") no-repeat scroll -373px -111px;}
+.wst-login-box .pass{background: #fff url("../../../View/default/images/login-all-bg.png") no-repeat scroll -346px -108px;}
+.wst-login-box #loginsubmit{border:0 none;cursor:pointer;background: rgba(0, 0, 0, 0) url("../../../View/default/images/login-all-bg.png") no-repeat scroll 0 -61px;font-family: "微软雅黑";height: 34px;line-height: 100px;overflow: hidden;text-indent: -9999px;width: 307px;margin-left:60px;}
