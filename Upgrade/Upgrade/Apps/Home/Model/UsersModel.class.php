@@ -15,7 +15,7 @@ class UsersModel extends BaseModel {
 	  */
      public function get($userId=0){
 	 	$m = M('users');
-	 	$userId = $userId?$userId:(int)I('id',0);
+	 	$userId = intval($userId?$userId:I('id',0));
 		$user = $m->where("userId=".$userId)->find();
 		if(!empty($user) && $user['userType']==1){
 			//加载商家信息
@@ -51,7 +51,7 @@ class UsersModel extends BaseModel {
 	  * 查询登录名是否存在
 	  */
 	 public function checkLoginKey($loginName,$id = 0,$isCheckKeys = true){
-	 	$loginName = ($loginName!='')?$loginName:I('loginName');
+	 	$loginName = WSTAddslashes(($loginName!='')?$loginName:I('loginName'));
 	 	$rd = array('status'=>-1);
 	 	if($loginName=='')return $rd;
 	 	if($isCheckKeys){

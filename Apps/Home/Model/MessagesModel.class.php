@@ -48,7 +48,7 @@ class MessagesModel extends BaseModel {
 	}
 
 	public function batchDel(){
-		$ids = I('ids');
+		$ids = self::formatIn(",", I('ids'));
 		$re = array();
         $map = array('id'=>array('in',$ids),'receiveUserId'=>(int)session('WST_USER.userId'));
         $re['status'] = $this->where($map)->delete() === false ? -1 : 1 ;

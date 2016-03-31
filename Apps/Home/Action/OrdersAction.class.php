@@ -125,7 +125,7 @@ class OrdersAction extends BaseAction {
 		$USER = session('WST_USER');
 		$morders = D('Home/Orders');
 		$obj["userId"] = (int)$USER['userId'];
-		$obj["orderId"] = I("orderId");
+		$obj["orderId"] = (int)I("orderId");
 		$rs = $morders->getOrderDetails($obj);
 		$data["orderInfo"] = $rs;
 		$this->assign("orderInfo",$rs);
@@ -140,7 +140,7 @@ class OrdersAction extends BaseAction {
     	$USER = session('WST_USER');
     	$morders = D('Home/Orders');
     	$obj["userId"] = (int)$USER['userId'];
-    	$obj["orderId"] = I("orderId");
+    	$obj["orderId"] = (int)I("orderId");
 		$rs = $morders->orderCancel($obj);
 		$this->ajaxReturn($rs);
 	} 
@@ -153,7 +153,7 @@ class OrdersAction extends BaseAction {
     	$USER = session('WST_USER');
     	$morders = D('Home/Orders');
     	$obj["userId"] = (int)$USER['userId'];
-    	$obj["orderId"] = I("orderId");
+    	$obj["orderId"] = (int)I("orderId");
     	$obj["type"] = (int)I("type");
 		$rs = $morders->orderConfirm($obj);
 		$this->ajaxReturn($rs);
@@ -268,6 +268,7 @@ class OrdersAction extends BaseAction {
 	 */
 	public function submitOrder(){	
 		$this->isUserLogin();
+		session("WST_ORDER_UNIQUE",null);
 		$morders = D('Home/Orders');
 		$rs = $morders->submitOrder();
 		$this->ajaxReturn($rs);
@@ -289,7 +290,6 @@ class OrdersAction extends BaseAction {
 		$morders = D('Home/Orders');
 		$USER = session('WST_USER');
 		$obj["userId"] = (int)$USER['userId'];
-		$obj["orderIds"] = I("orderIds");
 		$rs = $morders->checkOrderPay($obj);
 		$this->ajaxReturn($rs);
 	}
@@ -304,7 +304,7 @@ class OrdersAction extends BaseAction {
 		$morders = D('Home/Orders');
 		$obj["userId"] = (int)$USER['userId'];
 		$obj["shopId"] = (int)$USER['shopId'];
-		$obj["orderId"] = I("orderId");
+		$obj["orderId"] = (int)I("orderId");
 		$rs = $morders->getOrderDetails($obj);
 		$data["orderInfo"] = $rs;
 		$this->assign("orderInfo",$rs);
@@ -345,7 +345,7 @@ class OrdersAction extends BaseAction {
     	$morders = D('Home/Orders');
     	$obj["userId"] = (int)$USER['userId'];
     	$obj["shopId"] = (int)$USER['shopId'];
-    	$obj["orderId"] = I("orderId");
+    	$obj["orderId"] = (int)I("orderId");
 		$rs = $morders->shopOrderAccept($obj);
 		$this->ajaxReturn($rs);
 	} 
@@ -367,7 +367,7 @@ class OrdersAction extends BaseAction {
     	$morders = D('Home/Orders');
     	$obj["userId"] = (int)$USER['userId'];
     	$obj["shopId"] = (int)$USER['shopId'];
-    	$obj["orderId"] = I("orderId");
+    	$obj["orderId"] = (int)I("orderId");
 		$rs = $morders->shopOrderProduce($obj);
 		$this->ajaxReturn($rs);
 	} 
@@ -386,7 +386,7 @@ class OrdersAction extends BaseAction {
     	$morders = D('Home/Orders');
     	$obj["userId"] = (int)$USER['userId'];
     	$obj["shopId"] = (int)$USER['shopId'];
-    	$obj["orderId"] = I("orderId");
+    	$obj["orderId"] = (int)I("orderId");
 		$rs = $morders->shopOrderDelivery($obj);
 		$this->ajaxReturn($rs);
 	} 
@@ -410,7 +410,7 @@ class OrdersAction extends BaseAction {
     	$morders = D('Home/Orders');
     	$obj["userId"] = (int)$USER['userId'];
     	$obj["shopId"] = (int)$USER['shopId'];
-    	$obj["orderId"] = I("orderId");
+    	$obj["orderId"] = (int)I("orderId");
 		$rs = $morders->shopOrderReceipt($obj);
 		$this->ajaxReturn($rs);
 	} 
@@ -424,7 +424,7 @@ class OrdersAction extends BaseAction {
     	$morders = D('Home/Orders');
     	$obj["userId"] = (int)$USER['userId'];
     	$obj["shopId"] = (int)$USER['shopId'];
-    	$obj["orderId"] = I("orderId");
+    	$obj["orderId"] = (int)I("orderId");
 		$rs = $morders->shopOrderRefund($obj);
 		$this->ajaxReturn($rs);
 	}

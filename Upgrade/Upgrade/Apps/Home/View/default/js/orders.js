@@ -316,16 +316,16 @@ function submitOrder(){
 				WST.msg("您选的商品不在配送区域内！", {icon: 5});
 				return ;
 			}
-			params.orderunique = new Date().getTime();
+			//params.orderunique = new Date().getTime();
 			
 			var ll = layer.msg('提交订单，请稍候...', {icon: 16,shade: [0.5, '#B3B3B3']});
 			jQuery.post(Think.U('Home/Orders/submitOrder') ,params,function(data) {
 				 var json = WST.toJson(data);	
 				 if(json.status==1){
 					 if(params.payway==1){
-						 location.href=Think.U('Home/Payments/toPay','orderIds='+json.orderIds);
+						 location.href=Think.U('Home/Payments/toPay');
 					 }else{
-						 location.href=Think.U('Home/Orders/orderSuccess','orderIds='+json.orderIds+"&orderunique="+params.orderunique);
+						 location.href=Think.U('Home/Orders/orderSuccess');
 					 }
 				 }else{
 					 WST.msg(json.msg, {icon: 5});
@@ -352,7 +352,7 @@ function getOrderInfo(orderId){
 function getPayUrl(){
 	
 	var params = {};
-	params.orderIds = $.trim($("#orderIds").val());
+	params.orderId = $.trim($("#orderId").val());
 	params.payCode = $.trim($("#payCode").val());
 	params.needPay = $.trim($("#needPay").val());
 	if(params.payCode==""){
@@ -362,7 +362,7 @@ function getPayUrl(){
 	jQuery.post(Think.U('Home/Payments/get'+params.payCode+"URL") ,params,function(data) {
 		var json = WST.toJson(data);
 		if(json.status==1){
-			if(params.payCode=="Weixin"){
+			if(params.payCode=="weixin"){
 				location.href = json.url;
 			}else{
 				window.open(json.url);

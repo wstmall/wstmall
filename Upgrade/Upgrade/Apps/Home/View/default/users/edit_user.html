@@ -96,7 +96,7 @@ $(function () {
                 <div>
 		           <img id='userPhotoPreview' src='<if condition="$user['userPhoto'] =='' ">__ROOT__/{$CONF['goodsImg']}<else/>__ROOT__/{$user['userPhoto']}</if>' height='100'/><br/>
 	            </div>
-	            <input type='hidden' id='userPhoto' class='wstipt' value='{$object.userPhoto}'/>
+	            <input type='hidden' id='userPhoto' class='wstipt' value='{$user["userPhoto"]}'/>
              	<div id="userPhotoPicker" style='margin-left:0px;margin-top:5px;height:30px;overflow:hidden'>上传用户头像</div>
              	<div>图片大小:150 x 150 (px)，格式为 gif, jpg, jpeg, png</div>
              </td>
@@ -128,7 +128,7 @@ $(function () {
              </td>
            </tr>
            <tr>
-             <td colspan='2' style='padding-left:250px;height:100px;'>
+             <td colspan='3' style='padding-left:250px;height:100px;'>
                  <button class='wst-btn-query' type="submit">保&nbsp;存</button>
                  <button class='wst-btn-query' type="reset">重&nbsp;置</button>
              </td>

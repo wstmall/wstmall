@@ -14,7 +14,16 @@ $.fn.TabPanel = function(options){
 }
 
 $(function() {
-	
+	//搜索
+    $("#btnsch").click(function () {
+    	var searchType = $("#wst-search-type").val();
+    	if(searchType==2){
+    		window.location = Think.U('Home/Shops/toShopStreet','searchType='+searchType+"&keyWords="+$.trim($("#keyword").val()));
+    	}else{
+    		window.location = Think.U('Home/goods/getGoodsList','searchType='+searchType+"&keyWords="+$.trim($("#keyword").val()));;
+    	}
+        
+    });
 	//head 弹出菜单部分
     var cateMenu2 = function () {
         var cateLiNum = $(".cateMenu2 li").length;
@@ -376,7 +385,7 @@ function uploadFile(opts){
 	var uploader = WebUploader.create(_opts);
 	uploader.on('uploadSuccess', function( file,response ) {
 	    var json = WST.toJson(response._raw);
-	    if(_opts.callback)_opts.callback(json);
+	    if(_opts.callback)_opts.callback(json,file);
 	});
 	uploader.on('uploadError', function( file ) {
 		WST.msg('上传失败!', {icon: 5});
@@ -384,6 +393,7 @@ function uploadFile(opts){
 	uploader.on( 'uploadProgress', function( file, percentage ) {
 		if(_opts.progress)_opts.progress(percentage);
 	});
+	return uploader;
 }
 function loginWin(){
 	var loading = layer.load(0, {shade: false,offset:'250px'});

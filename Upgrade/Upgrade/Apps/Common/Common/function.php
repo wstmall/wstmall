@@ -385,8 +385,16 @@ function WSTMSubstr($str, $start = 0, $length, $charset = "utf-8", $suffix = tru
 	}
 	return (strlen($str)>strlen($newStr))?$newStr."...":$newStr;
 }
-
-
+/**
+ * 获取当前毫秒数
+ */
+function WSTGetMillisecond(){
+	$time = explode (" ", microtime () );
+	$time = $time [1] . ($time [0] * 1000);
+	$time2 = explode ( ".", $time );
+	$time = $time2 [0];
+	return $time;
+}
 
 /**
  * 格式化查询语句中传入的in 参与，防止sql注入

@@ -67,13 +67,13 @@ class ShopsCatsModel extends BaseModel {
 	  */
 	 public function editName(){
 	 	$rd = array('status'=>-1);
-	 	$id = I("id",0);
+	 	$id = (int)I("id",0);
 		$data = array();
 		$data["catName"] = I("catName");
 		$shopId = (int)session('WST_USER.shopId');
 		if($this->checkEmpty($data,true)){	
 			$m = M('shops_cats');
-			$rs = $m->where("catId=".I('id')." and shopId=".$shopId)->save($data);
+			$rs = $m->where("catId=".$id." and shopId=".$shopId)->save($data);
 			if(false !== $rs){
 				$rd['status']= 1;
 				S("WST_CACHE_SHOP_CAT_".session('WST_USER.shopId'),null);
@@ -86,12 +86,12 @@ class ShopsCatsModel extends BaseModel {
 	  */
 	 public function editSort(){
 	 	$rd = array('status'=>-1);
-	 	$id = I("id",0);
+	 	$id = (int)I("id",0);
 		$data = array();
 		$data["catSort"] = (int)I("catSort");
 		$shopId = (int)session('WST_USER.shopId');
 		$m = M('shops_cats');
-		$rs = $m->where("catId=".I('id')." and shopId=".$shopId)->save($data);
+		$rs = $m->where("catId=".$id." and shopId=".$shopId)->save($data);
 		if(false !== $rs){
 			$rd['status']= 1;
 			S("WST_CACHE_SHOP_CAT_".session('WST_USER.shopId'),null);
@@ -164,7 +164,7 @@ class ShopsCatsModel extends BaseModel {
 		//删除商品分类
 		$data = array();
 		$data["catFlag"] = -1;
-	 	$rs = $m->where("(catId=".I('id')." or parentId=".I('id').") and shopId=".$shopId)->save($data);
+	 	$rs = $m->where("(catId=".$id." or parentId=".$id.") and shopId=".$shopId)->save($data);
 	    if(false !== $rs){
 			$rd['status']= 1;
 			S("WST_CACHE_SHOP_CAT_".session('WST_USER.shopId'),null);
@@ -216,8 +216,8 @@ class ShopsCatsModel extends BaseModel {
 		$shopId = (int)session('WST_USER.shopId');
 		if($this->checkEmpty($data,true)){
 			$m = M('shops_cats');
-			$m->where("catId=".I('id')." and shopId=".$shopId)->save($data);
-			$m->where("parentId=".I('id')." and shopId=".$shopId)->save($data);
+			$m->where("catId=".$id." and shopId=".$shopId)->save($data);
+			$m->where("parentId=".$id." and shopId=".$shopId)->save($data);
 			if($parentId>0 && $isShow==1){
 				$m->where("catId=".$parentId." and shopId=".$shopId)->save($data);
 			}

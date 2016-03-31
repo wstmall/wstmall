@@ -40,7 +40,7 @@ class BrandsAction extends BaseAction{
     public function getBrands(){
 		$m = D('Home/Brands');
 		$brandslist = $m->queryBrandsByDistrict();
-		cookie("bstreesAreaId3",I("areaId3"));
+		cookie("bstreesAreaId3",(int)I("areaId3"));
 		$this->ajaxReturn($brandslist);
 	}
 	

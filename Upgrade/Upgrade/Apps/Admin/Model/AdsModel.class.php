@@ -71,7 +71,7 @@ class AdsModel extends BaseModel {
      public function queryByPage(){
      	$adPositionId = (int)I('adPositionId');
      	$adDateRange = I('adDateRange');
-     	$adName = I('adName');
+     	$adName = WSTAddslashes(I('adName'));
         $m = M('ads');
 	 	$sql = "select a.*,a1.areaName areaName1,a2.areaName areaName2
 	 	        from __PREFIX__ads a left join __PREFIX__areas a1 on a.areaId1=a1.areaId 

@@ -59,7 +59,7 @@ class GoodsAppraisesModel extends BaseModel {
 	 public function delAppraise(){
 	 	$rd = array('status'=>-1);
 	 	$m = M('goods_appraises');
-		$rs = $m->delete(I('id'));
+		$rs = $m->delete((int)I('id'));
 		if($rs){
 		   $rd['status']= 1;
 		}

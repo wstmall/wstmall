@@ -86,10 +86,10 @@ class ShopsAction extends BaseAction {
 	public function getDistrictsShops(){
    		$mshops = D('Home/Shops');
    		$obj["areaId3"] = (int)I("areaId3");
-   		$obj["shopName"] = I("shopName");
-   		$obj["deliveryStartMoney"] = I("deliveryStartMoney");
-   		$obj["deliveryMoney"] = I("deliveryMoney");
-   		$obj["shopAtive"] = I("shopAtive");
+   		$obj["shopName"] = WSTAddslashes(I("shopName"));
+   		$obj["deliveryStartMoney"] = (float)I("deliveryStartMoney");
+   		$obj["deliveryMoney"] = (float)I("deliveryMoney");
+   		$obj["shopAtive"] = (int)I("shopAtive");
    		cookie("bstreesAreaId3",$obj["areaId3"]);
    		
    		$dsplist = $mshops->getDistrictsShops($obj);
@@ -104,9 +104,9 @@ class ShopsAction extends BaseAction {
    		$mshops = D('Home/Shops');
    		$obj["communityId"] = (int)I("communityId");
    		$obj["areaId3"] = (int)I("areaId3");
-   		$obj["shopName"] = I("shopName");
-   		$obj["deliveryStartMoney"] = I("deliveryStartMoney");
-   		$obj["deliveryMoney"] = I("deliveryMoney");
+   		$obj["shopName"] = WSTAddslashes(I("shopName"));
+   		$obj["deliveryStartMoney"] = (float)I("deliveryStartMoney");
+   		$obj["deliveryMoney"] = (float)I("deliveryMoney");
    		$obj["shopAtive"] = (int)I("shopAtive",-1);
    		$ctplist = $mshops->getShopByCommunitys($obj);
    		$pages = $rslist["pages"];

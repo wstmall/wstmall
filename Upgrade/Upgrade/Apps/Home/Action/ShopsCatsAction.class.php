@@ -58,7 +58,7 @@ class ShopsCatsAction extends BaseAction{
 		$this->isShopLogin();
 		$USER = session('WST_USER');
 		$m = D('Home/ShopsCats');
-      	$List = $m->getCatAndChild($USER['shopId'],I('parentId',0));
+      	$List = $m->getCatAndChild($USER['shopId'],(int)I('parentId',0));
     	$this->assign('List',$List);
     	$this->assign("umark","index");
         $this->display("default/shops/shopscats/list");
@@ -69,7 +69,7 @@ class ShopsCatsAction extends BaseAction{
     public function queryByList(){
 		$m = D('Home/ShopsCats');
 		$USER = session('WST_USER');
-		$list = $m->queryByList($USER['shopId'],I('id',0));
+		$list = $m->queryByList($USER['shopId'],(int)I('id',0));
 		$rs = array();
 		$rs['status'] = 1;
 		$rs['list'] = $list;

@@ -71,7 +71,7 @@ class UserAddressModel extends BaseModel {
 		}
 		$data["areaId2"] = (int)I("areaId2");
 		$data["areaId3"] = (int)I("areaId3");
-		$data["communityId"] = I("communityId");
+		$data["communityId"] = (int)I("communityId");
 		$data["address"] = I("address");
 		
 		if($this->checkEmpty($data,true)){	
@@ -82,7 +82,7 @@ class UserAddressModel extends BaseModel {
 			$rs = $m->where("userId=".(int)session('WST_USER.userId')." and addressId=".$id)->save($data);
 			if(false !== $rs){
 				$rd['status']= 1;
-				if(I("isDefault")==1){
+				if((int)I("isDefault")==1){
 					//修改所有的地址为非默认
 					$m->isDefault = 0;
 					$m->where('userId='.(int)session('WST_USER.userId')." and addressId!=".$id)->save();
@@ -267,7 +267,7 @@ class UserAddressModel extends BaseModel {
 	 */
 	public function getAddressDetails($addressId){
 		$m = M('user_address');
-		$addressId = $addressId?$addressId:I("addressId");
+		$addressId = $addressId?$addressId:(int)I("addressId");
 		$sql ="SELECT * FROM __PREFIX__user_address WHERE addressId=$addressId AND addressFlag=1 and userId=".(int)session('WST_USER.userId');
 		$address = $this->queryRow($sql);
 		if(empty($address))return array();

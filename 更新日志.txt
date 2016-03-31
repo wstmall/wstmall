@@ -1,9 +1,16 @@
 本次修订版主要解决以下问题：
-1.修复投诉订单问题。
-2.用户订单列表点击店铺名称跳转去自营店的bug。
-3.店铺首页横栏限制只能展示7个商品分类，避免错位。
-4.商品有属性却没有价格属性的时候，在购物车中加减商品出错的bug。
-5.修复微信支付支付完成后按返回键提示错误的bug。
+1.修复部分模块sql注入的bug。
+2.修复多个订单合并支付时订单号过长导致支付出错的bug。
+3.用户支付时记录支付来源。
+4.修复下单界面进行商品搜索，提示栏无法关闭的bug。
+5.修复二次保存用户资料时用户头像丢失的bug。
+6.修复游客注册开店时密码错误的bug。
+7.修复取消商品属性之后，在商品列表不能双击修改商品数量的bug。
+8.修改管理后台广告图片大小提示。
+
+*若已安装的用户请参照以下步骤：
+1.将wstmall/Upgrade/Upgrade里面的程序拷贝到网站WSTMall根目录下覆盖。
+2.执行wstmall/Upgrade/1.4.7.sql进行数据库升级。
 
 WSTMall在成长的脚步上离不开大家的热心支持，大家有什么意见或者建议可通过以下渠道反馈给我们：
 WSTMall用户交流群：50056937
@@ -12,3 +19,5 @@ WSTMall客服电话：020-85289921
 WSTMall邮箱 wstmall@qq.com
 WSTMall官网：http://www.wstmall.com
 百度贴吧：http://tieba.baidu.com/wstmall
+Github：https://github.com/wstmall/wstmall.git
+Oscgit：https://git.oschina.net/wstmall/wstmall.git

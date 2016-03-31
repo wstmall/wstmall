@@ -349,12 +349,10 @@ function getAttrList(catId){
 	$('#attrContainer').hide();
 	$('#priceConent').empty();
 	$('#attrConent').empty();
-	if(catId==0){
-		$('.hiddenPriceAttr').attr('dataId',0);
-		$('.hiddenPriceAttr').attr('dataNo',0);
-		$('.hiddenPriceAttr').val('');
-		$('#goodsStock').attr('disabled',false);
-	}
+	$('.hiddenPriceAttr').attr('dataId',0);
+	$('.hiddenPriceAttr').attr('dataNo',0);
+	$('.hiddenPriceAttr').val('');
+	$('#goodsStock').attr('disabled',false);
 	$.post(Think.U('Home/Attributes/getAttributes'),{catId:catId},function(data,textStatus){
 		 var json = WST.toJson(data);
 		 var priceAttr = null;

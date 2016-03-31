@@ -643,7 +643,7 @@ class ShopsModel extends BaseModel {
 		
 		$communityId = (int)$obj["communityId"];
 		$shopName = $obj["shopName"];
-		$keyWords = I("keyWords");
+		$keyWords = WSTAddslashes(urldecode(I("keyWords")));
 		$pcurr = (int)I("curr");
 		$deliveryStartMoney = $obj["deliveryStartMoney"];
 		if($deliveryStartMoney != -1){
@@ -663,7 +663,6 @@ class ShopsModel extends BaseModel {
 		$words1 = array();
 		$words2 = array();
 		if($keyWords!=""){
-			$keyWords = urldecode($keyWords);
 			$words1 = explode(" ",$keyWords);
 		}
 		 

@@ -20,7 +20,7 @@ class WxPayAction extends BaseAction {
 
 		$this->wxpayConfig = C ( 'WxPayConf' );
 		$m = D ( 'Home/Payments' );
-		$this->wxpay = $m->getPayment ( "Weixin" );
+		$this->wxpay = $m->getPayment ( "weixin" );
 		$this->wxpayConfig ['appid'] = $this->wxpay ['appId']; // 微信公众号身份的唯一标识
 		$this->wxpayConfig ['appsecret'] = $this->wxpay ['appsecret']; // JSAPI接口中获取openid
 		$this->wxpayConfig ['mchid'] = $this->wxpay ['mchId']; // 受理商ID
@@ -35,12 +35,14 @@ class WxPayAction extends BaseAction {
 		$pkey = base64_decode ( I ( "pkey" ) );
 		$pkeys = explode ( "@", $pkey );
 		$pflag = true;
-		if (count ( $pkeys ) != 2) {
+		if (count ( $pkeys ) != 3) {
 			$this->assign ( 'out_trade_no', "" );
 		} else {
 			$morders = D ( 'Home/Orders' );
-			$obj ["orderIds"] = $pkeys [1];
+			$obj ["uniqueId"] = $pkeys [1];
+			$obj ["orderType"] = $pkeys [2];
 			$data = $morders->getPayOrders ( $obj );
+			
 			$orders = $data ["orders"];
 			$needPay = $data ["needPay"];
 			if($needPay>0){
@@ -75,11 +77,10 @@ class WxPayAction extends BaseAction {
 					echo "错误代码描述：" . $wxQrcodePayResult ['err_code_des'] . "<br>";
 				} elseif ($wxQrcodePayResult ["code_url"] != NULL) {
 					// 从统一支付接口获取到code_url
-					
 					$code_url = $wxQrcodePayResult ["code_url"];
 					// 商户自行增加处理流程
 				}
-				$this->assign ( 'out_trade_no', $obj ["orderIds"] );
+				$this->assign ( 'out_trade_no', $obj ["uniqueId"] );
 				$this->assign ( 'code_url', $code_url );
 				$this->assign ( 'wxQrcodePayResult', $wxQrcodePayResult );
 			}else{
@@ -117,20 +118,22 @@ class WxPayAction extends BaseAction {
 			} else {
 				// 此处应该更新一下订单状态，商户自行增删操作
 				$order = $wxQrcodePay->getData ();
-				// $out_trade_no = $order["out_trade_no"];
 				$trade_no = $order["transaction_id"];
 				$total_fee = $order ["total_fee"];
 				$pkey = $order ["attach"] ;
 				$pkeys = explode ( "@", $pkey );
 				$userId = $pkeys [0];
 				$out_trade_no = $pkeys [1];
+				$orderType = $pkeys [2];
 				$pm = D ( 'Home/Payments' );
 				// 商户订单号
 				$obj = array ();
 				$obj ["trade_no"] = $trade_no;
 				$obj ["out_trade_no"] = $out_trade_no;
+				$obj ["order_type"] = $orderType;
 				$obj ["total_fee"] = $total_fee;
 				$obj ["userId"] = $userId;
+				$obj["payFrom"] = 2;
 				// 支付成功业务逻辑
 				$payments = $pm->complatePay ( $obj );
 				S ("$out_trade_no",$total_fee);

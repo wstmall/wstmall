@@ -140,7 +140,6 @@ class GoodsAction extends BaseAction {
 			$this->assign("shopCommunitys",json_encode($shopCommunitys));
 			
 			$this->assign("goodsImgs",$goods->getGoodsImgs());
-			$this->assign("hotgoods",$goods->getHotGoods($goodsDetails['shopId']));
 			$this->assign("relatedGoods",$goods->getRelatedGoods($goodsId));
 			$this->assign("goodsNav",$goods->getGoodsNav());
 			$this->assign("goodsAttrs",$goods->getAttrs($obj));

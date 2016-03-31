@@ -35,7 +35,7 @@ class AttributesModel extends BaseModel {
 	 			$data['attrName'] = $attrName;
 	 			$data['isPriceAttr'] = (int)I('isPriceAttr_'.$i);
 	 			$data['attrType'] = (int)I('attrType_'.$i);
-	 			if($data['attrType']==1 || $data['attrType']==2)$data['attrContent'] = trim(I('attrContent_'.$i));
+	 			if($data['attrType']==1 || $data['attrType']==2)$data['attrContent'] = str_replace('，',',',I('attrContent_'.$i));
 	 			$data['attrSort'] = (int)I('attrSort_'.$i);
 	 			$m->where('shopId='.$shopId.' and catId='.$catId.' and attrId='.$id)->save($data);
 	 			if($data['isPriceAttr']==1)$newPriceAttrId = $id;
@@ -43,7 +43,7 @@ class AttributesModel extends BaseModel {
 	 			$data['attrName'] = $attrName;
 	 			$data['isPriceAttr'] = (int)I('isPriceAttr_'.$i);
 	 			$data['attrType'] = (int)I('attrType_'.$i);
-	 			if($data['attrType']==1 || $data['attrType']==2)$data['attrContent'] = trim(I('attrContent_'.$i));
+	 			if($data['attrType']==1 || $data['attrType']==2)$data['attrContent'] = str_replace('，',',',I('attrContent_'.$i));
 	 			$data['attrSort'] = (int)I('attrSort_'.$i);
 	 			$data['attrFlag'] = 1;
 			    $data['createTime'] = date('Y-m-d H:i:s');
@@ -68,7 +68,7 @@ class AttributesModel extends BaseModel {
      public function get(){
      	$shopId = (int)session('WST_USER.shopId');
      	$m = M('attributes');
-		return $m->where("shopId=".$shopId." and attrId=".I('id'))->find();
+		return $m->where("shopId=".$shopId." and attrId=".(int)I('id'))->find();
 	 }
 	 /**
 	  * 分页列表

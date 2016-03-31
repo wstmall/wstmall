@@ -88,6 +88,8 @@ class WxPayBase {
 	 */
 	public function xmlToArray($xml) {
 		// 将XML转为array
+		libxml_disable_entity_loader(true);
+		libxml_use_internal_errors();
 		$array_data = json_decode ( json_encode ( simplexml_load_string ( $xml, 'SimpleXMLElement', LIBXML_NOCDATA ) ), true );
 		return $array_data;
 	}

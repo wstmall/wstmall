@@ -6,13 +6,15 @@
 <script>
    var uploading = null;
    $(function(){
-      uploadFile({
+	   var uploader = uploadFile({
     	  server:"{:U('Home/Goods/importGoods')}",pick:'#filePicker',
     	  formData: {dir:'temp'},
-    	  callback:function(f){
+    	  callback:function(f,file){
     		  layer.close(uploading);
     		  var json = WST.toJson(f);
     		  if(json.status==1){
+    			  uploader.removeFile(file);
+    			  uploader.refresh();
     		      WST.msg('导入数据成功!已导入数据'+json.importNum+"条", {icon: 1});
     		  }else{
     			  WST.msg('导入数据失败,出错原因：'+json.msg, {icon: 5});

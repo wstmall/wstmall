@@ -15,6 +15,7 @@ CREATE TABLE `wst_orders` (
   `totalMoney` decimal(11,2) NOT NULL DEFAULT '0.00',
   `deliverMoney` decimal(11,2) NOT NULL DEFAULT '0.00',
   `payType` tinyint(4) NOT NULL DEFAULT '0',
+  `payFrom` int(11) NOT NULL DEFAULT '0',
   `isSelf` tinyint(4) NOT NULL DEFAULT '0',
   `isPay` tinyint(4) NOT NULL DEFAULT '0',
   `deliverType` tinyint(4) NOT NULL DEFAULT '0',
@@ -49,4 +50,4 @@ CREATE TABLE `wst_orders` (
 -- ----------------------------
 -- Records of wst_orders
 -- ----------------------------
-INSERT INTO `wst_orders` VALUES ('4', '1000000013', '440000', '440100', '440106', '4', '4', '72.00', '0.00', '0', '0', '0', '1', '9', '马生', '17', '广州市 天河区 华南理工大学社区 桑德菲杰卡拉斯的减肥', '1591867199', null, '', '72', '0', '', '
+INSERT INTO `wst_orders` VALUES ('4', '1000000013', '440000', '440100', '440106', '4', '4', '72.00', '0.00', '0', '0', '0', '0', '1', '9', '马生', '17', '广州市 天河区 华南理工大学社区 桑德菲杰卡拉斯的减肥', '1591867199', null, '', '72', '0', '', '

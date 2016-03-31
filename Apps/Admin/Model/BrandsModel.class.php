@@ -15,7 +15,7 @@ class BrandsModel extends BaseModel {
 	 public function insert(){
 	 	$rd = array('status'=>-1);
 	 	$id = (int)I("id",0);
-	    $idsStr = I("catIds");
+	    $idsStr = WSTFormatIn(",", I("catIds"));
 	 	$ids = array();
 	 	if($idsStr!=''){
 	 		$idsStr = explode(',',$idsStr);
@@ -51,7 +51,7 @@ class BrandsModel extends BaseModel {
 	 public function edit(){
 	 	$rd = array('status'=>-1);
 	 	$id = (int)I("id",0);
-	    $idsStr = I("catIds");
+	    $idsStr = WSTFormatIn(",", I("catIds"));
 	 	$ids = array();
 	 	if($idsStr!=''){
 	 		$idsStr = explode(',',$idsStr);
@@ -116,7 +116,7 @@ class BrandsModel extends BaseModel {
 	  */
      public function queryByPage(){
         $m = M('brands');
-        $brandName = I("brandName");
+        $brandName = WSTAddslashes(I("brandName"));
         $catId = (int)I("catId");
 	 	$sql = "select b.* from __PREFIX__brands b";
 	 	if($catId>0){
@@ -127,7 +127,7 @@ class BrandsModel extends BaseModel {
 	 		$sql .= " and b.brandId = cb.brandId and cb.catId = $catId";
 	 	}
 	 	if($brandName!=""){
-	 		$sql .= " and brandName like '%".WSTAddslashes($brandName)."%'";
+	 		$sql .= " and brandName like '%".$brandName."%'";
 	 	}
 	 	$sql .= " order by b.brandId desc";
 		return $m->pageQuery($sql);

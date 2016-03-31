@@ -78,7 +78,7 @@ class OrderComplainsModel extends BaseModel {
 	 	$id = (int)I('id');
 	 	if($id==0)return $rd;
 	 	//判断是否已经处理过了
-	 	$sql = "select oc.complainStatus,p.userId shopUserId,o.userId,o.orderNo,o.orderId 
+	 	$sql = "select oc.complainStatus,p.userId shopUserId,o.userId,o.orderNo,o.orderId,oc.needRespond 
 	 	        from __PREFIX__order_complains oc,__PREFIX__orders o left join __PREFIX__shops p on o.shopId=p.shopId
 	 	        where oc.orderId=o.orderId and complainId=".$id;
 	 	$rs = $this->queryRow($sql);
@@ -92,17 +92,19 @@ class OrderComplainsModel extends BaseModel {
 	 	    if($ers!==false){
 	 	    	$rd['status'] = 1;
 	 	    	$rd['msg'] = '操作成功!';
-		 	    //发站内商家信息提醒
-		 	    $messsage = array(
-						'msgType' => 0,
-						'sendUserId' => session('WST_STAFF.staffId'),
-						'receiveUserId' => $rs['shopUserId'],
-						'msgContent' => "您的被投诉订单【".$rs['orderNo']."】已仲裁，请查看订单投诉详情。",
-						'createTime' => date('Y-m-d H:i:s'),
-						'msgStatus' => 0,
-						'msgFlag' => 1,
-				);
-				M('messages')->add($messsage);
+	 	    	if($rs['needRespond']==1){
+			 	    //发站内商家信息提醒
+			 	    $messsage = array(
+							'msgType' => 0,
+							'sendUserId' => session('WST_STAFF.staffId'),
+							'receiveUserId' => $rs['shopUserId'],
+							'msgContent' => "您的被投诉订单【".$rs['orderNo']."】已仲裁，请查看订单投诉详情。",
+							'createTime' => date('Y-m-d H:i:s'),
+							'msgStatus' => 0,
+							'msgFlag' => 1,
+					);
+					M('messages')->add($messsage);
+	 	    	}
 				//发站内用户信息提醒
 		 	    $messsage = array(
 						'msgType' => 0,

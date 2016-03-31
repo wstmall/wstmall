@@ -229,7 +229,7 @@ class UsersModel extends BaseModel {
 	 	if(I('id',0)==0)return $rd;
 	 	$m = M('users');
 	 	$m->userStatus = (I('userStatus')==1)?1:0;
-	 	$rs = $m->where("userId=".I('id',0))->save();
+	 	$rs = $m->where("userId=".(int)I('id',0))->save();
 	    if(false !== $rs){
 			$rd['status']= 1;
 		}
@@ -240,7 +240,7 @@ class UsersModel extends BaseModel {
 	  */
 	 public function getAccountById(){
 	 	 $m = M('users');
-		 $rs = $m->where('userId='.I('id',0))->getField('userId,loginName,userStatus,userType',1);
+		 $rs = $m->where('userId='.(int)I('id',0))->getField('userId,loginName,userStatus,userType',1);
 		 return current($rs);
 	 }
 	 /**
@@ -250,7 +250,7 @@ class UsersModel extends BaseModel {
 	 	$rd = array('status'=>-1);
 	 	if(I('id')=='')return $rd;
 	 	$m = M('users');
-	 	$loginSecret = $m->where("userId=".I('id'))->getField('loginSecret');
+	 	$loginSecret = $m->where("userId=".(int)I('id'))->getField('loginSecret');
 	 	if(I('loginPwd')!='')$m->loginPwd = md5(I('loginPwd').$loginSecret);
 	 	$m->userStatus = I('userStatus',0);
 	 	$rs = $m->where('userId='.(int)I('id'))->save();

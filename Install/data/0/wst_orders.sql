@@ -30,6 +30,7 @@ CREATE TABLE `wst_orders` (
   `totalMoney` decimal(11,2) NOT NULL DEFAULT '0.00',
   `deliverMoney` decimal(11,2) NOT NULL DEFAULT '0.00',
   `payType` tinyint(4) NOT NULL DEFAULT '0',
+  `payFrom` int(11) NOT NULL DEFAULT '0',
   `isSelf` tinyint(4) NOT NULL DEFAULT '0',
   `isPay` tinyint(4) NOT NULL DEFAULT '0',
   `deliverType` tinyint(4) NOT NULL DEFAULT '0',

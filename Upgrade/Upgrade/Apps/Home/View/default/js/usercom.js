@@ -205,11 +205,11 @@ function editUser(){
 function toPay(id){
 	
 	var params = {};
-	params.orderIds = id;
+	params.orderId = id;
 	jQuery.post(Think.U('Home/Orders/checkOrderPay') ,params,function(data) {
 		var json = WST.toJson(data);
 		if(json.status==1){
-			location.href=Think.U('Home/Payments/toPay','orderIds='+params.orderIds);
+			location.href=Think.U('Home/Payments/toPay','orderId='+params.orderId);
 		}else if(json.status==-2){
 			var rlist = json.rlist;
 			var garr = new Array();

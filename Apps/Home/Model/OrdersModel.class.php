@@ -78,17 +78,42 @@ class OrdersModel extends BaseModel {
 	 * 获取订单商品详情
 	 */
 	public function getPayOrders($obj){
-			
-		$orderIds = self::formatIn(",", $obj["orderIds"]) ;
-		$sql = "SELECT o.orderId, o.orderNo, g.goodsId, g.goodsName ,og.goodsAttrName , og.goodsNums ,og.goodsPrice 
+		$orderType = (int)$obj["orderType"];
+		$orderId = 0;
+		$orderunique = 0;
+		if($orderType>0){//来在线支付接口
+			$uniqueId = $obj["uniqueId"];
+			if($orderType==1){
+				$orderId = (int)$uniqueId;
+			}else{
+				$orderunique = WSTAddslashes($uniqueId);
+			}
+		}else{
+			$orderId = (int)$obj["orderId"];
+			$orderunique = session("WST_ORDER_UNIQUE");
+		}
+		
+		if($orderId>0){
+			$sql = "SELECT o.orderId, o.orderNo, g.goodsId, g.goodsName ,og.goodsAttrName , og.goodsNums ,og.goodsPrice
 				FROM __PREFIX__order_goods og, __PREFIX__goods g, __PREFIX__orders o
-				WHERE o.orderId = og.orderId AND og.goodsId = g.goodsId AND o.payType=1 AND orderFlag =1 AND o.isPay=0 AND o.needPay>0 AND o.orderStatus = -2 AND og.orderId in ($orderIds)";
+				WHERE o.orderId = og.orderId AND og.goodsId = g.goodsId AND o.payType=1 AND orderFlag =1 AND o.isPay=0 AND o.needPay>0 AND o.orderStatus = -2 AND o.orderId =$orderId";
+		}else{
+			$sql = "SELECT o.orderId, o.orderNo, g.goodsId, g.goodsName ,og.goodsAttrName , og.goodsNums ,og.goodsPrice
+				FROM __PREFIX__order_goods og, __PREFIX__goods g, __PREFIX__orders o
+				WHERE o.orderId = og.orderId AND og.goodsId = g.goodsId AND o.payType=1 AND orderFlag =1 AND o.isPay=0 AND o.needPay>0 AND o.orderStatus = -2 AND o.orderunique ='$orderunique'";
+		}
+		
 		$rslist = $this->query($sql);
+		
 		$orders = array();
 		foreach ($rslist as $key => $order) {
 			$orders[$order["orderNo"]][] = $order;
 		}
-		$sql = "SELECT SUM(needPay) needPay FROM __PREFIX__orders WHERE orderId IN ($orderIds) AND isPay=0 AND payType=1 AND needPay>0 AND orderStatus = -2 AND orderFlag =1";
+		if($orderId>0){
+			$sql = "SELECT SUM(needPay) needPay FROM __PREFIX__orders WHERE orderId = $orderId AND isPay=0 AND payType=1 AND needPay>0 AND orderStatus = -2 AND orderFlag =1";
+		}else{
+			$sql = "SELECT SUM(needPay) needPay FROM __PREFIX__orders WHERE orderunique = '$orderunique' AND isPay=0 AND payType=1 AND needPay>0 AND orderStatus = -2 AND orderFlag =1";
+		}
 		$payInfo = self::queryRow($sql);
 		$data["orders"] = $orders;
 		$data["needPay"] = $payInfo["needPay"];
@@ -112,7 +137,7 @@ class OrdersModel extends BaseModel {
 		$payway = (int)I("payway");
 		$isself = (int)I("isself");
 		$needreceipt = (int)I("needreceipt");
-		$orderunique = WSTAddslashes(I("orderunique"));
+		$orderunique = WSTGetMillisecond().$userId;
 		$shopcat = session("WST_CART")?session("WST_CART"):array();	
 		
 		$catgoods = array();	
@@ -173,7 +198,7 @@ class OrdersModel extends BaseModel {
 				session("WST_CART",empty($newcart)?null:$newcart);
 				$rd['orderIds'] = implode(",",$ordersInfo["orderIds"]);
 				$rd['status'] = 1;
-				
+				session("WST_ORDER_UNIQUE",$orderunique);
 			}catch(Exception $e){
 				$morders->rollback();
 				$rd['msg'] = '下单出错，请联系管理员!';
@@ -327,23 +352,17 @@ class OrdersModel extends BaseModel {
 	 * 获取订单参数
 	 */
 	public function getOrderListByIds(){
-		 $ids = explode(',',I('orderIds'));
-		 $id = array();
-		 foreach ($ids as $v) {
-		 	if(trim($v)!='')$id[] = $v;
-		 }
+		 $orderunique = session("WST_ORDER_UNIQUE");
 		 $orderInfos = array('totalMoney'=>0,'isMoreOrder'=>0,'list'=>array());
-		 if(empty($id))return $orderInfos;
 		 $sql = "select orderId,orderNo,totalMoney,deliverMoney 
 		         from __PREFIX__orders where userId=".(int)session('WST_USER.userId')." 
-		         and orderunique='".I('orderunique')."' and orderId in (".implode(',',$id).") and orderFlag=1 ";
+		         and orderunique='".$orderunique."' and orderFlag=1 ";
 	     $rs = $this->query($sql);
-	     
 	     if(!empty($rs)){
 	     	$totalMoney = 0;
 	     	foreach ($rs as $key =>$v){
 	     		$orderInfos['list'][] = array('orderId'=>$v['orderId'],'orderNo'=>$v['orderNo']);
-	     		$totalMoney = $v['totalMoney'] + $v['deliverMoney'];
+	     		$totalMoney += $v['totalMoney'] + $v['deliverMoney'];
 	     	}
 	     	$orderInfos['totalMoney'] = $totalMoney;
 	     	$orderInfos['isMoreOrder'] = (count($rs)>0)?1:0;
@@ -396,8 +415,8 @@ class OrdersModel extends BaseModel {
 		$goodsName = WSTAddslashes(I("goodsName"));
 		$shopName = WSTAddslashes(I("shopName"));
 		$userName = WSTAddslashes(I("userName"));
-		$sdate = I("sdate");
-		$edate = I("edate");
+		$sdate = WSTAddslashes(I("sdate"));
+		$edate = WSTAddslashes(I("edate"));
 		$pcurr = (int)I("pcurr",0);
 		
 		$sql = "SELECT o.orderId,o.orderNo,o.shopId,o.orderStatus,o.userName,o.totalMoney,
@@ -1019,7 +1038,7 @@ class OrdersModel extends BaseModel {
 	public function batchShopOrderAccept(){		
 		$USER = session('WST_USER');
 		$userId = (int)$USER["userId"];
-		$orderIds = I("orderIds");
+		$orderIds = self::formatIn(",", I("orderIds"));
 		$shopId = (int)$USER["shopId"];
 		if($orderIds=='')return array('status'=>-2);
 		$orderIds = explode(',',$orderIds);
@@ -1083,7 +1102,7 @@ class OrdersModel extends BaseModel {
 	public function batchShopOrderProduce (){		
 		$USER = session('WST_USER');
 		$userId = (int)$USER["userId"];
-		$orderIds = I("orderIds");
+		$orderIds = self::formatIn(",", I("orderIds"));
 		$shopId = (int)$USER["shopId"];
 		if($orderIds=='')return array('status'=>-2);
 		$orderIds = explode(',',$orderIds);
@@ -1148,7 +1167,7 @@ class OrdersModel extends BaseModel {
 	public function batchShopOrderDelivery ($obj){		
 		$USER = session('WST_USER');
 		$userId = (int)$USER["userId"];
-		$orderIds = I("orderIds");
+		$orderIds = self::formatIn(",",I("orderIds"));
 		$shopId = (int)$USER["shopId"];
 		if($orderIds=='')return array('status'=>-2);
 		$orderIds = explode(',',$orderIds);
@@ -1264,14 +1283,21 @@ class OrdersModel extends BaseModel {
 	 */
 	public function checkOrderPay ($obj){
 		$userId = (int)$obj["userId"];
-		$orderIds = self::formatIn(",", $obj["orderIds"]);
-		$sql = "SELECT count(orderId) counts FROM __PREFIX__orders WHERE userId = $userId AND orderId in ($orderIds) AND orderFlag = 1 AND orderStatus = -2 AND isPay = 0 AND payType = 1";
+		$orderId = (int)I("orderId");
+		if($orderId>0){
+			$sql = "SELECT orderId,orderNo FROM __PREFIX__orders WHERE userId = $userId AND orderId = $orderId AND orderFlag = 1 AND orderStatus = -2 AND isPay = 0 AND payType = 1";
+		}else{
+			$orderunique = session("WST_ORDER_UNIQUE");
+			$sql = "SELECT orderId,orderNo FROM __PREFIX__orders WHERE userId = $userId AND orderunique = '$orderunique' AND orderFlag = 1 AND orderStatus = -2 AND isPay = 0 AND payType = 1";
+		}
 		$rsv = $this->query($sql);
-		$ocnt = count(explode(",",$orderIds));
+		$oIds = array();
+		for($i=0;$i<count($rsv);$i++){
+			$oIds[] = $rsv[$i]["orderId"];
+		}
+		$orderIds = implode(",",$oIds);
 		$data = array();
-		
-		if($ocnt==$rsv[0]['counts']){
-			
+		if(count($rsv)>0){
 			$sql = "SELECT og.goodsId,og.goodsName,og.goodsAttrName,g.goodsStock,og.goodsNums, og.goodsAttrId, ga.attrStock FROM  __PREFIX__goods g ,__PREFIX__order_goods og
 					left join __PREFIX__goods_attributes ga on ga.goodsId=og.goodsId and og.goodsAttrId=ga.id
 					WHERE og.goodsId = g.goodsId and og.orderId in($orderIds)";
@@ -1298,17 +1324,9 @@ class OrdersModel extends BaseModel {
 			}else{
 				$data["status"] = 1;
 			}
-			
-			
 		}else{
 			$data["status"] = -1;
 		}
-		
-		
 		return $data;
 	}
-	
-	
-	
-	
 }

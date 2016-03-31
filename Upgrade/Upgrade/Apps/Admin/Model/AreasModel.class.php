@@ -70,8 +70,8 @@ class AreasModel extends BaseModel {
 	  */
      public function queryByPage(){
         $m = M('areas');
-        $parentId = I("parentId",0);
-	 	$sql = "select * from __PREFIX__areas where parentId=".(int)$parentId." and areaFlag=1 order by areaSort asc,areaId asc";
+        $parentId = (int)I("parentId",0);
+	 	$sql = "select * from __PREFIX__areas where parentId=".$parentId." and areaFlag=1 order by areaSort asc,areaId asc";
 		return $m->pageQuery($sql);
 	 }
 	 /**

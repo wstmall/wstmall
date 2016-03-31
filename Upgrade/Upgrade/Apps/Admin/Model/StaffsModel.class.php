@@ -52,7 +52,7 @@ class StaffsModel extends BaseModel {
 	    if($this->checkEmpty($data)){
 	    	$data["staffNo"] = I("staffNo");
 	    	$data["staffPhoto"] = I("staffPhoto");
-			$rs = $m->where("staffId=".I('id'))->save($data);
+			$rs = $m->where("staffId=".(int)I('id'))->save($data);
 			if(false !== $rs){
 				$rd['status']= 1;
 				$staffId = (int)session('WST_STAFF.staffId');
@@ -135,7 +135,7 @@ class StaffsModel extends BaseModel {
 	 public function login(){
 	 	$rd = array('status'=>-1);
 	 	$m = M('staffs');
-	 	$staff = $m->where('loginName="'.I('loginName').'" and staffFlag=1 and staffStatus=1')->find();
+	 	$staff = $m->where('loginName="'.WSTAddslashes(I('loginName')).'" and staffFlag=1 and staffStatus=1')->find();
 	 	if($staff['loginPwd']==md5(I('loginPwd').$staff['secretKey'])){
 	 		//获取角色权限
 	 		$r = M('roles');

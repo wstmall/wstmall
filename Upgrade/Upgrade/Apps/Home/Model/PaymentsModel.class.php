@@ -38,7 +38,7 @@ class PaymentsModel extends BaseModel {
 	 */
 	public function getPayment($payCode=""){
 		$m = M('payments');
-		$payCode = $payCode?$payCode:I("payCode");
+		$payCode = $payCode?$payCode:WSTAddslashes(I("payCode"));
 		$payment = $m->where("enabled=1 AND payCode='$payCode' AND isOnline=1")->find();
 		$payConfig = json_decode($payment["payConfig"]) ;
 		foreach ($payConfig as $key => $value) {
@@ -53,7 +53,6 @@ class PaymentsModel extends BaseModel {
 	* @param   array   $payment    支付方式信息
 	*/
     function getAlipayUrl(){
-    	//$morders = D('Home/Orders');
     	$payment = self::getPayment();
         $real_method = 2;
         
@@ -70,12 +69,20 @@ class PaymentsModel extends BaseModel {
         }
 		
         $extend_param = '';
-        $orderIds = self::formatIn(",",I("orderIds"));
+        $orderunique = WSTAddslashes(I("orderunique"));
         
         $USER = session('WST_USER');
         $userId = (int)$USER['userId'];
         $obj["userId"] = $userId;
-        $obj["orderIds"] = $orderIds;
+        $orderId = (int)I("orderId");
+        
+        if($orderId>0){
+        	$obj["orderType"] = 1;
+        	$obj["uniqueId"] = $orderId;
+        }else{
+        	$obj["orderType"] = 2;
+        	$obj["uniqueId"] = session("WST_ORDER_UNIQUE");
+        }
         $orders = self::getPayOrders($obj);
         $orderNoList = array();
         $orderAmount = 0;
@@ -87,7 +94,7 @@ class PaymentsModel extends BaseModel {
         $notify_url = WSTDomain().'/Wstapi/payment/notify_alipay.php';
         $orderNos = implode(",",$orderNoList);
         $parameter = array(
-        	'extra_common_param'=> $userId,
+        	'extra_common_param'=> $userId."@".$obj["orderType"],
             'service'           => $service,
             'partner'           => $payment['parterID'],
             '_input_charset'    => "utf-8",
@@ -96,7 +103,7 @@ class PaymentsModel extends BaseModel {
             /* 业务参数 */
             'subject'           => '支付购买商品费'.$orderAmount.'元',
         	'body'  	        => '支付订单['.$orderNos.']费用',
-            'out_trade_no'      => $orderIds,
+            'out_trade_no'      => $obj["uniqueId"],
         	'total_fee'         => $orderAmount,
             'quantity'          => 1,
             'payment_type'      => 1,
@@ -124,33 +131,53 @@ class PaymentsModel extends BaseModel {
      * 获取支付订单信息
      */
     public function getPayOrders ($obj){
-    	$userId = $obj["userId"];
-    	$orderIds = self::formatIn(",", $obj["orderIds"]);
-    	$sql = "SELECT orderId,orderNo,orderStatus,needPay FROM __PREFIX__orders WHERE userId = $userId AND orderId in ($orderIds) AND orderFlag = 1 AND needPay>0 AND orderStatus = -2 AND isPay = 0 AND payType = 1";
+    	$userId = (int)$obj["userId"];
+    	$orderType = (int)$obj["orderType"];
+    	if($orderType==1){
+    		$orderId = (int)$obj["uniqueId"];
+    		$sql = "SELECT orderId,orderNo,orderStatus,needPay FROM __PREFIX__orders WHERE userId = $userId AND orderId = $orderId AND orderFlag = 1 AND needPay>0 AND orderStatus = -2 AND isPay = 0 AND payType = 1";
+    	}else{
+    		$orderunique = WSTAddslashes($obj["uniqueId"]);
+    		$sql = "SELECT orderId,orderNo,orderStatus,needPay FROM __PREFIX__orders WHERE userId = $userId AND orderunique = '$orderunique' AND orderFlag = 1 AND needPay>0 AND orderStatus = -2 AND isPay = 0 AND payType = 1";
+    	}
     	$rsv = $this->query($sql);
     	return $rsv;
     }
+
 
     /**
      * 完成支付订单
      */
     public function complatePay ($obj){
 
-    	$trade_no = $obj["trade_no"];
-		$orderIds = $obj["out_trade_no"];
-		$total_fee = $obj["total_fee"];
-		$userId = $obj["userId"];
-		$sql = "select og.orderId,og.goodsId,og.goodsNums,og.goodsAttrId from __PREFIX__order_goods og, __PREFIX__orders o where og.orderId = o.orderId AND o.orderId in ($orderIds) and o.payType = 1 and o.needPay > 0 and o.orderFlag=1 and o.orderStatus=-2";
+    	$trade_no = WSTAddslashes($obj["trade_no"]);
+    	$orderType = (int)$obj["order_type"];
+    	if($orderType==1){
+    		$orderId = (int)$obj["out_trade_no"];
+    	}else{
+    		$orderunique = WSTAddslashes($obj["out_trade_no"]);
+    	}
+		$userId = (int)$obj["userId"];
+		$payFrom = (int)$obj["payFrom"];
+		if($orderType==1){
+			$sql = "select og.orderId,og.goodsId,og.goodsNums,og.goodsAttrId from __PREFIX__order_goods og, __PREFIX__orders o where o.userId=$userId and og.orderId = o.orderId AND o.orderId = $orderId and o.payType = 1 and o.needPay > 0 and o.orderFlag=1 and o.orderStatus=-2";
+		}else{
+			$sql = "select og.orderId,og.goodsId,og.goodsNums,og.goodsAttrId from __PREFIX__order_goods og, __PREFIX__orders o where o.userId=$userId and og.orderId = o.orderId AND o.orderunique = '$orderunique' and o.payType = 1 and o.needPay > 0 and o.orderFlag=1 and o.orderStatus=-2";
+		}
 		$goodslist = $this->query($sql);
 		$data = array();
 		$data["needPay"] = 0;
 		$data["isPay"] = 1;
 		$data["orderStatus"] = 0;
 		$data["tradeNo"] = $trade_no;
+		$data["payFrom"] = $payFrom;
 		$rd = array('status'=>-1);
 		$om = M('orders');
-		$rs = $om->where("orderId in ($orderIds) and payType = 1 and needPay > 0 and orderFlag=1 and orderStatus=-2")->save($data);
-			
+		if($orderType==1){
+			$rs = $om->where("orderId = $orderId and payType = 1 and needPay > 0 and orderFlag=1 and orderStatus=-2")->save($data);
+		}else{
+			$rs = $om->where("orderunique = '$orderunique' and payType = 1 and needPay > 0 and orderFlag=1 and orderStatus=-2")->save($data);
+		}
 		if(false !== $rs){
 			$rd['status']= 1;
 			//修改库存
@@ -166,7 +193,15 @@ class PaymentsModel extends BaseModel {
 				}
 			}
 			$orderIdArr = explode(",",$orderIds);
-			foreach ($orderIdArr as $key => $orderId) {
+			if($orderType==1){
+				$sql = "select orderId,orderNo from __PREFIX__orders where userId=$userId and orderId=$orderId";
+			}else{
+				$sql = "select orderId,orderNo from __PREFIX__orders where userId=$userId and orderunique='$orderunique'";
+			}
+
+			$list = $this->query($sql);
+			for($i=0;$i<count($list);$i++) {
+				$orderId = $list[$i]["orderId"];
 				$data = array();
 				$lm = M('log_orders');
 				$data["orderId"] = $orderId;
@@ -211,7 +246,7 @@ class PaymentsModel extends BaseModel {
      * @return boolean
      */
     function getSignVeryfy($para_temp) {
-    	$payment = self::getPayment("Alipay");
+    	$payment = self::getPayment("alipay");
     	$parterKey = $payment["parterKey"];
     	//除去待签名参数数组中的空值和签名参数
     	$para_filter = $this->paraFilter($para_temp);

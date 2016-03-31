@@ -18,7 +18,7 @@ class PaymentsAction extends BaseAction{
     	$morders = D('Home/Orders');
 		$USER = session('WST_USER');
 		$obj["userId"] = (int)$USER['userId'];
-		$obj["orderIds"] = WSTFormatIn(",",I("orderIds"));
+
 		$data = $morders->checkOrderPay($obj);
     	if($data["status"]==1){
     		$m = D('Home/Payments');
@@ -33,11 +33,16 @@ class PaymentsAction extends BaseAction{
 		$morders = D('Home/Orders');
 		$USER = session('WST_USER');
 		$obj["userId"] = (int)$USER['userId'];
-		$obj["orderIds"] = WSTFormatIn(",",I("orderIds"));
+		
 		$data = $morders->checkOrderPay($obj);
 		if($data["status"]==1){
 			$m = D('Home/Payments');
-			$pkey = $obj["userId"]."@".$obj["orderIds"];
+			$orderId = (int)I("orderId");
+			if($orderId>0){
+				$pkey = $obj["userId"]."@".$orderId."@1";
+			}else{
+				$pkey = $obj["userId"]."@".session("WST_ORDER_UNIQUE")."@2";
+			}
 			$data["url"] = U('Home/WxPay/createQrcode',array("pkey"=>base64_encode($pkey)));
 		}
 		$this->ajaxReturn($data);
@@ -54,12 +59,12 @@ class PaymentsAction extends BaseAction{
 		$pm = D('Home/Payments');
 		$payments = $pm->getList();
 		$this->assign("payments",$payments["onlines"]);
-		$orderIds = WSTFormatIn(",",I("orderIds"));
-		$obj["orderIds"] = $orderIds;
+
+		$obj["orderId"] = (int)I("orderId");
 		$data = $morders->getPayOrders($obj);
 		$orders = $data["orders"];
 		$needPay = $data["needPay"];
-		$this->assign("orderIds",$orderIds);
+		$this->assign("orderId",$obj["orderId"]);
 		$this->assign("orders",$orders);
 		$this->assign("needPay",$needPay);
 		$this->assign("orderCnt",count($orders));
@@ -94,7 +99,10 @@ class PaymentsAction extends BaseAction{
 			$obj["trade_no"] = $_POST['trade_no'];
 			$obj["out_trade_no"] = $_POST['out_trade_no'];
 			$obj["total_fee"] = $_POST['total_fee'];
-			$obj["userId"] = $_POST['extra_common_param'];
+			$extras = explode("@",$_POST['extra_common_param']);
+			$obj["userId"] = $extras[0];
+			$obj["order_type"] = $extras[1];
+			$obj["payFrom"] = 1;
 			//支付成功业务逻辑
 			$payments = $pm->complatePay($obj);
 			echo 'success';

@@ -137,7 +137,7 @@ class OrdersModel extends BaseModel {
 	 public function refund(){
 	 	$rd = array('status'=>-1);
 	 	$m = M('orders');
-	 	$rs = $m->where('isRefund=0 and orderFlag=1 and orderStatus in (-1,-4,-6,-7) and payType=1 and isPay=1 and orderId='.I('id'))->find();
+	 	$rs = $m->where('isRefund=0 and orderFlag=1 and orderStatus in (-1,-4,-6,-7) and payType=1 and isPay=1 and orderId='.(int)I('id'))->find();
 	 	if($rs['orderId']!=''){
 	 		$data = array();
 	 		$data['isRefund'] = 1;
