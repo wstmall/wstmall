@@ -15,7 +15,7 @@ class OrderComplainsModel extends BaseModel {
 	public function queryUserComplainByPage(){
 		$userId = (int)session('WST_USER.userId');
 		$orderNo = WSTAddslashes(I('orderNo'));
-		$sql = "select oc.complainId,o.orderId,o.orderNo,p.shopName,oc.complainContent,oc.complainStatus,oc.complainTime
+		$sql = "select oc.complainId,o.orderId,o.orderNo,p.shopId,p.shopName,oc.complainContent,oc.complainStatus,oc.complainTime
 		        from __PREFIX__order_complains oc left join __PREFIX__shops p on oc.respondTargetId=p.shopId,
 		        __PREFIX__orders o where oc.orderId=o.orderId and o.orderFlag=1 and o.userId=".$userId;
 		if($orderNo!='')$sql.=" and o.orderNo like '%".$orderNo."%'";
@@ -27,11 +27,11 @@ class OrderComplainsModel extends BaseModel {
 	  * 获取商家被投诉列表
 	  */
 	public function queryShopComplainByPage(){
-		$userId = (int)session('WST_USER.userId');
+		$shopId = (int)session('WST_USER.shopId');
 		$orderNo = WSTAddslashes(I('orderNo'));
 		$sql = "select oc.complainId,o.orderId,o.orderNo,u.userName,u.loginName,oc.complainContent,oc.complainStatus,oc.complainTime
 		        from __PREFIX__order_complains oc left join __PREFIX__users u on oc.complainTargetId=u.userId,
-		        __PREFIX__orders o where oc.needRespond=1 and oc.orderId=o.orderId and o.orderFlag=1 and oc.respondTargetId=".$userId;
+		        __PREFIX__orders o where oc.needRespond=1 and oc.orderId=o.orderId and o.orderFlag=1 and oc.respondTargetId=".$shopId;
 		if($orderNo!='')$sql.=" and o.orderNo like '%".$orderNo."%'";
 		$sql.=" order by oc.complainId desc";
 		return  $this->pageQuery($sql,(int)I('p'),30);
@@ -79,7 +79,7 @@ class OrderComplainsModel extends BaseModel {
 		);
 	    if($this->validate($rules)->create()){
 	        //判断订单是否该用户的
-			$sql = "select o.orderId,p.userId from __PREFIX__orders o left join __PREFIX__shops p on p.shopId = o.shopId
+			$sql = "select o.orderId,o.shopId from __PREFIX__orders o
 			        where o.orderId=".$this->orderId." and o.userId=".$userId;
 			$order = $this->queryRow($sql);
 			if(!$order){
@@ -95,7 +95,7 @@ class OrderComplainsModel extends BaseModel {
 			}
 			
 			$this->complainTargetId = $userId;
-			$this->respondTargetId = $order['userId'];
+			$this->respondTargetId = $order['shopId'];
 			$this->complainStatus = 0;
 			$this->complainTime = date('Y-m-d H:i:s');
 			if(I('complainAnnex')!='')$this->complainAnnex = I('complainAnnex');
@@ -125,7 +125,7 @@ class OrderComplainsModel extends BaseModel {
 		if($userType==0){
 			$sql.=" and oc.complainTargetId=".$userId;
 		}else{
-			$sql.=" and oc.needRespond=1 and oc.respondTargetId=".$userId;
+			$sql.=" and oc.needRespond=1 and oc.respondTargetId=".$shopId;
 		}
 		$rs = $this->queryRow($sql);
 		if($rs){
@@ -146,14 +146,14 @@ class OrderComplainsModel extends BaseModel {
 	 */
 	public function saveRespond(){
 		$rd = array('status'=>-1);
-		$userId = (int)session('WST_USER.userId');
+		$shopId = (int)session('WST_USER.shopId');
 		$complainId = (int)I('complainId');
 		$rules = array(
 		     array('respondContent','require','应诉内容不能为空！',1)
 		);
 	    if($this->validate($rules)->create()){
 			//判断是否提交过应诉和是否有效的投诉信息
-			$sql = "select needRespond,complainStatus from __PREFIX__order_complains where complainId=".$complainId." and respondTargetId=".$userId;
+			$sql = "select needRespond,complainStatus from __PREFIX__order_complains where complainId=".$complainId." and respondTargetId=".$shopId;
 			$rs = $this->queryRow($sql);
 	        if((int)$rs['needRespond']!=1){
 				$rd['msg'] = "无效的投诉信息";

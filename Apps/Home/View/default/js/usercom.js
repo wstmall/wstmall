@@ -319,12 +319,16 @@ function complainInit(){
 	    var json = WST.toJson(response._raw);
 	    layer.close(uploading);
 	    if(json.status==1){
-	    	var html = [];
-			html.push("<div style='width:100px;float:left;margin-right:5px;'>");
-			html.push("<img class='complain_pic' width='100' height='100' src='"+WST.DOMAIN+"/"+json.file.savepath+json.file.savename+"'>");
-			html.push('<div style="position:relative;top:-100px;left:80px;cursor:pointer;" onclick="javascript:delComplainPic(this)"><img src="'+WST.DOMAIN+'/Apps/Home/View/default/images/action_delete.gif"></div>');
-			html.push('</div>');
-			$('#picBox').append(html.join(''));
+			var tdiv = $("<div style='width:100px;float:left;margin-right:5px;'>"+
+			             "<img class='complain_pic' width='100' height='100' src='"+WST.DOMAIN+"/"+json.file.savepath+json.file.savename+"'></div>");
+			var btn = $('<div style="position:relative;top:-100px;left:80px;cursor:pointer;" ><img src="'+WST.DOMAIN+'/Apps/Home/View/default/images/action_delete.gif"></div>');
+			tdiv.append(btn);
+			$('#picBox').append(tdiv);
+			btn.on('click','img',function(){
+				uploader.removeFile(file);
+				$(this).parent().parent().remove();
+				uploader.refresh();
+			});
 	    }
 	});
 	uploader.on('uploadError', function( file ) {
@@ -333,9 +337,6 @@ function complainInit(){
 	uploader.on( 'uploadProgress', function( file, percentage ) {
 		uploading = WST.msg('正在上传图片，请稍后...');
 	});
-}
-function delComplainPic(obj){
-	$(obj).parent().remove();
 }
 function getComplainList(){
 	location.href=Think.U('Home/OrderComplains/queryUserComplainByPage','orderNo='+$.trim($('#orderNo').val()));

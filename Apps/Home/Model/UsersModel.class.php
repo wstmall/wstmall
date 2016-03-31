@@ -89,8 +89,8 @@ class UsersModel extends BaseModel {
 	 */
 	public function checkLogin(){
 		$rv = array('status'=>-1);
-		$loginName = I('loginName');
-		$userPwd = I('loginPwd');
+		$loginName = WSTAddslashes(I('loginName'));
+		$userPwd = WSTAddslashes(I('loginPwd'));
 		$rememberPwd = I('rememberPwd');
 		$sql ="SELECT * FROM __PREFIX__users WHERE (loginName='".$loginName."' OR userEmail='".$loginName."' OR userPhone='".$loginName."') AND userFlag=1 and userStatus=1 ";
 		$rss = $this->query($sql);

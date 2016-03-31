@@ -385,3 +385,20 @@ function WSTMSubstr($str, $start = 0, $length, $charset = "utf-8", $suffix = tru
 	}
 	return (strlen($str)>strlen($newStr))?$newStr."...":$newStr;
 }
+
+
+
+/**
+ * 格式化查询语句中传入的in 参与，防止sql注入
+ * @param unknown $split
+ * @param unknown $str
+ */
+function WSTFormatIn($split,$str){
+	$strdatas = explode($split,$str);
+	$data = array();
+	for($i=0;$i<count($strdatas);$i++){
+		$data[] = (int)$strdatas[$i];
+	}
+	$data = array_unique($data);
+	return implode($split,$data);
+}

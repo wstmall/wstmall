@@ -719,7 +719,6 @@ class GoodsModel extends BaseModel {
 	 		$sql = "select g.goodsId from __PREFIX__goods g,__PREFIX__shops_cats sc2,__PREFIX__goods_cats gc3 
 	 		  	    where sc2.shopId=$shopId and g.shopCatId2=sc2.catId and sc2.catFlag=1 and sc2.isShow=1 and g.goodsCatId3=gc3.catId and gc3.catFlag=1 and gc3.isShow=1
 	 		  	    and g.goodsId in(".$ids.")";
-	 		echo $sql;
 	 		$goodsRs = $m->query($sql);
 
 	 		if(count($goodsRs)>0){

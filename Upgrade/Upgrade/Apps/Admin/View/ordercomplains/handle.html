@@ -243,7 +243,7 @@
                </tr>
                <tr>
                   <td width='120' align='right'>投诉人：</td>
-                  <td>{$object['userName']}</td>
+                  <td>{$object['userName']?$object['userName']:$object['loginName']}</td>
                </tr>
                <tr>
                   <td align='right'>投诉类型：</td>
@@ -329,7 +329,7 @@
 		                  <td align='right' valign='right' width='120'>仲裁结果：</td>
 		                  <td>
 		                    <if condition="$object['complainStatus'] neq 4">
-		                    <textarea id='finalResult' style='height:150px;width:100%'></textarea>
+		                    <textarea id='finalResult' style='height:150px;width:100%' placeholder='若无需转交应诉人应诉则直接填写仲裁结果进行仲裁'></textarea>
 		                    <else/>
 		                    {$object['finalResult']}
 		                    </if>

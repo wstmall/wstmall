@@ -25,7 +25,7 @@
              	<td style="padding-top:10px;vertical-align:top;">
              	<a onclick="showOrder({$order['orderId']})" href="javascript:;">{$order["orderNo"]}</a>
              	</td>
-				<td style="padding-top:10px;vertical-align:top;"><a href="{:U('Home/Shops/toShopHome/',array('shopId'=>$goodsDetails['shopId']))}" target="_blank">{$order["shopName"]}</a></td>
+				<td style="padding-top:10px;vertical-align:top;"><a href="{:U('Home/Shops/toShopHome/',array('shopId'=>$order['shopId']))}" target="_blank">{$order["shopName"]}</a></td>
                	<td>{:WSTMSubstr($order["complainContent"],0,32)}</td>
                	<td><div style="line-height:20px;">{$order["complainTime"]}</div></td>
                	<td>

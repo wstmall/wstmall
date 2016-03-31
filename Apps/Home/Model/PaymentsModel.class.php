@@ -70,16 +70,18 @@ class PaymentsModel extends BaseModel {
         }
 		
         $extend_param = '';
-        $orderIds = I("orderIds");
-        $orderAmount = I("needPay");
+        $orderIds = self::formatIn(",",I("orderIds"));
+        
         $USER = session('WST_USER');
         $userId = (int)$USER['userId'];
         $obj["userId"] = $userId;
         $obj["orderIds"] = $orderIds;
         $orders = self::getPayOrders($obj);
         $orderNoList = array();
+        $orderAmount = 0;
         foreach ($orders as $key => $order) {
         	$orderNoList[] = $order["orderNo"];
+        	$orderAmount = $orderAmount+$order["needPay"];
         }
         $return_url = WSTDomain().'/Wstapi/payment/return_alipay.php';
         $notify_url = WSTDomain().'/Wstapi/payment/notify_alipay.php';
@@ -123,8 +125,8 @@ class PaymentsModel extends BaseModel {
      */
     public function getPayOrders ($obj){
     	$userId = $obj["userId"];
-    	$orderIds = $obj["orderIds"];
-    	$sql = "SELECT orderId,orderNo,orderStatus FROM __PREFIX__orders WHERE userId = $userId AND orderId in ($orderIds) AND orderFlag = 1 AND needPay>0 AND orderStatus = -2 AND isPay = 0 AND payType = 1";
+    	$orderIds = self::formatIn(",", $obj["orderIds"]);
+    	$sql = "SELECT orderId,orderNo,orderStatus,needPay FROM __PREFIX__orders WHERE userId = $userId AND orderId in ($orderIds) AND orderFlag = 1 AND needPay>0 AND orderStatus = -2 AND isPay = 0 AND payType = 1";
     	$rsv = $this->query($sql);
     	return $rsv;
     }

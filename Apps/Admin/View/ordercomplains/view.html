@@ -202,7 +202,7 @@
                </tr>
                <tr>
                   <td width='120' align='right'>投诉人：</td>
-                  <td>{$object['userName']}</td>
+                  <td>{$object['userName']?$object['userName']:$object['loginName']}</td>
                </tr>
                <tr>
                   <td align='right'>投诉类型：</td>

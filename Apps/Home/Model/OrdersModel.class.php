@@ -79,7 +79,7 @@ class OrdersModel extends BaseModel {
 	 */
 	public function getPayOrders($obj){
 			
-		$orderIds = $obj["orderIds"];
+		$orderIds = self::formatIn(",", $obj["orderIds"]) ;
 		$sql = "SELECT o.orderId, o.orderNo, g.goodsId, g.goodsName ,og.goodsAttrName , og.goodsNums ,og.goodsPrice 
 				FROM __PREFIX__order_goods og, __PREFIX__goods g, __PREFIX__orders o
 				WHERE o.orderId = og.orderId AND og.goodsId = g.goodsId AND o.payType=1 AND orderFlag =1 AND o.isPay=0 AND o.needPay>0 AND o.orderStatus = -2 AND og.orderId in ($orderIds)";

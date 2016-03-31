@@ -18,7 +18,7 @@ class PaymentsAction extends BaseAction{
     	$morders = D('Home/Orders');
 		$USER = session('WST_USER');
 		$obj["userId"] = (int)$USER['userId'];
-		$obj["orderIds"] = I("orderIds");
+		$obj["orderIds"] = WSTFormatIn(",",I("orderIds"));
 		$data = $morders->checkOrderPay($obj);
     	if($data["status"]==1){
     		$m = D('Home/Payments');
@@ -33,7 +33,7 @@ class PaymentsAction extends BaseAction{
 		$morders = D('Home/Orders');
 		$USER = session('WST_USER');
 		$obj["userId"] = (int)$USER['userId'];
-		$obj["orderIds"] = I("orderIds");
+		$obj["orderIds"] = WSTFormatIn(",",I("orderIds"));
 		$data = $morders->checkOrderPay($obj);
 		if($data["status"]==1){
 			$m = D('Home/Payments');
@@ -54,7 +54,7 @@ class PaymentsAction extends BaseAction{
 		$pm = D('Home/Payments');
 		$payments = $pm->getList();
 		$this->assign("payments",$payments["onlines"]);
-		$orderIds = I("orderIds");
+		$orderIds = WSTFormatIn(",",I("orderIds"));
 		$obj["orderIds"] = $orderIds;
 		$data = $morders->getPayOrders($obj);
 		$orders = $data["orders"];

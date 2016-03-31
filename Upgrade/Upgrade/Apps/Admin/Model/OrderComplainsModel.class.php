@@ -14,7 +14,7 @@ class OrderComplainsModel extends BaseModel {
 	 */
 	 public function getDetail(){
 	 	$id = (int)I('id');
-	 	$sql = "select oc.*,u.userName from __PREFIX__order_complains oc,__PREFIX__users u where oc.complainTargetId=u.userId and oc.complainId=".$id;
+	 	$sql = "select oc.*,u.userName,u.loginName from __PREFIX__order_complains oc,__PREFIX__users u where oc.complainTargetId=u.userId and oc.complainId=".$id;
 	 	$data = $this->queryRow($sql);
 	 	if($data){
 	 		if($data['complainAnnex']!='')$data['complainAnnex'] = explode(',',$data['complainAnnex']);
@@ -129,7 +129,8 @@ class OrderComplainsModel extends BaseModel {
 	 	$id = (int)I('id');
 	 	if($id==0)return $rd;
 	 	//判断是否已经处理过了
-	 	$sql = "select oc.complainStatus,oc.respondTargetId,o.orderNo from __PREFIX__order_complains oc,__PREFIX__orders o 
+	 	$sql = "select oc.complainStatus,oc.respondTargetId,o.orderNo ,p.userId
+	 	        from __PREFIX__order_complains oc,__PREFIX__orders o left join __PREFIX__shops p on o.shopId = p.shopId
 	 	        where oc.orderId=o.orderId and complainId=".$id;
 	 	$rs = $this->queryRow($sql);
 	 	if($rs['complainStatus']==0){
@@ -145,7 +146,7 @@ class OrderComplainsModel extends BaseModel {
 		 	    $messsage = array(
 						'msgType' => 0,
 						'sendUserId' => session('WST_STAFF.staffId'),
-						'receiveUserId' => $rs['respondTargetId'],
+						'receiveUserId' => $rs['userId'],
 						'msgContent' => "您有新的被投诉订单【".$rs['orderNo']."】，请及时回应以免影响您的店铺评分。",
 						'createTime' => date('Y-m-d H:i:s'),
 						'msgStatus' => 0,

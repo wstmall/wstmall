@@ -32,8 +32,9 @@ class ShopsModel extends BaseModel {
     */
 	public function login(){
 		$rd = array('status'=>-1);
+		$loginName = WSTAddslashes(I('loginName'));
 	 	$m = M('users');
-	 	$users = $m->where('(loginName="'.I('loginName').'" or userPhone="'.I('loginName').'" or userEmail="'.I('loginName').'") and userFlag=1 and userStatus=1')->find();
+	 	$users = $m->where('(loginName="'.$loginName.'" or userPhone="'.$loginName.'" or userEmail="'.$loginName.'") and userFlag=1 and userStatus=1')->find();
 	 	if($users['loginPwd']==md5(I('loginPwd').$users['loginSecret']) && $users['userType']>=1){
 	 		//加载商家信息
 	 		$s = M('shops');
@@ -135,6 +136,7 @@ class ShopsModel extends BaseModel {
 			return $rd;
 		}
 		$u->loginSecret = rand(1000,9999);
+		$u->loginPwd = md5($u->loginPwd.$u->loginSecret);
 		$u->userStatus = 1;
 		$u->userType = 0;
 		$u->userFlag = 1;
