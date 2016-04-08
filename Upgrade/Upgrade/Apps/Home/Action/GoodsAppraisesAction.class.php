@@ -62,7 +62,7 @@ class GoodsAppraisesAction extends BaseAction{
 	 * 添加评价
 	 */
     public function addGoodsAppraises(){
-    	$this->isUserAjaxLogin();
+    	$this->isUserLogin();
     	$USER = session('WST_USER');
     	$morders = D('Home/Goods_appraises');
     	$obj["userId"] = $USER['userId'];

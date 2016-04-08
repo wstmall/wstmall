@@ -16,7 +16,7 @@ class GoodsModel extends BaseModel {
 	 public function get(){
 	 	$m = M('goods');
 	 	$id = (int)I('id',0);
-		$goods = $m->where("goodsId=".$id)->find();
+		$goods = $this->where("goodsId=".$id)->find();
 		//相册
 		$m = M('goods_gallerys');
 		$goods['gallery'] = $m->where('goodsId='.$id)->select();
@@ -43,7 +43,7 @@ class GoodsModel extends BaseModel {
 			            ,ga.isRecomm from __PREFIX__attributes a 
 			            left join __PREFIX__goods_attributes ga on ga.attrId=a.attrId and ga.goodsId=".$id." where  
 						a.attrFlag=1 and a.catId=".$goods['attrCatId']." and a.shopId=".$goods['shopId'];
-			$attrRs = $m->query($sql);
+			$attrRs = $this->query($sql);
 			if(!empty($attrRs)){
 				$priceAttr = array();
 				$attrs = array();
@@ -66,7 +66,6 @@ class GoodsModel extends BaseModel {
 	  * 分页列表[获取待审核列表]
 	  */
      public function queryPenddingByPage(){
-        $m = M('goods');
         $shopName = WSTAddslashes(I('shopName'));
      	$goodsName = WSTAddslashes(I('goodsName'));
      	$areaId1 = (int)I('areaId1',0);
@@ -86,13 +85,12 @@ class GoodsModel extends BaseModel {
 	 	if($shopName!='')$sql.=" and (p.shopName like '%".$shopName."%' or p.shopSn like '%".$shopName."%')";
 	 	if($goodsName!='')$sql.=" and (g.goodsName like '%".$goodsName."%' or g.goodsSn like '%".$goodsName."%')";
 	 	$sql.="  order by goodsId desc";
-		return $m->pageQuery($sql);
+		return $this->pageQuery($sql);
 	 }
 	 /**
 	  * 分页列表[获取已审核列表]
 	  */
      public function queryByPage(){
-        $m = M('goods');
         $shopName = WSTAddslashes(I('shopName'));
      	$goodsName = WSTAddslashes(I('goodsName'));
      	$areaId1 = (int)I('areaId1',0);
@@ -116,25 +114,23 @@ class GoodsModel extends BaseModel {
 	 	if($shopName!='')$sql.=" and (p.shopName like '%".$shopName."%' or p.shopSn like '%".$shopName."%')";
 	 	if($goodsName!='')$sql.=" and (g.goodsName like '%".$goodsName."%' or g.goodsSn like '%".$goodsName."%')";
 	 	$sql.="  order by goodsId desc";   
-		return $m->pageQuery($sql);
+		return $this->pageQuery($sql);
 	 }
 	 /**
 	  * 获取列表
 	  */
 	  public function queryByList(){
-	     $m = M('goods');
 	     $sql = "select * from __PREFIX__goods order by goodsId desc";
-		 return $m->find($sql);
+		 return $this->find($sql);
 	  }
 	 /**
 	  * 修改商品状态
 	  */
 	 public function changeGoodsStatus(){
 	 	$rd = array('status'=>-1);
-	 	$m = M('goods');
 	 	$id = (int)I('id',0);
-	 	$m->goodsStatus = (int)I('status',0);
-		$rs = $m->where('goodsId='.$id)->save();
+	 	$this->goodsStatus = (int)I('status',0);
+		$rs = $this->where('goodsId='.$id)->save();
 		if(false !== $rs){
 			$sql = "select goodsName,userId from __PREFIX__goods g,__PREFIX__shops s where g.shopId=s.shopId and g.goodsId=".$id;
 			$goods = $this->query($sql);
@@ -163,7 +159,6 @@ class GoodsModel extends BaseModel {
 	  */
 	 public function queryPenddingGoodsNum(){
 	 	$rd = array('status'=>-1);
-	 	$m = M('goods');
 	 	$sql="select count(*) counts from __PREFIX__goods where goodsStatus=0 and goodsFlag=1";
 	 	$rs = $this->query($sql);
 	 	$rd['num'] = $rs[0]['counts'];
@@ -174,11 +169,10 @@ class GoodsModel extends BaseModel {
 	  */
 	 public function changeBestStatus(){
 	 	$rd = array('status'=>-1);
-	 	$m = M('goods');
 	 	$id = I('id',0);
 	 	$id = self::formatIn(",", $id);
-	 	$m->isAdminBest = (int)I('status',0);
-		$rs = $m->where('goodsId in('.$id.")")->save();
+	 	$this->isAdminBest = (int)I('status',0);
+		$rs = $this->where('goodsId in('.$id.")")->save();
 		if(false !== $rs){
 			$rd['status'] = 1;
 		}
@@ -189,11 +183,10 @@ class GoodsModel extends BaseModel {
 	  */
 	 public function changeRecomStatus(){
 	 	$rd = array('status'=>-1);
-	 	$m = M('goods');
 	 	$id = I('id',0);
 	 	$id = self::formatIn(",", $id);
-	 	$m->isAdminRecom = (int)I('status',0);
-		$rs = $m->where('goodsId in('.$id.")")->save();
+	 	$this->isAdminRecom = (int)I('status',0);
+		$rs = $this->where('goodsId in('.$id.")")->save();
 		if(false !== $rs){
 			$rd['status'] = 1;
 		}

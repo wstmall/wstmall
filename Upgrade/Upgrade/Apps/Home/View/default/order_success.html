@@ -49,7 +49,7 @@
 								    <if condition="($key gt 1) AND ($orderInfos['isMoreOrder'] eq 1)">、</if>
 									<a href="javascript:;" onclick="getOrderInfo({$order['orderId']});"><span class="wst-ods-success-th">{$order['orderNo']}</span></a>&nbsp;
 								</volist>
-								 应付金额：<span class="wst-ods-success-ti">{$orderInfos['totalMoney']}</span> 元
+								 应付金额：<span class="wst-ods-success-ti">{$orderInfos['realTotalMoney']}</span> 元
 	   							</if>
 	   						</div>							
 						</div>

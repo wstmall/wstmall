@@ -32,14 +32,14 @@ class ArticlesAction extends BaseAction{
 	 * 新增/修改操作
 	 */
 	public function edit(){
-		$this->isAjaxLogin();
+		$this->isLogin();
 		$m = D('Admin/Articles');
     	$rs = array();
     	if(I('id',0)>0){
-    		$this->checkAjaxPrivelege('wzlb_02');
+    		$this->checkPrivelege('wzlb_02');
     		$rs = $m->edit();
     	}else{
-    		$this->checkAjaxPrivelege('wzlb_01');
+    		$this->checkPrivelege('wzlb_01');
     		$rs = $m->insert();
     	}
     	$this->ajaxReturn($rs);
@@ -48,8 +48,8 @@ class ArticlesAction extends BaseAction{
 	 * 删除操作
 	 */
 	public function del(){
-		$this->isAjaxLogin();
-		$this->checkAjaxPrivelege('wzlb_03');
+		$this->isLogin();
+		$this->checkPrivelege('wzlb_03');
 		$m = D('Admin/Articles');
     	$rs = $m->del();
     	$this->ajaxReturn($rs);
@@ -85,7 +85,7 @@ class ArticlesAction extends BaseAction{
 	 * 列表查询
 	 */
     public function queryByList(){
-    	$this->isAjaxLogin();
+    	$this->isLogin();
 		$m = D('Admin/Articles');
 		$list = $m->queryByList();
 		$rs = array();
@@ -97,8 +97,8 @@ class ArticlesAction extends BaseAction{
 	 * 显示商品是否显示/隐藏
 	 */
 	 public function editiIsShow(){
-	 	$this->isAjaxLogin();
-	 	$this->checkAjaxPrivelege('wzlb_02');
+	 	$this->isLogin();
+	 	$this->checkPrivelege('wzlb_02');
 	 	$m = D('Admin/Articles');
 		$rs = $m->editiIsShow();
 		$this->ajaxReturn($rs);

@@ -88,6 +88,12 @@ $(function () {
        <form name="myform" method="post" id="myform" autocomplete="off">
         <table class="table table-hover table-striped table-bordered wst-form" style='margin-top:10px;'>
            <tr>
+             <th align='right' width="80">用户等级：</th>
+             <td>
+             	{$WST_USER["userRank"]['rankName']}
+             </td>
+           </tr>
+           <tr>
              <th align='right' width="80">昵称 <font color='red'>*</font>：</th>
              <td>
              <input type='text' id='userName' name='userName' value="{$user['userName']}"/>

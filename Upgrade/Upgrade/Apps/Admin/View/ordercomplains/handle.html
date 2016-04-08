@@ -21,6 +21,14 @@
    function finalHandle(id){
 	   var params = {};
 	   params.id = id;
+	   
+	   <if condition="$object['order']['orderStatus'] eq -5">
+		   params.orderStatus = $.trim($('#orderStatus').val());
+		   if(params.orderStatus==0){
+			   Plugins.Tips({title:'信息提示',icon:'error',content:'请选择仲裁状态!',timeout:1000});
+			   return;
+		   }
+	   </if>
 	   params.finalResult = $.trim($('#finalResult').val());
 	   if(params.finalResult==''){
 		   Plugins.Tips({title:'信息提示',icon:'error',content:'请输入仲裁结果!',timeout:1000});
@@ -315,16 +323,38 @@
                   <td align='right'>应诉时间：</td>
                   <td>{$object['respondTime']}</td>
                </tr>
+               
              </table>
              </td>
              </tr>
              </if>
+             <if condition="$object['complainStatus'] neq 4"> 
+				<if condition="$object['complainStatus'] eq 0"> 
+	             <tr>
+	                <td  align='center'>
+						<button type="button" class="btn btn-primary" onclick='javascript:deliverNext({$object["complainId"]})'>转交应诉人应诉</button>
+					</td>
+	             </tr>
+             	</if>
+	    	</if>
              <tr>
                 <td><span style='font-weight:bold;'>仲裁结果</span></td>
              </tr>
              <tr>
                 <td>
                    <table width='100%'>
+                   <if condition="$object['order']['orderStatus'] eq -5">
+                   	   <tr height="40">
+		                  <td align='right' valign='right' width='120'>仲裁状态：</td>
+		                  <td>
+		                   	<select id="orderStatus">
+		                   		<option value="0">请选择</option>
+			                	<option value="-4">同意用户拒收</option>
+			                	<option value="4">不同意用户拒收</option>
+			                </select>
+		                  </td>
+		               </tr>
+		               </if>
 		               <tr>
 		                  <td align='right' valign='right' width='120'>仲裁结果：</td>
 		                  <td>
@@ -341,10 +371,7 @@
            <tr>
              <td colspan='2' align='center'>
                 <if condition="$object['complainStatus'] neq 4"> 
-                <if condition="$object['complainStatus'] eq 0"> 
-                   <button type="button" class="btn btn-primary" onclick='javascript:deliverNext({$object["complainId"]})'>转交应诉人应诉</button>
-                </if>
-                <button type="button" class="btn btn-primary" onclick='javascript:finalHandle({$object["complainId"]})'>仲&nbsp;裁</button>
+                <button type="button" class="btn btn-primary" onclick='javascript:finalHandle({$object["complainId"]},{$object["order"]["orderStatus"]})'>仲&nbsp;裁</button>
                 </if>
                 <button type="button" class="btn btn-primary" onclick='javascript:location.href="{$referer}"'>返&nbsp;回</button>
              </td>

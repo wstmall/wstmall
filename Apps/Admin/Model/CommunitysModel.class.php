@@ -14,7 +14,6 @@ class CommunitysModel extends BaseModel {
 	  */
 	 public function insert(){
 	 	$rd = array('status'=>-1);
-	 	$id = (int)I("id",0);
 		$data = array();
 		$data["areaId1"] = (int)I("areaId1");
 		$data["areaId2"] = (int)I("areaId2");
@@ -25,8 +24,7 @@ class CommunitysModel extends BaseModel {
 		$data["communityFlag"] = 1;
 	    if($this->checkEmpty($data)){
 	    	$data["communityKey"] = I("communityKey");
-			$m = M('communitys');
-			$rs = $m->add($data);
+			$rs = $this->add($data);
 		    if(false !== $rs){
 				$rd['status']= 1;
 			}
@@ -38,7 +36,7 @@ class CommunitysModel extends BaseModel {
 	  */
 	 public function edit(){
 	 	$rd = array('status'=>-1);
-	 	$id = I("id",0);
+	 	$id = (int)I("id",0);
 		$data = array();
 		$data["areaId1"] = (int)I("areaId1");
 		$data["areaId2"] = (int)I("areaId2");
@@ -48,8 +46,7 @@ class CommunitysModel extends BaseModel {
 		$data["communitySort"] = (int)I("communitySort",0);
 	    if($this->checkEmpty($data)){	
 	    	$data["communityKey"] = I("communityKey");
-			$m = M('communitys');
-		    $rs = $m->where("communityId=".(int)I('id',0))->save($data);
+		    $rs = $this->where("communityId=".$id)->save($data);
 			if(false !== $rs){
 				$rd['status']= 1;
 			}
@@ -60,14 +57,12 @@ class CommunitysModel extends BaseModel {
 	  * 获取指定对象
 	  */
      public function get(){
-	 	$m = M('communitys');
-		return $m->where("communityId=".(int)I('id'))->find();
+		return $this->where("communityId=".(int)I('id'))->find();
 	 }
 	 /**
 	  * 分页列表
 	  */
      public function queryByPage(){
-        $m = M('communitys');
         $areaId1 = (int)I('areaId1',0);
      	$areaId2 = (int)I('areaId2',0);
      	$areaId3 = (int)I('areaId3',0);
@@ -78,15 +73,14 @@ class CommunitysModel extends BaseModel {
 	 	if($areaId2>0)$sql.=" and c.areaId2=".$areaId2;
 	 	if($areaId3>0)$sql.=" and c.areaId3=".$areaId3;
 	 	$sql.=" order by communityId desc";
-		return $m->pageQuery($sql);
+		return $this->pageQuery($sql);
 	 }
 	 /**
 	  * 获取列表
 	  */
 	  public function queryByList(){
-	     $m = M('communitys');
 	     $sql = "select * from __PREFIX__communitys order by communityId desc";
-		 return $m->select($sql);
+		 return $this->select($sql);
 	  }
 	  
 	 /**
@@ -94,10 +88,9 @@ class CommunitysModel extends BaseModel {
 	  */
 	 public function del(){
 	 	$rd = array('status'=>-1);
-	 	$m = M('communitys');
 	 	$data = array();
 		$data["communityFlag"] = -1;
-	 	$rs = $m->where("communityId=".(int)I('id'))->save($data);
+	 	$rs = $this->where("communityId=".(int)I('id'))->save($data);
 	    if(false !== $rs){
 			$rd['status']= 1;
 		}
@@ -108,10 +101,10 @@ class CommunitysModel extends BaseModel {
 	  */
 	 public function editiIsShow(){
 	 	$rd = array('status'=>-1);
-	 	if(I('id',0)==0)return $rd;
-	 	$m = M('communitys');
-	 	$m->isShow = ((int)I('isShow')==1)?1:0;
-	 	$rs = $m->where("communityId=".(int)I('id',0))->save();
+	 	$id = (int)I('id',0);
+	 	if($id==0)return $rd;
+	 	$this->isShow = ((int)I('isShow')==1)?1:0;
+	 	$rs = $this->where("communityId=".$id)->save();
 	    if(false !== $rs){
 			$rd['status']= 1;
 		}

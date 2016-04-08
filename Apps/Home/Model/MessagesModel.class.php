@@ -14,9 +14,8 @@ class MessagesModel extends BaseModel {
 	  */
 	 public function del(){
 	 	$rd = array('status'=>-1);
-	    $m = M('messages');
 	    $map = array('id'=>(int)I('id'),'receiveUserId'=>(int)session('WST_USER.userId'));
-	    $rs = $m->where($map)->delete();
+	    $rs = $this->where($map)->delete();
 		if(false !== $rs){
 		   $rd['status']= 1;
 		}

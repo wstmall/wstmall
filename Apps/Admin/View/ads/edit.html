@@ -29,6 +29,7 @@
 	}
    var filetypes = ["gif","jpg","png","jpeg"];
    $(function () {
+	   changAdCat(document.getElementById('adPositionId'));
 	   $.formValidator.initConfig({
 		   theme:'Default',mode:'AutoTip',formID:"myform",debug:true,submitOnce:true,onSuccess:function(){
 				   edit();
@@ -98,17 +99,14 @@
    }
    
    function changAdCat(obj){
-		var catId = $(obj).val();
-		if(catId==-1){
-			$("#img_size").html("1400 x 360");
-		}else if(catId==-2){
-			$("#img_size").html("1210 x 350");
-		}else if(catId==-3){
-			$("#img_size").html("1210 x 350");
-		}else{
-			$("#img_size").html("210 x 275");
+		var catId = obj.value;
+		switch(catId){
+			case '-1':$("#img_size").html("1400 x 360");break;
+			case '-2':
+			case '-3':$("#img_size").html("1210 x 350");break;
+			default:$("#img_size").html("210 x 275");
 		}
-   }
+  }
    </script>
    <body class="wst-page">
    	<iframe name="upload" style="display:none"></iframe>
@@ -120,18 +118,7 @@
 					<input type="file" class="inputstyle" id="Filedata" name="Filedata" onchange="updfile('Filedata');" >
 				</div>
 				<div style="clear:both;"></div>
-				<div >&nbsp;图片大小:<span id="img_size">
-					<?php if($object['adPositionId'] == -1){ ?>
-					1400 x 360
-					<?php }else if($object['adPositionId'] == -2){ ?>
-					1210 x 350
-					<?php }else if($object['adPositionId'] == -3){ ?>
-					1210 x 350
-					<?php }else{ ?>
-					210 x 275
-					<?php } ?>
-					
-				</span> (px)(格式为 gif, jpg, jpeg, png)</div>
+				<div >&nbsp;图片大小:<span id="img_size"></span> (px)(格式为 gif, jpg, jpeg, png)</div>
 				<input type="hidden" name="dir" value="ads">
 				<input type="hidden" name="width" value="1400">
 				<input type="hidden" name="folder" value="Filedata">

@@ -40,14 +40,14 @@ class NavsAction extends BaseAction{
 	 * 新增/修改操作
 	 */
 	public function edit(){
-		$this->isAjaxLogin();
+		$this->isLogin();
 		$m = D('Admin/Navs');
     	$rs = array();
     	if(I('id',0)>0){
-    		$this->checkAjaxPrivelege('dhgl_02');
+    		$this->checkPrivelege('dhgl_02');
     		$rs = $m->edit();
     	}else{
-    		$this->checkAjaxPrivelege('dhgl_01');
+    		$this->checkPrivelege('dhgl_01');
     		$rs = $m->insert();
     	}
     	$this->ajaxReturn($rs);
@@ -56,8 +56,8 @@ class NavsAction extends BaseAction{
 	 * 删除操作
 	 */
 	public function del(){
-		$this->isAjaxLogin();
-		$this->checkAjaxPrivelege('dhgl_03');
+		$this->isLogin();
+		$this->checkPrivelege('dhgl_03');
 		$m = D('Admin/Navs');
     	$rs = $m->del();
     	$this->ajaxReturn($rs);
@@ -67,7 +67,7 @@ class NavsAction extends BaseAction{
 	 */
 	public function index(){
 		$this->isLogin();
-		$this->checkAjaxPrivelege('dhgl_00');
+		$this->checkPrivelege('dhgl_00');
 		$m = D('Admin/Navs');
     	$page = $m->queryByPage();
     	$pager = new \Think\Page($page['total'],$page['pageSize'],I());
@@ -83,8 +83,8 @@ class NavsAction extends BaseAction{
 	 * 是否显示/隐藏
 	 */
 	 public function editiIsShow(){
-	 	$this->isAjaxLogin();
-	 	$this->checkAjaxPrivelege('dhgl_02');
+	 	$this->isLogin();
+	 	$this->checkPrivelege('dhgl_02');
 	 	$m = D('Admin/Navs');
 		$rs = $m->editiIsShow();
 		$this->ajaxReturn($rs);
@@ -93,8 +93,8 @@ class NavsAction extends BaseAction{
 	 * 是否新窗口打开
 	 */
 	 public function editiIsOpen(){
-	 	$this->isAjaxLogin();
-	 	$this->checkAjaxPrivelege('dhgl_02');
+	 	$this->isLogin();
+	 	$this->checkPrivelege('dhgl_02');
 	 	$m = D('Admin/Navs');
 		$rs = $m->editiIsOpen();
 		$this->ajaxReturn($rs);

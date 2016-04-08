@@ -14,7 +14,6 @@ class GoodsCatsModel extends BaseModel {
 	  */
 	 public function insert(){
 	 	$rd = array('status'=>-1);
-	 	$id = (int)I("id",0);
 		$data = array();
 		$data["catName"] = I("catName");
 		if($this->checkEmpty($data,true)){
@@ -22,8 +21,7 @@ class GoodsCatsModel extends BaseModel {
 		    $data["isShow"] = (int)I("isShow",0);
 			$data["catSort"] = (int)I("catSort",0);
 			$data["catFlag"] = 1;;
-			$m = M('goods_cats');
-			$rs = $m->add($data);
+			$rs = $this->add($data);
 			if($rs){
 				$rd['status']= 1;
 			}
@@ -41,8 +39,7 @@ class GoodsCatsModel extends BaseModel {
 	    if($this->checkEmpty($data)){
 	    	$data["isShow"] = (int)I("isShow",0);
 	    	$data["catSort"] = (int)I("catSort",0);
-	    	$m = M('goods_cats');
-			$rs = $m->where("catFlag=1 and catId=".(int)I('id'))->save($data);
+			$rs = $this->where("catFlag=1 and catId=".$id)->save($data);
 			if(false !== $rs){
 				if ($data['isShow'] == 0) {//修改子栏目是否隐藏
 					$this->editiIsShow();
@@ -61,8 +58,7 @@ class GoodsCatsModel extends BaseModel {
 		$data = array();
 		$data["catName"] = I("catName");
 	    if($this->checkEmpty($data)){
-	    	$m = M('goods_cats');
-			$rs = $m->where("catFlag=1 and catId=".(int)I('id'))->save($data);
+			$rs = $this->where("catFlag=1 and catId=".$id)->save($data);
 			if(false !== $rs){
 				$rd['status']= 1;
 			}
@@ -73,25 +69,22 @@ class GoodsCatsModel extends BaseModel {
 	  * 获取指定对象
 	  */
      public function get($id){
-	 	$m = M('goods_cats');
-		return $m->where("catId=".(int)$id)->find();
+		return $this->where("catId=".(int)$id)->find();
 	 }
 	 /**
 	  * 获取列表
 	  */
 	  public function queryByList($pid = 0){
-	     $m = M('goods_cats');
-	     $rs = $m->where('catFlag=1 and parentId='.(int)$pid)->select(); 
+	     $rs = $this->where('catFlag=1 and parentId='.(int)$pid)->select(); 
 		 return $rs;
 	  }
 	  /**
 	   * 获取树形分类
 	   */
 	  public function getCatAndChild(){
-	  	  $m = M('goods_cats');
 	  	  //获取第一级分类
 	  	  $sql = "select * from __PREFIX__goods_cats where catFlag=1 and parentId =0 order by catSort asc";
-	  	  $rs1 = $m->query($sql);
+	  	  $rs1 = $this->query($sql);
 	  	  if(count($rs1)>0){
 	  	  	 $ids = array();
 	  	  	 foreach ($rs1 as $key =>$v){
@@ -99,7 +92,7 @@ class GoodsCatsModel extends BaseModel {
 	  	  	 }
 	  	  	 //获取第二级分类
 	  	     $sql = "select * from __PREFIX__goods_cats where catFlag=1 and parentId in (".implode(',',$ids).")  order by catSort asc";
-	  	     $rs2 = $m->query($sql);
+	  	     $rs2 = $this->query($sql);
 	  	     if(count($rs2)>0){
 	  	     	 $ids = array();
 		  	  	 foreach ($rs2 as $key =>$v){
@@ -107,7 +100,7 @@ class GoodsCatsModel extends BaseModel {
 		  	  	 }
 		  	  	 //获取第三级分类
 		  	     $sql = "select * from __PREFIX__goods_cats where catFlag=1 and parentId in (".implode(',',$ids).")  order by catSort asc";
-		  	     $rs3 = $m->query($sql);
+		  	     $rs3 = $this->query($sql);
 		  	     $tmpArr = array();
 		  	     if(count($rs3)>0){
 			  	     foreach ($rs3 as $key =>$v){
@@ -136,9 +129,8 @@ class GoodsCatsModel extends BaseModel {
 	  * 迭代获取下级
 	  */
 	 public function getChild($ids = array(),$pids = array()){
-	 	$m = M('goods_cats');
 	 	$sql = "select catId from __PREFIX__goods_cats where catFlag=1 and parentId in(".implode(',',$pids).")";
-	 	$rs = $m->query($sql);
+	 	$rs = $this->query($sql);
 	 	if(count($rs)>0){
 	 		$cids = array();
 		 	foreach ($rs as $key =>$v){
@@ -160,17 +152,17 @@ class GoodsCatsModel extends BaseModel {
 	 	$ids = array();
 		$ids[] = (int)I('id');
 	 	$ids = $this->getChild($ids,$ids);
-	 	$m = M('goods_cats');
+
 	 	//把相关的商品下架了
 	 	$sql = "update __PREFIX__goods set isSale=0 where goodsCatId1 in(".implode(',',$ids).")";
-	 	$m->execute($sql);
+	 	$this->execute($sql);
 	 	$sql = "update __PREFIX__goods set isSale=0 where goodsCatId2 in(".implode(',',$ids).")";
-	 	$m->execute($sql);
+	 	$this->execute($sql);
 	 	$sql = "update __PREFIX__goods set isSale=0 where goodsCatId3 in(".implode(',',$ids).")";
-	 	$m->execute($sql);
+	 	$this->execute($sql);
 	 	//设置商品分类为删除状态
-	 	$m->catFlag = -1;
-		$rs = $m->where(" catId in(".implode(',',$ids).")")->save();
+	 	$this->catFlag = -1;
+		$rs = $this->where(" catId in(".implode(',',$ids).")")->save();
 	    if(false !== $rs){
 		   $rd['status']= 1;
 		}
@@ -187,18 +179,18 @@ class GoodsCatsModel extends BaseModel {
 	 	$ids = array();
 		$ids[] = (int)I('id');
 	 	$ids = $this->getChild($ids,$ids);
-	 	$m = M('goods_cats');
+
 	 	if($isShow!=1){
 	 		//把相关的商品下架了
 		 	$sql = "update __PREFIX__goods set isSale=0 where goodsCatId1 in(".implode(',',$ids).")";
-		 	$m->execute($sql);
+		 	$this->execute($sql);
 		 	$sql = "update __PREFIX__goods set isSale=0 where goodsCatId2 in(".implode(',',$ids).")";
-		 	$m->execute($sql);
+		 	$this->execute($sql);
 		 	$sql = "update __PREFIX__goods set isSale=0 where goodsCatId3 in(".implode(',',$ids).")";
-		 	$m->execute($sql);
+		 	$this->execute($sql);
 	 	}
-	 	$m->isShow = ($isShow==1)?1:0;
-	 	$rs = $m->where("catId in(".implode(',',$ids).")")->save();
+	 	$this->isShow = ($isShow==1)?1:0;
+	 	$rs = $this->where("catId in(".implode(',',$ids).")")->save();
 	    if(false !== $rs){
 			$rd['status']= 1;
 		}

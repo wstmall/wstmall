@@ -29,7 +29,7 @@ class AttributeCatsAction extends BaseAction{
 	 * 新增/修改操作
 	 */
 	public function edit(){
-		$this->isShopAjaxLogin();
+		$this->isShopLogin();
 		$m = D('Home/AttributeCats');
     	$rs = array();
     	if((int)I('id',0)>0){
@@ -43,7 +43,7 @@ class AttributeCatsAction extends BaseAction{
 	 * 删除操作
 	 */
 	public function del(){
-		$this->isShopAjaxLogin();
+		$this->isShopLogin();
 		$m = D('Home/AttributeCats');
     	$rs = $m->del();
     	$this->ajaxReturn($rs);

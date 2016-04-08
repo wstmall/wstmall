@@ -13,7 +13,7 @@ class OrdersModel extends BaseModel {
 	 * 获取订单详细信息
 	 */
 	 public function getDetail(){
-	 	$m = M('orders');
+
 	 	$id = (int)I('id',0);
 		$sql = "select o.*,s.shopName from __PREFIX__orders o
 	 	         left join __PREFIX__shops s on o.shopId=s.shopId 
@@ -28,7 +28,7 @@ class OrdersModel extends BaseModel {
 		$cRs = $this->queryRow($sql);
 		$rs['userAddress'] = $cRs['areaName1'].$cRs['areaName2'].$cRs['areaName3'].$cRs['communityName'].$rs['userAddress'];
 		//获取日志信息
-		$m = M('log_orders');
+
 		$sql = "select lo.*,u.loginName,u.userType,s.shopName from __PREFIX__log_orders lo
 		         left join __PREFIX__users u on lo.logUserId = u.userId
 		         left join __PREFIX__shops s on u.userType!=0 and s.userId=u.userId
@@ -46,14 +46,13 @@ class OrdersModel extends BaseModel {
 	  * 获取订单信息
 	  */
 	 public function get(){
-	 	$m = M('orders');
-	 	return $m->where('isRefund=0 and payType=1 and isPay=1 and orderFlag=1 and orderStatus in (-1,-4,-6,-7) and orderId='.(int)I('id'))->find();
+	 	return $this->where('isRefund=0 and payType=1 and isPay=1 and orderFlag=1 and orderStatus in (-1,-4,-6,-7) and orderId='.(int)I('id'))->find();
 	 }
 	 /**
 	  * 订单分页列表
 	  */
      public function queryByPage(){
-        $m = M('goods');
+
         $shopName = WSTAddslashes(I('shopName'));
      	$orderNo = WSTAddslashes(I('orderNo'));
      	$areaId1 = (int)I('areaId1',0);
@@ -70,7 +69,7 @@ class OrdersModel extends BaseModel {
 	 	if($orderStatus!=-9999 && $orderStatus!=-100)$sql.=" and o.orderStatus=".$orderStatus;
 	 	if($orderStatus==-100)$sql.=" and o.orderStatus in(-6,-7)";
 	 	$sql.=" order by orderId desc";   
-		$page = $m->pageQuery($sql);
+		$page = $this->pageQuery($sql);
 		//获取涉及的订单及商品
 		if(count($page['root'])>0){
 			$orderIds = array();
@@ -94,7 +93,7 @@ class OrdersModel extends BaseModel {
 	  * 获取退款列表
 	  */
      public function queryRefundByPage(){
-        $m = M('goods');
+
         $shopName = WSTAddslashes(I('shopName'));
      	$orderNo = WSTAddslashes(I('orderNo'));
      	$isRefund = (int)I('isRefund',-1);
@@ -110,7 +109,7 @@ class OrdersModel extends BaseModel {
 	 	if($shopName!='')$sql.=" and (s.shopName like '%".$shopName."%' or s.shopSn like '%".$shopName."%')";
 	 	if($orderNo!='')$sql.=" and o.orderNo like '%".$orderNo."%' ";
 	 	$sql.=" order by orderId desc";  
-		$page = $m->pageQuery($sql);
+		$page = $this->pageQuery($sql);
 		//获取涉及的订单及商品
 		if(count($page['root'])>0){
 			$orderIds = array();
@@ -136,14 +135,14 @@ class OrdersModel extends BaseModel {
 	  */
 	 public function refund(){
 	 	$rd = array('status'=>-1);
-	 	$m = M('orders');
-	 	$rs = $m->where('isRefund=0 and orderFlag=1 and orderStatus in (-1,-4,-6,-7) and payType=1 and isPay=1 and orderId='.(int)I('id'))->find();
+
+	 	$rs = $this->where('isRefund=0 and orderFlag=1 and orderStatus in (-1,-4,-6,-7) and payType=1 and isPay=1 and orderId='.(int)I('id'))->find();
 	 	if($rs['orderId']!=''){
 	 		$data = array();
 	 		$data['isRefund'] = 1;
 	 		$data['refundRemark'] = I('content');
-	 	    $rss = $m->where("orderId=".(int)I('id',0))->save($data);
-			if(false !== $rs){
+	 	    $rss = $this->where("orderId=".(int)I('id',0))->save($data);
+			if(false !== $rss){
 				$rd['status']= 1;
 			}else{
 				$rd['status']= -2;

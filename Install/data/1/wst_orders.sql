@@ -1,8 +1,4 @@
-SET FOREIGN_KEY_CHECKS=0;
 
--- ----------------------------
--- Table structure for `wst_orders`
--- ----------------------------
 DROP TABLE IF EXISTS `wst_orders`;
 CREATE TABLE `wst_orders` (
   `orderId` int(11) NOT NULL AUTO_INCREMENT,
@@ -41,13 +37,18 @@ CREATE TABLE `wst_orders` (
   `orderFlag` tinyint(4) NOT NULL DEFAULT '1',
   `needPay` decimal(11,2) DEFAULT '0.00',
   `tradeNo` varchar(100) DEFAULT NULL,
+  `settlementId` int(11) DEFAULT '0',
+  `realTotalMoney` decimal(11,2) NOT NULL DEFAULT '0.00',
+  `poundageRate` float(11,2) NOT NULL DEFAULT '0.00',
+  `poundageMoney` decimal(11,2) NOT NULL DEFAULT '0.00',
+  `useScore` int(11) NOT NULL DEFAULT '0',
+  `scoreMoney` decimal(11,2) NOT NULL DEFAULT '0.00',
+  `receiveTime` datetime DEFAULT NULL,
+  `deliveryTime` datetime DEFAULT NULL,
   PRIMARY KEY (`orderId`),
   KEY `shopId` (`shopId`,`orderFlag`),
   KEY `userId` (`userId`,`orderFlag`),
   KEY `isRefund` (`isRefund`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Records of wst_orders
--- ----------------------------
-INSERT INTO `wst_orders` VALUES ('4', '1000000013', '440000', '440100', '440106', '4', '4', '72.00', '0.00', '0', '0', '0', '0', '1', '9', '马生', '17', '广州市 天河区 华南理工大学社区 桑德菲杰卡拉斯的减肥', '1591867199', null, '', '72', '0', '', '
+

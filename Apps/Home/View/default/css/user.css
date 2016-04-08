@@ -111,7 +111,8 @@ a:link,a:visited,a:active,a:hover,a:hover {
 
 .wst-page-content {
 	width: 972px;
-	padding: 5px 10px 10px;
+	margin: 0 auto;;
+	padding: 5px;
 }
 
 .wst-tbar-query {

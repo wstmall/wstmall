@@ -22,8 +22,7 @@ class UserRanksModel extends BaseModel {
 		$data["rebate"] = I("rebate");
 		$data["createTime"] = date('Y-m-d H:i:s');
 		if($this->checkEmpty($data)){
-			$m = M('user_ranks');
-			$rs = $m->add($data);
+			$rs = $this->add($data);
 			if(false !== $rs){
 				$rd['status']= 1;
 			}
@@ -36,14 +35,13 @@ class UserRanksModel extends BaseModel {
 	 public function edit(){
 	 	$rd = array('status'=>-1);
 	 	$id = (int)I("id",0);
-		$m = M('user_ranks');
 		$data = array();
 		$data['rankName'] = I("rankName");
 		$data['startScore'] = I("startScore");
 		$data['endScore'] = I("endScore");
 		$data['rebate'] = I("rebate");
 		if($this->checkEmpty($data)){
-			$rs = $m->where("rankId=".(int)I('id'))->save($data);
+			$rs = $this->where("rankId=".(int)I('id'))->save($data);
 			if(false !== $rs){
 				$rd['status']= 1;
 			}
@@ -54,25 +52,22 @@ class UserRanksModel extends BaseModel {
 	  * 获取指定对象
 	  */
      public function get(){
-	 	$m = M('user_ranks');
-		return $m->where("rankId=".(int)I('id'))->find();
+		return $this->where("rankId=".(int)I('id'))->find();
 	 }
 	 /**
 	  * 分页列表
 	  */
      public function queryByPage(){
-        $m = M('user_ranks');
 	 	$sql = "select * from __PREFIX__user_ranks order by rankId desc";
-		$rs = $m->pageQuery($sql);
+		$rs = $this->pageQuery($sql);
 		return $rs;
 	 }
 	 /**
 	  * 获取列表
 	  */
 	  public function queryByList(){
-	    $m = M('user_ranks');
 	     $sql = "select * from __PREFIX__user_ranks order by rankId desc";
-		 $rs = $m->find($sql);
+		 $rs = $this->find($sql);
 	  }
 	  
 	 /**
@@ -80,8 +75,7 @@ class UserRanksModel extends BaseModel {
 	  */
 	 public function del(){
 	 	$rd = array('status'=>-1);
-		$m = M('user_ranks');
-	    $rs = $m->delete((int)I('id'));
+	    $rs = $this->delete((int)I('id'));
 		if($rs){
 			$rd['status']= 1;
 		}

@@ -252,17 +252,44 @@ class OrdersModel extends BaseModel {
 			$data["userTel"] = $addressInfo["userTel"];
 			$data["userPhone"] = $addressInfo["userPhone"];
 			
-			$data['orderScore'] = round($data["totalMoney"]+$data["deliverMoney"],0);
+			$data['orderScore'] = floor($data["totalMoney"]+$data["deliverMoney"]);
 			$data["isInvoice"] = $needreceipt;		
 			$data["orderRemarks"] = $remarks;
 			$data["requireTime"] = I("requireTime");
 			$data["invoiceClient"] = I("invoiceClient");
 			$data["isAppraises"] = 0;
 			$data["isSelf"] = $isself;
-			$data["needPay"] = $shopgoods["totalMoney"]+$deliverMoney;
-
-			$data["createTime"] = date("Y-m-d H:i:s");
 			
+			$isScorePay = (int)I("isScorePay",0);
+			$scoreMoney = 0;
+			$useScore = 0;
+
+			if($GLOBALS['CONFIG']['poundageRate']>0){
+				$data["poundageRate"] = $GLOBALS['CONFIG']['poundageRate'];
+				$data["poundageMoney"] = WSTBCMoney($data["totalMoney"] * $data["poundageRate"] / 100,0,2);
+			}else{
+				$data["poundageRate"] = 0;
+				$data["poundageMoney"] = 0;
+			}
+			if($GLOBALS['CONFIG']['isOpenScorePay']==1 && $isScorePay==1){//积分支付
+				$baseScore = WSTOrderScore();
+				$baseMoney = WSTScoreMoney();
+				$sql = "select userId,userScore from __PREFIX__users where userId=$userId";
+				$user = $this->queryRow($sql);
+				$useScore = $baseScore*floor($user["userScore"]/$baseScore);
+				$scoreMoney = $baseMoney*floor($user["userScore"]/$baseScore);
+				$orderTotalMoney = $shopgoods["totalMoney"]+$deliverMoney;
+				if($orderTotalMoney<$scoreMoney){//订单金额小于积分金额
+					$useScore = $baseScore*floor($orderTotalMoney/$baseMoney);
+					$scoreMoney = $baseMoney*floor($orderTotalMoney/$baseMoney);
+				}
+				$data["useScore"] = $useScore;
+				$data["scoreMoney"] = $scoreMoney;
+			}
+			$data["realTotalMoney"] = $shopgoods["totalMoney"]+$deliverMoney - $scoreMoney;
+			$data["needPay"] = $shopgoods["totalMoney"]+$deliverMoney - $scoreMoney;
+			
+			$data["createTime"] = date("Y-m-d H:i:s");
 			if($payway==1){
 				$data["orderStatus"] = -2;
 			}else{
@@ -271,9 +298,28 @@ class OrdersModel extends BaseModel {
 			
 			$data["orderunique"] = $orderunique;
 			$data["isPay"] = 0;
+			if($data["needPay"]==0){
+				$data["isPay"] = 1;
+			}
+			
 			$morders = M('orders');
 			$orderId = $morders->add($data);	
-
+			if($GLOBALS['CONFIG']['isOpenScorePay']==1 && $isScorePay==1 && $useScore>0){//积分支付
+				$sql = "UPDATE __PREFIX__users set userScore=userScore-".$useScore." WHERE userId=".$userId;
+				$rs = $this->execute($sql);
+				
+				$data = array();
+				$m = M('user_score');
+				$data["userId"] = $userId;
+				$data["score"] = $useScore;
+				$data["dataSrc"] = 1;
+				$data["dataId"] = $orderId;
+				$data["dataRemarks"] = "订单支付-扣积分";
+				$data["scoreType"] = 2;
+				$data["createTime"] = date('Y-m-d H:i:s');
+				$m->add($data);
+			}
+	
 			//订单创建成功则建立相关记录
 			if($orderId>0){
 				$orderIds[] = $orderId;
@@ -292,7 +338,6 @@ class OrdersModel extends BaseModel {
 					$data["goodsThums"] = $sgoods["goodsThums"];
 					
 					$mog->add($data);
-					
 				}
 			
 				if($payway==0){
@@ -305,7 +350,6 @@ class OrdersModel extends BaseModel {
 					$data["logTime"] = date('Y-m-d H:i:s');
 					$mlogo = M('log_orders');
 					$mlogo->add($data);
-					
 					
 					//建立订单提醒
 					$sql ="SELECT userId,shopId,shopName FROM __PREFIX__shops WHERE shopId=$shopId AND shopFlag=1  ";
@@ -354,17 +398,20 @@ class OrdersModel extends BaseModel {
 	public function getOrderListByIds(){
 		 $orderunique = session("WST_ORDER_UNIQUE");
 		 $orderInfos = array('totalMoney'=>0,'isMoreOrder'=>0,'list'=>array());
-		 $sql = "select orderId,orderNo,totalMoney,deliverMoney 
+		 $sql = "select orderId,orderNo,totalMoney,deliverMoney,realTotalMoney
 		         from __PREFIX__orders where userId=".(int)session('WST_USER.userId')." 
 		         and orderunique='".$orderunique."' and orderFlag=1 ";
 	     $rs = $this->query($sql);
 	     if(!empty($rs)){
 	     	$totalMoney = 0;
+	     	$realTotalMoney = 0;
 	     	foreach ($rs as $key =>$v){
 	     		$orderInfos['list'][] = array('orderId'=>$v['orderId'],'orderNo'=>$v['orderNo']);
 	     		$totalMoney += $v['totalMoney'] + $v['deliverMoney'];
+	     		$realTotalMoney += $v['realTotalMoney'];
 	     	}
 	     	$orderInfos['totalMoney'] = $totalMoney;
+	     	$orderInfos['realTotalMoney'] = $realTotalMoney;
 	     	$orderInfos['isMoreOrder'] = (count($rs)>0)?1:0;
 	     }
 	     return $orderInfos;
@@ -415,11 +462,9 @@ class OrdersModel extends BaseModel {
 		$goodsName = WSTAddslashes(I("goodsName"));
 		$shopName = WSTAddslashes(I("shopName"));
 		$userName = WSTAddslashes(I("userName"));
-		$sdate = WSTAddslashes(I("sdate"));
-		$edate = WSTAddslashes(I("edate"));
 		$pcurr = (int)I("pcurr",0);
 		
-		$sql = "SELECT o.orderId,o.orderNo,o.shopId,o.orderStatus,o.userName,o.totalMoney,
+		$sql = "SELECT o.orderId,o.orderNo,o.shopId,o.orderStatus,o.userName,o.totalMoney,o.realTotalMoney,
 		        o.createTime,o.payType,o.isRefund,o.isAppraises,sp.shopName 
 		        FROM __PREFIX__orders o,__PREFIX__shops sp 
 		        WHERE o.userId = $userId AND o.orderStatus =-2 AND o.isPay = 0 AND needPay >0 AND o.payType = 1 AND o.shopId=sp.shopId ";
@@ -431,12 +476,6 @@ class OrdersModel extends BaseModel {
 		}
 		if($shopName!=""){
 			$sql .= " AND sp.shopName like '%$shopName%'";
-		}
-		if($sdate!=""){
-			$sql .= " AND o.createTime >= $sdate";
-		}
-		if($edate!=""){
-			$sql .= " AND o.createTime <= $edate";
 		}
 		$sql .= " order by o.orderId desc";
 		$pages = $this->pageQuery($sql,$pcurr);	
@@ -478,11 +517,9 @@ class OrdersModel extends BaseModel {
 		$goodsName = WSTAddslashes(I("goodsName"));
 		$shopName = WSTAddslashes(I("shopName"));
 		$userName = WSTAddslashes(I("userName"));
-		$sdate = WSTAddslashes(I("sdate"));
-		$edate = WSTAddslashes(I("edate"));
 		$pcurr = (int)I("pcurr",0);
 
-		$sql = "SELECT o.orderId,o.orderNo,o.shopId,o.orderStatus,o.userName,o.totalMoney,
+		$sql = "SELECT o.orderId,o.orderNo,o.shopId,o.orderStatus,o.userName,o.totalMoney,o.realTotalMoney,
 		        o.createTime,o.payType,o.isRefund,o.isAppraises,sp.shopName 
 		        FROM __PREFIX__orders o,__PREFIX__shops sp WHERE o.userId = $userId AND o.orderStatus =3 AND o.shopId=sp.shopId ";
 		if($orderNo!=""){
@@ -493,12 +530,6 @@ class OrdersModel extends BaseModel {
 		}
 		if($shopName!=""){
 			$sql .= " AND sp.shopName like '%$shopName%'";
-		}
-		if($sdate!=""){
-			$sql .= " AND o.createTime >= $sdate";
-		}
-		if($edate!=""){
-			$sql .= " AND o.createTime <= $edate";
 		}
 		$sql .= " order by o.orderId desc";
 		$pages = $this->pageQuery($sql,$pcurr);	
@@ -537,11 +568,9 @@ class OrdersModel extends BaseModel {
 		$goodsName = WSTAddslashes(I("goodsName"));
 		$shopName = WSTAddslashes(I("shopName"));
 		$userName = WSTAddslashes(I("userName"));
-		$sdate = WSTAddslashes(I("sdate"));
-		$edate = WSTAddslashes(I("edate"));
 		$pcurr = (int)I("pcurr",0);
 
-		$sql = "SELECT o.orderId,o.orderNo,o.shopId,o.orderStatus,o.userName,o.totalMoney,
+		$sql = "SELECT o.orderId,o.orderNo,o.shopId,o.orderStatus,o.userName,o.totalMoney,o.realTotalMoney,
 		        o.createTime,o.payType,o.isRefund,o.isAppraises,sp.shopName 
 		        FROM __PREFIX__orders o,__PREFIX__shops sp 
 		        WHERE o.userId = $userId AND o.orderStatus in ( 0,1,2 ) AND o.shopId=sp.shopId ";
@@ -553,12 +582,6 @@ class OrdersModel extends BaseModel {
 		}
 		if($shopName!=""){
 			$sql .= " AND sp.shopName like '%$shopName%'";
-		}
-		if($sdate!=""){
-			$sql .= " AND o.createTime >= $sdate";
-		}
-		if($edate!=""){
-			$sql .= " AND o.createTime <= $edate";
 		}
 		$sql .= " order by o.orderId desc";
 		$pages = $this->pageQuery($sql,$pcurr);
@@ -603,7 +626,7 @@ class OrdersModel extends BaseModel {
 		$pcurr = (int)I("pcurr",0);
 		//必须是在线支付的才允许退款
 
-		$sql = "SELECT o.orderId,o.orderNo,o.shopId,o.orderStatus,o.userName,o.totalMoney,
+		$sql = "SELECT o.orderId,o.orderNo,o.shopId,o.orderStatus,o.userName,o.totalMoney,o.realTotalMoney,
 		        o.createTime,o.payType,o.isRefund,o.isAppraises,sp.shopName ,oc.complainId
 		        FROM __PREFIX__orders o left join __PREFIX__order_complains oc on oc.orderId=o.orderId,__PREFIX__shops sp 
 		        WHERE o.userId = $userId AND (o.orderStatus in (-3,-4,-5) or (o.orderStatus in (-1,-4,-6,-7) and payType =1 AND o.isPay =1)) AND o.shopId=sp.shopId ";
@@ -615,12 +638,6 @@ class OrdersModel extends BaseModel {
 		}
 		if($shopName!=""){
 			$sql .= " AND sp.shopName like '%$shopName%'";
-		}
-		if($sdate!=""){
-			$sql .= " AND o.createTime >= $sdate";
-		}
-		if($edate!=""){
-			$sql .= " AND o.createTime <= $edate";
 		}
 		$sql .= " order by o.orderId desc";
 		$pages = $this->pageQuery($sql,$pcurr);	
@@ -660,11 +677,9 @@ class OrdersModel extends BaseModel {
 		$goodsName = WSTAddslashes(I("goodsName"));
 		$shopName = WSTAddslashes(I("shopName"));
 		$userName = WSTAddslashes(I("userName"));
-		$sdate = WSTAddslashes(I("sdate"));
-		$edate = WSTAddslashes(I("edate"));
 		$pcurr = (int)I("pcurr",0);
 
-		$sql = "SELECT o.orderId,o.orderNo,o.shopId,o.orderStatus,o.userName,o.totalMoney,
+		$sql = "SELECT o.orderId,o.orderNo,o.shopId,o.orderStatus,o.userName,o.totalMoney,o.realTotalMoney,
 		        o.createTime,o.payType,o.isRefund,o.isAppraises,sp.shopName 
 		        FROM __PREFIX__orders o,__PREFIX__shops sp 
 		        WHERE o.userId = $userId AND o.orderStatus in (-1,-6,-7) AND o.shopId=sp.shopId ";
@@ -676,12 +691,6 @@ class OrdersModel extends BaseModel {
 		}
 		if($shopName!=""){
 			$sql .= " AND sp.shopName like '%$shopName%'";
-		}
-		if($sdate!=""){
-			$sql .= " AND o.createTime >= $sdate";
-		}
-		if($edate!=""){
-			$sql .= " AND o.createTime <= $edate";
 		}
 		$sql .= " order by o.orderId desc";
 		$pages = $this->pageQuery($sql,$pcurr);	
@@ -720,10 +729,8 @@ class OrdersModel extends BaseModel {
 		$goodsName = WSTAddslashes(I("goodsName"));
 		$shopName = WSTAddslashes(I("shopName"));
 		$userName = WSTAddslashes(I("userName"));
-		$sdate = WSTAddslashes(I("sdate"));
-		$edate = WSTAddslashes(I("edate"));
 		$pcurr = (int)I("pcurr",0);
-		$sql = "SELECT o.orderId,o.orderNo,o.shopId,o.orderStatus,o.userName,o.totalMoney,
+		$sql = "SELECT o.orderId,o.orderNo,o.shopId,o.orderStatus,o.userName,o.totalMoney,o.realTotalMoney,
 		        o.createTime,o.payType,o.isRefund,o.isAppraises,sp.shopName ,oc.complainId
 		        FROM __PREFIX__orders o left join __PREFIX__order_complains oc on oc.orderId=o.orderId,__PREFIX__shops sp WHERE o.userId = $userId AND o.shopId=sp.shopId ";	
 		if($orderNo!=""){
@@ -734,12 +741,6 @@ class OrdersModel extends BaseModel {
 		}
 		if($shopName!=""){
 			$sql .= " AND sp.shopName like '%$shopName%'";
-		}
-		if($sdate!=""){
-			$sql .= " AND o.createTime >= $sdate";
-		}
-		if($edate!=""){
-			$sql .= " AND o.createTime <= $edate";
 		}
 		$sql .= " AND o.orderStatus = 4";
 		$sql .= " order by o.orderId desc";
@@ -777,7 +778,7 @@ class OrdersModel extends BaseModel {
 		$orderId = (int)$obj["orderId"];
 		$rsdata = array('status'=>-1);
 		//判断订单状态，只有符合状态的订单才允许改变
-		$sql = "SELECT orderId,orderNo,orderStatus FROM __PREFIX__orders WHERE orderId = $orderId and orderFlag = 1 and userId=".$userId;		
+		$sql = "SELECT orderId,orderNo,orderStatus,useScore FROM __PREFIX__orders WHERE orderId = $orderId and orderFlag = 1 and userId=".$userId;		
 		$rsv = $this->queryRow($sql);
 		$cancelStatus = array(0,1,2,-2);//未受理,已受理,打包中,待付款订单
 		if(!in_array($rsv["orderStatus"], $cancelStatus))return $rsdata;
@@ -801,6 +802,21 @@ class OrdersModel extends BaseModel {
 		$sql="Delete From __PREFIX__order_reminds where orderId=".$orderId." AND remindType=0";
 		$this->execute($sql);
 		
+		if($rsv["useScore"]>0){
+			$sql = "UPDATE __PREFIX__users set userScore=userScore+".$rsv["useScore"]." WHERE userId=".$userId;
+			$this->execute($sql);
+			
+			$data = array();
+			$m = M('user_score');
+			$data["userId"] = $userId;
+			$data["score"] = $rsv["useScore"];
+			$data["dataSrc"] = 3;
+			$data["dataId"] = $orderId;
+			$data["dataRemarks"] = "取消订单返还";
+			$data["scoreType"] = 1;
+			$data["createTime"] = date('Y-m-d H:i:s');
+			$m->add($data);
+		}
 		$data = array();
 		$m = M('log_orders');
 		$data["orderId"] = $orderId;
@@ -821,7 +837,7 @@ class OrdersModel extends BaseModel {
 		$orderId = (int)$obj["orderId"];
 		$type = (int)$obj["type"];
 		$rsdata = array();
-		$sql = "SELECT orderId,orderNo,orderScore,orderStatus FROM __PREFIX__orders WHERE orderId = $orderId and userId=".$userId;		
+		$sql = "SELECT orderId,orderNo,orderScore,orderStatus,poundageRate,poundageMoney,shopId,useScore,scoreMoney FROM __PREFIX__orders WHERE orderId = $orderId and userId=".$userId;		
 		$rsv = $this->queryRow($sql);
 		if($rsv["orderStatus"]!=3){
 			$rsdata["status"] = -1;
@@ -829,15 +845,60 @@ class OrdersModel extends BaseModel {
 		}		
         //收货则给用户增加积分
         if($type==1){
-        	$sql = "UPDATE __PREFIX__orders set orderStatus = 4 WHERE orderId = $orderId and userId=".$userId;			
+        	$sql = "UPDATE __PREFIX__orders set orderStatus = 4,receiveTime='".date("Y-m-d H:i:s")."'  WHERE orderId = $orderId and userId=".$userId;			
         	$rs = $this->execute($sql);
         	
         	//修改商品销量
         	$sql = "UPDATE __PREFIX__goods g, __PREFIX__order_goods og, __PREFIX__orders o SET g.saleCount=g.saleCount+og.goodsNums WHERE g.goodsId= og.goodsId AND og.orderId = o.orderId AND o.orderId=$orderId AND o.userId=".$userId;
         	$rs = $this->execute($sql);
         	
-        	$sql = "UPDATE __PREFIX__users set userScore=userScore+".$rsv["orderScore"]." WHERE userId=".$userId;
-        	$rs = $this->execute($sql);
+        	//修改积分
+        	if($GLOBALS['CONFIG']['isOrderScore']==1){
+	        	$sql = "UPDATE __PREFIX__users set userScore=userScore+".$rsv["orderScore"].",userTotalScore=userTotalScore+".$rsv["orderScore"]." WHERE userId=".$userId;
+	        	$rs = $this->execute($sql);
+	        	
+	        	$data = array();
+	        	$m = M('user_score');
+	        	$data["userId"] = $userId;
+	        	$data["score"] = $rsv["orderScore"];
+	        	$data["dataSrc"] = 1;
+	        	$data["dataId"] = $orderId;
+	        	$data["dataRemarks"] = "交易获得";
+	        	$data["scoreType"] = 1;
+	        	$data["createTime"] = date('Y-m-d H:i:s');
+	        	$m->add($data);
+        	}
+        	//积分支付支出
+        	if($rsv["scoreMoney"]>0){
+        		$data = array();
+        		$m = M('log_sys_moneys');
+        		$data["targetType"] = 0;
+        		$data["targetId"] = $userId;
+        		$data["dataSrc"] = 2;
+        		$data["dataId"] = $orderId;
+        		$data["moneyRemark"] = "订单【".$rsv["orderNo"]."】支付 ".$rsv["useScore"]." 个积分，支出 ￥".$rsv["scoreMoney"];
+        		$data["moneyType"] = 2;
+        		$data["money"] = $rsv["scoreMoney"];
+        		$data["createTime"] = date('Y-m-d H:i:s');
+        		$data["dataFlag"] = 1;
+        		$m->add($data);
+        	}
+        	//收取订单佣金
+        	if($rsv["poundageMoney"]>0){
+        		$data = array();
+        		$m = M('log_sys_moneys');
+        		$data["targetType"] = 1;
+        		$data["targetId"] = $rsv["shopId"];
+        		$data["dataSrc"] = 1;
+        		$data["dataId"] = $orderId;
+        		$data["moneyRemark"] = "收取订单【".$rsv["orderNo"]."】".$rsv["poundageRate"]."%的佣金 ￥".$rsv["poundageMoney"];
+        		$data["moneyType"] = 1;
+        		$data["money"] = $rsv["poundageMoney"];
+        		$data["createTime"] = date('Y-m-d H:i:s');
+        		$data["dataFlag"] = 1;
+        		$m->add($data);
+        	}
+        	
         }else{
         	if(I('rejectionRemarks')=='')return $rsdata;//如果是拒收的话需要填写原因
         	$sql = "UPDATE __PREFIX__orders set orderStatus = -3 WHERE orderId = $orderId and userId=".$userId;			
@@ -868,7 +929,6 @@ class OrdersModel extends BaseModel {
 		$order = $this->queryRow($sql);
 		if(empty($order))return $data;
 		$data["order"] = $order;
-
 		$sql = "select og.orderId, og.goodsId ,g.goodsSn, og.goodsNums, og.goodsName , og.goodsPrice shopPrice,og.goodsThums,og.goodsAttrName,og.goodsAttrName 
 				from __PREFIX__goods g , __PREFIX__order_goods og 
 				WHERE g.goodsId = og.goodsId AND og.orderId = $orderId";
@@ -967,7 +1027,7 @@ class OrdersModel extends BaseModel {
 		$userName = WSTAddslashes(I("userName"));
 		$userAddress = WSTAddslashes(I("userAddress"));
 		$rsdata = array();
-		$sql = "SELECT orderNo,orderId,userId,userName,userAddress,totalMoney,orderStatus,createTime FROM __PREFIX__orders WHERE shopId = $shopId ";
+		$sql = "SELECT orderNo,orderId,userId,userName,userAddress,totalMoney,realTotalMoney,orderStatus,createTime FROM __PREFIX__orders WHERE shopId = $shopId ";
 		if($orderStatus==5){
 			$sql.=" AND orderStatus in (-3,-4,-5,-6,-7)";
 		}else{
@@ -1146,7 +1206,7 @@ class OrdersModel extends BaseModel {
 			return $rsdata;
 		}
 
-		$sql = "UPDATE __PREFIX__orders set orderStatus = 3 WHERE orderId = $orderId and shopId=".$shopId;		
+		$sql = "UPDATE __PREFIX__orders set orderStatus = 3,deliveryTime='".date('Y-m-d H:i:s')."' WHERE orderId = $orderId and shopId=".$shopId;		
 		$rs = $this->execute($sql);		
 
 		$data = array();
@@ -1179,7 +1239,7 @@ class OrdersModel extends BaseModel {
 			$rsv = $this->queryRow($sql);
 			if($rsv["orderStatus"]!=2)continue;//状态不符合则跳过
 	
-			$sql = "UPDATE __PREFIX__orders set orderStatus = 3 WHERE orderId = $orderId and shopId=".$shopId;		
+			$sql = "UPDATE __PREFIX__orders set orderStatus = 3,deliveryTime='".date('Y-m-d H:i:s')."' WHERE orderId = $orderId and shopId=".$shopId;		
 			$rs = $this->execute($sql);		
 	
 			$data = array();
@@ -1235,7 +1295,7 @@ class OrdersModel extends BaseModel {
 		$shopId = (int)$obj["shopId"];
 		$type = (int)I('type');
 		$rsdata = array();
-		$sql = "SELECT orderId,orderNo,orderStatus FROM __PREFIX__orders WHERE orderId = $orderId AND orderFlag = 1 and shopId=".$shopId;		
+		$sql = "SELECT orderId,orderNo,orderStatus,useScore FROM __PREFIX__orders WHERE orderId = $orderId AND orderFlag = 1 and shopId=".$shopId;		
 		$rsv = $this->queryRow($sql);
 		if($rsv["orderStatus"]!= -3){
 			$rsdata["status"] = -1;
@@ -1259,6 +1319,22 @@ class OrdersModel extends BaseModel {
 						$sql = "UPDATE __PREFIX__goods_attributes set attrStock = attrStock+$goodsNums WHERE id = $goodsAttrId";
 						$this->execute($sql);
 					}
+				}
+				
+				if($rsv["useScore"]>0){
+					$sql = "UPDATE __PREFIX__users set userScore=userScore+".$rsv["useScore"]." WHERE userId=".$userId;
+					$this->execute($sql);
+						
+					$data = array();
+					$m = M('user_score');
+					$data["userId"] = $userId;
+					$data["score"] = $rsv["useScore"];
+					$data["dataSrc"] = 4;
+					$data["dataId"] = $orderId;
+					$data["dataRemarks"] = "拒收订单返还";
+					$data["scoreType"] = 1;
+					$data["createTime"] = date('Y-m-d H:i:s');
+					$m->add($data);
 				}
 			}	
         }else{//不同意拒收

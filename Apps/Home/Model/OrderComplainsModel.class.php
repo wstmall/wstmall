@@ -49,7 +49,7 @@ class OrderComplainsModel extends BaseModel {
 		$data = array('complainStatus'=>1);
 		if($rs['complainId']==''){
 			//获取订单信息
-			$sql = "select o.totalMoney,o.orderNo,o.orderId,o.createTime,o.deliverMoney,o.requireTime,p.shopName,p.shopId 
+			$sql = "select o.realTotalMoney,o.orderNo,o.orderId,o.createTime,o.deliverMoney,o.requireTime,p.shopName,p.shopId 
 			        from __PREFIX__orders o left join __PREFIX__shops p on o.shopId=p.shopId where o.orderId=".$orderId." and o.userId=".$userId;
 			$order = $this->queryRow($sql);
 			if($order){
@@ -119,7 +119,7 @@ class OrderComplainsModel extends BaseModel {
 		$shopId = (int)session('WST_USER.shopId');
 		$id = (int)I('id');
 		//获取订单信息
-		$sql = "select oc.*,o.totalMoney,o.orderNo,o.orderId,o.createTime,o.deliverMoney,o.requireTime,p.shopName,p.shopId 
+		$sql = "select oc.*,o.realTotalMoney,o.orderNo,o.orderId,o.createTime,o.deliverMoney,o.requireTime,p.shopName,p.shopId 
 			        from __PREFIX__order_complains oc,__PREFIX__orders o left join __PREFIX__shops p on o.shopId=p.shopId 
 			        where oc.orderId=o.orderId and oc.complainId=".$id;
 		if($userType==0){

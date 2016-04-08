@@ -31,20 +31,20 @@ class NavsModel extends BaseModel {
 	  * 新增
 	  */
 	 public function insert(){
-	 	$m = M('navs');
+
 	 	$rd = array('status'=>-1);
-		$data = $m->create();
+		$data = $this->create();
 		if(!$data){
-			$rd['msg'] = $m->getError();
+			$rd['msg'] = $this->getError();
 			return $rd;
 		}
 		$data['createTime'] = date('Y-m-d H:i:s');
-		$rs = $m->add($data);
+		$rs = $this->add($data);
 		if(false !== $rs){
 			$rd['status']= 1;
 			WSTDelDir(C('WST_RUNTIME_PATH')."/Data/navigation");
 		}else{
-			echo $m->getDbError();
+			echo $this->getDbError();
 		}
 		return $rd;
 	 } 
@@ -52,14 +52,13 @@ class NavsModel extends BaseModel {
 	  * 修改
 	  */
 	 public function edit(){
-	 	$m = M('navs');
 	 	$rd = array('status'=>-1);
-	    $data = $m->create();
+	    $data = $this->create();
 		if(!$data){
-			$rd['msg'] = $m->getError();
+			$rd['msg'] = $this->getError();
 			return $rd;
 		}
-		$rs = $m->where("id=".(int)I('id',0))->save($data);
+		$rs = $this->where("id=".(int)I('id',0))->save($data);
 		if(false !== $rs){
 			$rd['status']= 1;
 			WSTDelDir(C('WST_RUNTIME_PATH')."/Data/navigation");
@@ -70,8 +69,7 @@ class NavsModel extends BaseModel {
 	  * 获取指定对象
 	  */
      public function get(){
-	 	$m = M('navs');
-		return $m->where("id=".I('id'))->find();
+		return $this->where("id=".I('id'))->find();
 	 }
 	 /**
 	  * 分页列表
@@ -93,8 +91,7 @@ class NavsModel extends BaseModel {
 	  */
 	 public function del(){
 	    $rd = array('status'=>-1);
-	    $m = M('navs');
-	    $rs = $m->delete((int)I('id'));
+	    $rs = $this->delete((int)I('id'));
 		if(false !== $rs){
 		   $rd['status']= 1;
 		   WSTDelDir(C('WST_RUNTIME_PATH')."/Data/navigation");
@@ -107,10 +104,10 @@ class NavsModel extends BaseModel {
 	  */
 	 public function editiIsShow(){
 	 	$rd = array('status'=>-1);
-	 	if(I('id',0)==0)return $rd;
-	 	$m = M('navs');
+	 	$id = (int)I('id',0);
+	 	if($id==0)return $rd;
 	 	$m->isShow = (I('isShow')==1)?1:0;
-	 	$rs = $m->where("id = ".(int)I('id',0))->save();
+	 	$rs = $this->where("id = ".$id)->save();
 	    if(false !== $rs){
 			$rd['status']= 1;
 			WSTDelDir(C('WST_RUNTIME_PATH')."/Data/navigation");
@@ -123,10 +120,11 @@ class NavsModel extends BaseModel {
 	  */
 	 public function editiIsOpen(){
 	 	$rd = array('status'=>-1);
-	 	if(I('id',0)==0)return $rd;
-	 	$m = M('navs');
-	 	$m->isOpen = (I('isOpen')==1)?1:0;
-	 	$rs = $m->where("id = ".(int)I('id',0))->save();
+	 	$id = (int)I('id',0);
+	 	if($id==0)return $rd;
+	 	
+	 	$this->isOpen = (I('isOpen')==1)?1:0;
+	 	$rs = $this->where("id = ".$id)->save();
 	    if(false !== $rs){
 			$rd['status']= 1;
 			WSTDelDir(C('WST_RUNTIME_PATH')."/Data/navigation");

@@ -50,15 +50,16 @@
             	<span class='wst-menu-title'><span></span>交易管理</span>
             
               	<a href='{:U("Home/Orders/toShopOrdersList")}'><li id='li_toShopOrdersList' <if condition='$umark eq "toShopOrdersList"'> class='liselect'</if>>订单管理<span style="display:none;" class="wst-msg-tips-box"></span></li></a>
-            	<a href="{:U('Home/OrderComplains/queryShopComplainByPage/')}"><li <if condition='$umark eq "queryShopComplainByPage"'> class='selected'</if>>投诉订单</li></a>
+            	<a href="{:U('Home/OrderComplains/queryShopComplainByPage')}"><li <if condition='$umark eq "queryShopComplainByPage"'> class='selected'</if>>投诉订单</li></a>
+            	<a href="{:U('Home/OrderSettlements/toSettlementIndex')}"><li <if condition='$umark eq "toSettlementIndex"'> class='selected'</if>>订单结算</li></a>
             	<span class='wst-menu-title' style='border-top:0px;'><span></span>商品管理</span>
             
-               	<a href="{:U('Home/ShopsCats/index/')}"><li <if condition='$umark eq "index"'> class='liselect'</if>>商品分类</li></a>
-              	<a href="{:U('Home/Goods/queryOnSaleByPage/')}"><li <if condition='$umark eq "queryOnSaleByPage"'> class='liselect'</if>>出售中的商品</li></a>
-               	<a href="{:U('Home/Goods/queryPenddingByPage/')}"><li <if condition='$umark eq "queryPenddingByPage"'> class='liselect'</if>>待审核商品</li></a>
-               	<a href="{:U('Home/Goods/queryUnSaleByPage/')}"><li <if condition='$umark eq "queryUnSaleByPage"'> class='liselect'</if>>仓库中的商品</li></a>
+               	<a href="{:U('Home/ShopsCats/index')}"><li <if condition='$umark eq "index"'> class='liselect'</if>>商品分类</li></a>
+              	<a href="{:U('Home/Goods/queryOnSaleByPage')}"><li <if condition='$umark eq "queryOnSaleByPage"'> class='liselect'</if>>出售中的商品</li></a>
+               	<a href="{:U('Home/Goods/queryPenddingByPage')}"><li <if condition='$umark eq "queryPenddingByPage"'> class='liselect'</if>>待审核商品</li></a>
+               	<a href="{:U('Home/Goods/queryUnSaleByPage')}"><li <if condition='$umark eq "queryUnSaleByPage"'> class='liselect'</if>>仓库中的商品</li></a>
                	<a href="{:U('Home/Goods/toEdit/',array('umark'=>'toEditGoods'))}"><li <if condition='$umark eq "toEditGoods"'> class='liselect'</if>>新增商品</li></a>
-               	<a href="{:U('Home/GoodsAppraises/index/')}"><li <if condition='$umark eq "GoodsAppraises"'> class='liselect'</if>>评价管理</li></a>
+               	<a href="{:U('Home/GoodsAppraises/index')}"><li <if condition='$umark eq "GoodsAppraises"'> class='liselect'</if>>评价管理</li></a>
 
                	<a href="{:U('Home/AttributeCats/index')}"><li <if condition='$umark eq "AttributeCats"'> class='liselect'</if>>商品类型</li></a>
                	<a href="{:U('Home/Imports/index')}"><li <if condition='$umark eq "Imports"'> class='liselect'</if>>数据导入</li></a>

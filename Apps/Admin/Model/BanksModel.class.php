@@ -18,8 +18,7 @@ class BanksModel extends BaseModel {
 		$data["bankName"] = I("bankName");
 		$data["bankFlag"] = 1;
 		if($this->checkEmpty($data,true)){
-			$m = M('banks');
-			$rs = $m->add($data);
+			$rs = $this->add($data);
 			if(false !== $rs){
 				$rd['status']= 1;
 			}
@@ -32,12 +31,10 @@ class BanksModel extends BaseModel {
 	 public function edit(){
 	 	$rd = array('status'=>-1);
 	 	$id = (int)I("id",0);
-	    
-		$m = M('banks');
 		$data["bankId"] = (int)I("id");
 		$data["bankName"] = I("bankName");
 		if($this->checkEmpty($data)){	
-			$rs = $m->where("bankId=".(int)I('id'))->save($data);
+			$rs = $this->where("bankId=".(int)I('id'))->save($data);
 			if(false !== $rs){
 				$rd['status']= 1;
 			}
@@ -48,24 +45,21 @@ class BanksModel extends BaseModel {
 	  * 获取指定对象
 	  */
      public function get(){
-	 	$m = M('banks');
-		return $m->where("bankId=".(int)I('id'))->find();
+		return $this->where("bankId=".(int)I('id'))->find();
 	 }
 	 /**
 	  * 分页列表
 	  */
      public function queryByPage(){
-        $m = M('banks');
 	 	$sql = "select * from __PREFIX__banks where bankFlag=1 order by bankId desc";
-		$rs = $m->pageQuery($sql);
+		$rs = $this->pageQuery($sql);
 		return $rs;
 	 }
 	 /**
 	  * 获取列表
 	  */
 	  public function queryByList(){
-	     $m = M('banks');
-		 $rs = $m->where('bankFlag=1')->select();
+		 $rs = $this->where('bankFlag=1')->select();
 		 return $rs;
 	  }
 	  
@@ -74,8 +68,7 @@ class BanksModel extends BaseModel {
 	  */
 	 public function del(){
 	 	$rd = array('status'=>-1);
-	 	$m = M('banks');
-		$rs = $m->delete((int)I('id'));
+		$rs = $this->delete((int)I('id'));
 		if($rs){
 		   $rd['status']= 1;
 		}

@@ -1,0 +1,194 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+	<script>
+	var statusMark = 0;
+	$(function () {
+		$('#tab').TabPanel({tab:statusMark,callback:function(tab){
+			switch(tab){
+			   case 0:querySettlementsByPage(0);break;
+			   case 1:queryUnSettlementOrdersByPage(0);break;
+			   case 2:querySettlementsOrdersByPage(0);break;
+			}
+		}});
+	});
+	</script>
+	<div class="wst-body" style="margin-bottom: 8px;"> 
+		<div class='wst-page-header'>卖家中心 > 订单结算</div>
+		<div class='wst-page-content' style="padding-top:10px;">
+		   <div id='tab' class="wst-tab-box">
+			<ul class="wst-tab-nav">
+				<li id="wst-msg-li-0">结算信息<span style="display:none;"></span></li>
+				<li id="wst-msg-li-1">未结算订单<span style="display:none;"></span></li>
+				<li id="wst-msg-li-2">已结算订单<span style="display:none;"></span></li>
+			</ul>
+			<div class="wst-tab-content" style='width:98%;'>
+			    <!-- 结算信息 -->
+				<div class='wst-tab-item'>
+					<div>
+						<table class='wst-list' style="font-size:13px;">
+							<thead>
+								<tr>
+									<th colspan="10" class="wst-form">
+									结算单号：<input type="text" id="settlementNo_0" style='width:120px;' autocomplete="off"/>
+									结算状态：<select id='isFinish_0' autocomplete="off">
+									    <option value='-1'>全部</option>
+									    <option value='0'>未结算</option>
+									    <option value='1'>已结算</option>
+									</select>
+									<button class='wst-btn-query' onclick="querySettlementsByPage(0)">查询</button>
+
+									</th>
+								</tr>
+								<tr>
+								    <th width='20'>&nbsp;</th>
+									<th width='100'>结算单号</th>
+									<th width='40'>类型</th>
+									<th width='60'>订单金额</th>
+									<th width='60'>结算金额</th>
+									<th width='60'>佣金</th>
+									<th width='130'>创建时间</th>
+									<th width='60'>结算状态</th>
+									<th width='130'>结算时间</th>
+									<th width='*'>备注</th>
+								</tr>
+							</thead>
+							<script id="tblist0" type="text/html">
+							{{# for(var i = 0; i < d.length; i++){ }}
+							<tr>
+								<td>{{i+1}}</td>
+							    <td><a style='color:blue' href='javascript:view("{{d[i].settlementNo}}")'>{{d[i].settlementNo}}</a></td>
+								<td>{{# if(d[i].settlementType==1){ }}定时{{# }else{ }}手动{{# } }}</td>
+                                <td>{{d[i].orderMoney}}</td>
+								<td>{{d[i].settlementMoney}}</td>
+                                <td>{{d[i].poundageMoney}}</td>
+                                <td>{{d[i].createTime}}</td>
+								<td>{{# if(d[i].isFinish==1){ }}已结算{{# }else{ }}未结算{{# } }}</td>
+                                <td>{{WST.blank(d[i].finishTime,'-')}}</td> 
+                                <td>{{WST.blank(d[i].remarks)}}</td>
+							</tr>
+							{{# } }}
+                            </script>
+							<tbody id="otbody0"></tbody>
+							<tfoot>
+								<tr>
+									<td colspan='10' align='center' id="opage_0">
+										<div id="wst-page-0" class='wst-page' style="float:right;padding-bottom:10px;"></div>
+									</td>
+								</tr>
+							 </tfoot>
+						</table>
+					</div>
+					<div style='clear:both;'></div>
+				</div>
+				<!-- 未结算订单 -->
+				<div class='wst-tab-item' style="display:none;">
+					<div>
+						<table class='wst-list' style="font-size:13px;">
+							<thead>
+								<tr>
+									<th colspan="7" class="wst-form">
+									订单号：<input type="text" id="orderNo_1" style='width:120px;' autocomplete="off"/>
+									收货人：<input type="text" id="userName_1" style='width:120px;' autocomplete="off"/>
+									<button class='wst-btn-query' onclick="queryUnSettlementOrdersByPage(0)">查询</button>
+									<button class='wst-btn-query' style='width:80px;' onclick="settlement()">申请结算</button>
+									</th>
+								</tr>
+								<tr>
+								    <th width='20'><input type='checkbox' onclick='WST.checkChks(this,".chk_1")'/></th>
+									<th width='100'>订单号</th>
+									<th width='100'>收货人</th>
+									<th width='130'>下单时间</th>
+									<th width='70'>订单金额</th>
+									<th width='70'>佣金比例</th>
+									<th width='70'>佣金</th>
+									
+								</tr>
+							</thead>
+							<script id="tblist1" type="text/html">
+							{{# for(var i = 0; i < d.length; i++){ }}
+							<tr>
+								<td><input type='checkbox' class='chk_1' value='{{d[i].orderId}}'/></td>
+							    <td>{{d[i].orderNo}}</td>
+								<td>{{d[i].userName}}</td>
+                                <td>{{d[i].createTime}}</td>
+								<td>{{d[i].realTotalMoney }}</td>
+                                <td>{{d[i].poundageRate}}</td>
+                                <td>{{d[i].poundageMoney}}</td>
+							</tr>
+							{{# } }}
+                            </script>
+							<tbody id="otbody1">
+							</tbody>
+							<tfoot>
+								<tr>
+									<td colspan='6' align='center' id="opage_1">
+										<div  id="wst-page-1" class="wst-page" style="float:right;padding-bottom:10px;"></div>
+									</td>
+								</tr>
+							 </tfoot>
+						</table>
+					</div>
+					<div style='clear:both;'></div>
+				</div>
+				<!-- 打包中 -->
+				<div class='wst-tab-item' style="display:none;">
+					<div>
+						<table class='wst-list' style="font-size:13px;">
+							<thead>
+								<tr>
+									<th colspan="9" class="wst-form">
+									结算单号：<input type="text" id="settlementNo_2" style='width:120px;' autocomplete="off"/>
+									订单号：<input type="text" id="orderNo_2" style='width:120px;' autocomplete="off"/>
+									结算状态：<select id='isFinish_2' autocomplete="off">
+									    <option value='-1'>全部</option>
+									    <option value='0'>未结算</option>
+									    <option value='1'>已结算</option>
+									</select>
+									<button class='wst-btn-query' onclick="querySettlementsOrdersByPage(0)">查询</button>
+									</th>
+								</tr>
+								<tr>
+								    <th width='20'>&nbsp;</th>
+									<th width='100'>订单号</th>
+									<th width='100'>收货人</th>
+									<th width='70'>订单金额</th>
+									<th width='70'>佣金比例</th>
+									<th width='70'>结算金额</th>
+									<th width='130'>结算单号</th>
+									<th width='100'>结算时间</th>
+								</tr>
+							</thead>
+							<script id="tblist2" type="text/html">
+							{{# for(var i = 0; i < d.length; i++){ }}
+							<tr>
+								<td width='10'>{{i+1}}</td>
+							    <td width='100'>{{d[i].orderNo}}</td>
+								<td width='70'>{{d[i].userName}}</td>
+								<td width='100'>{{d[i].realTotalMoney }}</td>
+                                <td>{{d[i].poundageRate}}</td>
+                                <td width='100'>{{d[i].settlementMoney }}</td>
+								<td width='120'>{{d[i].settlementNo}}</td>
+                                <td width='120'>{{WST.blank(d[i].finishTime,'-')}}</td>
+							</tr>
+							{{# } }}
+                            </script>
+							<tbody id="otbody2">
+							</tbody>
+							<tfoot>
+								<tr>
+									<td colspan='9' align='center' id="opage_2">
+										<div  id="wst-page-2" class="wst-page" style="float:right;padding-bottom:10px;"></div>
+									</td>
+								</tr>
+							 </tfoot>
+						</table>
+					</div>
+					<div style='clear:both;'></div>
+				</div>
+			</div>
+			</div>
+		</div>
+		<div style='clear:both;'></div>
+	</div>
+	<script src="__ROOT__/Apps/Home/View/default/js/settlements.js"></script>
+</block>  

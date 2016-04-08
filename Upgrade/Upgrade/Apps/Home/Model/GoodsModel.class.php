@@ -22,7 +22,8 @@ class GoodsModel extends BaseModel {
 		$c2Id = (int)I("c2Id");
 		$c3Id = (int)I("c3Id");
 		$pcurr = (int)I("pcurr");
-		$msort = (int)I("msort",1);//排序标识
+		$mark = (int)I("mark",1);
+		$msort = (int)I("msort",0);
 		$prices = I("prices");
 		if($prices != ""){
 			$pricelist = explode("_",$prices);
@@ -88,21 +89,10 @@ class GoodsModel extends BaseModel {
 			$sql .= " AND (g.shopPrice BETWEEN  ".(int)$pricelist[0]." AND ".(int)$pricelist[1].") ";
 		}
 	   	$sql .= " group by goodsId ";
-		if($msort==1){//综合
-			$sql .= " ORDER BY g.saleCount DESC ,g.goodsId ";
-		}else if($msort==6){//人气
-			$sql .= " ORDER BY g.saleCount DESC ,g.goodsId ";
-		}else if($msort==7){//销量
-			$sql .= " ORDER BY g.saleCount DESC ,g.goodsId ";
-		}else if($msort==8){//价格
-			$sql .= " ORDER BY g.shopPrice ASC ,g.goodsId ";
-		}else if($msort==9){//价格
-			$sql .= " ORDER BY g.shopPrice DESC ,g.goodsId ";
-		}else if($msort==10){//好评
-				
-		}else if($msort==11){//上架时间
-			$sql .= " ORDER BY g.saleTime DESC ,g.goodsId ";
-		}
+	   	//排序-暂时没有按好评度排
+	   	$orderFile = array('1'=>'saleCount','6'=>'saleCount','7'=>'saleCount','8'=>'shopPrice','9'=>'shopPrice',''=>'saleTime');
+	   	$orderSort = array('0'=>'ASC','1'=>'DESC');
+		$sql .= " ORDER BY ".$orderFile[$mark]." ".$orderSort[$msort].",g.goodsId ";
 		$pages = $this->pageQuery($sql,$pcurr,30);
 		
 		$rs["maxPrice"] = $maxPrice;
@@ -132,7 +122,6 @@ class GoodsModel extends BaseModel {
 	 */
 	public function getMaxPrice($obj){
 		$areaId2 = $obj["areaId2"];
-
 		$c1Id = (int)I("c1Id");
 		$c2Id = (int)I("c2Id");
 		$c3Id = (int)I("c3Id");

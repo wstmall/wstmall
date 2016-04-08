@@ -18,11 +18,7 @@
 		<input id="c1Id" type="hidden" value="{$c1Id}"/>
 		<input id="c2Id" type="hidden" value="{$c2Id}"/>
 		<input id="c3Id" type="hidden" value="{$c3Id}"/>
-
 		<input type="hidden" id="msort" value="{$msort}"/>   		
-   		<input type="hidden" id="sj" value="{$sj}"/>
-		
-
 		<!----加载商品楼层start----->
 		<div class="wst-container">
 			<div class="wst-nvg-title">
@@ -69,7 +65,6 @@
 						<div class="search-items">
 							<div class="items-title">商品品牌：</div>
 							<div id="wst-brand" class="items" >
-								<input type="hidden" id="bs" value="{$bs}">
 								<div id="wst-brand-tp" onclick="tohide(this,'wst-brand');">&nbsp;显示&nbsp;</div>
 								<li <if condition="$brandId eq 0" >class="searched"</if> data="0" onClick="queryGoods(this,3);">全部</li>
 								<volist name="brands" id="vo">
@@ -102,14 +97,12 @@
 			<!-----------------------商品列表---------------------------->
 			<div class="wst-goods-list">
 				<div class="wst-goods-header">
-					<!--li>综合排序{$rq}</li-->
-					
-					<!-- li <if condition="$msort eq 1">class="licurr"</if> onclick="queryGoods(this,1);">综合排序<s <if condition="$msort eq 1">class="bscurr"</if>></s></li> -->
-					<li <if condition="$msort eq 6">class="licurr"</if> onclick="queryGoods(this,6);">人气<s <if condition="$msort eq 6">class="bscurr"</if>></s></li>
-					<li <if condition="$msort eq 7">class="licurr"</if> onclick="queryGoods(this,7);">销量<s <if condition="$msort eq 7">class="bscurr"</if>></s></li>
-					<li <if condition="$msort eq 8 or $msort eq 9">class="licurr"</if> onclick="queryGoods(this,8);">价格<b <if condition="$msort eq 8">class="bscurr"</if><if condition="$msort eq 9">class="bscurr_up"</if>></b></li>
-					<li <if condition="$msort eq 10">class="licurr"</if> onclick="queryGoods(this,10);">好评度<s <if condition="$msort eq 10">class="bscurr"</if>></s></li>
-					<li <if condition="$msort eq 11">class="licurr"</if> onclick="queryGoods(this,11);">上架时间<s <if condition="$msort eq 11">class="bscurr"</if>></s></li>
+					<li <if condition="$mark lt 6">class="licurr"</if> onclick="queryGoods(this,1);">综合排序<s <if condition="$msort eq 0">class="bscurr_up"<else/>class="bscurr"</if>></s></li>
+					<li <if condition="$mark eq 6">class="licurr"</if> onclick="queryGoods(this,6);">人气<s <if condition="$msort eq 0">class="bscurr_up"<else/>class="bscurr"</if>></s></li>
+					<li <if condition="$mark eq 7">class="licurr"</if> onclick="queryGoods(this,7);">销量<s <if condition="$msort eq 0">class="bscurr_up"<else/>class="bscurr"</if>></s></li>
+					<li <if condition="$mark eq 8">class="licurr"</if> onclick="queryGoods(this,8);">价格<b <if condition="$msort eq 0">class="bscurr_up"<else/>class="bscurr"</if>></b></li>
+					<li <if condition="$mark eq 9">class="licurr"</if> onclick="queryGoods(this,9);">好评度<s <if condition="$msort eq 0">class="bscurr_up"<else/>class="bscurr"</if>></s></li>
+					<li <if condition="$mark eq 10">class="licurr"</if> onclick="queryGoods(this,10);">上架时间<s <if condition="$msort eq 0">class="bscurr_up"<else/>class="bscurr"</if>></s></li>
 					<div style="float:left;position: relative;">
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<s class="rmb1"></s>

@@ -77,6 +77,7 @@ function visitorShopInit(){
   		$("#goodsCatId3").formValidator({onFocus:"请选择所属行业"}).inputValidator({min:1,onError: "请选择所属行业"});
   		$("#bankId").formValidator({onFocus:"请选择所属银行"}).inputValidator({min:1,onError: "请选择所属银行"});
 		$("#bankNo").formValidator({onShow:"",onFocus:"请输入银行卡号",onCorrect:"输入正确"}).inputValidator({min:16,max:19,onError:"银行卡号格式错误,请确认"});
+		$("#bankUserName").formValidator({onShow:"",onFocus:"请输入银行卡所有人名称",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"请输入银行卡所有人名称"});
 		var uploading = null;
 		uploadFile({
 	    	  server:Think.U('Home/Shops/uploadPic'),pick:'#filePicker',
@@ -416,6 +417,7 @@ function userShopInit(){
 	$("#goodsCatId1").formValidator({onFocus:"请选择所属行业"}).inputValidator({min:1,onError: "请选择所属行业"});
 	$("#bankId").formValidator({onFocus:"请选择所属银行"}).inputValidator({min:1,onError: "请选择所属银行"});
 	$("#bankNo").formValidator({onShow:"",onFocus:"请输入银行卡号",onCorrect:"输入正确"}).inputValidator({min:16,max:19,onError:"银行卡号格式错误,请确认"});
+	$("#bankUserName").formValidator({onShow:"",onFocus:"请输入银行卡所有人名称",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"请输入银行卡所有人名称"});
 	$("#userPhone").inputValidator({min:0,max:11,onError:"你输入的手机号码非法,请确认"}).regexValidator({
 			regExp:"mobile",dataType:"enum",onError:"手机号码格式错误"
 		}).ajaxValidator({

@@ -1,0 +1,76 @@
+<extend name="./Apps/Home/View/default/users/layout.html" />
+<block name="content">
+	<script>
+	var statusMark = 0;
+	$(function () {
+		$('#tab').TabPanel({tab:statusMark,callback:function(tab){
+			statusMark = tab;
+			if(statusMark==0){
+				getScoreList(0,0);
+			}else if(statusMark==1){
+				getScoreList(0,1);
+			}else if(statusMark==2){
+				getScoreList(0,2);
+			}
+		}});
+	});
+	</script>
+	<div class="wst-body" style="margin-bottom: 8px;"> 
+		<div class='wst-page-header'>买家中心 > 积分记录</div>
+		<div class='wst-page-content' style="padding-top:10px;">
+		<div id='tab' class="wst-tab-box" style="position:relative;">
+			<div style="position:absolute;top:2px;right:10px;">可用积分：<span style="font-size:20px;font-weight:bold;color:green">{$userScore}</span> 个</div>
+			<ul class="wst-tab-nav">
+				<li id="wst-msg-li-0">积分明细<span style="display:none;" class="wst-order-tips-box"></span></li>
+				<li id="wst-msg-li-1">积分收入<span style="display:none;"></span></li>
+				<li id="wst-msg-li-2">积分支出<span style="display:none;"></span></li>
+			</ul>
+			<table class='wst-list' style="font-size:13px;">
+           <thead>
+             <tr>
+               <th width='*'>来源/用途</th>
+               <th width='120'>积分变化</th>
+               <th width='160'>日期</th>
+               <th width='260'>备注</th>
+             </tr>
+           </thead>
+           <script id="tblist" type="text/html">
+			{{# for(var i = 0; i < d.length; i++){ }}
+            <tr>
+               <td width='*'>
+					{{# if(d[i].dataSrc==1){ }}
+						【{{ d[i].orderNo }}】交易订单
+					{{# }else if(d[i].dataSrc==2){ }}
+						【{{ d[i].orderNo }}】评价订单
+					{{# }else if(d[i].dataSrc==3){ }}
+						【{{ d[i].orderNo }}】取消订单返还
+					{{# }else if(d[i].dataSrc==4){ }}
+						【{{ d[i].orderNo }}】拒收返还
+					{{# } }}
+			   </td>
+               <td width='120'>
+					{{# if(d[i].scoreType==1){ }}
+						<span style="color:green;font-size:16px;font-weight: bold;">+ {{ d[i].score }}</span>
+					{{# }else{ }}
+						<span style="color:red;font-size:16px;font-weight: bold;"> - {{ d[i].score }}</span>
+					{{# } }}
+				</td>
+			   <td width='160'>{{ d[i].createTime }}</td>
+               <td width='260'>{{ d[i].dataRemarks }}</td>
+             </tr>
+			{{# } }}
+			</script>
+           <tbody id="wst-score-page"></tbody>
+           <tfoot>
+             <tr>
+                <td colspan='4' align='center' style="height:30px;border-bottom: 0px;">
+					<div id="wst-page" class="wst-page" style="float:right;padding-bottom:10px;"></div>
+				</td>
+             </tr>
+           </tfoot>
+        </table>
+		</div>	
+		</div>
+		<div style='clear:both;'></div>
+	</div>
+</block>  

@@ -22,7 +22,7 @@ class FavoritesAction extends BaseAction{
 	 * 获取商品关注
 	 */
 	public function queryGoodsByPage(){
-		$this->isAjaxLogin();
+		$this->isLogin();
 		$m = D('Home/Favorites');
 		$page = $m->queryGoodsByPage();
 		$rs = array();
@@ -34,7 +34,7 @@ class FavoritesAction extends BaseAction{
 	 * 获取店铺关注
 	 */
 	public function queryShopsByPage(){
-		$this->isAjaxLogin();
+		$this->isLogin();
 		$m = D('Home/Favorites');
 		$page = $m->queryShopsByPage();
 		$rs = array();
@@ -47,7 +47,7 @@ class FavoritesAction extends BaseAction{
      * 关注商品
      */
     public function favoriteGoods(){
-    	$this->isAjaxLogin();
+    	$this->isLogin();
     	$m = D('Home/Favorites');
     	$rs = $m->favoriteGoods();
     	$this->ajaxReturn($rs);
@@ -56,7 +56,7 @@ class FavoritesAction extends BaseAction{
      * 关注商品
      */
     public function favoriteShops(){
-    	$this->isAjaxLogin();
+    	$this->isLogin();
     	$m = D('Home/Favorites');
     	$rs = $m->favoriteShops();
     	$this->ajaxReturn($rs);
@@ -66,7 +66,7 @@ class FavoritesAction extends BaseAction{
      * 取消关注
      */
     public function cancelFavorite(){
-    	$this->isAjaxLogin();
+    	$this->isLogin();
     	$m = D('Home/Favorites');
     	$rs = $m->cancelFavorite();
     	$this->ajaxReturn($rs);

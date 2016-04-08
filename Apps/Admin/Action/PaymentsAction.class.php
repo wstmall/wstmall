@@ -28,7 +28,7 @@ class PaymentsAction extends BaseAction{
 	 * 新增/修改操作
 	 */
 	public function edit(){
-		$this->isAjaxLogin();
+		$this->isLogin();
 		$m = D('Admin/Payments');
     	$rs = array();
     	if(I('id',0)>0){
@@ -44,7 +44,7 @@ class PaymentsAction extends BaseAction{
 	 * 删除操作
 	 */
 	public function del(){
-		$this->isAjaxLogin();
+		$this->isLogin();
 		$this->checkPrivelege('zfgl_03');
 		$m = D('Admin/Payments');
     	$rs = $m->del();
@@ -68,7 +68,7 @@ class PaymentsAction extends BaseAction{
 	 * 列表查询
 	 */
     public function queryByList(){
-    	$this->isAjaxLogin();
+    	$this->isLogin();
 		$m = D('Admin/Payments');
 		$list = $m->queryByList();
 		$rs = array();

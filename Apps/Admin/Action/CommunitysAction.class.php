@@ -32,14 +32,14 @@ class CommunitysAction extends BaseAction{
 	 * 新增/修改操作
 	 */
 	public function edit(){
-		$this->isAjaxLogin();
+		$this->isLogin();
 		$m = D('Admin/Communitys');
     	$rs = array();
     	if(I('id',0)>0){
-    		$this->checkAjaxPrivelege('sqlb_02');
+    		$this->checkPrivelege('sqlb_02');
     		$rs = $m->edit();
     	}else{
-    		$this->checkAjaxPrivelege('sqlb_01');
+    		$this->checkPrivelege('sqlb_01');
     		$rs = $m->insert();
     	}
     	$this->ajaxReturn($rs);
@@ -48,8 +48,8 @@ class CommunitysAction extends BaseAction{
 	 * 删除操作
 	 */
 	public function del(){
-		$this->isAjaxLogin();
-		$this->checkAjaxPrivelege('sqlb_03');
+		$this->isLogin();
+		$this->checkPrivelege('sqlb_03');
 		$m = D('Admin/Communitys');
     	$rs = $m->del();
     	$this->ajaxReturn($rs);
@@ -77,7 +77,7 @@ class CommunitysAction extends BaseAction{
 	 * 列表查询
 	 */
     public function queryByList(){
-    	$this->isAjaxLogin();
+    	$this->isLogin();
 		$m = D('Admin/Communitys');
 		$list = $m->queryList();
 		$rs = array();
@@ -89,8 +89,8 @@ class CommunitysAction extends BaseAction{
 	 * 显示商品是否显示/隐藏
 	 */
 	 public function editiIsShow(){
-	 	$this->isAjaxLogin();
-	 	$this->checkAjaxPrivelege('sqlb_02');
+	 	$this->isLogin();
+	 	$this->checkPrivelege('sqlb_02');
 	 	$m = D('Admin/Communitys');
 		$rs = $m->editiIsShow();
 		$this->ajaxReturn($rs);

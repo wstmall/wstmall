@@ -97,6 +97,7 @@ class ShopsModel extends BaseModel {
 		     array('shopAddress','require','请输入公司地址!',1),
 		     array('bankId','integer','请选择银行!',1),
 		     array('bankNo','require','请输入银行卡号!',1),
+			 array('bankUserName','require','请输入银行卡所有人名称!',1),
 		     array('latitude','require','请标记店铺地址!',1),
 		     array('longitude','require','请标记店铺地址!',1),
 		     array('mapLevel','integer','请标记店铺地址!',1),
@@ -239,6 +240,7 @@ class ShopsModel extends BaseModel {
 		     array('shopAddress','require','请输入公司地址!',1),
 		     array('bankId','integer','请选择银行!',1),
 		     array('bankNo','require','请输入银行卡号!',1),
+	 		 array('bankUserName','require','请输入银行卡所有人名称!',1),
 		     array('latitude','require','请标记店铺地址!',1),
 		     array('longitude','require','请标记店铺地址!',1),
 		     array('mapLevel','integer','请标记店铺地址!',1),
@@ -367,6 +369,7 @@ class ShopsModel extends BaseModel {
 		$data["shopTel"] = I("shopTel");
 		$data["bankId"] = (int)I("bankId");
 		$data["bankNo"] = I("bankNo");
+		$data["bankUserName"] = I("bankUserName");
 		
 		if($this->checkEmpty($data,true)){
 			$data["qqNo"] = I("qqNo");

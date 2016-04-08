@@ -14,8 +14,8 @@ class GoodsAppraisesAction extends BaseAction{
 	 * 删除操作
 	 */
 	public function del(){
-		$this->isAjaxLogin();
-		$this->checkAjaxPrivelege('sppl_03');
+		$this->isLogin();
+		$this->checkPrivelege('sppl_03');
 		$m = D('Admin/Goods_appraises');
     	$rs = $m->del();
     	$this->ajaxReturn($rs);
@@ -37,8 +37,8 @@ class GoodsAppraisesAction extends BaseAction{
 	 * 修改商品评价
 	 */
 	public function edit(){
-		$this->isAjaxLogin();
-		$this->checkAjaxPrivelege('sppl_04');
+		$this->isLogin();
+		$this->checkPrivelege('sppl_04');
 		$m = D('Admin/Goods_appraises');
     	$rs = $m->edit();
     	$this->ajaxReturn($rs);

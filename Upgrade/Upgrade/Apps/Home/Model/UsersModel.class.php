@@ -14,13 +14,13 @@ class UsersModel extends BaseModel {
 	  * 获取用户信息
 	  */
      public function get($userId=0){
-	 	$m = M('users');
+
 	 	$userId = intval($userId?$userId:I('id',0));
-		$user = $m->where("userId=".$userId)->find();
+		$user = $this->where("userId=".$userId)->find();
 		if(!empty($user) && $user['userType']==1){
 			//加载商家信息
-		 	$s = M('shops');
-		 	$shops = $s->where('userId='.$user['userId']." and shopFlag=1")->find();
+		 	$sp = M('shops');
+		 	$shops = $sp->where('userId='.$user['userId']." and shopFlag=1")->find();
 		 	if(!empty($shops))$user = array_merge($shops,$user);
 		}
 		return $user;
@@ -30,9 +30,8 @@ class UsersModel extends BaseModel {
 	  * 获取用户信息
 	  */
      public function getUserInfo($loginName,$loginPwd){
-	 	$m = M('users');
 		$loginPwd = md5($loginPwd);
-	 	$rs = $m->where(" loginName ='%s' AND loginPwd ='%s' ",array($loginName,$loginPwd))->find();
+	 	$rs = $this->where(" loginName ='%s' AND loginPwd ='%s' ",array($loginName,$loginPwd))->find();
 	    return $rs;
 	 }
 	 
@@ -40,10 +39,8 @@ class UsersModel extends BaseModel {
 	  * 获取用户信息
 	  */
      public function getUserById($obj){
-	 	$m = M('users');
 		$userId = (int)$obj["userId"];
-	 	$rs = $m->where(" userId ='%s' ",array($userId))->find();
-	 	
+	 	$rs = $this->where(" userId ='%s' ",array($userId))->find();
 	    return $rs;
 	 }
 	 
@@ -61,11 +58,11 @@ class UsersModel extends BaseModel {
 		 	}
 	 	}
 	 	$sql = " (loginName ='%s' or userPhone ='%s' or userEmail='%s') and userFlag=1 ";
-	 	$m = M('users');
+
 	    if($id>0){
 	 		$sql.=" and userId!=".$id;
 	 	}
-	 	$rs = $m->where($sql,array($loginName,$loginName,$loginName))->count();
+	 	$rs = $this->where($sql,array($loginName,$loginName,$loginName))->count();
 	    if($rs==0){
 	    	$rd['status'] = 1;
 	    }
@@ -79,8 +76,7 @@ class UsersModel extends BaseModel {
 	 	if($key=='')return array();
 	 	$sql = " (loginName ='%s' or userPhone ='%s' or userEmail='%s') and userFlag=1 and userStatus=1 ";
 	 	$keyArr = array($key,$key,$key);
-	 	$m = M('users');
-	 	$rs = $m->where($sql,$keyArr)->find();
+	 	$rs = $this->where($sql,$keyArr)->find();
 	    return $rs;
 	 }
 	 
@@ -101,8 +97,7 @@ class UsersModel extends BaseModel {
 				$data = array();
 				$data['lastTime'] = date('Y-m-d H:i:s');
 				$data['lastIP'] = get_client_ip();
-				$m = M('users');
-		    	$m->where(" userId=".$rs['userId'])->data($data)->save();
+		    	$this->where(" userId=".$rs['userId'])->data($data)->save();
 		    	//如果是店铺则加载店铺信息
 		    	if($rs['userType']>=1){
 		    		$s = M('shops');
@@ -132,14 +127,13 @@ class UsersModel extends BaseModel {
 	 * 会员注册
 	 */
     public function regist(){
-    	$m = M('users');
     	$rd = array('status'=>-1);	   
     	
     	$data = array();
     	$data['loginName'] = I('loginName','');
     	$data['loginPwd'] = I("loginPwd");
     	$data['reUserPwd'] = I("reUserPwd");
-    	$data['protocol'] = I("protocol");
+    	$data['protocol'] = (int)I("protocol");
     	$loginName = $data['loginName'];
         //检测账号是否存在
         $crs = $this->checkLoginKey($loginName);
@@ -165,7 +159,7 @@ class UsersModel extends BaseModel {
     			return $rd;
     		}
     	}
-	    $nameType = I("nameType");
+	    $nameType = (int)I("nameType");
 	    $mobileCode = I("mobileCode");
 		if($nameType==3 && $GLOBALS['CONFIG']['phoneVerfy']==1){//手机号码
 			$verify = session('VerifyCode_userPhone');
@@ -191,7 +185,7 @@ class UsersModel extends BaseModel {
 	    unset($data['protocol']);
 	    //检测账号，邮箱，手机是否存在
 	    $data["loginSecret"] = rand(1000,9999);
-	    $data['loginPwd'] = md5(I('loginPwd').$data['loginSecret']);
+	    $data['loginPwd'] = md5($data['loginPwd'].$data['loginSecret']);
 	    $data['userType'] = 0;
 	    $data['userName'] = I('userName');
 	    $data['userQQ'] = I('userQQ');
@@ -202,7 +196,7 @@ class UsersModel extends BaseModel {
 	    $data['userFlag'] = 1;
 	    
 	   
-		$rs = $m->add($data);
+		$rs = $this->add($data);
 		if(false !== $rs){
 			$rd['status']= 1;
 			$rd['userId']= $rs;
@@ -212,7 +206,7 @@ class UsersModel extends BaseModel {
 	    	$data = array();
 	    	$data['lastTime'] = date('Y-m-d H:i:s');
 	    	$data['lastIP'] = get_client_ip();
-	    	$m->where(" userId=".$rs['userId'])->data($data)->save();	 		
+	    	$this->where(" userId=".$rs['userId'])->data($data)->save();	 		
 	    	//记录登录日志
 		 	$data = array();
 			$data["userId"] = $rd['userId'];
@@ -249,12 +243,11 @@ class UsersModel extends BaseModel {
     public function checkUserPhone($userPhone,$userId = 0){
     	$userId = $userId>0?$userId:(int)I("userId");
     	$rd = array('status'=>-3);
-	 	$m = M('users');
 		$sql =" userFlag=1 and userPhone='".$userPhone."'";
 		if($userId>0){
 			$sql .= " AND userId <> $userId";
 		}
-		$rs = $m->where($sql)->count();
+		$rs = $this->where($sql)->count();
 	
 	    if($rs==0)$rd['status'] = 1;
 	    return $rd;
@@ -265,15 +258,14 @@ class UsersModel extends BaseModel {
 	 */
 	public function editPass($id){
 		$rd = array('status'=>-1);
-		$m = M('users');
 		$data = array();
 		$data["loginPwd"] = I("newPass");
 		if($this->checkEmpty($data,true)){
-			$rs = $m->where('userId='.$id)->find();
+			$rs = $this->where('userId='.$id)->find();
 			//核对密码
 			if($rs['loginPwd']==md5(I("oldPass").$rs['loginSecret'])){
 				$data["loginPwd"] = md5(I("newPass").$rs['loginSecret']);
-				$rs = $m->where("userId=".$id)->save($data);
+				$rs = $this->where("userId=".$id)->save($data);
 				if(false !== $rs){
 					$rd['status']= 1;
 				}
@@ -304,16 +296,14 @@ class UsersModel extends BaseModel {
 	    	$rd['status'] = -3;
 	    	return $rd;
 	    }
-		$m = M('users');
 		$data = array();
-		
 		$data["userName"] = I("userName");
 		$data["userQQ"] = I("userQQ");
 		$data["userPhone"] = $userPhone;
 		$data["userSex"] = (int)I("userSex",0);
 		$data["userEmail"] = $userEmail;
 		$data["userPhoto"] = I("userPhoto");
-		$rs = $m->where(" userId=".$userId)->data($data)->save();
+		$rs = $this->where(" userId=".$userId)->data($data)->save();
 	    if(false !== $rs){
 			$rd['status']= 1;
 			$WST_USER = session('WST_USER');
@@ -338,8 +328,7 @@ class UsersModel extends BaseModel {
     		$rs['msg'] = '无效的用户！';
     		return $rs;
     	}
-    	$m = M('Users');
-    	$user = $m->where("userId=".$reset_userId." and userFlag=1 and userStatus=1")->find();
+    	$user = $this->where("userId=".$reset_userId." and userFlag=1 and userStatus=1")->find();
     	if(empty($user)){
     		$rs['msg'] = '无效的用户！';
     		return $rs;
@@ -350,7 +339,7 @@ class UsersModel extends BaseModel {
     		return $rs;
     	}
     	$data['loginPwd'] = md5($loginPwd.$user["loginSecret"]);
-    	$rc = $m->where("userId=".$reset_userId)->save($data);
+    	$rc = $this->where("userId=".$reset_userId)->save($data);
     	if(false !== $rc){
     	    $rs['status'] =1;
     	}

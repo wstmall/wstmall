@@ -295,13 +295,13 @@ function WSTUnlinkFile($aimUrl) {
 	}
 }
 
-function  WSTLogResult($filepath,$word){
+function  WSTLog($filepath,$word){
 	if(!file_exists_case($filepath)){
 		WSTCreateFile($filepath);
 	}
 	$fp = fopen($filepath,"a");
 	flock($fp, LOCK_EX) ;
-	fwrite($fp,"执行日期：".strftime("%Y-%m-%d %H:%M:%S",time())."\n".$word."\n\n");
+	fwrite($fp,$word);
 	flock($fp, LOCK_UN);
 	fclose($fp);
 }
@@ -409,4 +409,33 @@ function WSTFormatIn($split,$str){
 	}
 	$data = array_unique($data);
 	return implode($split,$data);
+}
+
+/**
+ * 获取上一个月或者下一个月份 1:下一个月,其他值为上一个月
+ * @param int $sign default 1
+ */
+function WSTMonth($sign=1,$month = ''){
+	$tmp_year=date('Y');  
+	$tmp_mon =date('m'); 
+    $tmp_nextmonth=mktime(0,0,0,$tmp_mon+1,1,$tmp_year);  
+    $tmp_forwardmonth=mktime(0,0,0,$tmp_mon-1,1,$tmp_year);  
+    if($sign==1){  
+        //得到当前月的下一个月   
+        return $fm_next_month=date("Y-m",$tmp_nextmonth);          
+    }else{  
+        //得到当前月的上一个月   
+        return $fm_forward_month=date("Y-m",$tmp_forwardmonth);           
+    }  
+} 
+
+
+/**
+ * 高精度数字相加
+ * @param $num
+ * @param number $i 保留小数位
+ */
+function WSTBCMoney($num1,$num2,$i=2){
+	$num = bcadd($num1, $num2, $i);
+	return (float)$num;
 }

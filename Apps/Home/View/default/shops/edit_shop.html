@@ -39,6 +39,7 @@ $(function () {
 		$("#shopTel").formValidator({onShow:"",onFocus:"请输入店铺电话",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"店铺电话不能为空,请确认"});
 		$("#shopAddress").formValidator({onShow:"",onFocus:"请输入公司地址",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"公司地址不能为空,请确认"});
 		$("#bankNo").formValidator({onShow:"",onFocus:"请输入银行卡号",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"银行卡号不能为空,请确认"});
+		$("#bankUserName").formValidator({onShow:"",onFocus:"请输入银行卡所有人名称",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"银行卡号所有人名称不能为空,请确认"});
 		$("#deliveryStartMoney").formValidator({onShow:"",onFocus:"请输入订单配送起步价",onCorrect:"输入正确"});
 		$("#deliveryFreeMoney").formValidator({onShow:"",onFocus:"请输入包邮起步价",onCorrect:"输入正确"});
 		$("#deliveryMoney").formValidator({onShow:"",onFocus:"请输入邮费",onCorrect:"输入正确"});
@@ -214,6 +215,10 @@ function ShopMapInit(option){
            <tr>
              <th width='120' align='right'>银行卡卡号<font color='red'>*</font>：</th>
              <td><input type='text' id='bankNo' value='{$object.bankNo}' maxLength='25' size='50'/></td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>银行卡所有人名称<font color='red'>*</font>：</th>
+             <td><input type='text' id='bankUserName' value='{$object.bankUserName}' maxLength='25' size='50'/></td>
            </tr>
            <tr>
              <th align='right'>营业时间<font color='red'>*</font>：</th>

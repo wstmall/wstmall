@@ -19,7 +19,7 @@
 	<div class="wst-ad">
 		<div class="wst-slide" id="wst-slide">
 			<ul class="wst-slide-items" style="min-width:1210px;">
-				<volist name="indexAds" id="vo" key="k">
+				<volist name=":WSTAds(-1)" id="vo" key="k">
 				<li style="z-index: 1;"><a target="_blank" onclick="addAccess({$vo['adId']})" href="{$vo['adURL']}">
 						<img src="__ROOT__/{$vo['adFile']}" height="360" width="100%" title="{$vo['adName']}" />
 				</a></li>

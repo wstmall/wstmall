@@ -10,7 +10,6 @@ namespace Admin\Action;
  */
 use Think\Controller;
 class BaseAction extends Controller {
-	
 	public function __construct(){
 		parent::__construct();
 		//初始化系统信息
@@ -64,31 +63,28 @@ class BaseAction extends Controller {
     	
     }
     /**
-     * ajax操作登录验证
-     */
-    public function isAjaxLogin(){
-    	$s = session('WST_STAFF');
-    	if(empty($s))die("{status:-999,url:'toLogin'}");
-    }
-    /**
      * 登录操作验证
      */
     public function isLogin(){
     	$s = session('WST_STAFF');
-        if(empty($s))$this->redirect("Index/toLogin");
+        if(IS_AJAX){
+    	    if(empty($s))die("{status:-999,url:'toLogin'}");
+    	}else{
+    		if(empty($s))$this->redirect("Index/toLogin");
+    	}
     }
     /**
      * 跳转权限操作
      */
     public function checkPrivelege($grant){
     	$s = session('WST_STAFF.grant');
-    	if(empty($s) || !in_array($grant,$s)){
-    		$this->display("/noprivelege");exit();
+    	if(IS_AJAX){
+    		if(empty($s) || !in_array($grant,$s))die("{status:-998}");
+    	}else{
+    	    if(empty($s) || !in_array($grant,$s)){
+	    		$this->display("/noprivelege");exit();
+	    	}
     	}
-    }
-    public function checkAjaxPrivelege($grant){
-    	$s = session('WST_STAFF.grant');
-    	if(empty($s) || !in_array($grant,$s))die("{status:-998}");
     }
     
     /**

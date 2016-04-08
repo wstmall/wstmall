@@ -70,12 +70,9 @@ class ShopsAction extends BaseAction {
    			$obj["areaId3"] = ((int)I('areaId3')>0)?(int)I('areaId3'):$areaList[0]['areaId'];
    			cookie("bstreesAreaId3",$obj["areaId3"]);
    		}
-   		//广告
-   		$ads = D('Home/Ads');
-   		$ads = $ads->getAds($areaId2,-3);
-   		$this->assign('areaId3',$obj["areaId3"]);
+
+  		$this->assign('areaId3',$obj["areaId3"]);
    		$this->assign('keyWords',I("keyWords"));
-   		$this->assign('ads',$ads);
    		$this->assign('areaList',$areaList);
         $this->display("default/shop_street");
 	}
@@ -290,7 +287,7 @@ class ShopsAction extends BaseAction {
 	 * 会员提交开店申请
 	 */
 	public function openShopByUser(){
-		$this->isUserAjaxLogin();
+		$this->isUserLogin();
 		$rs = array('status'=>-1);
 		if($GLOBALS['CONFIG']['phoneVerfy']==1){
 			$verify = session('VerifyCode_userPhone');

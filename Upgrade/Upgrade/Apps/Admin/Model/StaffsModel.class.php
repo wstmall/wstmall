@@ -14,7 +14,6 @@ class StaffsModel extends BaseModel {
 	  */
 	 public function insert(){
 	 	$rd = array('status'=>-1);
-	 	$id = I("id",0);
 		$data = array();
 		$data["loginName"] = I("loginName");
 		$data["secretKey"] = rand(1000,9999);
@@ -28,8 +27,7 @@ class StaffsModel extends BaseModel {
 	    if($this->checkEmpty($data,true)){
 	    	$data["staffNo"] = I("staffNo");
 	    	$data["staffPhoto"] = I("staffPhoto");
-			$m = M('staffs');
-			$rs = $m->add($data);
+			$rs = $this->add($data);
 			if(false !== $rs){
 				$rd['status']= 1;
 			}
@@ -42,7 +40,6 @@ class StaffsModel extends BaseModel {
 	 public function edit(){
 	 	$rd = array('status'=>-1);
 	 	$id = (int)I("id",0);
-	 	$m = M('staffs');
 		$data = array();
 		$data["loginName"] = I("loginName");
 		$data["staffName"] = I("staffName");
@@ -52,7 +49,7 @@ class StaffsModel extends BaseModel {
 	    if($this->checkEmpty($data)){
 	    	$data["staffNo"] = I("staffNo");
 	    	$data["staffPhoto"] = I("staffPhoto");
-			$rs = $m->where("staffId=".(int)I('id'))->save($data);
+			$rs = $this->where("staffId=".$id)->save($data);
 			if(false !== $rs){
 				$rd['status']= 1;
 				$staffId = (int)session('WST_STAFF.staffId');
@@ -74,27 +71,24 @@ class StaffsModel extends BaseModel {
 	  * 获取指定对象
 	  */
      public function get(){
-	 	$m = M('staffs');
-		return $m->where("staffId=".(int)I('id'))->find();
+		return $this->where("staffId=".(int)I('id'))->find();
 	 }
 	 /**
 	  * 分页列表
 	  */
      public function queryByPage(){
-        $m = M('staffs');
 	 	$sql = "select s.*,r.roleName from __PREFIX__staffs s left join  __PREFIX__roles r on s.staffRoleId=r.roleId where staffFlag=1 ";
 	 	if(I('loginName')!='')$sql.=" and loginName LIKE '%".WSTAddslashes(I('loginName'))."%'";
 	 	if(I('staffName')!='')$sql.=" and staffName LIKE '%".WSTAddslashes(I('staffName'))."%'";
 	 	$sql .=" order by staffId desc ";
-		return $m->pageQuery($sql);
+		return $this->pageQuery($sql);
 	 }
 	 /**
 	  * 获取列表
 	  */
 	  public function queryByList(){
-	     $m = M('staffs');
 	     $sql = "select * from __PREFIX__staffs order by staffId desc";
-		 return $m->find($sql);
+		 return $this->find($sql);
 	  }
 	  
 	 /**
@@ -103,10 +97,9 @@ class StaffsModel extends BaseModel {
 	 public function del(){
 	 	$rd = array('status'=>-1);
 	 	if(I('id')==session('WST_STAFF.staffId'))return $rd;
-	 	$m = M('staffs');
 	 	$data = array();
 		$data["staffFlag"] = -1;
-	 	$rs = $m->where("staffId=".(int)I('id'))->save($data);
+	 	$rs = $this->where("staffId=".(int)I('id'))->save($data);
 	    if(false !== $rs){
 			$rd['status']= 1;
 		}
@@ -121,10 +114,9 @@ class StaffsModel extends BaseModel {
 	 	$id = (int)I('id');
 	 	$key = I('clientid');
 	 	if($key!=''  && I($key)=='')return $rd;
-	 	$m = M('staffs');
 	 	$sql = " loginName ='%s' and staffFlag=1 ";
 	 	if($id>0)$sql.=" and staffId!=".$id;
-	 	$rs = $m->where($sql,array(I("loginName")))->count();
+	 	$rs = $this->where($sql,array(I("loginName")))->count();
 	    if($rs==0)$rd['status'] = 1;
 	    return $rd;
 	 }
@@ -134,8 +126,7 @@ class StaffsModel extends BaseModel {
 	  */
 	 public function login(){
 	 	$rd = array('status'=>-1);
-	 	$m = M('staffs');
-	 	$staff = $m->where('loginName="'.WSTAddslashes(I('loginName')).'" and staffFlag=1 and staffStatus=1')->find();
+	 	$staff = $this->where('loginName="'.WSTAddslashes(I('loginName')).'" and staffFlag=1 and staffStatus=1')->find();
 	 	if($staff['loginPwd']==md5(I('loginPwd').$staff['secretKey'])){
 	 		//获取角色权限
 	 		$r = M('roles');
@@ -144,9 +135,9 @@ class StaffsModel extends BaseModel {
 	 		$staff['grant'] = explode(',',$rrs['grant']);
 	 		$rd['staff'] = $staff;
 	 		$rd['status'] = 1;
-	 		$m->lastTime = date('Y-m-d H:i:s');
-	 		$m->lastIP = get_client_ip();
-	 		$m->where(' staffId='.$staff['staffId'])->save();
+	 		$this->lastTime = date('Y-m-d H:i:s');
+	 		$this->lastIP = get_client_ip();
+	 		$this->where(' staffId='.$staff['staffId'])->save();
 	 		//记录登录日志
 		 	$data = array();
 			$data["staffId"] = $staff['staffId'];
@@ -163,9 +154,8 @@ class StaffsModel extends BaseModel {
 	 public function editStatus(){
 	 	$rd = array('status'=>-1);
 	 	if(I('id',0)==0)return $rd;
-	 	$m = M('staffs');
-	 	$m->staffStatus = (I('staffStatus')==1)?1:0;
-	 	$rs = $m->where("staffId=".(int)I('id',0))->save();
+	 	$this->staffStatus = (I('staffStatus')==1)?1:0;
+	 	$rs = $this->where("staffId=".(int)I('id',0))->save();
 	    if(false !== $rs){
 			$rd['status']= 1;
 		}

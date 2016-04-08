@@ -18,7 +18,7 @@
 		<include file="./Apps/Home/View/default/header_common.html" />
 		<div>
 			<div class="wst-brands-ads">
-				<volist name="ads" id="vo" key='i'>
+				<volist name=":WSTAds(-2)" id="vo" key='i'>
 					<if condition="$i eq 1">
 				   	<a href="{:U('Home/Index/access/',array('id'=>$vo['adId'],'url'=>$vo['adURL']))}" target="_blank">
 						<img src="__ROOT__/{$vo['adFile']}" width='1210' height="350" title="{$vo['adName']}"/>

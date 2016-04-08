@@ -34,14 +34,14 @@ class BrandsAction extends BaseAction{
 	 * 新增/修改操作
 	 */
 	public function edit(){
-		$this->isAjaxLogin();
+		$this->isLogin();
 		$m = D('Admin/Brands');
     	$rs = array();
     	if(I('id',0)>0){
-    		$this->checkAjaxPrivelege('ppgl_02');
+    		$this->checkPrivelege('ppgl_02');
     		$rs = $m->edit();
     	}else{
-    		$this->checkAjaxPrivelege('ppgl_01');
+    		$this->checkPrivelege('ppgl_01');
     		$rs = $m->insert();
     	}
     	$this->ajaxReturn($rs);
@@ -50,8 +50,8 @@ class BrandsAction extends BaseAction{
 	 * 删除操作
 	 */
 	public function del(){
-		$this->isAjaxLogin();
-		$this->checkAjaxPrivelege('ppgl_03');
+		$this->isLogin();
+		$this->checkPrivelege('ppgl_03');
 		$m = D('Admin/Brands');
     	$rs = $m->del();
     	$this->ajaxReturn($rs);
@@ -81,7 +81,7 @@ class BrandsAction extends BaseAction{
 	 * 列表查询
 	 */
     public function queryByList(){
-    	$this->isAjaxLogin();
+    	$this->isLogin();
 		$m = D('Admin/Brands');
 		$list = $m->queryList();
 		$rs = array();

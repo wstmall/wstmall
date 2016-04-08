@@ -28,7 +28,7 @@ class OrderRptsAction extends BaseAction{
 	 */
 	public function queryByMonthAndDays(){
 		$this->isLogin();
-		$this->checkAjaxPrivelege('dttj_00');
+		$this->checkPrivelege('dttj_00');
 		$rs = D('Admin/OrderRpts')->queryByMonthAndDays();
 		$this->ajaxReturn($rs);
 	}

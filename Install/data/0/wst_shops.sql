@@ -1,8 +1,4 @@
-SET FOREIGN_KEY_CHECKS=0;
 
--- ----------------------------
--- Table structure for `wst_shops`
--- ----------------------------
 DROP TABLE IF EXISTS `wst_shops`;
 CREATE TABLE `wst_shops` (
   `shopId` int(11) NOT NULL AUTO_INCREMENT,
@@ -42,11 +38,9 @@ CREATE TABLE `wst_shops` (
   `longitude` char(30) DEFAULT '0',
   `mapLevel` int(11) DEFAULT '13',
   `qqNo` varchar(20) DEFAULT NULL,
+  `bankUserName` varchar(100) NOT NULL,
   PRIMARY KEY (`shopId`),
   KEY `areaId1` (`areaId2`) USING BTREE,
   KEY `shopStatus` (`shopStatus`,`shopFlag`) USING BTREE
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Records of wst_shops
--- ----------------------------

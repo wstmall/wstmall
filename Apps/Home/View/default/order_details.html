@@ -147,9 +147,11 @@
         		</tbody>
         		<tr>
         		   <td colspan='4' class='wst-cart-total-money'>
-        		  商品总金额： ￥{$orderInfo["order"]["totalMoney"]}  <br/>
-        		   + 运费：￥{$orderInfo["order"]["deliverMoney"]}<br/> 
-        		   <span class='wst-cart-order-txt'>订单总金额：</span><span class='wst-cart-order-money'>￥{$orderInfo["order"]["totalMoney"]+$orderInfo["order"]["deliverMoney"]}</span></td>
+        		   商品总金额： ￥{$orderInfo["order"]["totalMoney"]}  <br/>
+        		   + 运费：￥{$orderInfo["order"]["deliverMoney"]}<br/>
+        		 <if condition='$orderInfo["order"]["useScore"] gt 0'>使用积分：{$orderInfo["order"]["useScore"]} 点<br/></if>
+        		   订单总金额：<span class='wst-cart-order-money'>￥{$orderInfo["order"]["totalMoney"]+$orderInfo["order"]["deliverMoney"]}</span><br/>
+        		   <span class='wst-cart-order-txt'>实付总金额：</span><span class='wst-cart-order-money'>￥{$orderInfo["order"]["realTotalMoney"]}</span></td>
         		</tr>
         	</table>
         	</div>

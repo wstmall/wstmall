@@ -25,8 +25,7 @@ class FavoritesModel extends BaseModel {
 			$data['targetId'] = $id;
 			$data['createTime'] = date('Y-m-d H:i:s');
 			if($this->checkEmpty($data)){
-				$m = M('favorites');
-				$rs = $m->add($data);
+				$rs = $this->add($data);
 			    if(false !== $rs){
 					$rd['status']= 1;
 					$rd['id']= $rs;
@@ -52,8 +51,7 @@ class FavoritesModel extends BaseModel {
 			$data['targetId'] = $id;
 			$data['createTime'] = date('Y-m-d H:i:s');
 			if($this->checkEmpty($data)){
-				$m = M('favorites');
-				$rs = $m->add($data);
+				$rs = $this->add($data);
 			    if(false !== $rs){
 					$rd['status']= 1;
 					$rd['id']= $rs;
@@ -79,8 +77,7 @@ class FavoritesModel extends BaseModel {
 		$rd = array('status'=>-1);
 		$id = (int)I('id');
 		$type = (int)I('type');
-		$m = M('favorites');
-		$rs = $m->where('favoriteType='.$type." and favoriteId=".$id." and userId=".(int)session('WST_USER.userId'))->delete();
+		$rs = $this->where('favoriteType='.$type." and favoriteId=".$id." and userId=".(int)session('WST_USER.userId'))->delete();
 		if(false !== $rs){
 			$rd['status']= 1;
 		}

@@ -33,14 +33,14 @@ class UsersAction extends BaseAction{
 	 * 新增/修改操作
 	 */
 	public function edit(){
-		$this->isAjaxLogin();
+		$this->isLogin();
 		$m = D('Admin/Users');
     	$rs = array();
     	if(I('id',0)>0){
-    		$this->checkAjaxPrivelege('hylb_02');
+    		$this->checkPrivelege('hylb_02');
     		$rs = $m->edit();
     	}else{
-    		$this->checkAjaxPrivelege('hylb_01');
+    		$this->checkPrivelege('hylb_01');
     		$rs = $m->insert();
     	}
     	$this->ajaxReturn($rs);
@@ -49,8 +49,8 @@ class UsersAction extends BaseAction{
 	 * 删除操作
 	 */
 	public function del(){
-		$this->isAjaxLogin();
-		$this->checkAjaxPrivelege('hylb_03');
+		$this->isLogin();
+		$this->checkPrivelege('hylb_03');
 		$m = D('Admin/Users');
     	$rs = $m->del();
     	$this->ajaxReturn($rs);
@@ -89,7 +89,7 @@ class UsersAction extends BaseAction{
 	 * 列表查询
 	 */
     public function queryByList(){
-    	$this->isAjaxLogin();
+    	$this->isLogin();
 		$m = D('Admin/Users');
 		$list = $m->queryByList();
 		$rs = array();
@@ -101,7 +101,7 @@ class UsersAction extends BaseAction{
 	 * 查询用户账号
 	 */
 	public function checkLoginKey(){
-		$this->isAjaxLogin();
+		$this->isLogin();
 		$m = D('Admin/Users');
 		$key = I('clientid');
 	 	$id = I('id',0);
@@ -132,8 +132,8 @@ class UsersAction extends BaseAction{
 	 * 编辑账号状态
 	 */
 	public function editUserStatus(){
-		$this->isAjaxLogin();
-		$this->checkAjaxPrivelege('hyzh_04');
+		$this->isLogin();
+		$this->checkPrivelege('hyzh_04');
 		$m = D('Admin/Users');
 		$rs = $m->editUserStatus();
 		$this->ajaxReturn($rs);
@@ -153,8 +153,8 @@ class UsersAction extends BaseAction{
 	 * 编辑账号信息
 	 */
 	public function editAccount(){
-		$this->isAjaxLogin();
-		$this->checkAjaxPrivelege('hyzh_04');
+		$this->isLogin();
+		$this->checkPrivelege('hyzh_04');
 		$m = D('Admin/Users');
 		$rs = $m->editAccount();
 		$this->ajaxReturn($rs);

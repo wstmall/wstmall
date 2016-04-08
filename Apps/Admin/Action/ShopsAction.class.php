@@ -52,18 +52,18 @@ class ShopsAction extends BaseAction{
 	 * 新增/修改操作
 	 */
 	public function edit(){
-		$this->isAjaxLogin();
+		$this->isLogin();
 		$m = D('Admin/Shops');
     	$rs = array();
     	if(I('id',0)>0){
-    		$this->checkAjaxPrivelege('ppgl_02');
+    		$this->checkPrivelege('ppgl_02');
     		if(I('shopStatus',0)<=-1){
     			$rs = $m->reject();
     		}else{
     		    $rs = $m->edit();
     		}
     	}else{
-    		$this->checkAjaxPrivelege('ppgl_01');
+    		$this->checkPrivelege('ppgl_01');
     		$rs = $m->insert();
     	}
     	$this->ajaxReturn($rs);
@@ -72,8 +72,8 @@ class ShopsAction extends BaseAction{
 	 * 删除操作
 	 */
 	public function del(){
-		$this->isAjaxLogin();
-		$this->checkAjaxPrivelege('ppgl_03');
+		$this->isLogin();
+		$this->checkPrivelege('ppgl_03');
 		$m = D('Admin/Shops');
     	$rs = $m->del();
     	$this->ajaxReturn($rs);
@@ -138,7 +138,7 @@ class ShopsAction extends BaseAction{
 	 * 列表查询
 	 */
     public function queryByList(){
-    	$this->isAjaxLogin();
+    	$this->isLogin();
 		$m = D('Admin/Shops');
 		$list = $m->queryList();
 		$rs = array();
@@ -150,7 +150,7 @@ class ShopsAction extends BaseAction{
 	 * 获取待审核的店铺数量
 	 */
 	public function queryPenddingGoodsNum(){
-		$this->isAjaxLogin();
+		$this->isLogin();
     	$m = D('Admin/Shops');
     	$rs = $m->queryPenddingShopsNum();
     	$this->ajaxReturn($rs);

@@ -28,101 +28,50 @@ class BaseAction extends Controller {
 	}
 	
 	/**
-	 * 生成URL
-	 */
-	public function getURL(){
-		$params = I('post.');
-		$wstModel = $params["wstModel"];
-		$wstControl = $params["wstControl"];
-		$wstAction = $params["wstAction"];
-		$newparams = array();
-		$baseParas = array("wstModel","wstControl","wstAction");
-		foreach ($params as $key => $p) {
-			if(!in_array($key, $baseParas) ){
-				$newparams[$key] = $p;
-			}
-		}
-		$data["url"] = U($wstModel.'/'.$wstControl.'/'.$wstAction,$newparams);
-		
-		return $this->ajaxReturn($data);
-
-	}
-	
-	/**
 	 * 空操作处理
 	 */
     public function _empty($name){
         $this->assign('msg',"你的思想太飘忽，系统完全跟不上....");
         $this->display('default/sys_msg');
     }
-	
-    /**
-     * 只要不是会员都跳到登录页面让他登录
-     */
-	public function isUserLogin($ref="") {
-		$USER = session('WST_USER');
-		if (empty($USER) || ($USER['userId']=='')){
-			$this->redirect("Users/login");
-		}
-	}
 	/**
      * ajax程序验证,只要不是会员都返回-999
      */
-    public function isUserAjaxLogin() {
+    public function isUserLogin() {
     	$USER = session('WST_USER');
 		if (empty($USER) || ($USER['userId']=='')){
-			if(!empty($_COOKIE['loginName']) && !empty($_COOKIE['loginPwd'])){ //自动登录(已保存loginName，loginPwd)
-				$m = D('Home/Users');
-				$user = $m->getUserInfo($_COOKIE['loginName'],$_COOKIE['loginPwd']);
-				if(empty($user)){
-					session('WST_USER',$user);
-				}else{
-					die("{status:-999}");
-				}
+			if(IS_AJAX){
+				$this->ajaxReturn(array('status'=>-999,'url'=>'Users/login'));
+			}else{
+				$this->redirect("Users/login");
 			}
 		}
 	}
 	/**
-	 * 商家登录验证
+	 * 商家ajax登录验证
 	 */
 	public function isShopLogin(){
 		$USER = session('WST_USER');
-	    if (empty($USER) || $USER['userType']<1)$this->redirect("Shops/login");
-	}
-	/**
-	 * 商家ajax登录验证
-	 */
-	public function isShopAjaxLogin(){
-		$USER = session('WST_USER');
-		if (empty($USER) || $USER['userType']<1){
-			die("{status:-999,url:'Shops/login'}");
+		if (empty($USER) || $USER['userType']!=1){
+			if(IS_AJAX){
+				$this->ajaxReturn(array('status'=>-999,'url'=>'Shops/login'));
+			}else{
+				$this->redirect("Shops/login");
+			}
 		}
 	}
 	/**
 	 * 用户登录验证-主要用来判断会员和商家共同功能的部分
 	 */
-	public function isLogin($userType = 'User'){
+	public function isLogin($userType = 'Users'){
 		$USER = session('WST_USER');
 		if (empty($USER)){
-		    if($userType=='Shop'){
-		    	$this->redirect("Shops/login");
-		    }else{
-		    	$this->redirect("Users/login");
-		    }
-		}
-   }
-   /**
-	* 用户ajax登录验证
-	*/
-   public function isAjaxLogin($userType = 'User'){
-   	   $USER = session('WST_USER');
-	   if (empty($USER)){
-			if($userType=='Shop'){
-				die("{status:-999,url:'Shops/login'}");
+			if(IS_AJAX){
+			    $this->redirect($userType."/login");
 			}else{
-				die("{status:-999,url:'Users/login'}");
+				$this->ajaxReturn(array('status'=>-999,'url'=>$userType.'/login'));
 			}
-	   }
+		}
    }
    /**
     * 检查登录状态

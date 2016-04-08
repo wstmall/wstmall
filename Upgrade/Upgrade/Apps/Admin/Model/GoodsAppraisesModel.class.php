@@ -22,7 +22,7 @@ class GoodsAppraisesModel extends BaseModel {
 		$data["content"] = I("content");
 		$data["isShow"] = (int)I("isShow",1);
 		if($this->checkEmpty($data)){	
-			$rs = $m->where("id=".(int)I('id'))->save($data);
+			$rs = $m->where("id=".$id)->save($data);
 			if(false !== $rs){
 				$rd['status']= 1;
 			}
@@ -49,7 +49,6 @@ class GoodsAppraisesModel extends BaseModel {
      	$goodsName = WSTAddslashes(I('goodsName'));
      	$areaId1 = (int)I('areaId1',0);
      	$areaId2 = (int)I('areaId2',0);
-        $m = M('goods_appraises');
 	 	$sql = "select gp.*,g.goodsName,g.goodsThums,o.orderNo,u.loginName from __PREFIX__goods_appraises gp
 	 	         left join __PREFIX__goods g on gp.goodsId=g.goodsId
 		         left join __PREFIX__orders o on gp.orderId=o.orderId 
@@ -61,7 +60,7 @@ class GoodsAppraisesModel extends BaseModel {
 	 	if($shopName!='')$sql.=" and (p.shopName like '%".$shopName."%' or p.shopSn like '%'".$shopName."%')";
 	 	if($goodsName!='')$sql.=" and (g.goodsName like '%".$goodsName."%' or g.goodsSn like '%".$goodsName."%')";
 	 	$sql.="  order by id desc";
-		$rs = $m->pageQuery($sql);
+		$rs = $this->pageQuery($sql);
 		return $rs;
 	 }
 	  
@@ -70,8 +69,7 @@ class GoodsAppraisesModel extends BaseModel {
 	  */
 	 public function del(){
 	 	$rd = array('status'=>-1);
-	 	$m = M('goods_appraises');
-		$rs = $m->delete((int)I('id'));
+		$rs = $this->delete((int)I('id'));
 		if($rs){
 		   $rd['status']= 1;
 		}

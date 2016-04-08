@@ -69,6 +69,7 @@ class ShopsModel extends BaseModel {
 		$sdata["shopAddress"] = I("shopAddress");
 		$sdata["bankId"] = (int)I("bankId");
 		$sdata["bankNo"] = I("bankNo");
+		$data["bankUserName"] = I("bankUserName");
 		$sdata["serviceStartTime"] = I("serviceStartTime");
 		$sdata["serviceEndTime"] = I("serviceEndTime");
 		$sdata["shopTel"] = I("shopTel");
@@ -199,6 +200,7 @@ class ShopsModel extends BaseModel {
 		$data["avgeCostMoney"] = I("avgeCostMoney",0);
 		$data["bankId"] = I("bankId");
 		$data["bankNo"] = I("bankNo");
+		$data["bankUserName"] = I("bankUserName");
 		$data["longitude"] = (float)I("longitude");
 		$data["latitude"] = (float)I("latitude");
 		$data["mapLevel"] = (int)I("mapLevel",13);
@@ -366,7 +368,6 @@ class ShopsModel extends BaseModel {
 	  * 分页列表
 	  */
      public function queryByPage(){
-        $m = M('shops');
         $areaId1 = (int)I('areaId1',0);
      	$areaId2 = (int)I('areaId2',0);
 	 	$sql = "select shopId,shopSn,shopName,u.userName,shopAtive,shopStatus,gc.catName from __PREFIX__shops s,__PREFIX__users u ,__PREFIX__goods_cats gc 
@@ -376,13 +377,12 @@ class ShopsModel extends BaseModel {
 	 	if($areaId1>0)$sql.=" and areaId1=".$areaId1;
 	 	if($areaId2>0)$sql.=" and areaId2=".$areaId2;
 	 	$sql.=" order by shopId desc";
-		return $m->pageQuery($sql);
+		return $this->pageQuery($sql);
 	 }
      /**
 	  * 分页列表[待审核列表]
 	  */
      public function queryPeddingByPage(){
-        $m = M('shops');
         $areaId1 = (int)I('areaId1',0);
      	$areaId2 = (int)I('areaId2',0);
 	 	$sql = "select shopId,shopSn,shopName,u.userName,shopAtive,shopStatus,gc.catName from __PREFIX__shops s,__PREFIX__users u ,__PREFIX__goods_cats gc 
@@ -393,15 +393,14 @@ class ShopsModel extends BaseModel {
 	 	if($areaId1>0)$sql.=" and areaId1=".$areaId1;
 	 	if($areaId2>0)$sql.=" and areaId2=".$areaId2;
 	 	$sql.=" order by shopId desc";
-		return $m->pageQuery($sql);
+		return $this->pageQuery($sql);
 	 }
 	 /**
 	  * 获取列表
 	  */
 	  public function queryByList(){
-	     $m = M('shops');
 	     $sql = "select * from __PREFIX__shops order by shopId desc";
-		 $rs = $m->find($sql);
+		 $rs = $this->find($sql);
 	  }
 	  
 	 /**
@@ -410,20 +409,19 @@ class ShopsModel extends BaseModel {
 	 public function del(){
 	 	$shopId = (int)I('id');
 	    $rd = array('status'=>-1);
-	    $m = M('shops');
 	    //下架所有商品
 	    $sql = "update __PREFIX__goods set isSale=0,goodsStatus=-1 where shopId=".$shopId;
-		$m->execute($sql);
+		$this->execute($sql);
 		$sql = "select userId from __PREFIX__shops where shopId=".$shopId;
 		$shop = $this->queryRow($sql);
 		//删除登录账号
 		$sql = "update __PREFIX__users set userFlag=-1 where userId=".$shop['userId'];
-		$m->execute($sql);
+		$this->execute($sql);
 		//标记店铺删除状态
 	    $data = array();
 		$data["shopFlag"] = -1;
 		$data["shopStatus"] = -2;
-	 	$rs = $m->where("shopId=".$shopId)->save($data);
+	 	$rs = $this->where("shopId=".$shopId)->save($data);
 	    if(false !== $rs){
 			$rd['status']= 1;
 		}
@@ -434,7 +432,6 @@ class ShopsModel extends BaseModel {
 	  */
 	 public function queryPenddingShopsNum(){
 	 	$rd = array('status'=>-1);
-	 	$m = M('goods');
 	 	$sql="select count(*) counts from __PREFIX__shops where shopStatus=0 and shopFlag=1";
 	 	$rs = $this->query($sql);
 	 	$rd['num'] = $rs[0]['counts'];

@@ -1710,7 +1710,7 @@ class Model {
     }
     
     /*********************************************************************************************
-     *                                      以下为wasonteam扩展函数                                                                                                          *
+     *                                      以下为WSTMall扩展函数                                                                                                          *
      *********************************************************************************************/
     /**
      * 分页函数
@@ -1731,7 +1731,7 @@ class Model {
 		//查询总数
 		$totalSql = '';
 		//if(stripos(strtolower($sql),'distinct')!==false || stripos(strtolower($sql),'group')!==false || stripos(strtolower($sql),'union')!==false){
-		    $totalSql = "select count(*) counts from (".$sql.") as a";
+		    $totalSql = "select count(1) counts from (".$sql.") as a";
 		//}else{
 			//$findNum = stripos($sql,' from ');
 			//$totalSql = "select count(*) counts from (".substr($sql,$findNum,strlen($sql)).") as a";

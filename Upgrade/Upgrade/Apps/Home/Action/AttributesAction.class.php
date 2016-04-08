@@ -33,7 +33,7 @@ class AttributesAction extends BaseAction{
 	 * 新增/修改操作
 	 */
 	public function edit(){
-		$this->isShopAjaxLogin();
+		$this->isShopLogin();
 		$m = D('Home/Attributes');
     	$rs = array();
     	$rs = $m->edit();
@@ -43,7 +43,7 @@ class AttributesAction extends BaseAction{
 	 * 删除操作
 	 */
 	public function del(){
-		$this->isShopAjaxLogin();
+		$this->isShopLogin();
 		$m = D('Home/Attributes');
     	$rs = $m->del();
     	$this->ajaxReturn($rs);

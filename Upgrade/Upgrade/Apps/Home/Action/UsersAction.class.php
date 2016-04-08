@@ -11,12 +11,11 @@ namespace Home\Action;
 class UsersAction extends BaseAction {
     /**
      * 跳去登录界面
-     * 
      */
 	public function login(){
 		//如果已经登录了则直接跳去后台
 		$USER = session('WST_USER');
-		if(!empty($USER)){
+		if(!empty($USER) && $USER['userId']!=''){
 			$this->redirect("Users/index");
 		}
 		if(isset($_COOKIE["loginName"])){
@@ -24,10 +23,6 @@ class UsersAction extends BaseAction {
 		}else{
 			$this->assign('loginName','');
 		}
-		if(!(strripos($ref,"regist")) && !(strripos($ref,"login")) && !(strripos($ref,"logout"))){
-			$_SESSION['refer'] = $ref;
-		}
-		
 		$this->display('default/login');
 	}
 	
@@ -158,7 +153,7 @@ class UsersAction extends BaseAction {
 	 * 修改用户密码
 	 */
 	public function editPass(){
-		$this->isAjaxLogin();
+		$this->isLogin();
 		$USER = session('WST_USER');
 		$m = D('Home/Users');
    		$rs = $m->editPass($USER['userId']);
@@ -173,6 +168,12 @@ class UsersAction extends BaseAction {
 		$obj["userId"] = session('WST_USER.userId');
 		$user = $m->getUserById($obj);
 	
+		//判断会员等级
+		$USER = session('WST_USER');
+		$rm = D('Home/UserRanks');
+		$USER["userRank"] = $rm->getUserRank();
+		session('WST_USER',$USER);
+		
 		$this->assign("user",$user);
 		$this->assign("umark","toEditUser");
 		$this->display("default/users/edit_user");
@@ -353,5 +354,27 @@ class UsersAction extends BaseAction {
      */
     public function toLoginBox(){
     	$this->display('default/login_box');
+    }
+    
+    /**
+     * 查看积分记录
+     */
+    public function toScoreList(){
+    	$this->isUserLogin();
+    	$um = D('Home/Users');
+    	$user = $um->getUserById(array("userId"=>session('WST_USER.userId')));
+    	$this->assign("userScore",$user['userScore']);
+    	$this->assign("umark","toScoreList");
+    	$this->display("default/users/score_list");
+    }
+    
+    /**
+     * 查看积分记录
+     */
+    public function getScoreList(){
+    	$this->isUserLogin();
+    	$m = D('Home/UserScore');
+    	$rs = $m->getScoreList();
+    	$this->ajaxReturn($rs);
     }
 }

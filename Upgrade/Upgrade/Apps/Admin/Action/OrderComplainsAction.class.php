@@ -14,7 +14,7 @@ class OrderComplainsAction extends BaseAction{
 	 */
 	public function index(){
 		$this->isLogin();
-		$this->checkAjaxPrivelege('ddts_00');
+		$this->checkPrivelege('ddts_00');
 		//获取地区信息
 		$m = D('Admin/Areas');
 		$this->assign('areaList',$m->queryShowByList(0));
@@ -64,7 +64,7 @@ class OrderComplainsAction extends BaseAction{
 	 * 转交给应诉人回应
 	 */
 	public function deliverRespond(){
-		$this->isAjaxLogin();
+		$this->isLogin();
 		$this->checkPrivelege('ddts_04');
 		$rs = array('status'=>-1,'msg'=>'无效的投诉信息!');
 		if((int)I('id')>0){
@@ -76,7 +76,7 @@ class OrderComplainsAction extends BaseAction{
 	 * 仲裁投诉记录
 	 */
 	public function finalHandle(){
-		$this->isAjaxLogin();
+		$this->isLogin();
 		$this->checkPrivelege('ddts_04');
 		$rs = array('status'=>-1,'msg'=>'无效的投诉信息!');
 		if((int)I('id')>0){

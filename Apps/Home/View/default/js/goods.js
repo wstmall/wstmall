@@ -38,103 +38,54 @@ function tohide(obj,id){
 }
 
 function queryGoods(obj,mark){
-	var params = {};
-	params.c1Id = $("#c1Id").val();
-	params.c2Id = $("#c2Id").val();
-	params.c3Id = $("#c3Id").val();
-	params.bs = $("#bs").val();
-	params.mark = mark;
-	if(mark==8){
-		var sj = $("#sj").val();
-		if(sj==2){
-			$("#sj").val(1);
-			$("#msort").val(8);
-		}else{
-			$("#sj").val(2);
-			$("#msort").val(9);
-		}		
-	}else{
-		$("#sj").val(0);
-		$("#msort").val(mark);
-	}	
-	params.msort = $("#msort").val();
-	params.sj = $("#sj").val();
-	
+	var params = [];
+	var communityId,brandId,prices,areaId3,c1Id,c2Id,c3Id,msort;
+	c1Id = $("#c1Id").val();
+	c2Id = $("#c2Id").val();
+	c3Id = $("#c3Id").val();
+	msort = 1;
 	if(mark==1){
-		var areaId3 = $(obj).attr("data");
-		params.areaId3 = areaId3;
+		areaId3 = $(obj).attr("data")?$(obj).attr("data"):'';
+		communityId = $("#wst-communitys").find(".searched").attr("data");
+		brandId = $("#wst-brand").find(".searched").attr("data");
+		prices = $("#wst-price").find(".searched").attr("data");
 	}else if(mark==2){
-		var areaId3 = $("#wst-areas").find(".searched").attr("data");
-		var communityId = $(obj).attr("data");
-		communityId = communityId?communityId:'';
-		params.areaId3 = areaId3;
-		params.communityId = communityId;
+		areaId3 = $("#wst-areas").find(".searched").attr("data");
+		brandId = $("#wst-brand").find(".searched").attr("data");
+		prices = $("#wst-price").find(".searched").attr("data");
+		communityId = $(obj).attr("data");
 	}else if(mark==3){
-		var areaId3 = $("#wst-areas").find(".searched").attr("data");
-		var communityId = $("#wst-communitys").find(".searched").attr("data");
-		var brandId = $(obj).attr("data");
-		communityId = communityId?communityId:'';
-		params.areaId3 = areaId3;
-		params.communityId = communityId;
-		params.brandId = brandId;
+		areaId3 = $("#wst-areas").find(".searched").attr("data");
+		communityId = $("#wst-communitys").find(".searched").attr("data");
+		brandId = $(obj).attr("data");
+		prices = $("#wst-price").find(".searched").attr("data");
 	}else if(mark==4){
-		var areaId3 = $("#wst-areas").find(".searched").attr("data");
-		var communityId = $("#wst-communitys").find(".searched").attr("data");
-		var brandId = $("#wst-brand").find(".searched").attr("data");
-		var prices = $(obj).attr("data");
-		
-		params.areaId3 = areaId3;
-		params.communityId = communityId;
-		params.brandId = brandId;
-		params.prices = prices;
-		
-	}else if(mark==5){
-		var areaId3 = $("#wst-areas").find(".searched").attr("data");
-		var communityId = $("#wst-communitys").find(".searched").attr("data");
-		var brandId = $("#wst-brand").find(".searched").attr("data");
-		var prices = $("#wst-price").find(".searched").attr("data");
-		var shopId = $(obj).attr("data");
-		communityId = communityId?communityId:'';
-
-		params.areaId3 = areaId3;
-		params.communityId = communityId;
-		params.brandId = brandId;
-		params.prices = prices;
-		
+		areaId3 = $("#wst-areas").find(".searched").attr("data");
+		communityId = $("#wst-communitys").find(".searched").attr("data");
+		brandId = $("#wst-brand").find(".searched").attr("data");
+		prices = $(obj).attr("data");	
 	}else{
-		var areaId3 = $("#wst-areas").find(".searched").attr("data");
-		var communityId = $("#wst-communitys").find(".searched").attr("data");
-		var brandId = $("#wst-brand").find(".searched").attr("data");
+		areaId3 = $("#wst-areas").find(".searched").attr("data");
+		communityId = $("#wst-communitys").find(".searched").attr("data");
+		brandId = $("#wst-brand").find(".searched").attr("data");
 		if(mark==12){
-			var prices = $("#sprice").val()+"_"+$("#eprice").val();
+			prices = $("#sprice").val()+"_"+$("#eprice").val();
 		}else{
-			var prices = $("#wst-price").find(".searched").attr("data");
+			prices = $("#wst-price").find(".searched").attr("data");
 		}
 		
-		var shopId = $("#wst-shop").attr("data");
-		communityId = communityId?communityId:'';
-		
-		params.mark = mark;
-		params.areaId3 = areaId3;
-		params.communityId = communityId;
-		params.brandId = brandId;
-		params.prices = prices;
 	}
-	
-	var keyword = $.trim($("#keyword").val());
-	if(keyword!=""){
-		params.keyWords = keyword;
-	}
-	
-	params.wstModel = "Home";
-	params.wstControl = "Goods";
-	params.wstAction = "getGoodsList";
-
-	jQuery.post(Think.U('Home/Base/getURL') ,params,function(data) {
-		var json = WST.toJson(data);
-		window.location = json.url;
-	});
-	
+	msort = $('#msort').val();
+	params.push("msort="+((msort=='0')?1:0));
+	params.push("mark="+mark);
+	if(c1Id && c1Id!='0')params.push("c1Id="+c1Id);
+	if(c2Id && c2Id!='0')params.push("c2Id="+$("#c2Id").val());
+	if(c3Id && c3Id!='0')params.push("c3Id="+$("#c3Id").val());
+	if(areaId3 && areaId3!='0')params.push("areaId3="+areaId3);
+	if(communityId && communityId!='0')params.push("communityId="+communityId);
+	if(brandId && brandId!='0')params.push("brandId="+brandId);
+	if(prices)params.push("prices="+prices);
+	window.location = Think.U('Home/Goods/getGoodsList',params.join('&'));
 }
 
 /**
@@ -150,8 +101,6 @@ function addCart(goodsId,type,goodsThums){
 	jQuery.post(Think.U('Home/Cart/addToCartAjax') ,params,function(data) {
 		if(type==1){
 			location.href= Think.U('Home/Cart/toCart');
-		}else{
-			//layer.msg("添加成功!",1,1);
 		}
 	});
 }

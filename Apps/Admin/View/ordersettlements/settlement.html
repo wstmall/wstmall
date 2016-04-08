@@ -1,0 +1,45 @@
+<meta charset="utf-8">
+   <script>
+   function edit(){
+	   var params = {};
+	   params.content = $.trim($('#content').val());
+	   params.id = $('#id').val();
+	   Plugins.waitTips({title:'信息提示',content:'正在提交数据，请稍后...'});
+	   $.post("{:U('Admin/OrderSettlements/settlement')}",params,function(data,textStatus){
+			var json = WST.toJson(data);
+			if(json.status=='1'){
+				Plugins.setWaitTipsMsg({ content:'操作成功',timeout:1000,callback:function(){
+					 location.href="{:U('Admin/OrderSettlements/index')}";
+				}});
+			}else{
+				Plugins.setWaitTipsMsg({content:json.msg,timeout:1000});
+			}
+		});
+   }
+   
+   </script>
+       <form name="myform" method="post" id="myform">
+        <input type='hidden' id='id' value='{$object.settlementId}'/>
+        <table class="table table-hover table-striped table-bordered wst-form">
+           <tr>
+             <th width='120' align='right'>结算编号：</th>
+             <td>{$object['settlementNo']}</td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>结算金额：</th>
+             <td><font color='red'>￥{$object['settlementMoney']}</font>&nbsp;(订单总金额：￥{$object['orderMoney']} - 佣金：￥{$object['poundageMoney']})  </td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>结算说明：<br/>(商家可看)</th>
+             <td>
+             <textarea style='width:450px;height:100px' id='content' name='content'></textarea>
+             </td>
+           </tr> 
+           <tr>
+             <td colspan='2' style='padding-left:250px;'>
+                 <button type="button" class="btn btn-success" onclick='javascript:edit()'>确&nbsp;定</button>
+                 <button type="button" class="btn btn-primary" data-dismiss="modal">返&nbsp;回</button>
+             </td>
+           </tr>
+        </table>
+       </form>

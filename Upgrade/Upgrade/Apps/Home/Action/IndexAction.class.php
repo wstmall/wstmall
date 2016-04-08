@@ -20,9 +20,6 @@ class IndexAction extends BaseAction {
 		$gcm = D('Home/GoodsCats');
 		$catList = $gcm->getGoodsCatsAndGoodsForIndex($areaId2);
 		$this->assign('catList',$catList);
-   		//首页主广告
-   		$indexAds = $ads->getAds($areaId2,-1);
-   		$this->assign('indexAds',$indexAds);
    		//分类广告
    		$catAds = $ads->getAdsByCat($areaId2);
    		$this->assign('catAds',$catAds);

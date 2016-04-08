@@ -38,8 +38,8 @@ class AreasModel extends BaseModel {
 	  * 获取列表[带社区]
 	  */
 	 public function queryAreaAndCommunitysByList($parentId){
-	     $m = M('areas');
-		 $rs = $m->where('areaFlag=1 and parentId='.$parentId)->field('areaId,areaName')->select();
+
+		 $rs = $this->where('areaFlag=1 and parentId='.$parentId)->field('areaId,areaName')->select();
 		 if(count($rs)>0){
 		 	$m = M('communitys');
 		 	foreach ($rs as $key =>$v){
@@ -53,15 +53,13 @@ class AreasModel extends BaseModel {
 	  * 根据父ID获取子数据
 	  */
 	 public function queryByList($parentId){
-	 	$m = M('areas');
-		return $m->where('areaFlag=1 and isShow=1 and parentId='.$parentId)->field('areaId,areaName')->select();
+		return $this->where('areaFlag=1 and isShow=1 and parentId='.$parentId)->field('areaId,areaName')->select();
 	 }
      /**
 	 * 获取区域信息
 	 */
 	 public function getArea($areaId){
-	  	 $m = M('areas');
-		 return $m->where('areaFlag=1 and isShow=1 and areaId='.$areaId)->find();
+		 return $this->where('areaFlag=1 and isShow=1 and areaId='.$areaId)->find();
 	 }
 	  
 	/**
@@ -115,11 +113,10 @@ class AreasModel extends BaseModel {
 	  	if($areaId2==0){
 	  		$areaId2 = (int)session('areaId2');
 	  	}
-        $m = D('Home/Areas');
 	  	//检验城市有效性
 	  	if($areaId2>0){
 	  		$sql ="SELECT areaId FROM __PREFIX__areas WHERE isShow=1 AND areaFlag = 1 AND areaType=1 AND areaId=".$areaId2;
-	  		$rs = $m->query($sql);
+	  		$rs = $this->query($sql);
 	  		if($rs[0]['areaId']=='')$areaId2 = 0;
 	  	}else{
 	  		$areaId2 = (int)$_COOKIE['areaId2'];
@@ -134,7 +131,7 @@ class AreasModel extends BaseModel {
 	  			$where['isShow'] = 1;
 	  			$where['areaFlag'] = 1;
 	  			$where['areaType'] = 1;
-	  			$rs = $m->where($where)->getField('areaId');
+	  			$rs = $this->where($where)->getField('areaId');
 	  			if(intval($rs)>0){
 	  				$areaId2 = intval($rs);
 	  			}else{

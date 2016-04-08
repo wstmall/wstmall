@@ -1,17 +1,3 @@
-
-function checkAll(obj){
-	$('.chk').each(function(){
-		$(this)[0].checked = obj.checked;
-	})
-}
-function getChks(){
-	var ids = [];
-	$('.chk').each(function(){
-		if($(this)[0].checked)ids.push($(this).val());
-	});
-	return ids.join(',');
-}
-
 /****************************商品操作**************************/
 function queryUnSaleByPage(){
 	var shopCatId1 = $('#shopCatId1').val();
@@ -61,7 +47,7 @@ function delGoods(id){
 }
 function batchDel(){
 	layer.confirm("您确定要删除这些商品？",{icon: 3, title:'系统提示'},function(){
-	      var ids = getChks();
+	      var ids = WST.getChks('.chk');
 	      var loading = layer.load('正在处理，请稍后...', 3);
 	      var params = {};
 	      params.ids = ids;
@@ -79,7 +65,7 @@ function batchDel(){
 	});
 }
 function sale(v){
-	var ids = getChks();
+	var ids = WST.getChks('.chk');
 	if(ids==''){
 		WST.msg('请先选择商品!', {icon: 5});
 		return;
@@ -112,7 +98,7 @@ function sale(v){
 	});
 }
 function goodsSet(type,umark){
-	var ids = getChks();
+	var ids = WST.getChks('.chk');
 	if(ids==''){
 		WST.msg('请先选择商品!', {icon: 5});
 		return;
@@ -801,6 +787,7 @@ function queryOrderPager(statusMark,pcurr){
 						html.push("<td width='*'>"+order.userAddress+"</td>");
 					}
 					html.push("<td width='100'>"+order.totalMoney+"</td>");
+					html.push("<td width='100' style='font-weight:bold;'>"+order.realTotalMoney+"</td>");
 					html.push("<td width='100'><div style='line-height:20px;'>"+order.createTime+"</div></td>");
 					html.push("<td width='100'>");
 					html.push("<a href='javascript:;' style='color:"+((order.orderStatus==-6 || order.orderStatus==-3)?"red":"blue")+"' onclick=showOrder('"+order.orderId+"')>查看</a>");
@@ -946,7 +933,8 @@ function editShop(){
 	   
 	   params.bankId = $('#bankId').val();
 	   params.bankNo = $('#bankNo').val();
-	   
+	   params.bankUserName = $('#bankUserName').val();
+	   alert( params.bankUserName );
 	   params.shopAtive = $("input[name='shopAtive']:checked").val();
 	   var relateArea = [0];
 	   var relateCommunity = [0];
@@ -1174,7 +1162,7 @@ function delAttrs(no,id){
 }
 function batchMessageDel(){
 	  layer.confirm("您确定要删除这些消息？",function(){
-	        var ids = getChks();
+	        var ids = WST.getChks('.chk');
 	        layer.load('正在处理，请稍后...', 3);
 	        var params = {};
 	        params.ids = ids;
@@ -1470,11 +1458,43 @@ function getShopMsgTips(){
 	});
 }
 
+/**
+ * 获取提现帐号列表
+ */
+function getCashConfigsList(p){
+	var tips = WST.msg('正在加载记录,请稍候...',{time:600000000});
+	var params = {};
+	params.p = p;
+	$.post(Think.U('Home/CashConfigs/getCashConfigsList'),params,function(data,textStatus){
+		layer.close(tips);
+	    var json = WST.toJson(data);
+	       	var gettpl = document.getElementById('tblist').innerHTML;
+	       	laytpl(gettpl).render(json.root, function(html){
+	       	    $('#wst-score-page').html(html);
+	       	});
+	       	if(json.totalPage>1){
+	       		laypage({
+		        	 cont: 'wst-page', 
+		        	 pages:json.totalPage, 
+		        	 curr: json.currPage,
+		        	 skin: '#e23e3d',
+		        	 groups: 3,
+		        	 jump: function(e, first){
+		        		    if(!first){
+		        		    	getCashConfigsList(e.curr);
+		        		    }
+		        	    } 
+		        });
+	       	}else{
+	       		$('#wst-page').empty();
+	       	}
+       
+	});
+}
 
 $(function() {
 	loadAudio();
 	getShopMsgTips();
 	setInterval("getShopMsgTips()",30000);
 });
-
 

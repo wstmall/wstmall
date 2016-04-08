@@ -54,8 +54,7 @@ class UsersModel extends BaseModel {
 		    $data["userFlag"] = 1;
 		    
 		    $data["createTime"] = date('Y-m-d H:i:s');
-			$m = M('users');
-			$rs = $m->add($data);
+			$rs = $this->add($data);
 			if(false !== $rs){
 				$rd['status']= 1;
 			}
@@ -85,7 +84,6 @@ class UsersModel extends BaseModel {
 		 	
 	 	}
 	 	//修改数据
-		$m = M('users');
 		$data = array();
 		$data["userScore"] = (int)I("userScore",0);
 		$data["userTotalScore"] = (int)I("userTotalScore",0);
@@ -96,7 +94,7 @@ class UsersModel extends BaseModel {
 		    $data["userQQ"] = I("userQQ");
 		    $data["userPhone"] = I("userPhone");
 		    $data["userEmail"] = I("userEmail");
-			$rs = $m->where("userId=".$id)->save($data);
+			$rs = $this->where("userId=".$id)->save($data);
 			if(false !== $rs){
 				$rd['status']= 1;
 				
@@ -108,14 +106,12 @@ class UsersModel extends BaseModel {
 	  * 获取指定对象
 	  */
      public function get(){
-	 	$m = M('users');
-		return $m->where("userId=".(int)I('id'))->find();
+		return $this->where("userId=".(int)I('id'))->find();
 	 }
 	 /**
 	  * 分页列表
 	  */
      public function queryByPage(){
-        $m = M('users');
         $map = array();
 	 	$sql = "select * from __PREFIX__users where userFlag=1 ";
 	 	if(I('loginName')!='')$sql.=" and loginName LIKE '%".WSTAddslashes(I('loginName'))."%'";
@@ -123,7 +119,7 @@ class UsersModel extends BaseModel {
 	 	if(I('userEmail')!='')$sql.=" and userEmail LIKE '%".WSTAddslashes(I('userEmail'))."%'";
 	 	if(I('userType',-1)!=-1)$sql.=" and userType=".I('userType',-1);
 	 	$sql.="  order by userId desc";
-		$rs = $m->pageQuery($sql);
+		$rs = $this->pageQuery($sql);
 		//计算等级
 		if(count($rs)>0){
 			$m = M('user_ranks');
@@ -142,9 +138,8 @@ class UsersModel extends BaseModel {
 	  * 获取列表
 	  */
 	  public function queryByList(){
-	     $m = M('users');
 	     $sql = "select * from __PREFIX__users order by userId desc";
-		 $rs = $m->find($sql);
+		 $rs = $this->find($sql);
 		 return $rs;
 	  }
 	  
@@ -169,7 +164,7 @@ class UsersModel extends BaseModel {
 		   	    $rs = $m->where(" userId=".$id)->save();
 		   	    $shopId = $m->where('userId='.$id)->getField('shopId',1);
 				$sql = "update __PREFIX__goods set isSale=0,goodsStatus=-1 where shopId=".$shopId;
-			 	$m->execute($sql);
+			 	$this->execute($sql);
 		   }
 		}
 		
@@ -186,8 +181,7 @@ class UsersModel extends BaseModel {
 	 	if($id>0){
 	 		$sql.=" and userId!=".$id;
 	 	}
-	 	$m = M('users');
-	 	$rs = $m->where($sql,$keyArr)->count();
+	 	$rs = $this->where($sql,$keyArr)->count();
 	    if($rs==0)$rd['status'] = 1;
 	    return $rd;
 	 }
@@ -200,13 +194,12 @@ class UsersModel extends BaseModel {
       * 获取账号分页列表
       */
 	 public function queryAccountByPage(){
-        $m = M('users');
 	 	$sql = "select * from __PREFIX__users where userFlag=1 ";
 	 	if(I('loginName')!='')$sql.=" and loginName LIKE '%".WSTAddslashes(I('loginName'))."%'";
 	 	if(I('userStatus',-1)!=-1)$sql.=" and userStatus=".(int)I('userStatus',-1);
 	 	if(I('userType',-1)!=-1)$sql.=" and userType=".(int)I('userType',-1);
 	 	$sql.="  order by userId desc";
-		$rs = $m->pageQuery($sql);
+		$rs = $this->pageQuery($sql);
 		//计算等级
 		if(count($rs)>0){
 			$m = M('user_ranks');
@@ -227,9 +220,8 @@ class UsersModel extends BaseModel {
 	 public function editUserStatus(){
 	 	$rd = array('status'=>-1);
 	 	if(I('id',0)==0)return $rd;
-	 	$m = M('users');
-	 	$m->userStatus = (I('userStatus')==1)?1:0;
-	 	$rs = $m->where("userId=".(int)I('id',0))->save();
+	 	$this->userStatus = (I('userStatus')==1)?1:0;
+	 	$rs = $this->where("userId=".(int)I('id',0))->save();
 	    if(false !== $rs){
 			$rd['status']= 1;
 		}
@@ -239,8 +231,7 @@ class UsersModel extends BaseModel {
 	  * 获取账号信息
 	  */
 	 public function getAccountById(){
-	 	 $m = M('users');
-		 $rs = $m->where('userId='.(int)I('id',0))->getField('userId,loginName,userStatus,userType',1);
+		 $rs = $this->where('userId='.(int)I('id',0))->getField('userId,loginName,userStatus,userType',1);
 		 return current($rs);
 	 }
 	 /**
@@ -249,11 +240,10 @@ class UsersModel extends BaseModel {
 	 public function editAccount(){
 	 	$rd = array('status'=>-1);
 	 	if(I('id')=='')return $rd;
-	 	$m = M('users');
-	 	$loginSecret = $m->where("userId=".(int)I('id'))->getField('loginSecret');
+	 	$loginSecret = $this->where("userId=".(int)I('id'))->getField('loginSecret');
 	 	if(I('loginPwd')!='')$m->loginPwd = md5(I('loginPwd').$loginSecret);
-	 	$m->userStatus = I('userStatus',0);
-	 	$rs = $m->where('userId='.(int)I('id'))->save();
+	 	$this->userStatus = (int)I('userStatus',0);
+	 	$rs = $this->where('userId='.(int)I('id'))->save();
 	    if(false !== $rs){
 			$rd['status']= 1;
 		}

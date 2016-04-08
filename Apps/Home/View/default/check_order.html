@@ -348,6 +348,20 @@
                         </div>
                         </volist>	
                     </div>
+                    <?php if($CONF['isOpenScorePay']==1){ ?>
+                    <div style="padding:8px;background-color: #F3FBFE;line-height: 25px;">
+                    	<div style="float:left;width:500px;">
+				   		<if condition="$canUserScore eq 0">本次不符合积分使用规则，无可用积分<br/></if>
+						共{$userScore}个积分，本次可用 <span style="color:red;">{$canUserScore}</span> 个积分，<span id="scoreRule" onmouseover="showScoreRule()" style="cursor: pointer;"><img src="__ROOT__/Apps/Home/View/default/images/a5.jpg"/> 积分规则</span>
+						</div>
+						<div style="float:right;width:500px;text-align: right;padding-right: 8px;">
+							<if condition="$canUserScore gt 0">
+							<label><input id="isScorePay" type="checkbox" scoreMoney="{$scoreMoney}" totalMoney="{$totalMoney}" />使用积分支付 ￥{$scoreMoney}</label>
+							</if>
+						</div>
+						<div style="clear:both"></div>
+                    </div>
+                    <?php } ?>
                     <div class="checkout-buttons group" id="checkout-floatbar">
                         <div class="sticky-placeholder hide" style="display: none;"></div>
                         <div class="wst-chkod-yf1">
@@ -359,6 +373,11 @@
 	                                </strong>元</span>
                                 </span>
                         </div>
+                        <if condition="$CONF['isOrderScore'] eq 1">
+                    	<div class="wst-chkod-yf1">                                           
+                                                                   可获得积分：<?php echo floor($totalMoney)?> 个
+                      	</div>
+                      	</if>
                         <div class="sticky-wrap">
                             <div class="wst-inner" style="padding:15px;">
                             <button onclick="javascript:backCart();" class="wst-prev-btn">
@@ -381,6 +400,13 @@
 		<include file="./Apps/Home/View/default/footer.html" />
 	</body>
 	<script type="text/javascript">
+	
+	function showScoreRule(){
+		layer.tips('积分满 {:WSTOrderScore()} 即可使用：每次使用积分为 n*{:WSTOrderScore()}', '#scoreRule', {
+			  tips: [1, '#87d7f5'],
+			  time: 4000
+		});
+	}
 	
 	function subCheckArea(){
 	    var communityId = $("#consignee_add_CommunityId").val();

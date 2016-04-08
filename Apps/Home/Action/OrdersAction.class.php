@@ -17,13 +17,17 @@ class OrdersAction extends BaseAction {
 		$USER = session('WST_USER');
 		session('WST_USER.loginTarget','User');
 		//判断会员等级
-		$morders = D('Home/UserRanks');
-		session('WST_USER.userRank',$morders->checkUserRank($USER['userScore']));
+		$rm = D('Home/UserRanks');
+		$USER["userRank"] = $rm->getUserRank();
+		session('WST_USER',$USER);
 		//获取订单列表
 		$morders = D('Home/Orders');
 		$obj["userId"] = (int)$USER['userId'];
 		$orderList = $morders->queryByPage($obj);
 		$statusList = $morders->getUserOrderStatusCount($obj);
+		$um = D('Home/Users');
+		$user = $um->getUserById(array("userId"=>session('WST_USER.userId')));
+		$this->assign("userScore",$user['userScore']);
 		$this->assign("umark","queryByPage");
 		$this->assign("orderList",$orderList);
 		$this->assign("statusList",$statusList);
@@ -136,7 +140,7 @@ class OrdersAction extends BaseAction {
 	 * 取消订单
 	 */
     public function orderCancel(){
-    	$this->isUserAjaxLogin();
+    	$this->isUserLogin();
     	$USER = session('WST_USER');
     	$morders = D('Home/Orders');
     	$obj["userId"] = (int)$USER['userId'];
@@ -149,7 +153,7 @@ class OrdersAction extends BaseAction {
 	 * 用户确认收货订单
 	 */
     public function orderConfirm(){
-    	$this->isUserAjaxLogin();
+    	$this->isUserLogin();
     	$USER = session('WST_USER');
     	$morders = D('Home/Orders');
     	$obj["userId"] = (int)$USER['userId'];
@@ -252,13 +256,25 @@ class OrdersAction extends BaseAction {
 		if(floor($endTime)<$endTime){
 			$cendTime = $cendTime + 2;
 		}
-
+		$baseScore = WSTOrderScore();
+		$baseMoney = WSTScoreMoney();
 		$this->assign("startTime",$cstartTime);
 		$this->assign("endTime",$cendTime);
 		$this->assign("shopColleges",$shopColleges);
 		$this->assign("catgoods",$catgoods);
 		$this->assign("gtotalMoney",$gtotalMoney);
 		$this->assign("totalMoney",$totalMoney);
+		$um = D('Home/Users');
+		$user = $um->getUserById(array("userId"=>session('WST_USER.userId')));
+		$this->assign("userScore",$user['userScore']);
+		$useScore = $baseScore*floor($user["userScore"]/$baseScore);
+		$scoreMoney = $baseMoney*floor($user["userScore"]/$baseScore);
+		if($totalMoney<$scoreMoney){//订单金额小于积分金额
+			$useScore = $baseScore*floor($totalMoney/$baseMoney);
+			$scoreMoney = $baseMoney*floor($totalMoney/$baseMoney);
+		}
+		$this->assign("canUserScore",$useScore);
+		$this->assign("scoreMoney",$scoreMoney);
 		$this->display('default/check_order');
 	}
 	
@@ -308,6 +324,7 @@ class OrdersAction extends BaseAction {
 		$rs = $morders->getOrderDetails($obj);
 		$data["orderInfo"] = $rs;
 		$this->assign("orderInfo",$rs);
+	
 		$this->display("default/users/orders/details");
 	}
 	
@@ -327,7 +344,7 @@ class OrdersAction extends BaseAction {
 	 * 获取商家订单列表
 	*/
 	public function queryShopOrders(){
-		$this->isShopAjaxLogin();
+		$this->isShopLogin();
 		$USER = session('WST_USER');
 		$morders = D('Home/Orders');
 		$obj["shopId"] = (int)$USER["shopId"];
@@ -340,7 +357,7 @@ class OrdersAction extends BaseAction {
 	 * 商家受理订单
 	 */
     public function shopOrderAccept(){
-    	$this->isShopAjaxLogin();
+    	$this->isShopLogin();
     	$USER = session('WST_USER');
     	$morders = D('Home/Orders');
     	$obj["userId"] = (int)$USER['userId'];
@@ -353,7 +370,7 @@ class OrdersAction extends BaseAction {
 	 * 商家批量受理订单
 	 */
     public function batchShopOrderAccept(){
-    	$this->isShopAjaxLogin();
+    	$this->isShopLogin();
     	$morders = D('Home/Orders');
 		$rs = $morders->batchShopOrderAccept($obj);
 		$this->ajaxReturn($rs);
@@ -362,7 +379,7 @@ class OrdersAction extends BaseAction {
 	 * 商家生产订单
 	 */
     public function shopOrderProduce(){
-    	$this->isShopAjaxLogin();
+    	$this->isShopLogin();
     	$USER = session('WST_USER');
     	$morders = D('Home/Orders');
     	$obj["userId"] = (int)$USER['userId'];
@@ -372,7 +389,7 @@ class OrdersAction extends BaseAction {
 		$this->ajaxReturn($rs);
 	} 
 	public function batchShopOrderProduce(){
-    	$this->isShopAjaxLogin();
+    	$this->isShopLogin();
     	$morders = D('Home/Orders');
 		$rs = $morders->batchShopOrderProduce($obj);
 		$this->ajaxReturn($rs);
@@ -381,7 +398,7 @@ class OrdersAction extends BaseAction {
 	 * 商家发货配送订单
 	 */
     public function shopOrderDelivery(){
-    	$this->isShopAjaxLogin();
+    	$this->isShopLogin();
     	$USER = session('WST_USER');
     	$morders = D('Home/Orders');
     	$obj["userId"] = (int)$USER['userId'];
@@ -395,7 +412,7 @@ class OrdersAction extends BaseAction {
 	 * 商家发货配送订单
 	 */
     public function batchShopOrderDelivery(){
-    	$this->isShopAjaxLogin();
+    	$this->isShopLogin();
     	$morders = D('Home/Orders');
 		$rs = $morders->batchShopOrderDelivery($obj);
 		$this->ajaxReturn($rs);
@@ -405,7 +422,7 @@ class OrdersAction extends BaseAction {
 	 * 商家确认收货订单
 	 */
     public function shopOrderReceipt(){
-    	$this->isShopAjaxLogin();
+    	$this->isShopLogin();
     	$USER = session('WST_USER');
     	$morders = D('Home/Orders');
     	$obj["userId"] = (int)$USER['userId'];
@@ -419,7 +436,7 @@ class OrdersAction extends BaseAction {
 	 * 商家同意拒收/不同意拒收
 	 */
 	public function shopOrderRefund(){
-		$this->isShopAjaxLogin();
+		$this->isShopLogin();
 		$USER = session('WST_USER');
     	$morders = D('Home/Orders');
     	$obj["userId"] = (int)$USER['userId'];
@@ -433,7 +450,7 @@ class OrdersAction extends BaseAction {
 	 * 获取用户订单消息提示
 	 */
 	public function getUserMsgTips(){
-		$this->isUserAjaxLogin();
+		$this->isUserLogin();
 		$morders = D('Home/Orders');
 		$USER = session('WST_USER');
 		$obj["userId"] = (int)$USER['userId'];
@@ -445,7 +462,7 @@ class OrdersAction extends BaseAction {
 	 * 获取店铺订单消息提示
 	 */
 	public function getShopMsgTips(){
-		$this->isShopAjaxLogin();
+		$this->isShopLogin();
 		$morders = D('Home/Orders');
 		$USER = session('WST_USER');
 		$obj["shopId"] = (int)$USER['shopId'];

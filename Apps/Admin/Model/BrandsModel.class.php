@@ -30,8 +30,7 @@ class BrandsModel extends BaseModel {
 		$data["createTime"] = date('Y-m-d H:i:s');
 		$data["brandFlag"] = 1;
 		if($this->checkEmpty($data) && count($ids)>0){
-			$m = M('brands');
-			$rs = $m->add($data);
+			$rs = $this->add($data);
 		    if(false !== $rs){
 		        $m = M('goods_cat_brands');
 				foreach ($ids as $key =>$v){
@@ -75,12 +74,11 @@ class BrandsModel extends BaseModel {
 				return $rd;
 			}
 		}
-		$m = M('brands');
-		$m->brandName = I("brandName");
-		$m->brandIco = I("brandIco");
-		$m->brandDesc = I("brandDesc");
+		$this->brandName = I("brandName");
+		$this->brandIco = I("brandIco");
+		$this->brandDesc = I("brandDesc");
 	    if($this->checkEmpty($data) && count($ids)>0){
-			$rs = $m->where("brandId=".$id)->save();
+			$rs = $this->where("brandId=".$id)->save();
 			if(false !== $rs){
 			    $cm = M('goods_cat_brands');
 				$cm->where('brandId='.$id)->delete();
@@ -99,8 +97,7 @@ class BrandsModel extends BaseModel {
 	  * 获取指定对象
 	  */
      public function get(){
-	 	$m = M('brands');
-		$rs = $m->where("brandId=".(int)I('id'))->find();
+		$rs = $this->where("brandId=".(int)I('id'))->find();
         //获取关联的分类
 		$sql = "select * from __PREFIX__goods_cat_brands where brandId=".(int)I('id');
 		$catBrands = $this->query($sql);
@@ -115,7 +112,7 @@ class BrandsModel extends BaseModel {
 	  * 分页列表
 	  */
      public function queryByPage(){
-        $m = M('brands');
+     
         $brandName = WSTAddslashes(I("brandName"));
         $catId = (int)I("catId");
 	 	$sql = "select b.* from __PREFIX__brands b";
@@ -130,15 +127,14 @@ class BrandsModel extends BaseModel {
 	 		$sql .= " and brandName like '%".$brandName."%'";
 	 	}
 	 	$sql .= " order by b.brandId desc";
-		return $m->pageQuery($sql);
+		return $this->pageQuery($sql);
 	 }
 
 	 /**
 	  * 获取列表
 	  */
 	  public function queryByList(){
-	     $m = M('brands');
-	     return $m->where('brandFlag=1')->select();
+	     return $this->where('brandFlag=1')->select();
 	  }
 	  
 	 /**
@@ -147,9 +143,8 @@ class BrandsModel extends BaseModel {
 	 public function del(){
 	    $rd = array('status'=>-1);
 	 	if(I('id',0)==0)return $rd;
-	 	$m = M('brands');
-	 	$m->brandFlag = -1;
-	 	$rs = $m->where("brandId=".(int)I('id',0))->save();
+	 	$this->brandFlag = -1;
+	 	$rs = $this->where("brandId=".(int)I('id',0))->save();
 	    if(false !== $rs){
 			$rd['status']= 1;
 		}

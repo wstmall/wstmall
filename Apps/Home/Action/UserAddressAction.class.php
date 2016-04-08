@@ -33,7 +33,7 @@ class UserAddressAction extends BaseAction{
 	 */
 	public function edit(){
 		
-		$this->isUserAjaxLogin();
+		$this->isUserLogin();
 		$m = D('Home/UserAddress');
     	$rs = array();
     	if((int)I('id',0)>0){
@@ -47,7 +47,7 @@ class UserAddressAction extends BaseAction{
 	 * 删除操作
 	 */
 	public function del(){
-		$this->isUserAjaxLogin();
+		$this->isUserLogin();
 		$m = D('Home/UserAddress');
     	$rs = $m->del();
     	$this->ajaxReturn($rs);
@@ -68,7 +68,7 @@ class UserAddressAction extends BaseAction{
 	 * 获取用户地址
 	 */
 	public function getUserAddress(){
-		$this->isUserAjaxLogin();
+		$this->isUserLogin();
 		$m = D('Home/UserAddress');
 		$address = $m->getUserAddressInfo();	
 		$addressInfo = array();

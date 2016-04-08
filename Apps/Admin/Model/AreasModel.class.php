@@ -14,14 +14,15 @@ class AreasModel extends BaseModel {
 	  */
 	 public function insert(){
 	 	$areaType = 0;
-	 	if(I("parentId",0)>0){
-		 	$prs = $this->get((int)I("parentId",0));
+	 	$parentId = (int)I("parentId",0);
+	 	if($parentId>0){
+		 	$prs = $this->get($parentId);
 		 	$areaType = $prs['areaType']+1;
 		}
 	 	$rd = array('status'=>-1);
 	 	$id = (int)I("id",0);
 		$data = array();
-		$data["parentId"] = (int)I("parentId",0);
+		$data["parentId"] = $parentId;
 		$data["areaName"] = I("areaName");
 		$data["isShow"] = (int)I("isShow",1);
 		$data["areaSort"] = (int)I("areaSort",0);
@@ -29,8 +30,7 @@ class AreasModel extends BaseModel {
 		$data["areaType"] = $areaType;
 		$data["areaFlag"] = 1;
 	    if($this->checkEmpty($data,true)){
-			$m = M('areas');
-			$rs = $m->add($data);
+			$rs = $this->add($data);
 		    if(false !== $rs){
 				$rd['status']= 1;
 			}
@@ -47,9 +47,8 @@ class AreasModel extends BaseModel {
 		$data["areaName"] = I("areaName");
 		$data["isShow"] = (int)I("isShow",1);
 		$data["areaSort"] = (int)I("areaSort",0);
-		if($this->checkEmpty($data,true)){	
-			$m = M('areas');
-		    $rs = $m->where("areaId=".(int)I('id',0))->save($data);
+		if($this->checkEmpty($data,true)){
+		    $rs = $this->where("areaId=".$id)->save($data);
 			if(false !== $rs){
 				$rd['status']= 1;
 				
@@ -61,39 +60,34 @@ class AreasModel extends BaseModel {
 	  * 获取指定对象
 	  */
      public function get($id){
-	 	$m = M('areas');
 	 	$id = (I('id')!='')?I('id'):$id;
-		return $m->where("areaId=".(int)$id)->find();
+		return $this->where("areaId=".(int)$id)->find();
 	 }
 	 /**
 	  * 分页列表
 	  */
      public function queryByPage(){
-        $m = M('areas');
         $parentId = (int)I("parentId",0);
 	 	$sql = "select * from __PREFIX__areas where parentId=".$parentId." and areaFlag=1 order by areaSort asc,areaId asc";
-		return $m->pageQuery($sql);
+		return $this->pageQuery($sql);
 	 }
 	 /**
 	  * 获取列表
 	  */
 	  public function queryByList($parentId){
-	     $m = M('areas');
-		 return $m->where('areaFlag=1 and parentId='.(int)$parentId)->select();
+		 return $this->where('areaFlag=1 and parentId='.(int)$parentId)->select();
 	  }
      /**
 	  * 获取列表[获取启用的区域信息]
 	  */
 	  public function queryShowByList($parentId){
-	     $m = M('areas');
-		 return $m->where('areaFlag=1 and isShow = 1 and parentId='.(int)$parentId)->select();
+		 return $this->where('areaFlag=1 and isShow = 1 and parentId='.(int)$parentId)->select();
 	  }
      /**
 	  * 获取列表[带社区]
 	  */
 	  public function queryAreaAndCommunitysByList($parentId){
-	     $m = M('areas');
-		 $rs = $m->where('areaFlag=1 and parentId='.(int)$parentId)->select();
+		 $rs = $this->where('areaFlag=1 and parentId='.(int)$parentId)->select();
 		 if(count($rs)>0){
 		 	$m = M('communitys');
 		 	foreach ($rs as $key =>$v){
@@ -114,10 +108,9 @@ class AreasModel extends BaseModel {
 		$ids = array();
 		$ids[] = (int)I('id');
 		$ids = $this->getChild($ids,$ids);
-		$m = M('areas');
 	 	$data = array();
 		$data["areaFlag"] = -1;
-	    $rs = $m->where("areaId in(".implode(',',$ids).")")->save($data);
+	    $rs = $this->where("areaId in(".implode(',',$ids).")")->save($data);
 	    if(false !== $rs){
 			$rd['status']= 1;
 		}
@@ -127,9 +120,8 @@ class AreasModel extends BaseModel {
 	  * 迭代获取下级
 	  */
 	 public function getChild($ids = array(),$pids = array()){
-	 	$m = M('areas');
 	 	$sql = "select areaId from __PREFIX__areas where areaFlag=1 and parentId in(".implode(',',$pids).")";
-	 	$rs = $m->query($sql);
+	 	$rs = $this->query($sql);
 	 	if(count($rs)>0){
 	 		$cids = array();
 		 	foreach ($rs as $key =>$v){
@@ -152,9 +144,8 @@ class AreasModel extends BaseModel {
 		$ids = array();
 		$ids[] = (int)I('id');
 		$ids = $this->getChild($ids,$ids);
-	 	$m = M('areas');
 	 	$m->isShow = ((int)I('isShow')==1)?1:0;
-	 	$rs = $m->where("areaId in(".implode(',',$ids).")")->save();
+	 	$rs = $this->where("areaId in(".implode(',',$ids).")")->save();
 	    if(false !== $rs){
 			$rd['status']= 1;
 		}

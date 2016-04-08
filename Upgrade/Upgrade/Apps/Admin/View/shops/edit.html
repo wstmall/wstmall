@@ -120,7 +120,7 @@ dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
 		$("#goodsCatId1").formValidator({onFocus:"请选择所属行业"}).inputValidator({min:1,onError: "请选择所属行业"});
 		$("#bankId").formValidator({onFocus:"请选择所属银行"}).inputValidator({min:1,onError: "请选择所属银行"});
 		$("#bankNo").formValidator({onShow:"",onFocus:"请输入银行卡号",onCorrect:"输入正确"}).inputValidator({min:16,max:19,onError:"银行卡号格式错误,请确认"});
-	
+		$("#bankUserName").formValidator({onShow:"",onFocus:"请输入银行卡所有人名称",onCorrect:"输入正确"}).inputValidator({min:1,max:50,onError:"请输入银行卡所有人名称"});
 		$("#serviceStartTime").formValidator({onShow:"",onFocus:"请选择营业时间"}).inputValidator({min:1,max:50,onError:"请选择营业时间"});
 		$("#serviceEndTime").formValidator({onShow:"",onFocus:"请选择营业时间"}).inputValidator({min:1,max:50,onError:"请选择营业时间"});
 
@@ -348,6 +348,7 @@ dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
 	   params.deliveryStartMoney = $('#deliveryStartMoney').val();
 	   params.bankId = $('#bankId').val();
 	   params.bankNo = $('#bankNo').val();
+	   params.bankUserName = $('#bankUserName').val();
 	   params.isInvoice = $("input[name='isInvoice']:checked").val();
 	   params.invoiceRemarks = $('#invoiceRemarks').val();
 	   params.serviceStartTime = $('#serviceStartTime').val();
@@ -596,6 +597,10 @@ dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
            <tr>
              <th align='right'>银行卡卡号<font color='red'>*</font>：</th>
              <td><input type='text' id='bankNo' class="form-control wst-ipt" value='{$object.bankNo}' maxLength='25'/></td>
+           </tr>
+           <tr>
+             <th align='right'>银行卡所有人名称<font color='red'>*</font>：</th>
+             <td><input type='text' id='bankUserName' class="form-control wst-ipt" value='{$object.bankUserName}' maxLength='25'/></td>
            </tr>
            <tr>
              <th align='right'>能否开发票<font color='red'>*</font>：</th>

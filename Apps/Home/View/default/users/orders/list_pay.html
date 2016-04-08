@@ -3,7 +3,7 @@
     <div class="wst-body"> 
        <div class='wst-page-header'>买家中心 > 待付款订单</div>
        <div class='wst-page-content'>
-       	<div style="padding-bottom:4px;">
+       	<div style="padding:6px;">
        		订单编号:<input id="orderNo" value="{$params['orderNo']}" style="width:80px;" autocomplete="off"/>
        		店铺名称:<input id="shopName" value="{$params['shopName']}" style="width:80px;" autocomplete="off"/>
        		收货人:<input id="userName" value="{$params['userName']}" style="width:80px;" autocomplete="off"/>
@@ -13,7 +13,7 @@
        		
        		<button class="wst-btn-query" onclick="javascript:getOrdersList(1)">查询</button>
        	</div>
-       <div class='wst-page-content'>
+       
         <table class='wst-list' style="font-size:13px;">
            <thead>
              <tr>
@@ -22,6 +22,7 @@
                <th width='100'>店铺名称</th>
                <th width='100'>收货人</th>
                <th width='70'>订单金额</th>
+               <th width='70'>实付金额</th>
                <th width='140'>下单时间</th>
                <th width='60'>状态</th>
                <th width='130'>操作</th>
@@ -41,6 +42,7 @@
 				<td width='100' style="padding-top:10px;vertical-align:top;"><a href="{:U('Home/Shops/toShopHome/',array('shopId'=>$order['shopId']))}" target="_blank">{$order["shopName"]}</a></td>
                	<td width='100'>{$order["userName"]}</td>
                	<td width='70'>{$order["totalMoney"]}</td>
+               	<td width='70'><span style="font-weight: bold;">{$order["realTotalMoney"]}</span></td>
                	<td width='140'><div style="line-height:20px;">{$order["createTime"]}</div></td>
                	<td width='60'>
                		<if condition='$order["orderStatus"] eq -3'>拒收
@@ -75,7 +77,7 @@
              </if>
            </tbody>
         </table>
-        </div>
+        
     </div>{$receiveOrders['totalPage']}
     <script>
     <if condition="$payOrders['totalPage'] gt 1">

@@ -26,11 +26,6 @@ class BrandsAction extends BaseAction{
    			cookie("bstreesAreaId3",$obj["areaId3"]);
    		}
    		$this->assign('areaId3',$obj["areaId3"]);
-   		//广告
-   		$ads = D('Home/Ads');
-   		$ads = $ads->getAds($areaId2,-2);
-   		$this->assign('ads',$ads);
-		$m = D('Home/Brands');
 		$this->display("default/brands_list");
 	}
 	

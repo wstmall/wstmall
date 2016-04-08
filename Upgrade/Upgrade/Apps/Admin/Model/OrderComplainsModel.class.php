@@ -78,7 +78,7 @@ class OrderComplainsModel extends BaseModel {
 	 	$id = (int)I('id');
 	 	if($id==0)return $rd;
 	 	//判断是否已经处理过了
-	 	$sql = "select oc.complainStatus,p.userId shopUserId,o.userId,o.orderNo,o.orderId,oc.needRespond 
+	 	$sql = "select oc.complainStatus,p.userId shopUserId,o.userId,o.orderNo,o.orderId,o.orderStatus,o.useScore,oc.needRespond 
 	 	        from __PREFIX__order_complains oc,__PREFIX__orders o left join __PREFIX__shops p on o.shopId=p.shopId
 	 	        where oc.orderId=o.orderId and complainId=".$id;
 	 	$rs = $this->queryRow($sql);
@@ -116,6 +116,37 @@ class OrderComplainsModel extends BaseModel {
 						'msgFlag' => 1,
 				);
 				M('messages')->add($messsage);
+				if($rs['orderStatus']==-5){
+					$orderId = $rs['orderId'];
+					$orderStatus = (int)I("orderStatus",0);
+					if($orderStatus==-4 && $rs["useScore"]>0){//同意用户拒收
+						$sql = "UPDATE __PREFIX__users set userScore=userScore+".$rs["useScore"]." WHERE userId=".$rs['userId'];
+						$this->execute($sql);
+						
+						$data = array();
+						$m = M('user_score');
+						$data["userId"] = $rs['userId'];
+						$data["score"] = $rs["useScore"];
+						$data["dataSrc"] = 4;
+						$data["dataId"] = $orderId;
+						$data["dataRemarks"] = "订单拒收返还积分";
+						$data["scoreType"] = 1;
+						$data["createTime"] = date('Y-m-d H:i:s');
+						$m->add($data);
+					}
+					
+					$data = array();
+					$data["orderId"] = $orderId;
+					$data["logContent"] = ($orderStatus==-4)?"订单仲裁结果，同意用户拒收":"订单仲裁结果，不同意用户拒收";
+					$data["logUserId"] = $rs['userId'];
+					$data["logType"] = 0;
+					$data["logTime"] = date('Y-m-d H:i:s');
+					$mlogo = M('log_orders');
+					$mlogo->add($data);
+					//根据仲裁结果，修改订单状态
+					$sql = "update __PREFIX__orders set orderStatus = $orderStatus where orderId= $orderId";
+					$this->execute($sql);
+				}
 	 	    }
 	 	}else{
 	 	    $rd['msg'] = '操作失败，该投诉状态已发生改变，请刷新后重试!';

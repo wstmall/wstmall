@@ -9,13 +9,6 @@ function checkAll(obj){
 		$(this)[0].checked = obj.checked;
 	})
 }
-function getChks(){
-	var ids = [];
-	$('.chk').each(function(){
-		if($(this)[0].checked)ids.push($(this).val());
-	});
-	return ids.join(',');
-}
 function editAddress(){
 	   var params = {};
 	   params.id = $('#id').val();
@@ -142,7 +135,7 @@ function toEditAddress(id){
 	}
 function batchMessageDel(){
 	  layer.confirm("您确定要删除这些消息？",function(){
-	        var ids = getChks();
+	        var ids = WST.getChks('.chk');
 	        layer.load('正在处理，请稍后...', 3);
 	        var params = {};
 	        params.ids = ids;
@@ -552,16 +545,7 @@ $(function() {
 	setInterval("getUserMsgTips()",30000);
 });
 
-function queryFavoriteGoods(p){
-	 layer.load('正在查询商品数据，请稍后...', 3);
-	 var param = {};
-	 param.key = $.trim($("#key_"+statusMark).val());
-     params.p = p;
-     $.post(Think.U('Home/Favorites/queryGoodsByPage'),params,function(data,textStatus){
-       var json = WST.toJson(data);
-       
-     });
-}
+
 function queryFavoriteGoods(p){
 	var tips = WST.msg('正在加载记录,请稍候...',{time:600000000});
 	var params = {};
@@ -595,6 +579,41 @@ function queryFavoriteGoods(p){
        	}  
 	});
 }
+/**
+ * 获取积分列表
+ */
+function getScoreList(p,scoreType){
+	var tips = WST.msg('正在加载记录,请稍候...',{time:600000000});
+	var params = {};
+	params.p = p;
+	params.scoreType = scoreType;
+	$.post(Think.U('Home/Users/getScoreList'),params,function(data,textStatus){
+		layer.close(tips);
+	    var json = WST.toJson(data);
+	       	var gettpl = document.getElementById('tblist').innerHTML;
+	       	laytpl(gettpl).render(json.root, function(html){
+	       	    $('#wst-score-page').html(html);
+	       	});
+	       	if(json.totalPage>1){
+	       		laypage({
+		        	 cont: 'wst-page', 
+		        	 pages:json.totalPage, 
+		        	 curr: json.currPage,
+		        	 skin: '#e23e3d',
+		        	 groups: 3,
+		        	 jump: function(e, first){
+		        		    if(!first){
+		        		    	getScoreList(e.curr,scoreType);
+		        		    }
+		        	    } 
+		        });
+	       	}else{
+	       		$('#wst-page').empty();
+	       	}
+       
+	});
+}
+
 /**
  * 加入购物车
  */

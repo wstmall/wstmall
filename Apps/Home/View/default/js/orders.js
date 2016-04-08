@@ -302,8 +302,12 @@ function submitOrder(){
 			var d2 = addHour(1);	
 			d2 = d2.replace(/-/g,"/");
 			var date2 = new Date(d2);
-			
-			
+			params.isScorePay = 0;
+			if($("#isScorePay").length>0){
+				if($("#isScorePay").prop('checked')){
+					params.isScorePay = 1;
+				}
+			}
 			if(params.needreceipt==1 && params.invoiceClient==""){
 				WST.msg("请输入抬头", {icon: 5});
 				return ;		
@@ -405,6 +409,15 @@ $(function() {
 		$("#payCode").val($(this).attr("data"));
 	});
 	
+	$("#isScorePay").click(function(){
+		if($("#isScorePay").prop('checked')){
+			var totalMoney = $(this).attr("totalMoney");
+			var scoreMoney = $(this).attr("scoreMoney");
+			$("#totalMoney_span").html((totalMoney-scoreMoney).toFixed(2));
+		}else{
+			$("#totalMoney_span").html($(this).attr("totalMoney"));
+		}
+	});
 	
 	$('input:radio[name="isself"]').click(function(){
 		if($(this).val()==0){//送货上门

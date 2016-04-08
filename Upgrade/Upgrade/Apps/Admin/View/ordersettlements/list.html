@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>{$CONF['shopTitle']['fieldValue']}后台管理中心</title>
+      <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
+      <!--[if lt IE 9]>
+      <script src="__PUBLIC__/js/html5shiv.min.js"></script>
+      <script src="__PUBLIC__/js/respond.min.js"></script>
+      <![endif]-->
+      <script src="__PUBLIC__/js/jquery.min.js"></script>
+      <script src="__PUBLIC__/plugins/bootstrap/js/bootstrap.min.js"></script>
+      <script src="__PUBLIC__/js/common.js"></script>
+      <script src="__PUBLIC__/plugins/plugins/plugins.js"></script>
+   </head>
+   <script>
+   function getAreaList(objId,parentId,t,id){
+	   var params = {};
+	   params.parentId = parentId;
+	   $('#'+objId).empty();
+	   if(t<1){
+		   $('#areaId3').empty();
+		   $('#areaId3').html('<option value="">请选择</option>');
+	   }
+	   var html = [];
+	   $.post("{:U('Admin/Areas/queryByList')}",params,function(data,textStatus){
+		    html.push('<option value="">请选择</option>');
+			var json = WST.toJson(data);
+			if(json.status=='1' && json.list.length>0){
+				var opts = null;
+				for(var i=0;i<json.list.length;i++){
+					opts = json.list[i];
+					html.push('<option value="'+opts.areaId+'" '+((id==opts.areaId)?'selected':'')+'>'+opts.areaName+'</option>');
+				}
+			}
+			$('#'+objId).html(html.join(''));
+	   });
+   }
+   $(function(){
+       <PHP>if($areaId1!=0){</PHP>
+	   getAreaList("areaId2",'{$areaId1}',0,'{$areaId2}');
+	   <PHP>}</PHP>  
+	   <PHP>if($areaId2 != 0){</PHP>
+	   getAreaList("areaId3",'{$areaId2}',1,'{$areaId3}');
+	   <PHP>}</PHP>
+	   $('#orderStatus').val({$orderStatus});
+   });
+   function settlement(url){
+	   Plugins.Modal({url:url,title:'结算订单',width:600});
+   }
+   </script>
+   <body class='wst-page'>
+      <form method="post" action='{:U("Admin/OrderSettlements/index")}'>
+       <div class='wst-tbar'>
+                             地区：<select name='areaId1' id='areaId1' onchange='javascript:getAreaList("areaId2",this.value,0)'>
+             <option value=''>请选择</option>
+             <volist name="areaList" id="vo">
+             <option value='{$vo['areaId']}' <if condition="$areaId1 == $vo['areaId'] ">selected</if>>{$vo['areaName']}</option>
+             </volist>
+          </select>
+          <select name='areaId2' id='areaId2' onchange='javascript:getAreaList("areaId3",this.value,1);'>
+             <option value=''>请选择</option>
+          </select>
+          <select name='areaId3' id='areaId3'>
+             <option value=''>请选择</option>
+          </select>
+       </div>
+       <div class='wst-tbar'>
+       结算编号：<input type='text' name='settlementNo' id='settlementNo' value='{$settlementNo}'/>  
+     结算状态：  <select name='isFinish' id='isFinish'>
+             <option value='-1'  <if condition="$isFinish eq -1 ">selected</if>>请选择</option>
+             <option value='0' <if condition="$isFinish eq 0 ">selected</if>>未结算</option>
+             <option value='1' <if condition="$isFinish eq 1 ">selected</if>>已结算</option>
+         </select>
+       <button type="submit" class="btn btn-primary glyphicon glyphicon-search">查询</button> 
+       </div>
+       </form>
+       <div class="wst-body"> 
+        <table class="table table-hover table-striped table-bordered wst-list">
+           <thead>
+             <tr>
+               <th width='40'>序号</th>
+               <th width='120'>结算编号</th>
+               <th width='120'>店铺</th>
+               <th width='70'>订单金额</th>
+               <th width='70'>结算金额</th>
+               <th width='60'>佣金</th>
+               <th width='150'>结算时间</th>
+               <th>备注</th>
+               <th>状态</th>
+               <th width='130'>操作</th>
+             </tr>
+           </thead>
+           <tbody>
+           <volist name="Page['root']" id="vo" key='key'>
+             <tr>
+               <td>{$key}</td>
+               <td>{$vo['settlementNo']}</td>
+               <td>{$vo['shopName']}</td>
+               <td>{$vo['orderMoney']}</td>
+               <td>{$vo['settlementMoney']}</td>
+               <td>{$vo['poundageMoney']}</td>
+               <td>{$vo['finishTime']}</td>
+               <td>{$vo['remarks']}</td>
+               <td>
+               <if condition='$vo["isFinish"] eq 0'>未结算
+               <elseif condition='$vo["isFinish"] eq 1'/>已结算
+			   </if>
+               </td>
+               <td>
+               <a class="btn btn-primary glyphicon" href="{:U('Admin/OrderSettlements/toView',array('id'=>$vo['settlementId']))}"">查看</a>
+               <if condition="$vo['isFinish'] ==0 ">
+               <php>if(in_array('js_04',$WST_STAFF['grant'])){</php>
+               <a class="btn btn-primary glyphicon" href="javascript:settlement('{:U('Admin/OrderSettlements/toSettlement',array('id'=>$vo['settlementId']))}')"">结算</a>
+               <php>}</php>
+               </if>
+               </td>
+             </tr>
+             </volist>
+             <tr>
+                <td colspan='10' align='center'>{$Page['pager']}</td>
+             </tr>
+           </tbody>
+        </table>
+       </div>
+   </body>
+</html>

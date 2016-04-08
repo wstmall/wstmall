@@ -16,7 +16,6 @@
        		
        		<button class="wst-btn-query" onclick="javascript:getOrdersList(5)">查询</button>
        	</div>
-       <div class='wst-page-content'>
         <table class='wst-list' style="font-size:13px;">
            <thead>
              <tr>
@@ -25,6 +24,7 @@
                <th width='100'>店铺名称</th>
                <th width='100'>收货人</th>
                <th width='70'>订单金额</th>
+               <th width='70'>实付金额</th>
                <th width='140'>下单时间</th>
                <th width='100'>状态</th>
                <th width='100'>操作</th>
@@ -44,6 +44,7 @@
 				<td width='100' style="padding-top:10px;vertical-align:top;"><a href="{:U('Home/Shops/toShopHome/',array('shopId'=>$order['shopId']))}" target="_blank">{$order["shopName"]}</a></td>
                	<td width='100'>{$order["userName"]}</td>
                	<td width='70'>{$order["totalMoney"]}</td>
+               	<td width='70'><span style="font-weight: bold;">{$order["realTotalMoney"]}</span></td>
                	<td width='140'><div style="line-height:20px;">{$order["createTime"]}</div></td>
                	<td width='100'>用户已取消</if>
                	</td>
@@ -65,7 +66,7 @@
              </if>
            </tbody>
         </table>
-        </div>
+       
     </div>
     <script>
     <if condition="$receiveOrders['totalPage'] gt 1">

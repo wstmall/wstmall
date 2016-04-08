@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>{$CONF['shopTitle']['fieldValue']}后台管理中心</title>
+      <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
+      <!--[if lt IE 9]>
+      <script src="__PUBLIC__/js/html5shiv.min.js"></script>
+      <script src="__PUBLIC__/js/respond.min.js"></script>
+      <![endif]-->
+      <script src="__PUBLIC__/js/jquery.min.js"></script>
+      <script src="__PUBLIC__/plugins/bootstrap/js/bootstrap.min.js"></script>
+      <script src="__PUBLIC__/js/common.js"></script>
+      <script src="__PUBLIC__/plugins/plugins/plugins.js"></script>
+      <script src="__PUBLIC__/plugins/formValidator/formValidator-4.1.3.js"></script>
+   </head>
+   <body class="wst-page">
+       <form name="myform" method="post" id="myform">
+        <input type='hidden' id='id' value='{$object.settlementId}'/>
+        <table class="table table-hover table-striped table-bordered wst-form">
+           <tr>
+             <th width='120' align='right'>结算编号：</th>
+             <td>{$object['settlementNo']}</td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>申请商家：</th>
+             <td>{$object['shopName']}</td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>订单金额：</th>
+             <td>{$object['orderMoney']}</td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>佣金：</th>
+             <td>{$object['poundageMoney']}</td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>结算金额：</th>
+             <td>{$object['settlementMoney']}</td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>结算说明：</th>
+             <td>{$object['remarks']}&nbsp;</td>
+           </tr> 
+           <tr>
+             <th colspan='2' style='text-align:left'>相关订单</th>
+           </tr>
+           <tr>
+             <th colspan='2' align='left'>
+             <table class="table table-hover table-striped table-bordered wst-list">
+             <thead>
+             <tr>
+               <th width='40'>序号</th>
+               <th width='120'>订单编号</th>
+               <th width='120'>收货人</th>
+               <th width='70'>订单金额</th>
+               <th width='70'>结算金额</th>
+               <th width='60'>佣金比例</th>
+               <th width='60'>佣金</th>
+             </tr>
+           </thead>
+           <tbody>
+             <volist name="object['List']" id="vo" key='key'>
+             <tr>
+               <td width='40'>{$key}</td>
+               <td width='120'>{$vo["orderNo"]}</td>
+               <td width='120'>{$vo["userName"]}</td>
+               <td width='70'>{$vo["realTotalMoney"]}</td>
+               <td width='70'>{$vo["realTotalMoney"]-$vo["poundageMoney"]}</td>
+               <td width='60'>{$vo["poundageRate"]}</td>
+               <td width='60'>{$vo["poundageMoney"]}</th>
+             </tr>
+             </volist>
+           </tbody>  
+             </table>
+             </th>
+           </tr>
+           <tr>
+             <td colspan='2' align='center'>
+                 <button type="button" class="btn btn-primary" data-dismiss="modal" onclick='javascript:history.go(-1)'>返&nbsp;回</button>
+             </td>
+           </tr>
+        </table>
+       </form>
+   </body>
+</html>

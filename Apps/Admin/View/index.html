@@ -200,6 +200,9 @@
                                 <php>if(in_array('tk_00',$WST_STAFF['grant'])){</php>
                                 <li><a href="{:U('Admin/Orders/queryRefundByPage')}" target='pageContent' >退款列表</a></li>
                                 <php>}</php>
+                                <php>if(in_array('js_00',$WST_STAFF['grant'])){</php>
+                                <li><a href="{:U('Admin/OrderSettlements/index')}" target='pageContent' >订单结算</a></li>
+                                <php>}</php>
                             </ul>
                         </li>
                         <php>}</php>

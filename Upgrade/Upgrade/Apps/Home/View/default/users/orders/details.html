@@ -154,8 +154,13 @@
         		<tr>
         		   <td colspan='4' style='border-left:0px;border-right:0px;border-bottom:0px;text-align:right;padding-right:5px;'>
         		  商品总金额： ￥{$orderInfo["order"]["totalMoney"]}  <br/>
-        		   + 运费：￥{$orderInfo["order"]["deliverMoney"]}<br/> 
-        		   <span style='font-weight:bold;font-size:20px;'>订单总金额：</span><span style='font-weight:bold;font-size:20px;color:red;'>￥{$orderInfo["order"]["totalMoney"]+$orderInfo["order"]["deliverMoney"]}</span></td>
+        		   + 运费：￥{$orderInfo["order"]["deliverMoney"]}<br/>
+        			<if condition='$orderInfo["order"]["useScore"] gt 0'>
+        			使用积分：{$orderInfo["order"]["useScore"]} 点<br/>
+        			</if>
+        		    订单总金额：<span style='font-weight:bold;font-size:20px;color:red;'>￥{$orderInfo["order"]["totalMoney"]+$orderInfo["order"]["deliverMoney"]}</span><br/>
+        		   <span style='font-weight:bold;font-size:20px;'>实付总金额：</span><span style='font-weight:bold;font-size:20px;color:red;'>￥{$orderInfo["order"]["realTotalMoney"]}</span>
+        		   </td>
         		</tr>
         	</table>
         	</div>

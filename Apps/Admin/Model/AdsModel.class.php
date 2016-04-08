@@ -14,7 +14,6 @@ class AdsModel extends BaseModel {
 	  */
 	 public function insert(){
 	 	$rd = array('status'=>-1);
-	 	$id = (int)I("id",0);
 		$data = array();
 		$data["adPositionId"] = (int)I("adPositionId");
 		$data["adFile"] = I("adFile");
@@ -26,8 +25,7 @@ class AdsModel extends BaseModel {
 		    $data["adURL"] = I("adURL");
 			$data["areaId1"] = I("areaId1");
 			$data["areaId2"] = I("areaId2");
-		    $m = M('ads');
-			$rs = $m->add($data);
+			$rs = $this->add($data);
 		    if(false !== $rs){
 				$rd['status']= 1;
 			}
@@ -50,8 +48,7 @@ class AdsModel extends BaseModel {
 			$data["adURL"] = I("adURL");
 	    	$data["areaId1"] = (int)I("areaId1");
 			$data["areaId2"] = (int)I("areaId2");
-			$m = M('ads');
-		    $rs = $m->where("adId=".(int)I('id',0))->save($data);
+		    $rs = $this->where("adId=".$id)->save($data);
 			if(false !== $rs){
 				$rd['status']= 1;
 			}
@@ -62,8 +59,7 @@ class AdsModel extends BaseModel {
 	  * 获取指定对象
 	  */
      public function get(){
-	 	$m = M('ads');
-		return $m->where("adId=".(int)I('id'))->find();
+		return $this->where("adId=".(int)I('id'))->find();
 	 }
 	 /**
 	  * 分页列表
@@ -72,7 +68,6 @@ class AdsModel extends BaseModel {
      	$adPositionId = (int)I('adPositionId');
      	$adDateRange = I('adDateRange');
      	$adName = WSTAddslashes(I('adName'));
-        $m = M('ads');
 	 	$sql = "select a.*,a1.areaName areaName1,a2.areaName areaName2
 	 	        from __PREFIX__ads a left join __PREFIX__areas a1 on a.areaId1=a1.areaId 
 	 	        left join __PREFIX__areas a2 on a.areaId2 = a2.areaId where 1=1 ";
@@ -81,16 +76,14 @@ class AdsModel extends BaseModel {
 	 		$sql.="  and a.adName like '%$adName%'";
 	 	}
 	 	$sql.=' order by adId desc';
-
-		return $m->pageQuery($sql);
+		return $this->pageQuery($sql);
 	 }
 	 /**
 	  * 获取列表
 	  */
 	  public function queryByList(){
-	    $m = M('ads');
 	     $sql = "select * from __PREFIX__ads order by adId desc";
-		 return $m->find($sql);
+		 return $this->find($sql);
 	  }
 	  
 	 /**
@@ -98,8 +91,7 @@ class AdsModel extends BaseModel {
 	  */
 	 public function del(){
 	    $rd = array('status'=>-1);
-	    $m = M('ads');
-	    $rs = $m->delete((int)I('id'));
+	    $rs = $this->delete((int)I('id'));
 		if(false !== $rs){
 		   $rd['status']= 1;
 		}

@@ -63,23 +63,20 @@ class GoodsAction extends BaseAction {
 			$prices["300_400"] = "300-400";
 			$prices["400_500"] = "400-500";
 		}
-        $this->assign('c1Id',I("c1Id"));
-   		$this->assign('c2Id',I("c2Id"));
-   		$this->assign('c3Id',I("c3Id"));
-   		$this->assign('bs',I("bs",0));
-   		$this->assign('msort',I("msort",0));
-		$this->assign('sj',I("sj",0));
+   		$this->assign('c3Id',(int)I("c3Id"));
+   		$this->assign('msort',(int)I("msort",0));
+   		$this->assign('mark',(int)I("mark",0));
 		$this->assign('stime',I("stime"));//上架开始时间
 		$this->assign('etime',I("etime"));//上架结束时间
    		
-   		$this->assign('areaId3',I("areaId3",0));
-   		$this->assign('communityId',I("communityId",0));
+   		$this->assign('areaId3',(int)I("areaId3",0));
+   		$this->assign('communityId',(int)I("communityId",0));
    		
    		$pricelist = explode("_",I("prices"));
-   		$this->assign('sprice',$pricelist[0]);
-   		$this->assign('eprice',$pricelist[1]);
+   		$this->assign('sprice',(int)$pricelist[0]);
+   		$this->assign('eprice',(int)$pricelist[1]);
    		
-   		$this->assign('brandId',I("brandId",0));
+   		$this->assign('brandId',(int)I("brandId",0));
    		$this->assign('keyWords',urldecode(I("keyWords")));
 		$this->assign('brands',$brands);
 		$this->assign('goodsNav',$goodsNav);

@@ -38,14 +38,14 @@ class AdsAction extends BaseAction{
 	 * 新增/修改操作
 	 */
 	public function edit(){
-		$this->isAjaxLogin();
+		$this->isLogin();
 		$m = D('Admin/Ads');
     	$rs = array();
     	if(I('id',0)>0){
-    		$this->checkAjaxPrivelege('gggl_02');
+    		$this->checkPrivelege('gggl_02');
     		$rs = $m->edit();
     	}else{
-    		$this->checkAjaxPrivelege('gggl_01');
+    		$this->checkPrivelege('gggl_01');
     		$rs = $m->insert();
     	}
     	$this->ajaxReturn($rs);
@@ -54,8 +54,8 @@ class AdsAction extends BaseAction{
 	 * 删除操作
 	 */
 	public function del(){
-		$this->isAjaxLogin();
-		$this->checkAjaxPrivelege('gggl_03');
+		$this->isLogin();
+		$this->checkPrivelege('gggl_03');
 		$m = D('Admin/Ads');
     	$rs = $m->del();
     	$this->ajaxReturn($rs);
@@ -65,7 +65,7 @@ class AdsAction extends BaseAction{
 	 */
 	public function index(){
 		$this->isLogin();
-		$this->checkAjaxPrivelege('gggl_00');
+		$this->checkPrivelege('gggl_00');
 		self::WSTAssigns();
 		//获取商品分类
 		$m = D('Admin/GoodsCats');
@@ -82,7 +82,7 @@ class AdsAction extends BaseAction{
 	 * 列表查询
 	 */
     public function queryByList(){
-    	$this->isAjaxLogin();
+    	$this->isLogin();
 		$m = D('Admin/Ads');
 		$list = $m->queryByList();
 		$rs = array();

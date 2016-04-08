@@ -50,8 +50,8 @@ class IndexAction extends BaseAction {
      * 保存商城配置信息
      */
     public function saveMallConfig(){
-    	$this->isAjaxLogin();
-    	$this->checkAjaxPrivelege('scxx_02');
+    	$this->isLogin();
+    	$this->checkPrivelege('scxx_02');
     	$m = D('Admin/Index');
     	$rs = $m->saveConfigsForCode();
     	$this->ajaxReturn($rs);
@@ -89,7 +89,7 @@ class IndexAction extends BaseAction {
      * 获取定时任务
      */
     public function getTask(){
-    	$this->isAjaxLogin();
+    	$this->isLogin();
     	//获取待审核商品
     	$m = D('Admin/Goods');
     	$grs = $m->queryPenddingGoodsNum();
@@ -106,7 +106,7 @@ class IndexAction extends BaseAction {
      * 获取当前版本
      */
     public function getWSTMallVersion(){
-    	$this->isAjaxLogin();
+    	$this->isLogin();
     	$version = C('WST_VERSION');
     	$key = C('WST_MD5');
     	$license = $GLOBALS['CONFIG']['mallLicense'];
@@ -129,7 +129,7 @@ class IndexAction extends BaseAction {
      * 验证授权码
      */
     public function verifyLicense(){
-    	$this->isAjaxLogin();
+    	$this->isLogin();
     	$license = I('license');
     	$content = file_get_contents(C('WST_WEB').'/index.php?m=Api&c=License&a=verifyLicense&host='.WSTRootDomain().'&license='.$license);
     	$json = json_decode($content,true);
@@ -144,7 +144,7 @@ class IndexAction extends BaseAction {
      * 清除缓存
      */
     public function cleanAllCache(){
-    	$this->isAjaxLogin();
+    	$this->isLogin();
         $rv = array('status'=>-1);
 		$rv['status'] = WSTDelDir(C('WST_RUNTIME_PATH'));
     	$this->ajaxReturn($rv);

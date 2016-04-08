@@ -33,14 +33,14 @@ class StaffsAction extends BaseAction{
 	 * 新增/修改操作
 	 */
 	public function edit(){
-		$this->isAjaxLogin();
+		$this->isLogin();
 		$m = D('Admin/Staffs');
     	$rs = array();
     	if(I('id',0)>0){
-    		$this->checkAjaxPrivelege('zylb_02');
+    		$this->checkPrivelege('zylb_02');
     		$rs = $m->edit();
     	}else{
-    		$this->checkAjaxPrivelege('zylb_01');
+    		$this->checkPrivelege('zylb_01');
     		$rs = $m->insert();
     	}
     	$this->ajaxReturn($rs);
@@ -49,8 +49,8 @@ class StaffsAction extends BaseAction{
 	 * 删除操作
 	 */
 	public function del(){
-		$this->isAjaxLogin();
-		$this->checkAjaxPrivelege('zylb_03');
+		$this->isLogin();
+		$this->checkPrivelege('zylb_03');
 		$m = D('Admin/Staffs');
     	$rs = $m->del();
     	$this->ajaxReturn($rs);
@@ -88,7 +88,7 @@ class StaffsAction extends BaseAction{
 	 * 查询用户账号
 	 */
 	public function checkLoginKey(){
-		$this->isAjaxLogin();
+		$this->isLogin();
 		$m = D('Admin/Staffs');
 		$rs = $m->checkLoginKey();
 		$this->ajaxReturn($rs);
@@ -97,8 +97,8 @@ class StaffsAction extends BaseAction{
 	 * 显示职员账号是否启用/停用
 	 */
 	 public function editStatus(){
-	 	$this->isAjaxLogin();
-	 	$this->checkAjaxPrivelege('zylb_03');
+	 	$this->isLogin();
+	 	$this->checkPrivelege('zylb_03');
 	 	$m = D('Admin/Staffs');
 		$rs = $m->editStatus();
 		$this->ajaxReturn($rs);
@@ -115,7 +115,7 @@ class StaffsAction extends BaseAction{
 	 * 修改职员密码
 	 */
 	public function editPass(){
-		$this->isAjaxLogin();
+		$this->isLogin();
 		$m = D('Admin/Staffs');
    		$rs = $m->editPass(session('WST_STAFF.staffId'));
     	$this->ajaxReturn($rs);

@@ -106,4 +106,44 @@ function WSTIPAddress(){
     return array();
 }
 
+/**
+ * 获取广告列表
+ */
+function WSTAds($type){
+	$ads = D('Home/Ads');
+	return $ads->getAds(session("areaId2"),$type);
+}
+
+
+function WSTOrderScore(){
+	$scoreCashRatio = $GLOBALS['CONFIG']["scoreCashRatio"];
+	$scoreCash = explode(":",$scoreCashRatio);
+	return (int)$scoreCash[0];
+}
+
+function WSTScoreMoney(){
+	$scoreCashRatio = $GLOBALS['CONFIG']["scoreCashRatio"];
+	$scoreCash = explode(":",$scoreCashRatio);
+	return (int)$scoreCash[1];
+}
+
+
+/**
+ * 获取当前用户对像
+ */
+function WSTTarget(){
+	$target = array();
+	$targetId = (int)session('WST_USER.userId');
+	$targetType = $targetId>0?0:-1;
+	if(!$targetId){
+		$targetId = (int)session('WST_USER.shopId');
+		$targetType = $targetId>0?1:-1;
+	}
+	$target["targetId"] = $targetId;
+	$target["targetType"] = $targetType;
+	return $target;
+}
+
+
+
 

@@ -105,7 +105,7 @@ class GoodsAction extends BaseAction{
 	 * 列表查询
 	 */
     public function queryByList(){
-    	$this->isAjaxLogin();
+    	$this->isLogin();
 		$m = D('Admin/Goods');
 		$list = $m->queryByList();
 		$rs = array();
@@ -117,7 +117,7 @@ class GoodsAction extends BaseAction{
 	 * 列表查询[获取启用的区域信息]
 	 */
     public function queryShowByList(){
-    	$this->isAjaxLogin();
+    	$this->isLogin();
 		$m = D('Admin/Goods');
 		$list = $m->queryShowByList();
 		$rs = array();
@@ -129,8 +129,8 @@ class GoodsAction extends BaseAction{
 	 * 修改待审核商品状态
 	 */
 	public function changePenddingGoodsStatus(){
-		$this->isAjaxLogin();
-		$this->checkAjaxPrivelege('spsh_04');
+		$this->isLogin();
+		$this->checkPrivelege('spsh_04');
 		$m = D('Admin/Goods');
 		$rs = $m->changeGoodsStatus();
 		$this->ajaxReturn($rs);
@@ -139,8 +139,8 @@ class GoodsAction extends BaseAction{
 	 * 修改商品状态
 	 */
 	public function changeGoodsStatus(){
-		$this->isAjaxLogin();
-		$this->checkAjaxPrivelege('splb_04');
+		$this->isLogin();
+		$this->checkPrivelege('splb_04');
 		$m = D('Admin/Goods');
 		$rs = $m->changeGoodsStatus();
 		$this->ajaxReturn($rs);
@@ -149,7 +149,7 @@ class GoodsAction extends BaseAction{
 	 * 获取待审核的商品数量
 	 */
 	public function queryPenddingGoodsNum(){
-		$this->isAjaxLogin();
+		$this->isLogin();
     	$m = D('Admin/Goods');
     	$rs = $m->queryPenddingGoodsNum();
     	$this->ajaxReturn($rs);
@@ -158,8 +158,8 @@ class GoodsAction extends BaseAction{
 	 * 批量设置精品
 	 */
 	public function changeBestStatus(){
-		$this->isAjaxLogin();
-		$this->checkAjaxPrivelege('splb_04');
+		$this->isLogin();
+		$this->checkPrivelege('splb_04');
 		$m = D('Admin/Goods');
 		$rs = $m->changeBestStatus();
 		$this->ajaxReturn($rs);
@@ -168,8 +168,8 @@ class GoodsAction extends BaseAction{
 	 * 批量设置推荐
 	 */
 	public function changeRecomStatus(){
-		$this->isAjaxLogin();
-		$this->checkAjaxPrivelege('splb_04');
+		$this->isLogin();
+		$this->checkPrivelege('splb_04');
 		$m = D('Admin/Goods');
 		$rs = $m->changeRecomStatus();
 		$this->ajaxReturn($rs);

@@ -1,23 +1,4 @@
-/*
-Navicat MySQL Data Transfer
 
-Source Server         : 127.0.0.1
-Source Server Version : 50520
-Source Host           : localhost:3306
-Source Database       : wstmall
-
-Target Server Type    : MYSQL
-Target Server Version : 50520
-File Encoding         : 65001
-
-Date: 2015-09-03 12:46:37
-*/
-
-SET FOREIGN_KEY_CHECKS=0;
-
--- ----------------------------
--- Table structure for `wst_orders`
--- ----------------------------
 DROP TABLE IF EXISTS `wst_orders`;
 CREATE TABLE `wst_orders` (
   `orderId` int(11) NOT NULL AUTO_INCREMENT,
@@ -56,12 +37,18 @@ CREATE TABLE `wst_orders` (
   `orderFlag` tinyint(4) NOT NULL DEFAULT '1',
   `needPay` decimal(11,2) DEFAULT '0.00',
   `tradeNo` varchar(100) DEFAULT NULL,
+  `settlementId` int(11) DEFAULT '0',
+  `realTotalMoney` decimal(11,2) NOT NULL DEFAULT '0.00',
+  `poundageRate` float(11,2) NOT NULL DEFAULT '0.00',
+  `poundageMoney` decimal(11,2) NOT NULL DEFAULT '0.00',
+  `useScore` int(11) NOT NULL DEFAULT '0',
+  `scoreMoney` decimal(11,2) NOT NULL DEFAULT '0.00',
+  `receiveTime` datetime DEFAULT NULL,
+  `deliveryTime` datetime DEFAULT NULL,
   PRIMARY KEY (`orderId`),
   KEY `shopId` (`shopId`,`orderFlag`),
   KEY `userId` (`userId`,`orderFlag`),
   KEY `isRefund` (`isRefund`)
-) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
--- ----------------------------
--- Records of wst_orders
--- ----------------------------
+

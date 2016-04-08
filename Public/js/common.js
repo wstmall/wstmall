@@ -4,7 +4,7 @@ $.browser.webkit = /webkit/.test(navigator.userAgent.toLowerCase());
 $.browser.opera = /opera/.test(navigator.userAgent.toLowerCase()); 
 $.browser.msie = /msie/.test(navigator.userAgent.toLowerCase());
 var WST = WST?WST:{};
-WST.v = '1.4.7';
+WST.v = '1.5.0';
 WST.pageHeight = function(){
 	if($.browser.msie){ 
 		return document.compatMode == "CSS1Compat"? document.documentElement.clientHeight : 
@@ -187,9 +187,8 @@ WST.isChinese = function(obj,isReplace){
  
 //用户名判断 （可输入"_",".","@", 数字，字母）
  WST.isUserName = function(evt){
- 	var e = evt || window.event; 
- 	var srcElement = e.srcElement || e.target;	
- 	var charCode = (evt.which) ? evt.which : event.keyCode;
+ 	var evt = evt || window.event; 
+ 	var charCode = (evt.which) ? evt.which : evt.keyCode;
  	if((charCode==95 || charCode==46 || charCode==64) || (charCode>=48 && charCode<=57) || (charCode>=65 && charCode<=90) || (charCode>=97 && charCode<=122) || charCode==8){
  		return true;
  	}else{		
@@ -386,12 +385,12 @@ function loadSearchList(loginName,namelist){
 					var lworks = keywords.split("@")[1];					
 					for(var i=0;i<emailList.length;i++){
 						if(emailList[i].indexOf(lworks)==0){
-							html.push("<div class='options' idx='"+i+"' id='nopt"+i+"' onmouseover='optionsOver(this,"+i+");' onclick='selectOpt("+i+")'>"+rworks+(i==0?"":"@")+emailList[i]+"</div>");
+							html.push("<div class='options' idx='"+i+"' id='nopt"+i+"' onmouseover='optionsOver("+i+");' onclick='selectOpt("+i+")'>"+rworks+(i==0?"":"@")+emailList[i]+"</div>");
 						}
 					}
 				}else{
 					for(var i=0;i<emailList.length;i++){					
-						html.push("<div class='options' idx='"+i+"' id='nopt"+i+"' onmouseover='optionsOver(this,"+i+");' onclick='selectOpt("+i+")'>"+keywords+(i==0?"":"@")+emailList[i]+"</div>");		
+						html.push("<div class='options' idx='"+i+"' id='nopt"+i+"' onmouseover='optionsOver("+i+");' onclick='selectOpt("+i+")'>"+keywords+(i==0?"":"@")+emailList[i]+"</div>");		
 					}
 				}				
 				$("#"+namelist).show();

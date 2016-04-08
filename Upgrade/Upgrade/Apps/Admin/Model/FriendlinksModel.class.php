@@ -28,8 +28,7 @@ class FriendlinksModel extends BaseModel {
 		$data['friendlinkUrl'] = I('friendlinkUrl');
 		$data['friendlinkSort'] = I('friendlinkSort',0);
 		if($this->checkEmpty($data)){
-			$m = M('friendlinks');
-			$rs = $m->add($data);
+			$rs = $this->add($data);
 			if(false !== $rs){
 				$rd['status']= 1;
 			}
@@ -41,13 +40,13 @@ class FriendlinksModel extends BaseModel {
 	 */
     public function edit(){
     	$rd = array('status'=>-1);
-		$m = M('friendlinks');
-		$m->friendlinkIco = I('friendlinkIco');
-		$m->friendlinkName = I('friendlinkName');
-		$m->friendlinkUrl = I('friendlinkUrl');
-		$m->friendlinkSort = I('friendlinkSort',0);
+		$data = array();
+		$data["friendlinkIco"] = I('friendlinkIco');
+		$data["friendlinkName"] = I('friendlinkName');
+		$data["friendlinkUrl"] = I('friendlinkUrl');
+		$data["friendlinkSort"] = (int)I('friendlinkSort',0);
 		if($this->checkEmpty($data)){
-			$rs = $m->where("friendlinkId=".(int)I('id'))->save();
+			$rs = $this->where("friendlinkId=".(int)I('id'))->save($data);
 			if(false !== $rs){
 				$rd['status']= 1;
 			}
@@ -58,16 +57,14 @@ class FriendlinksModel extends BaseModel {
 	 * 获取
 	 */
 	public function get(){
-		$m = M('friendlinks');
-		return $m->where("friendlinkId=".(int)I('id'))->find();
+		return $this->where("friendlinkId=".(int)I('id'))->find();
 	}
 	/**
 	 * 删除
 	 */
 	public function del(){
 		$rd = array('status'=>-1);
-		$m = M('friendlinks');
-		$rs = $m->delete((int)I('id'));
+		$rs = $this->delete((int)I('id'));
 		if(false !== $rs){
 			$rd['status']= 1;
 		}

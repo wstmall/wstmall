@@ -102,7 +102,7 @@ class OrdersAction extends BaseAction{
 	 */
     public function refund(){
 		$this->isLogin();
-		$this->checkAjaxPrivelege('tk_04');
+		$this->checkPrivelege('tk_04');
 		$m = D('Admin/Orders');
 		$rs = $m->refund();
 		$this->ajaxReturn($rs);

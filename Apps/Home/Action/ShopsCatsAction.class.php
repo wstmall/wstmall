@@ -37,7 +37,7 @@ class ShopsCatsAction extends BaseAction{
 	 * 批量保存商品分类
 	 */
 	public function batchSaveShopCats(){
-		$this->isShopAjaxLogin();
+		$this->isShopLogin();
 		$m = D('Home/ShopsCats');
 		$rs = $m->batchSaveShopCats();
     	$this->ajaxReturn($rs);

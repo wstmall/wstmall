@@ -13,6 +13,7 @@
 	   			<div>上次登录时间：{$WST_USER["lastTime"]}</div>
 	   			<div>上次登录IP：{$WST_USER["lastIP"]}</div>
 	   			<div class="wst-user-adr">
+	   				<div>我的积分：<a  href="{:U('Home/Users/toScoreList/')}"><span style="font-weight:bolder;color:#fff100;">{$userScore}</span></a> 个</div>
 	   				<a style="color:#ffffff;" href="{:U('Home/UserAddress/queryByPage/')}">我的收货地址</a>&nbsp;&nbsp;&nbsp;
 	   				<a href="{:U('Home/Users/toEdit/')}" style="color:#ffffff;">编辑个人资料</a>
 	   			</div>

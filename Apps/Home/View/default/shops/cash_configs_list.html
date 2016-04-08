@@ -1,0 +1,60 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/favorites.css">
+	<script>
+	$(function () {
+		getCashConfigsList(0);
+	});
+	</script>
+	<div class="wst-body" style="margin-bottom: 8px;"> 
+		<div class='wst-page-header'>卖家中心 > 账号管理</div>
+		<div class='wst-page-content' style="padding-top:10px;">
+		<div id='tab' class="wst-tab-box" style="position:relative;">
+			<div style="float:right;">
+	           <span></span>
+	           <a href='javascript:goodsSet("isNew","queryUnSaleByPage")'><span class='add btn'></span>新增</a>
+	        </div>
+			<table class='wst-list' style="font-size:13px;">
+			
+           <thead>
+             <tr>
+               <th width='*'>帐号类型</th>
+               <th width='120'>帐号</th>
+               <th width='160'>拥有者</th>
+               <th width='160'>是否为默认帐号</th>
+               <th width='160'>创建时间</th>
+             </tr>
+           </thead>
+           <script id="tblist" type="text/html">
+			{{# for(var i = 0; i < d.length; i++){ }}
+            <tr>
+               <td width='*'>
+					{{# if(d[i].accType==1){ }}
+						支付宝
+					{{# }else if(d[i].accType==2){ }}
+						微信
+					{{# }else if(d[i].accType==3){ }}
+						银行卡
+					{{# } }}
+			   </td>
+			   <td width='120'>{{ d[i].accNo }}</td>
+               <td width='160'>{{ d[i].accUser }}</td>
+			   <td width='160'>{{ d[i].isDefault }}</td>
+               <td width='160'>{{ d[i].createTime }}</td>
+             </tr>
+			{{# } }}
+			</script>
+           <tbody id="wst-score-page"></tbody>
+           <tfoot>
+             <tr>
+                <td colspan='5' align='center' style="height:30px;border-bottom: 0px;">
+					<div id="wst-page" class="wst-page" style="float:right;padding-bottom:10px;"></div>
+				</td>
+             </tr>
+           </tfoot>
+        </table>
+		</div>	
+		</div>
+		<div style='clear:both;'></div>
+	</div>
+</block>  
