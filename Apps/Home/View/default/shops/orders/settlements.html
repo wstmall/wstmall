@@ -111,7 +111,7 @@
 							    <td>{{d[i].orderNo}}</td>
 								<td>{{d[i].userName}}</td>
                                 <td>{{d[i].createTime}}</td>
-								<td>{{d[i].realTotalMoney }}</td>
+								<td>{{d[i].totalMoney+d[i].deliverMoney }}</td>
                                 <td>{{d[i].poundageRate}}</td>
                                 <td>{{d[i].poundageMoney}}</td>
 							</tr>
@@ -130,7 +130,7 @@
 					</div>
 					<div style='clear:both;'></div>
 				</div>
-				<!-- 打包中 -->
+				<!-- 已结算 -->
 				<div class='wst-tab-item' style="display:none;">
 					<div>
 						<table class='wst-list' style="font-size:13px;">
@@ -164,7 +164,7 @@
 								<td width='10'>{{i+1}}</td>
 							    <td width='100'>{{d[i].orderNo}}</td>
 								<td width='70'>{{d[i].userName}}</td>
-								<td width='100'>{{d[i].realTotalMoney }}</td>
+								<td width='100'>{{d[i].totalMoney+d[i].deliverMoney }}</td>
                                 <td>{{d[i].poundageRate}}</td>
                                 <td width='100'>{{d[i].settlementMoney }}</td>
 								<td width='120'>{{d[i].settlementNo}}</td>

@@ -118,7 +118,7 @@ class ShopsAction extends BaseAction {
      */
 	public function login(){
 		$USER = session('WST_USER');
-		if(!empty($USER) && $USER['userType']>=1){
+		if(!empty($USER) && $USER['userType']==1){
 			$this->redirect("Shops/index");
 		}else{
             $this->display("default/shop_login");

@@ -38,7 +38,7 @@ class GoodsAction extends BaseAction {
 		$goodsNav = $rslist["goodsNav"];
 		$this->assign('goodsList',$rslist);
 		//动态划分价格区间
-		$maxPrice = $mgoods->getMaxPrice($obj);
+		$maxPrice = $rslist["maxPrice"];
 		$minPrice = 0;
 		$pavg5 = ($maxPrice/5);
 		$prices = array();
@@ -63,6 +63,8 @@ class GoodsAction extends BaseAction {
 			$prices["300_400"] = "300-400";
 			$prices["400_500"] = "400-500";
 		}
+   		$this->assign('c1Id',(int)I("c1Id"));
+   		$this->assign('c2Id',(int)I("c2Id"));
    		$this->assign('c3Id',(int)I("c3Id"));
    		$this->assign('msort',(int)I("msort",0));
    		$this->assign('mark',(int)I("mark",0));

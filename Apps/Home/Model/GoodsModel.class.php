@@ -35,8 +35,9 @@ class GoodsModel extends BaseModel {
 			$words = explode(" ",$keyWords);
 		}
 		
-		$sql = "SELECT  g.goodsId,goodsSn,goodsName,goodsThums,goodsStock,g.saleCount,p.shopId,marketPrice,shopPrice,ga.id goodsAttrId 
-				FROM __PREFIX__goods g left join __PREFIX__goods_attributes ga on g.goodsId=ga.goodsId and ga.isRecomm=1, __PREFIX__shops p ";
+		$sqla = "SELECT  g.goodsId,goodsSn,goodsName,goodsThums,goodsStock,g.saleCount,p.shopId,marketPrice,shopPrice,ga.id goodsAttrId ";
+		$sqlb = "SELECT max(shopPrice) maxShopPrice  ";
+		$sql = " FROM __PREFIX__goods g left join __PREFIX__goods_attributes ga on g.goodsId=ga.goodsId and ga.isRecomm=1, __PREFIX__shops p ";
 	    if($areaId3>0 || $communityId>0){
 			$sql .=" , __PREFIX__shops_communitys sc ";
 		}
@@ -44,27 +45,27 @@ class GoodsModel extends BaseModel {
 		if($brandId>0){
 			$sql .=" , __PREFIX__brands bd ";
 		}
-		$sql .= "WHERE p.areaId2 = $areaId2 AND g.shopId = p.shopId AND  g.goodsStatus=1 AND g.goodsFlag = 1 and g.isSale=1 ";
+		$where .= " WHERE p.areaId2 = $areaId2 AND g.shopId = p.shopId AND  g.goodsStatus=1 AND g.goodsFlag = 1 and g.isSale=1 ";
 		if($areaId3>0 || $communityId>0){
-			$sql .= " AND sc.shopId=p.shopId ";
+			$where .= " AND sc.shopId=p.shopId ";
 			if($areaId3>0){
-				$sql .= " AND sc.areaId3 = $areaId3";
+				$where .= " AND sc.areaId3 = $areaId3";
 			}
 			if($communityId>0){
-				$sql .= " AND sc.communityId = $communityId ";
+				$where .= " AND sc.communityId = $communityId ";
 			}
 		}
 		if($brandId>0){
-			$sql .=" AND bd.brandId=g.brandId AND g.brandId = $brandId ";
+			$where .=" AND bd.brandId=g.brandId AND g.brandId = $brandId ";
 		}
 		if($c1Id>0){
-			$sql .= " AND g.goodsCatId1 = $c1Id";
+			$where .= " AND g.goodsCatId1 = $c1Id";
 		}
 		if($c2Id>0){
-			$sql .= " AND g.goodsCatId2 = $c2Id";
+			$where .= " AND g.goodsCatId2 = $c2Id";
 		}
 		if($c3Id>0){
-			$sql .= " AND g.goodsCatId3 = $c3Id";
+			$where .= " AND g.goodsCatId3 = $c3Id";
 		}
 		
 		if(!empty($words)){
@@ -74,27 +75,23 @@ class GoodsModel extends BaseModel {
 					$sarr[] = "g.goodsName LIKE '%$word%'";
 				}
 			}
-			$sql .= " AND (".implode(" or ", $sarr).")";
+			$where .= " AND (".implode(" or ", $sarr).")";
 		}
-		$glist = $this->query($sql);
-		$shops = array();
-		$maxPrice = 0;
-		for($i=0;$i<count($glist);$i++){
-			$goods = $glist[$i];
-			if($goods["shopPrice"]>$maxPrice){
-				$maxPrice = $goods["shopPrice"];
-			}
-		}
+		$maxrow = $this->queryRow($sqlb . $sql . $where);
+		$maxPrice = $maxrow["maxShopPrice"];
+		
+	
 	    if($prices != "" && $pricelist[0]>=0 && $pricelist[1]>=0){
-			$sql .= " AND (g.shopPrice BETWEEN  ".(int)$pricelist[0]." AND ".(int)$pricelist[1].") ";
+			$where .= " AND (g.shopPrice BETWEEN  ".(int)$pricelist[0]." AND ".(int)$pricelist[1].") ";
 		}
-	   	$sql .= " group by goodsId ";
+	   	$where .= " group by goodsId ";
 	   	//排序-暂时没有按好评度排
 	   	$orderFile = array('1'=>'saleCount','6'=>'saleCount','7'=>'saleCount','8'=>'shopPrice','9'=>'shopPrice',''=>'saleTime');
 	   	$orderSort = array('0'=>'ASC','1'=>'DESC');
-		$sql .= " ORDER BY ".$orderFile[$mark]." ".$orderSort[$msort].",g.goodsId ";
-		$pages = $this->pageQuery($sql,$pcurr,30);
-		
+		$where .= " ORDER BY ".$orderFile[$mark]." ".$orderSort[$msort].",g.goodsId ";
+
+		$pages = $this->pageQuery($sqla . $sql . $where, $pcurr, 30);
+
 		$rs["maxPrice"] = $maxPrice;
 		$brands = array();
 		$sql = "SELECT b.brandId, b.brandName FROM __PREFIX__brands b, __PREFIX__goods_cat_brands cb WHERE b.brandId = cb.brandId AND b.brandFlag=1 ";
@@ -115,59 +112,7 @@ class GoodsModel extends BaseModel {
 		$rs["goodsNav"] = self::getGoodsNav($gcats);
 		return $rs;
 	}
-	
-	
-	/**
-	 * 商品列表
-	 */
-	public function getMaxPrice($obj){
-		$areaId2 = $obj["areaId2"];
-		$c1Id = (int)I("c1Id");
-		$c2Id = (int)I("c2Id");
-		$c3Id = (int)I("c3Id");
-		
-		$keyWords = WSTAddslashes(urldecode(I("keyWords")));
-		$words = array();
-		if($keyWords!=""){
-			$words = explode(" ",$keyWords);
-		}
-		
-		$sql = "SELECT bd.brandId,bd.brandName, goodsId,goodsSn,goodsName,goodsThums,g.saleCount,p.shopId,marketPrice,shopPrice,p.shopName 
-				FROM __PREFIX__goods g , __PREFIX__brands bd, __PREFIX__shops p ";
-		$sql .= "WHERE p.areaId2 = $areaId2 AND g.shopId = p.shopId AND bd.brandId=g.brandId AND  g.goodsStatus=1 AND g.goodsFlag = 1";
-		
-		if($c1Id>0){
-			$sql .= " AND g.goodsCatId1 = $c1Id";
-		}
-		if($c2Id>0){
-			$sql .= " AND g.goodsCatId2 = $c2Id";
-		}
-		if($c3Id>0){
-			$sql .= " AND g.goodsCatId3 = $c3Id";
-		}
-		if(!empty($words)){
-			$sarr = array();
-			foreach ($words as $key => $word) {
-				if($word!=""){
-					$sarr[] = "g.goodsName LIKE '%$word%'";
-				}
-			}
-			$sql .= " AND (".implode(" or ", $sarr).")";
-		}
-		$sql .= " ORDER BY g.saleCount DESC";
-		$glist = $this->query($sql);
-		
-		$maxPrice = 0;
-		for($i=0;$i<count($glist);$i++){
-			$goods = $glist[$i];
-			if($goods["shopPrice"]>$maxPrice){
-				$maxPrice = $goods["shopPrice"];
-			}
-		}
 
-		return $maxPrice;
-	}
-	
 
 	/**
 	 * 查询商品信息
@@ -230,7 +175,7 @@ class GoodsModel extends BaseModel {
 		$sql = "select ga.id,ga.attrVal,ga.attrPrice,ga.attrStock,a.attrId,a.attrName,a.isPriceAttr
 		            from __PREFIX__attributes a 
 		            left join __PREFIX__goods_attributes ga on ga.attrId=a.attrId and ga.goodsId=".$id." where  
-					a.attrFlag=1 and a.catId=".$attrCatId." and a.shopId=".$shopId." order by a.attrSort, a.attrId";
+					a.attrFlag=1 and a.catId=".$attrCatId." and a.shopId=".$shopId." order by a.attrSort asc, a.attrId asc,ga.id asc";
 		$attrRs = $this->query($sql);
 		if(!empty($attrRs)){
 			$priceAttr = array();
@@ -601,7 +546,7 @@ class GoodsModel extends BaseModel {
 		$sql = "select ga.attrVal,ga.attrPrice,ga.attrStock,ga.isRecomm,a.attrId,a.attrName,a.isPriceAttr,a.attrType,a.attrContent
 		            ,ga.isRecomm from __PREFIX__attributes a 
 		            left join __PREFIX__goods_attributes ga on ga.attrId=a.attrId and ga.goodsId=".$id." where  
-					a.attrFlag=1 and a.catId=".$goods['attrCatId']." and a.shopId=".$shopId;
+					a.attrFlag=1 and a.catId=".$goods['attrCatId']." and a.shopId=".$shopId." order by a.attrSort asc, a.attrId asc,ga.id asc";
 		$attrRs = $m->query($sql);
 		if(!empty($attrRs)){
 			$priceAttr = array();

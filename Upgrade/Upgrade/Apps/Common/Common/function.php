@@ -434,6 +434,7 @@ function WSTMonth($sign=1,$month = ''){
  * 高精度数字相加
  * @param $num
  * @param number $i 保留小数位
+ * 注意：APP用有引用
  */
 function WSTBCMoney($num1,$num2,$i=2){
 	$num = bcadd($num1, $num2, $i);

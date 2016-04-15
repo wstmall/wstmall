@@ -73,11 +73,10 @@ function queryGoods(obj,mark){
 		}else{
 			prices = $("#wst-price").find(".searched").attr("data");
 		}
-		
+		msort = $('#msort').val();
+		params.push("msort="+((msort=='0')?1:0));
+		params.push("mark="+mark);
 	}
-	msort = $('#msort').val();
-	params.push("msort="+((msort=='0')?1:0));
-	params.push("mark="+mark);
 	if(c1Id && c1Id!='0')params.push("c1Id="+c1Id);
 	if(c2Id && c2Id!='0')params.push("c2Id="+$("#c2Id").val());
 	if(c3Id && c3Id!='0')params.push("c3Id="+$("#c3Id").val());

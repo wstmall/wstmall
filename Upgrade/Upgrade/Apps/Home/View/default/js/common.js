@@ -444,3 +444,7 @@ function checkUserLogin(){
 		}
 	});
 }
+
+function goBack(obj){
+	location.href = $(obj).attr("data");
+}

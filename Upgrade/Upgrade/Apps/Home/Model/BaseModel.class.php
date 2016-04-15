@@ -46,7 +46,12 @@ class BaseModel extends Model {
 	 * @param unknown $str
 	 */
 	public function formatIn($split,$str){
-		$strdatas = explode($split,$str);
+		if(is_array($str)){
+			$strdatas = $str;
+		}else{
+			$strdatas = explode($split,$str);
+		}
+		
 		$data = array();
 		for($i=0;$i<count($strdatas);$i++){
 			$data[] = (int)$strdatas[$i];

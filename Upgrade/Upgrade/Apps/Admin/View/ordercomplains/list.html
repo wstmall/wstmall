@@ -95,7 +95,7 @@
            <tbody>
              <tr>
                <td>{$key}</td>
-               <td>{$vo['userName']}</td>
+               <td><if condition="$vo['userName'] neq ''">{$vo['userName']}<else/>{$vo['loginName']}</if></td>
                <td>{$vo['orderNo']}</td>
                <td>{$vo['shopName']}</td>
                <td>

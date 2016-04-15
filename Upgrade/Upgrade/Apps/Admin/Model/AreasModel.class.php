@@ -144,7 +144,7 @@ class AreasModel extends BaseModel {
 		$ids = array();
 		$ids[] = (int)I('id');
 		$ids = $this->getChild($ids,$ids);
-	 	$m->isShow = ((int)I('isShow')==1)?1:0;
+	 	$this->isShow = ((int)I('isShow')==1)?1:0;
 	 	$rs = $this->where("areaId in(".implode(',',$ids).")")->save();
 	    if(false !== $rs){
 			$rd['status']= 1;

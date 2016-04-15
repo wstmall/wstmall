@@ -38,7 +38,7 @@
 			</div>
 			<div class="wst-shop-nav">
 				<div class="wst-nav-box">
-					<li class="liselect"><a href="{:U('Home/Shops/index')}" style='color:#FFFFFF;'>我是卖家</a></li>
+					<li class="liselect"  style="float:left;"><a href="{:U('Home/Shops/index')}" style='color:#FFFFFF;'>我是卖家</a></li>
 					<div class="wst-clear"></div>
 				</div>
 			</div>
@@ -48,27 +48,30 @@
           <div class='wst-main'>
             <div class='wst-menu'>
             	<span class='wst-menu-title'><span></span>交易管理</span>
-            
-              	<a href='{:U("Home/Orders/toShopOrdersList")}'><li id='li_toShopOrdersList' <if condition='$umark eq "toShopOrdersList"'> class='liselect'</if>>订单管理<span style="display:none;" class="wst-msg-tips-box"></span></li></a>
-            	<a href="{:U('Home/OrderComplains/queryShopComplainByPage')}"><li <if condition='$umark eq "queryShopComplainByPage"'> class='selected'</if>>投诉订单</li></a>
-            	<a href="{:U('Home/OrderSettlements/toSettlementIndex')}"><li <if condition='$umark eq "toSettlementIndex"'> class='selected'</if>>订单结算</li></a>
-            	<span class='wst-menu-title' style='border-top:0px;'><span></span>商品管理</span>
-            
-               	<a href="{:U('Home/ShopsCats/index')}"><li <if condition='$umark eq "index"'> class='liselect'</if>>商品分类</li></a>
-              	<a href="{:U('Home/Goods/queryOnSaleByPage')}"><li <if condition='$umark eq "queryOnSaleByPage"'> class='liselect'</if>>出售中的商品</li></a>
-               	<a href="{:U('Home/Goods/queryPenddingByPage')}"><li <if condition='$umark eq "queryPenddingByPage"'> class='liselect'</if>>待审核商品</li></a>
-               	<a href="{:U('Home/Goods/queryUnSaleByPage')}"><li <if condition='$umark eq "queryUnSaleByPage"'> class='liselect'</if>>仓库中的商品</li></a>
-               	<a href="{:U('Home/Goods/toEdit/',array('umark'=>'toEditGoods'))}"><li <if condition='$umark eq "toEditGoods"'> class='liselect'</if>>新增商品</li></a>
-               	<a href="{:U('Home/GoodsAppraises/index')}"><li <if condition='$umark eq "GoodsAppraises"'> class='liselect'</if>>评价管理</li></a>
+            	<ul>
+              	<li onclick="goBack(this)" data='{:U("Home/Orders/toShopOrdersList")}' <if condition='$umark eq "toShopOrdersList"'> class='liselect'</if>>订单管理<span style="display:none;" class="wst-msg-tips-box"></span></li>
+            	<li onclick="goBack(this)" data="{:U('Home/OrderComplains/queryShopComplainByPage')}" <if condition='$umark eq "queryShopComplainByPage"'> class='selected'</if>>投诉订单</li>
+            	<li onclick="goBack(this)" data="{:U('Home/OrderSettlements/toSettlementIndex')}" <if condition='$umark eq "toSettlementIndex"'> class='selected'</if>>订单结算</li>
+            	</ul>
+            	<span class='wst-menu-title'><span></span>商品管理</span>
+            	<ul>
+               	<li onclick="goBack(this)" data="{:U('Home/ShopsCats/index')}" <if condition='$umark eq "index"'> class='liselect'</if>>商品分类</li>
+              	<li onclick="goBack(this)" data="{:U('Home/Goods/queryOnSaleByPage')}" <if condition='$umark eq "queryOnSaleByPage"'> class='liselect'</if>>出售中的商品</li>
+               	<li onclick="goBack(this)" data="{:U('Home/Goods/queryPenddingByPage')}" <if condition='$umark eq "queryPenddingByPage"'> class='liselect'</if>>待审核商品</li>
+               	<li onclick="goBack(this)" data="{:U('Home/Goods/queryUnSaleByPage')}" <if condition='$umark eq "queryUnSaleByPage"'> class='liselect'</if>>仓库中的商品</li>
+               	<li onclick="goBack(this)" data="{:U('Home/Goods/toEdit/',array('umark'=>'toEditGoods'))}" <if condition='$umark eq "toEditGoods"'> class='liselect'</if>>新增商品</li>
+               	<li onclick="goBack(this)" data="{:U('Home/GoodsAppraises/index')}" <if condition='$umark eq "GoodsAppraises"'> class='liselect'</if>>评价管理</li>
 
-               	<a href="{:U('Home/AttributeCats/index')}"><li <if condition='$umark eq "AttributeCats"'> class='liselect'</if>>商品类型</li></a>
-               	<a href="{:U('Home/Imports/index')}"><li <if condition='$umark eq "Imports"'> class='liselect'</if>>数据导入</li></a>
-			
+               	<li onclick="goBack(this)" data="{:U('Home/AttributeCats/index')}" <if condition='$umark eq "AttributeCats"'> class='liselect'</if>>商品类型</li>
+               	<li onclick="goBack(this)" data="{:U('Home/Imports/index')}" <if condition='$umark eq "Imports"'> class='liselect'</if>>数据导入</li>
+				</ul>
               	<span class='wst-menu-title'><span></span>网店设置</span>
-            	<a href="{:U('Home/Shops/toEdit/')}"><li <if condition='$umark eq "toEdit"'> class='liselect'</if>>店铺资料</li></a>
-              	<a href="{:U('Home/Shops/toShopCfg/')}"><li <if condition='$umark eq "setShop"'> class='liselect'</if>>店铺设置</li></a>
-              	<a href="{:U('Home/Messages/queryByPage/')}"><li id='li_queryMessageByPage' <if condition='$umark eq "queryMessageByPage"'> class='liselect'</if>>商城消息<span style="display:none;" class="wst-msg-tips-box"></span></li></a>
-              	<a href="{:U('Home/Shops/toEditPass')}"><li <if condition='$umark eq "toEditPass"'> class='liselect'</if>>修改密码</li></a>
+              	<ul>
+            	<li onclick="goBack(this)" data="{:U('Home/Shops/toEdit/')}" <if condition='$umark eq "toEdit"'> class='liselect'</if>>店铺资料</li>
+              	<li onclick="goBack(this)" data="{:U('Home/Shops/toShopCfg/')}" <if condition='$umark eq "setShop"'> class='liselect'</if>>店铺设置</li>
+              	<li onclick="goBack(this)" data="{:U('Home/Messages/queryByPage/')}" id='li_queryMessageByPage' <if condition='$umark eq "queryMessageByPage"'> class='liselect'</if>>商城消息<span style="display:none;" class="wst-msg-tips-box"></span></li>
+              	<li onclick="goBack(this)" data="{:U('Home/Shops/toEditPass')}" <if condition='$umark eq "toEditPass"'> class='liselect'</if>>修改密码</li>
+           		</ul>
             </div>
             <div class='wst-content'>
             <block name="content"><div class="result">卖家中心</div></block>

@@ -956,14 +956,13 @@ b, strong {
 .triangle {
 	background:url(../../../View/default/images/simg.png);
     display: inline-block;
-    float: right;
     margin: 8px 0 0;
     background-position: -74px -110px;
 
     font-size: 0;
     height: 4px;
     line-height: 0;
-    margin: 13px 0 0 6px;
+    margin: 11px 0 0 6px;
     overflow: hidden;
     vertical-align: top;
     width: 7px;
@@ -1185,3 +1184,7 @@ input[type=checkbox],input[type=radio] {margin-right:5px;}
 .wst-login-box .name{background: #fff url("../../../View/default/images/login-all-bg.png") no-repeat scroll -373px -111px;}
 .wst-login-box .pass{background: #fff url("../../../View/default/images/login-all-bg.png") no-repeat scroll -346px -108px;}
 .wst-login-box #loginsubmit{border:0 none;cursor:pointer;background: rgba(0, 0, 0, 0) url("../../../View/default/images/login-all-bg.png") no-repeat scroll 0 -61px;font-family: "微软雅黑";height: 34px;line-height: 100px;overflow: hidden;text-indent: -9999px;width: 307px;margin-left:60px;}
+.wst-body{padding-bottom: 6px;}
+
+
+

@@ -191,11 +191,11 @@ class CronJobsModel extends BaseModel {
 		        $accRs = $this->queryRow($sql);
 		        if(empty($accRs))continue;
 	 			//按商家进行结算
-	 			$sql = "select sum(realTotalMoney) realTotalMoney,sum(poundageMoney) poundageMoney 
+	 			$sql = "select sum(totalMoney+deliverMoney) settlementMoney,sum(poundageMoney) poundageMoney 
 	 			     from __PREFIX__orders where left(receiveTime,7)='".$lastMonth."' and orderStatus=4 
 	 			     and settlementId=0 and orderFlag=1 and shopId=".$v['shopId'];
 	 			$totalRs = $this->queryRow($sql);
-	 			if((float)$totalRs['realTotalMoney']==0)continue;
+	 			if((float)$totalRs['settlementMoney']==0)continue;
 	 			$data = array();
 				$data['settlementType'] = 0;
 				$data['shopId'] = $v['shopId'];
@@ -204,7 +204,7 @@ class CronJobsModel extends BaseModel {
 				$data['accUser'] = $accRs['bankUserName'];
 				$data['createTime'] = date('Y-m-d H:i:s');
 				$data['orderMoney'] = $totalRs['realTotalMoney'];
-				$data['settlementMoney'] = $totalRs['realTotalMoney']-$totalRs['poundageMoney'];
+				$data['settlementMoney'] = $totalRs['settlementMoney']-$totalRs['poundageMoney'];
 				$data['poundageMoney'] = $totalRs['poundageMoney'];
 				$data['isFinish'] = 0;
 				$settlementId = $m->add($data);

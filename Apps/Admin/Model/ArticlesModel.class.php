@@ -96,7 +96,7 @@ class ArticlesModel extends BaseModel {
 	 public function editiIsShow(){
 	 	$rd = array('status'=>-1);
 	 	if(I('id',0)==0)return $rd;
-	 	$m->isShow = ((int)I('isShow')==1)?1:0;
+	 	$this->isShow = ((int)I('isShow')==1)?1:0;
 	 	$rs = $this->where("articleId=".(int)I('id',0))->save();
 	    if(false !== $rs){
 			$rd['status']= 1;

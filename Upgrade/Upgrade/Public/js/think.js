@@ -102,8 +102,8 @@
 		if($.isPlainObject(vars)){
 			url += "&" + $.param(vars);
 		}
-
 		if(0 != this.MODEL[0]){
+			url = url.replace(new RegExp("%2F","gm"),"+");
 			url = url.replace("?" + (path[0] ? this.VAR[0] : this.VAR[1]) + "=", "/")
 				     .replace("&" + this.VAR[1] + "=", this.DEEP)
 				     .replace("&" + this.VAR[2] + "=", this.DEEP)

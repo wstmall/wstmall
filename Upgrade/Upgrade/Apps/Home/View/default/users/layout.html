@@ -33,12 +33,12 @@
 							<div id="btnsch" class="wst-search-btn">搜&nbsp;索</div>
 						</div>
 					</div>
-					
+					<div class="wst-clear"></div>
 				</div>
 			</div>
 			<div class="wst-shop-nav">
 				<div class="wst-nav-box">
-					<li class="liselect"><a href="{:U('Home/Orders/queryByPage')}">买家首页</a></li>
+					<li class="liselect" style="float:left;"><a href="{:U('Home/Orders/queryByPage')}">买家首页</a></li>
 					<div class="wst-clear"></div>
 				</div>
 			</div>
@@ -46,24 +46,26 @@
           <div class='wst-nav'></div>
           <div class='wst-main'>
             <div class='wst-menu'>
-            <span class='wst-menu-title' style='border-top:0px;'><span></span>交易信息</span>
-            
-               <a href="{:U('Home/Orders/queryPayByPage/')}"><li id="li_queryPayByPage" <if condition='$umark eq "queryPayByPage"'> class='selected'</if>>待付款订单<span style="display:none;" class="wst-msg-tips-box"></span></li></a>
-               <a href="{:U('Home/Orders/queryDeliveryByPage/')}"><li id="li_queryDeliveryByPage" <if condition='$umark eq "queryDeliveryByPage"'> class='selected'</if>>待发货订单<span style="display:none;" class="wst-msg-tips-box"></span></li></a>
-               <a href="{:U('Home/Orders/queryReceiveByPage/')}"><li id="li_queryReceiveByPage" <if condition='$umark eq "queryReceiveByPage"'> class='selected'</if>>待确认收货<span style="display:none;" class="wst-msg-tips-box"></span></li></a>
-               <a href="{:U('Home/Orders/queryAppraiseByPage/')}"><li id="li_queryAppraiseByPage" <if condition='$umark eq "queryAppraiseByPage"'> class='selected'</if>>待评价交易<span style="display:none;" class="wst-msg-tips-box"></span></li></a>
-               <a href="{:U('Home/Orders/queryCancelOrders/')}"><li id="li_queryCancelOrders" <if condition='$umark eq "queryCancelOrders"'> class='selected'</if>>已取消订单</li></a>
-               <span class='wst-menu-title'><span></span>交易操作</span>
-           
-               <a href="{:U('Home/Orders/queryRefundByPage/')}"><li <if condition='$umark eq "queryRefundByPage"'> class='selected'</if>>拒收/退款</li></a>
-               <a href="{:U('Home/OrderComplains/queryUserComplainByPage/')}"><li <if condition='$umark eq "queryUserComplainByPage"'> class='selected'</if>>投诉订单</li></a>
-               <a href="{:U('Home/UserAddress/queryByPage/')}"><li <if condition='$umark eq "addressQueryByPage"'> class='selected'</if>>收货地址</li></a>
-               <a  href="{:U('Home/GoodsAppraises/getAppraisesList/')}"><li <if condition='$umark eq "getAppraisesList"'> class='selected'</if>>评价管理</li></a>
-               <a  href="{:U('Home/Users/toScoreList/')}"><li <if condition='$umark eq "toScoreList"'> class='selected'</if>>积分记录</li></a>
-               <a  href="{:U('Home/Favorites/queryByPage/')}"><li <if condition='$umark eq "queryFavoritesByPage"'> class='selected'</if>>我的关注</li></a>
-               <a href="{:U('Home/Messages/queryByPage/')}"><li id='li_queryMessageByPage' <if condition='$umark eq "queryMessageByPage"'> class='liselect'</if>>商城消息<span style="display:none;" class="wst-msg-tips-box"></span></li></a>
-               <a href="{:U('Home/Users/toEdit/')}"><li <if condition='$umark eq "toEditUser"'> class='selected'</if>>个人资料</li></a>
-               <a href="{:U('Home/Users/toEditPass/')}"><li <if condition='$umark eq "toEditPass"'> class='selected'</if>>修改密码</li></a>
+            	<div><span class='wst-menu-title' style='border-top:0px;'><span></span>交易信息</span></div>
+            	<ul>
+               		<li onclick="goBack(this)" data="{:U('Home/Orders/queryPayByPage/')}" <if condition='$umark eq "queryPayByPage"'> class='selected'</if>>待付款订单<span style="display:none;" class="wst-msg-tips-box"></span></li>
+               		<li onclick="goBack(this)" data="{:U('Home/Orders/queryDeliveryByPage/')}" <if condition='$umark eq "queryDeliveryByPage"'> class='selected'</if>>待发货订单<span style="display:none;" class="wst-msg-tips-box"></span></li>
+               		<li onclick="goBack(this)" data="{:U('Home/Orders/queryReceiveByPage/')}" <if condition='$umark eq "queryReceiveByPage"'> class='selected'</if>>待确认收货<span style="display:none;" class="wst-msg-tips-box"></span></li>
+               		<li onclick="goBack(this)" data="{:U('Home/Orders/queryAppraiseByPage/')}" <if condition='$umark eq "queryAppraiseByPage"'> class='selected'</if>>待评价交易<span style="display:none;" class="wst-msg-tips-box"></span></li>
+               		<li onclick="goBack(this)" data="{:U('Home/Orders/queryCancelOrders/')}" <if condition='$umark eq "queryCancelOrders"'> class='selected'</if>>已取消订单</a></li>
+				</ul>
+				<div><span class='wst-menu-title'><span></span>交易操作</span></div>
+				<ul>
+               		<li onclick="goBack(this)" data="{:U('Home/Orders/queryRefundByPage/')}" <if condition='$umark eq "queryRefundByPage"'> class='selected'</if>>拒收/退款</li>
+	               	<li onclick="goBack(this)" data="{:U('Home/OrderComplains/queryUserComplainByPage/')}" <if condition='$umark eq "queryUserComplainByPage"'> class='selected'</if>>投诉订单</li>
+	               	<li onclick="goBack(this)" data="{:U('Home/UserAddress/queryByPage/')}" <if condition='$umark eq "addressQueryByPage"'> class='selected'</if>>收货地址</li>
+	               	<li onclick="goBack(this)" data="{:U('Home/GoodsAppraises/getAppraisesList/')}" <if condition='$umark eq "getAppraisesList"'> class='selected'</if>>评价管理</li>
+	               	<li onclick="goBack(this)" data="{:U('Home/Users/toScoreList/')}" <if condition='$umark eq "toScoreList"'> class='selected'</if>>积分记录</li>
+	               	<li onclick="goBack(this)" data="{:U('Home/Favorites/queryByPage/')}" <if condition='$umark eq "queryFavoritesByPage"'> class='selected'</if>>我的关注</li>
+	               	<li onclick="goBack(this)" data="{:U('Home/Messages/queryByPage/')}" id='li_queryMessageByPage' <if condition='$umark eq "queryMessageByPage"'> class='liselect'</if>>商城消息<span style="display:none;" class="wst-msg-tips-box"></span></li>
+	               	<li onclick="goBack(this)" data="{:U('Home/Users/toEdit/')}" <if condition='$umark eq "toEditUser"'> class='selected'</if>>个人资料</li>
+	               	<li onclick="goBack(this)" data="{:U('Home/Users/toEditPass/')}" <if condition='$umark eq "toEditPass"'> class='selected'</if>>修改密码</li>
+               	</ul>
              <if condition='$WST_USER["userType"] eq 0'>
              <div class="wst-appsaler">
 				<div>您目前不是卖家，您可以</div>

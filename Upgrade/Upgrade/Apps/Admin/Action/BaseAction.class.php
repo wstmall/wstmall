@@ -102,6 +102,7 @@ class BaseAction extends Controller {
 	public function getVerify(){
 		// 导入Image类库
     	$Verify = new \Think\Verify();
+    	$Verify->length   = 4;
     	$Verify->entry();
     }
     

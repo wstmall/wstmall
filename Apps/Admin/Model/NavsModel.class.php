@@ -106,7 +106,7 @@ class NavsModel extends BaseModel {
 	 	$rd = array('status'=>-1);
 	 	$id = (int)I('id',0);
 	 	if($id==0)return $rd;
-	 	$m->isShow = (I('isShow')==1)?1:0;
+	 	$this->isShow = (I('isShow')==1)?1:0;
 	 	$rs = $this->where("id = ".$id)->save();
 	    if(false !== $rs){
 			$rd['status']= 1;

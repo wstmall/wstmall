@@ -58,9 +58,9 @@ class OrderComplainsModel extends BaseModel {
      	$areaId1 = (int)I('areaId1',0);
      	$areaId2 = (int)I('areaId2',0);
      	$areaId3 = (int)I('areaId3',0);
-	 	$sql = "select oc.complainId,o.orderId,o.orderNo,s.shopName,o.userName,oc.complainTime,oc.complainStatus,oc.complainType
-	 	         from __PREFIX__orders o left join __PREFIX__shops s on o.shopId=s.shopId
-	 	         ,__PREFIX__order_complains oc where oc.orderId=o.orderId and o.orderFlag=1 and o.orderStatus in (-5,-4,-3,4) ";
+	 	$sql = "select oc.complainId,o.orderId,o.orderNo,s.shopName,u.userName,u.loginName,oc.complainTime,oc.complainStatus,oc.complainType
+	 	         from __PREFIX__orders o left join __PREFIX__shops s on o.shopId=s.shopId,__PREFIX__users u
+	 	         ,__PREFIX__order_complains oc where o.userId=u.userId and oc.orderId=o.orderId and o.orderFlag=1 and o.orderStatus in (-5,-4,-3,4) ";
 	 	if($areaId1>0)$sql.=" and s.areaId1=".$areaId1;
 	 	if($areaId2>0)$sql.=" and s.areaId2=".$areaId2;
 	 	if($areaId3>0)$sql.=" and s.areaId3=".$areaId3;

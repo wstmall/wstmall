@@ -164,25 +164,6 @@ class GoodsAppraisesModel extends BaseModel {
 						WHERE shopId = ".$shopId;		
 			$this->execute($sql);
 			
-			//修改积分
-			$appraisesScore = (int)$GLOBALS['CONFIG']['appraisesScore'];
-			if((int)$GLOBALS['CONFIG']['isAppraisesScore']==1 && $appraisesScore>0){
-
-				$sql = "UPDATE __PREFIX__users set userScore=userScore+".$appraisesScore.",userTotalScore=userTotalScore+".$appraisesScore." WHERE userId=".$userId;
-				$rs = $this->execute($sql);
-				
-				$data = array();
-				$m = M('user_score');
-				$data["userId"] = $userId;
-				$data["score"] = $appraisesScore;
-				$data["dataSrc"] = 2;
-				$data["dataId"] = $orderId;
-				$data["dataRemarks"] = "订单评价获得";
-				$data["scoreType"] = 1;
-				$data["createTime"] = date('Y-m-d H:i:s');
-				$m->add($data);
-			}
-			
 			//检查下是不是订单的所有商品都评论完了
 			$sql = "SELECT og.goodsId,ga.id as gaId
 					FROM __PREFIX__order_goods og left join __PREFIX__goods_appraises ga on og.goodsAttrId=ga.goodsAttrId
@@ -197,6 +178,24 @@ class GoodsAppraisesModel extends BaseModel {
 			if($gmark==1){
 				$sql="update __PREFIX__orders set isAppraises=1 where orderId=".$orderId;
 				$this->execute($sql);
+				//修改积分
+				$appraisesScore = (int)$GLOBALS['CONFIG']['appraisesScore'];
+				if((int)$GLOBALS['CONFIG']['isAppraisesScore']==1 && $appraisesScore>0){
+	
+					$sql = "UPDATE __PREFIX__users set userScore=userScore+".$appraisesScore.",userTotalScore=userTotalScore+".$appraisesScore." WHERE userId=".$userId;
+					$rs = $this->execute($sql);
+					
+					$data = array();
+					$m = M('user_score');
+					$data["userId"] = $userId;
+					$data["score"] = $appraisesScore;
+					$data["dataSrc"] = 2;
+					$data["dataId"] = $orderId;
+					$data["dataRemarks"] = "订单评价获得";
+					$data["scoreType"] = 1;
+					$data["createTime"] = date('Y-m-d H:i:s');
+					$m->add($data);
+				}
 			}
 		}
 		$rd['status'] = 1;

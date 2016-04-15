@@ -169,20 +169,11 @@ class OrdersModel extends BaseModel {
 						return $rd;
 					}
 					$goods["cnt"] = $cgoods["cnt"];
-					$totalCnt += $cgoods["cnt"];
-					$totalMoney += $goods["cnt"]*$goods["shopPrice"];
 					$catgoods[$goods["shopId"]]["shopgoods"][] = $goods;
 					$catgoods[$goods["shopId"]]["deliveryFreeMoney"] = $goods["deliveryFreeMoney"];//店铺免运费最低金额
 					$catgoods[$goods["shopId"]]["deliveryMoney"] = $goods["deliveryMoney"];//店铺免运费最低金额
 					$catgoods[$goods["shopId"]]["totalCnt"] = $catgoods[$goods["shopId"]]["totalCnt"]+$cgoods["cnt"];
 					$catgoods[$goods["shopId"]]["totalMoney"] = $catgoods[$goods["shopId"]]["totalMoney"]+($goods["cnt"]*$goods["shopPrice"]);
-				}
-			}
-			foreach($catgoods as $key=> $cshop){
-				if($cshop["totalMoney"]<$cshop["deliveryFreeMoney"]){
-					if($isself==0){
-						$totalMoney = $totalMoney + $cshop["deliveryMoney"];
-					}
 				}
 			}
 			$morders->startTrans();	
@@ -265,7 +256,7 @@ class OrdersModel extends BaseModel {
 			$useScore = 0;
 
 			if($GLOBALS['CONFIG']['poundageRate']>0){
-				$data["poundageRate"] = $GLOBALS['CONFIG']['poundageRate'];
+				$data["poundageRate"] = (float)$GLOBALS['CONFIG']['poundageRate'];
 				$data["poundageMoney"] = WSTBCMoney($data["totalMoney"] * $data["poundageRate"] / 100,0,2);
 			}else{
 				$data["poundageRate"] = 0;
@@ -333,10 +324,8 @@ class OrdersModel extends BaseModel {
 					if($sgoods["attrVal"]!='')$data["goodsAttrName"] = $sgoods["attrName"].":".$sgoods["attrVal"];
 					$data["goodsNums"] = $sgoods["cnt"];
 					$data["goodsPrice"] = $sgoods["shopPrice"];
-					
 					$data["goodsName"] = $sgoods["goodsName"];
 					$data["goodsThums"] = $sgoods["goodsThums"];
-					
 					$mog->add($data);
 				}
 			
@@ -350,7 +339,6 @@ class OrdersModel extends BaseModel {
 					$data["logTime"] = date('Y-m-d H:i:s');
 					$mlogo = M('log_orders');
 					$mlogo->add($data);
-					
 					//建立订单提醒
 					$sql ="SELECT userId,shopId,shopName FROM __PREFIX__shops WHERE shopId=$shopId AND shopFlag=1  ";
 					$users = $this->query($sql);
@@ -934,13 +922,7 @@ class OrdersModel extends BaseModel {
 				WHERE g.goodsId = og.goodsId AND og.orderId = $orderId";
 		$goods = $this->query($sql);
 		$data["goodsList"] = $goods;
-		
-		for($i=0;$i<count($ogoodsList);$i++){
-			$sgoods = $ogoodsList[$i];
-			$sql="update __PREFIX__goods set goodsStock=goodsStock+".$sgoods['goodsNums']." where goodsId=".$sgoods["goodsId"];
-			$this->execute($sql);
-		}
-		
+
 		$sql = "SELECT * FROM __PREFIX__log_orders WHERE orderId = $orderId ";	
 		$logs = $this->query($sql);
 		$data["logs"] = $logs;

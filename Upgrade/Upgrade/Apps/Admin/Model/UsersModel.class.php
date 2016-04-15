@@ -241,7 +241,7 @@ class UsersModel extends BaseModel {
 	 	$rd = array('status'=>-1);
 	 	if(I('id')=='')return $rd;
 	 	$loginSecret = $this->where("userId=".(int)I('id'))->getField('loginSecret');
-	 	if(I('loginPwd')!='')$m->loginPwd = md5(I('loginPwd').$loginSecret);
+	 	if(I('loginPwd')!='')$this->loginPwd = md5(I('loginPwd').$loginSecret);
 	 	$this->userStatus = (int)I('userStatus',0);
 	 	$rs = $this->where('userId='.(int)I('id'))->save();
 	    if(false !== $rs){

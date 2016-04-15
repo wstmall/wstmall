@@ -52,7 +52,7 @@ class BaseAction extends Controller {
 	 */
 	public function isShopLogin(){
 		$USER = session('WST_USER');
-		if (empty($USER) || $USER['userType']!=1){
+		if (empty($USER) || $USER['userType']==0){
 			if(IS_AJAX){
 				$this->ajaxReturn(array('status'=>-999,'url'=>'Shops/login'));
 			}else{
@@ -164,6 +164,7 @@ class BaseAction extends Controller {
 	public function getVerify(){
 		// 导入Image类库
     	$Verify = new \Think\Verify();
+    	$Verify->length   = 4;
     	$Verify->entry();
     }
    /**

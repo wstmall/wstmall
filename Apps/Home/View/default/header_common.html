@@ -2,9 +2,9 @@
 <div style="height:132px;">
 <div id="mainsearchbox" style="text-align:center;">
 	<div id="wst-search-pbox">
-		<div style="float:left;width:240px;" class="wst-header-car">
+		<div style="float:left;width:240px;text-align:center;" class="wst-header-car">
 		  <a href='{:WSTDomain()}'>
-			<img id="wst-logo" width='240' height='132' src="{:WSTDomain()}/{$CONF['mallLogo']}"/>
+			<img id="wst-logo" height='132' src="{:WSTDomain()}/{$CONF['mallLogo']}" style="max-width:240px;"/>
 		  </a>	
 		</div>
 		<div id="wst-search-container">
@@ -43,13 +43,15 @@
 <div class="headNav">
 		  <div class="navCon w1020">
 		  	<div class="wst-slide-controls">
-		  		<volist name="indexAds" id="vo" key="k" >
+		  		<?php if($ishome == 1){ ?>
+		  		<volist name=":WSTAds(-1)" id="vo" key="k" >
 		  			<if condition="$k eq 1">
 		  		 		<span class="curr">{$k}</span>
 		  		  	<else/>
 		  		    	<span class="">{$k}</span>
 		  		 	</if>
 				</volist>
+				<?php } ?>
 			</div>
 		    <div class="navCon-cate fl navCon_on" >
 		      <div class="navCon-cate-title"> <a href="{:U('Home/goods/getGoodsList')}">全部商品分类</a></div>
