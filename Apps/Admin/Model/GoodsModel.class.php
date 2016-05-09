@@ -159,7 +159,7 @@ class GoodsModel extends BaseModel {
 	  */
 	 public function queryPenddingGoodsNum(){
 	 	$rd = array('status'=>-1);
-	 	$sql="select count(*) counts from __PREFIX__goods where goodsStatus=0 and goodsFlag=1";
+	 	$sql="select count(*) counts from __PREFIX__goods where goodsStatus=0 and goodsFlag=1 and isSale=1";
 	 	$rs = $this->query($sql);
 	 	$rd['num'] = $rs[0]['counts'];
 	 	return $rd;

@@ -877,7 +877,7 @@ a:hover,a:active {
 #entry .mc {
 	border: 1px solid #e1e1e1;
 	background: #ffffff;
-	height: 354px;
+	height: 372px;
 }
 
 #entry .form {
@@ -1010,7 +1010,6 @@ a:hover,a:active {
 }
 
 #entry #autoentry {
-	height: 37px;
 	margin-top: 35px;
 }
 

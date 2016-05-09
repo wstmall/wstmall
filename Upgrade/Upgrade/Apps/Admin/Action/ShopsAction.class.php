@@ -27,10 +27,10 @@ class ShopsAction extends BaseAction{
 	    $m = D('Admin/Shops');
     	$object = array();
     	if(I('id',0)>0){
-    		$this->checkPrivelege('ppgl_02');
+    		$this->checkPrivelege('dplb_02');
     		$object = $m->get();
     	}else{
-    		$this->checkPrivelege('ppgl_01');
+    		$this->checkPrivelege('dplb_01');
     		$object = $m->getModel();
     	}
     	
@@ -56,14 +56,14 @@ class ShopsAction extends BaseAction{
 		$m = D('Admin/Shops');
     	$rs = array();
     	if(I('id',0)>0){
-    		$this->checkPrivelege('ppgl_02');
+    		$this->checkPrivelege('dplb_02');
     		if(I('shopStatus',0)<=-1){
     			$rs = $m->reject();
     		}else{
     		    $rs = $m->edit();
     		}
     	}else{
-    		$this->checkPrivelege('ppgl_01');
+    		$this->checkPrivelege('dplb_01');
     		$rs = $m->insert();
     	}
     	$this->ajaxReturn($rs);
@@ -73,7 +73,7 @@ class ShopsAction extends BaseAction{
 	 */
 	public function del(){
 		$this->isLogin();
-		$this->checkPrivelege('ppgl_03');
+		$this->checkPrivelege('dplb_03');
 		$m = D('Admin/Shops');
     	$rs = $m->del();
     	$this->ajaxReturn($rs);
@@ -83,7 +83,7 @@ class ShopsAction extends BaseAction{
 	 */
 	public function toView(){
 		$this->isLogin();
-		$this->checkPrivelege('ppgl_00');
+		$this->checkPrivelege('dplb_00');
 		$m = D('Admin/Shops');
 		if(I('id')>0){
 			$object = $m->get();
@@ -96,7 +96,7 @@ class ShopsAction extends BaseAction{
 	 */
 	public function index(){
 		$this->isLogin();
-		$this->checkPrivelege('ppgl_00');
+		$this->checkPrivelege('dplb_00');
 		//获取地区信息
 		$m = D('Admin/Areas');
 		$this->assign('areaList',$m->queryShowByList(0));

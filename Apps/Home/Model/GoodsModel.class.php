@@ -37,7 +37,10 @@ class GoodsModel extends BaseModel {
 		
 		$sqla = "SELECT  g.goodsId,goodsSn,goodsName,goodsThums,goodsStock,g.saleCount,p.shopId,marketPrice,shopPrice,ga.id goodsAttrId ";
 		$sqlb = "SELECT max(shopPrice) maxShopPrice  ";
-		$sql = " FROM __PREFIX__goods g left join __PREFIX__goods_attributes ga on g.goodsId=ga.goodsId and ga.isRecomm=1, __PREFIX__shops p ";
+		$sql = " FROM __PREFIX__goods g 
+				left join __PREFIX__goods_attributes ga on g.goodsId=ga.goodsId and ga.isRecomm=1
+				left join __PREFIX__goods_scores gs on gs.goodsId= g.goodsId
+				, __PREFIX__shops p ";
 	    if($areaId3>0 || $communityId>0){
 			$sql .=" , __PREFIX__shops_communitys sc ";
 		}
@@ -84,9 +87,9 @@ class GoodsModel extends BaseModel {
 	    if($prices != "" && $pricelist[0]>=0 && $pricelist[1]>=0){
 			$where .= " AND (g.shopPrice BETWEEN  ".(int)$pricelist[0]." AND ".(int)$pricelist[1].") ";
 		}
-	   	$where .= " group by goodsId ";
+	   	$where .= " group by goodsId  ";
 	   	//排序-暂时没有按好评度排
-	   	$orderFile = array('1'=>'saleCount','6'=>'saleCount','7'=>'saleCount','8'=>'shopPrice','9'=>'shopPrice',''=>'saleTime');
+	   	$orderFile = array('1'=>'saleCount','6'=>'saleCount','7'=>'saleCount','8'=>'shopPrice','9'=>'(totalScore/totalUsers)','10'=>'saleTime',''=>'saleTime');
 	   	$orderSort = array('0'=>'ASC','1'=>'DESC');
 		$where .= " ORDER BY ".$orderFile[$mark]." ".$orderSort[$msort].",g.goodsId ";
 

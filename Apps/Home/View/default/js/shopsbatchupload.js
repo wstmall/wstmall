@@ -2,41 +2,28 @@
     // 当domReady的时候开始初始化
     $(function() {
         var $wrap = $('#uploader'),
-
             // 图片容器
             $queue = $( '.filelist' ),
-                
-
             // 状态栏，包括进度和控制按钮
             $statusBar = $wrap.find( '.statusBar' ),
-
             // 文件总体选择信息。
             $info = $statusBar.find( '.info' ),
-
             // 上传按钮
             $upload = $wrap.find( '.uploadBtn' ),
-
             // 没选择文件之前的内容。
             $placeHolder = $wrap.find( '.placeholder' ),
-
             $progress = $statusBar.find( '.progress' ).hide(),
-
             // 添加的文件数量
             fileCount = 0,
-
             // 添加的文件总大小
             fileSize = 0,
-
             // 优化retina, 在retina下这个值是2
             ratio = window.devicePixelRatio || 1,
-
             // 缩略图大小
             thumbnailWidth = 110 * ratio,
             thumbnailHeight = 110 * ratio,
-
             // 可能有pedding, ready, uploading, confirm, done.
             state = 'pedding',
-
             // 所有文件的进度信息，key为file id
             percentages = {},
             // 判断浏览器是否支持图片的base64
@@ -55,7 +42,6 @@
             // 检测是否已经安装flash，检测flash的版本
             flashVersion = ( function() {
                 var version;
-
                 try {
                     version = navigator.plugins[ 'Shockwave Flash' ];
                     version = version.description;
@@ -70,7 +56,7 @@
                 version = version.match( /\d+/g );
                 return parseFloat( version[ 0 ] + '.' + version[ 1 ], 10 );
             } )(),
-
+            
             supportTransition = (function(){
                 var s = document.createElement('p').style,
                     r = 'transition' in s ||
@@ -81,7 +67,7 @@
                 s = null;
                 return r;
             })(),
-
+            
             // WebUploader实例
             uploader;
 
@@ -188,16 +174,6 @@
             return !denied;
         });
 
-        // uploader.on('filesQueued', function() {
-        //     uploader.sort(function( a, b ) {
-        //         if ( a.name < b.name )
-        //           return -1;
-        //         if ( a.name > b.name )
-        //           return 1;
-        //         return 0;
-        //     });
-        // });
-
         // 添加“添加文件”的按钮，
         uploader.addButton({
             id: '#filePicker2',
@@ -255,14 +231,9 @@
                         $wrap.text( '不能预览' );
                         return;
                     }
-
                     if( isSupportBase64 ) {
                         img = $('<img src="'+src+'">');
                         $wrap.empty().append( img );
-
-                     
-                     
-                       
                     } else {
                         $.ajax(WST.PUBLIC +'/plugins/webuploader/preview.php', {
                             method: 'POST',
@@ -348,25 +319,7 @@
                     });
                 } else {
                     $wrap.css( 'filter', 'progid:DXImageTransform.Microsoft.BasicImage(rotation='+ (~~((file.rotation/90)%4 + 4)%4) +')');
-                    // use jquery animate to rotation
-                    // $({
-                    //     rotation: rotation
-                    // }).animate({
-                    //     rotation: file.rotation
-                    // }, {
-                    //     easing: 'linear',
-                    //     step: function( now ) {
-                    //         now = now * Math.PI / 180;
-
-                    //         var cos = Math.cos( now ),
-                    //             sin = Math.sin( now );
-
-                    //         $wrap.css( 'filter', "progid:DXImageTransform.Microsoft.Matrix(M11=" + cos + ",M12=" + (-sin) + ",M21=" + sin + ",M22=" + cos + ",SizingMethod='auto expand')");
-                    //     }
-                    // });
                 }
-
-
             });
 
             $li.appendTo( $queue );
@@ -391,9 +344,7 @@
                 total += v[ 0 ];
                 loaded += v[ 0 ] * v[ 1 ];
             } );
-
             percent = total ? loaded / total : 0;
-
 
             spans.eq( 0 ).text( Math.round( percent * 100 ) + '%' );
             spans.eq( 1 ).css( 'width', Math.round( percent * 100 ) + '%' );
@@ -402,7 +353,6 @@
 
         function updateStatus() {
             var text = '', stats;
-
             if ( state === 'ready' ) {
                 stats = uploader.getStats();
                 text =  (fileCount-stats.successNum) + '张图片未上传，共' +
@@ -495,10 +445,7 @@
         uploader.onUploadSuccess=function(file,response) {
             oRet=response._raw;
             var obj = eval("(" + oRet + ")");
-
-            
             $('#'+file.id).append('<input type="hidden" class="gallery-img" iv="'+obj.Filedata.savepath + obj.Filedata.savethumbname+'" v="' +obj.Filedata.savepath + obj.Filedata.savename+'"/>');
-           
         }
 
         uploader.onUploadProgress = function( file, percentage ) {
@@ -578,12 +525,11 @@
         } );
 
         $info.on( 'click', '.ignore', function() {
-            //alert( 'todo' );
+
         } );
 
         $upload.addClass( 'state-' + state );
         updateTotalProgress();
     });
-
 
 })( jQuery );

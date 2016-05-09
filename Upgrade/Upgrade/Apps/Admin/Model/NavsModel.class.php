@@ -31,15 +31,15 @@ class NavsModel extends BaseModel {
 	  * 新增
 	  */
 	 public function insert(){
-
+		$m = M("navs");
 	 	$rd = array('status'=>-1);
-		$data = $this->create();
+		$data = $m->create();
 		if(!$data){
 			$rd['msg'] = $this->getError();
 			return $rd;
 		}
 		$data['createTime'] = date('Y-m-d H:i:s');
-		$rs = $this->add($data);
+		$rs = $m->add($data);
 		if(false !== $rs){
 			$rd['status']= 1;
 			WSTDelDir(C('WST_RUNTIME_PATH')."/Data/navigation");
@@ -53,7 +53,8 @@ class NavsModel extends BaseModel {
 	  */
 	 public function edit(){
 	 	$rd = array('status'=>-1);
-	    $data = $this->create();
+	 	$m = M("navs");
+	    $data = $m->create();
 		if(!$data){
 			$rd['msg'] = $this->getError();
 			return $rd;

@@ -8,7 +8,7 @@
       <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
       <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
       <link href="__ROOT__/Apps/Admin/View/css/upload.css" rel="stylesheet" type="text/css" />
-      
+      <link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/webuploader/webuploader.css" />
       <!--[if lt IE 9]>
       <script src="__PUBLIC__/js/html5shiv.min.js"></script>
       <script src="__PUBLIC__/js/respond.min.js"></script>
@@ -20,12 +20,15 @@
       
       <script src="__PUBLIC__/plugins/formValidator/formValidator-4.1.3.js"></script>
       <script type="text/javascript" src="__ROOT__/Apps/Admin/View/js/upload.js"></script>
-      
+      <script type="text/javascript" src="__PUBLIC__/plugins/webuploader/webuploader.js"></script>
+      <script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
    </head>
    <script>
    var ThinkPHP = window.Think = {
-	        "ROOT"   : "__ROOT__"
-	}
+	        "ROOT"   : "__ROOT__",
+	        "PUBLIC" : "__PUBLIC__",
+	        "DOMAIN" : "{:WSTDomain()}"
+	};
    $(function () {
 	   $.formValidator.initConfig({
 		   theme:'Default',mode:'AutoTip',formID:"myform",debug:true,submitOnce:true,onSuccess:function(){
@@ -137,7 +140,22 @@
 				    }
 				}
 			});
-		
+		var uploading = null;
+		uploadFile({
+	    	  server:"{:U('Admin/Users/uploadPic')}",
+	    	  pick:'#filePicker',
+	    	  formData: {dir:'users'},
+	    	  callback:function(f){
+	    		  layer.close(uploading);
+	    		  var json = WST.toJson(f);
+	    		  $('#preview').attr('src',ThinkPHP.DOMAIN+"/"+json.file.savepath+json.file.savethumbname);
+	    		  $('#userPhoto').val(json.file.savepath+json.file.savename);
+	    		  $('#preview').show();
+		      },
+		      progress:function(rate){
+		  		 uploading = WST.msg('正在上传图片，请稍后...');
+		      }
+	    });
    });
    function edit(){
 	   var params = {};
@@ -171,25 +189,7 @@
    var filetypes = ["gif","jpg","png","jpeg"];
    </script>
    <body class="wst-page">
-   			<iframe name="upload" style="display:none"></iframe>
-			<form id="uploadform_Filedata" autocomplete="off" style="position:absolute;top:305px;left:120px;z-index:10;" enctype="multipart/form-data" method="POST" target="upload" action="{:U('Home/Shops/uploadPic')}" >
-				<div style="position:relative;">
-				<input id="userPhoto" name="userPhoto" class="form-control wst-ipt" type="text" value="{$object.userPhoto}" readonly style="margin-right:4px;float:left;margin-left:8px;width:250px;"/>
-				<div class="div1">
-					<div class="div2">浏览</div>
-					<input type="file" class="inputstyle" id="Filedata" name="Filedata" onchange="updfile('Filedata');" >
-				</div>
-				<div style="clear:both;"></div>
-				<div >&nbsp;图片大小:150 x 120 (px)(格式为 gif, jpg, jpeg, png)</div>
-				<input type="hidden" name="dir" value="users">
-				<input type="hidden" name="width" value="150">
-				<input type="hidden" name="folder" value="Filedata">
-				<input type="hidden" name="sfilename" value="Filedata">
-				<input type="hidden" name="fname" value="userPhoto">
-				<input type="hidden" id="s_Filedata" name="s_Filedata" value="">
-				
-				</div>
-		</form>
+   			
        <form name="myform" method="post" id="myform" autocomplete="off">   
         <input type='hidden' id='id' value='{$object.userId}'/>
        
@@ -199,7 +199,7 @@
              <td><input type='text' id='loginName' name='loginName' class="form-control wst-ipt" value='{$object.loginName}' maxLength='20'/></td>
              <td rowspan='6'>
              	<div id="preview_Filedata">
-                 <img id='userPhotoPreview' src='<if condition="$object['userPhoto'] =='' ">__ROOT__/Apps/Admin/View/img/staff.png<else/>__ROOT__/{$object['userPhoto']}</if>' height='152'/><br/>
+                 <img id='preview' src='<if condition="$object['userPhoto'] =='' ">__ROOT__/Apps/Admin/View/img/staff.png<else/>__ROOT__/{$object['userPhoto']}</if>' height='152'/><br/>
 	             </div>
              </td>
            </tr>
@@ -263,7 +263,11 @@
 	             <th align='right'>用户头像：</th>
 	             <td>
 		          
-		             
+		             <div>
+		          		<div id="filePicker" style='margin-left:0px;float:left'>上传头像</div>
+             	    	<div style='margin-left:5px;float:left'>图片大小:150 x 120 (px)，格式为 gif, jpg, jpeg, png</div>
+             	    	<input id="userPhoto" name="userPhoto" class="text wstipt" tabindex="3" autocomplete="off" type="hidden" value="{$object.userPhoto}"/>
+             		</div>
 	             </td>
 	           </tr>
             <tr>

@@ -83,16 +83,11 @@ class PaymentsModel extends BaseModel {
         	$obj["orderType"] = 2;
         	$obj["uniqueId"] = session("WST_ORDER_UNIQUE");
         }
-        $orders = self::getPayOrders($obj);
-        $orderNoList = array();
-        $orderAmount = 0;
-        foreach ($orders as $key => $order) {
-        	$orderNoList[] = $order["orderNo"];
-        	$orderAmount = $orderAmount+$order["needPay"];
-        }
+        $order = self::getPayOrders($obj);
+        $orderAmount = $order["needPay"];
+       
         $return_url = WSTDomain().'/Wstapi/payment/return_alipay.php';
         $notify_url = WSTDomain().'/Wstapi/payment/notify_alipay.php';
-        $orderNos = implode(",",$orderNoList);
         $parameter = array(
         	'extra_common_param'=> $userId."@".$obj["orderType"],
             'service'           => $service,
@@ -102,7 +97,7 @@ class PaymentsModel extends BaseModel {
             'return_url'        => $return_url,
             /* 业务参数 */
             'subject'           => '支付购买商品费'.$orderAmount.'元',
-        	'body'  	        => '支付订单['.$orderNos.']费用',
+        	'body'  	        => '支付订单费用',
             'out_trade_no'      => $obj["uniqueId"],
         	'total_fee'         => $orderAmount,
             'quantity'          => 1,
@@ -127,6 +122,7 @@ class PaymentsModel extends BaseModel {
         return 'https://mapi.alipay.com/gateway.do?'.$param. '&sign='.md5($sign).'&sign_type=MD5';
     }
 
+
     /**
      * 获取支付订单信息
      */
@@ -135,15 +131,14 @@ class PaymentsModel extends BaseModel {
     	$orderType = (int)$obj["orderType"];
     	if($orderType==1){
     		$orderId = (int)$obj["uniqueId"];
-    		$sql = "SELECT orderId,orderNo,orderStatus,needPay FROM __PREFIX__orders WHERE userId = $userId AND orderId = $orderId AND orderFlag = 1 AND needPay>0 AND orderStatus = -2 AND isPay = 0 AND payType = 1";
+    		$sql = "SELECT SUM(needPay) needPay FROM __PREFIX__orders WHERE userId = $userId AND orderId = $orderId AND orderFlag = 1 AND needPay>0 AND orderStatus = -2 AND isPay = 0 AND payType = 1";
     	}else{
     		$orderunique = WSTAddslashes($obj["uniqueId"]);
-    		$sql = "SELECT orderId,orderNo,orderStatus,needPay FROM __PREFIX__orders WHERE userId = $userId AND orderunique = '$orderunique' AND orderFlag = 1 AND needPay>0 AND orderStatus = -2 AND isPay = 0 AND payType = 1";
+    		$sql = "SELECT SUM(needPay) needPay FROM __PREFIX__orders WHERE userId = $userId AND orderunique = '$orderunique' AND orderFlag = 1 AND needPay>0 AND orderStatus = -2 AND isPay = 0 AND payType = 1";
     	}
-    	$rsv = $this->query($sql);
-    	return $rsv;
+    	$data = self::queryRow($sql);
+    	return $data;
     }
-
 
     /**
      * 完成支付订单
@@ -192,7 +187,6 @@ class PaymentsModel extends BaseModel {
 					$this->execute($sql);
 				}
 			}
-			$orderIdArr = explode(",",$orderIds);
 			if($orderType==1){
 				$sql = "select orderId,orderNo from __PREFIX__orders where userId=$userId and orderId=$orderId";
 			}else{

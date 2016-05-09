@@ -40,6 +40,7 @@ function tohide(obj,id){
 function queryGoods(obj,mark){
 	var params = [];
 	var communityId,brandId,prices,areaId3,c1Id,c2Id,c3Id,msort;
+	keyWords = $.trim($("#keyword").val());
 	c1Id = $("#c1Id").val();
 	c2Id = $("#c2Id").val();
 	c3Id = $("#c3Id").val();
@@ -77,6 +78,7 @@ function queryGoods(obj,mark){
 		params.push("msort="+((msort=='0')?1:0));
 		params.push("mark="+mark);
 	}
+	if(keyWords!="")params.push("keyWords="+keyWords);
 	if(c1Id && c1Id!='0')params.push("c1Id="+c1Id);
 	if(c2Id && c2Id!='0')params.push("c2Id="+$("#c2Id").val());
 	if(c3Id && c3Id!='0')params.push("c3Id="+$("#c3Id").val());
@@ -91,6 +93,10 @@ function queryGoods(obj,mark){
  * 加入购物车
  */
 function addCart(goodsId,type,goodsThums){
+	if(WST.IS_LOGIN==0){
+		loginWin();
+		return;
+	}
 	var params = {};
 	params.goodsId = goodsId;
 	params.gcount = parseInt($("#buy-num").val(),10);

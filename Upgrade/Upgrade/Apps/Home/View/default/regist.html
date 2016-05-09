@@ -4,7 +4,6 @@
   		<meta charset="utf-8">
       	<meta http-equiv="X-UA-Compatible" content="IE=edge">
       	<link rel="shortcut icon" href="favicon.ico"/>
-      	<meta name="viewport" content="width=device-width, initial-scale=1">
       	<title>用户注册 - {$CONF['mallTitle']}</title>
       	<meta name="keywords" content="{$CONF['mallKeywords']}" />
       	<meta name="description" content="{$CONF['mallDesc']},用户注册" />
@@ -19,7 +18,7 @@
     <include file="./Apps/Home/View/default/header_common.html" />
 	<div class="wst-regist" id="regist">	    
 	    <div class="mc">
-	        <div style="font-size:30px;color:black;padding-left:355px;border-bottom:dotted 1px #ddd; ">用户注册</div>
+	        <div class="reg-header">用户注册</div>
 	    	<if condition="!$WST_USER['userId']">
 	        <form id="register" method="post" autocomplete="off">
 	            <input name="regType" id="regType" value="person" type="hidden"/>
@@ -31,7 +30,7 @@
 	                        <div class="o-intelligent-regName" style="position:relative;">	                       
 	                            <input id="loginName" name="loginName" class="text" tabindex="1" maxlength="30" autocomplete="off" onpaste="return false;" style="ime-mode:disabled;" onblur="onblurName(this);" onkeypress="return WST.isUserName(event)" onfocus="onfocusName(this);" value="邮箱/用户名/手机号"  type="text"/>
 	                           <div id="loginNameTip" style="display: inline-block; "></div>
-								<div id="namelist" style="display:none;position:absolute;width:268px;top:36px;left:0px;border:1px solid #CCCCCC;"></div>
+								<div id="namelist"></div>
 	                        </div>	                        
 	                    </div>
 	                </div>	                
@@ -76,7 +75,6 @@
 	                        </div>
 	                        <span class="clr"></span>
 	                    </div>
-	                     
 	                  	<div class="item" id="authcodeDiv">
 	                            <span class="label"><b class="ftx04">*</b>验证码：</span>	
 	                            <div class="fl item-ifo">
@@ -89,7 +87,6 @@
 	                 	</div>	
 	                 	 
 	                </div>
-	                <input name="qVoCgWxtvu" value="EqaRK" type="hidden"/>	
 	                <div class="item item-new">
 	                    <span class="label">&nbsp;</span>	
 	                    <div class="fl item-ifo">
@@ -110,7 +107,7 @@
 	      		<span class="clr"></span>
 	        </form>
 	        <else/>
-	        <div style="line-height:150px;text-align: center;font-size:18px;">请先退出当前帐号再进行注册 !</div>
+	        <div class="reg-logout-tips">请先退出当前帐号再进行注册 !</div>
 	    	</if>
 	    </div>
 	</div>

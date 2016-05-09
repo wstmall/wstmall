@@ -2,7 +2,7 @@
 <block name="content">
 
 <script src="__PUBLIC__/plugins/kindeditor/kindeditor.js"></script>
-<script src="__PUBLIC__/plugins/kindeditor/lang/zh_CN.js"></script>
+<script src="__PUBLIC__/plugins/kindeditor/lang/zh-CN.js"></script>
 
 <link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/webuploader/style.css" />
 <link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/webuploader/webuploader.css" />
@@ -128,13 +128,13 @@ function delImg(obj){
 	             <td width='300'>
 	             <input type='text' id='goodsSn' name='goodsSn' class="wst-ipt wstipt" value='{$object.goodsSn}' maxLength='25'/>
 	             </td>
-	             <td rowspan='7' valign='top'>
+	             <td rowspan='6' valign='top'>
 	               <div>
 		           <img id='goodsImgPreview' src='<if condition="$object['goodsImg'] =='' ">__ROOT__/{$CONF['goodsImg']}<else/>__ROOT__/{$object['goodsImg']}</if>' height='152'/><br/>
 	               </div>
 	               <input type='hidden' id='goodsImg' class='wstipt' value='{$object.goodsImg}'/>
 	               <input type='hidden' id='goodsThums' class='wstipt' value='{$object.goodsThums}'/>
-             	   <div id="goodImgPicker" style='margin-left:0px;margin-top:5px;height:30px;overflow:hidden'>上传商品图片</div>
+             	   <div id="goodImgPicker" style='margin-left:0px;margin-top:5px;height:30px;overflow:hidden;width:100px;'>上传商品图片</div>
              	   <div>图片大小:150 x 150 (px)，格式为 gif, jpg, jpeg, png</div>
 	             </td>
 	           </tr>

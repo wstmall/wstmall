@@ -5,7 +5,6 @@
       	<meta http-equiv="X-UA-Compatible" content="IE=edge">
       	<link rel="shortcut icon" href="favicon.ico"/>
       	<meta http-equiv="cache-control" content="no-cache">
-      	<meta name="viewport" content="width=device-width, initial-scale=1">
       	<title>订单信息 - {$CONF['mallTitle']}</title>
       	<meta name="keywords" content="{$CONF['mallKeywords']},订单信息" />
       	<meta name="description" content="{$CONF['mallDesc']},订单信息" />
@@ -22,8 +21,8 @@
         	<table cellspacing="0" cellpadding="0" class="wst-tab" width="1210">
         		<caption class="wst-tab-cpt">日志信息
         		<span style="color:blue;float:right;">
-        			<if condition='($order["orderStatus"] eq -3) OR ($order["orderStatus"] eq -4)'>
-        			拒收(<if condition='$order["isRefund"] eq 1'>已退款<else/>未退款 </if>
+        			<if condition='($orderInfo["orderStatus"] eq -3) OR ($orderInfo["orderStatus"] eq -4)'>
+        			拒收<if condition='$orderInfo["isRefund"] eq 1'>(已退款)<else/>(未退款) </if>
 			        <elseif condition='$orderInfo["order"]["orderStatus"] eq -2'/>未付款
 			        <elseif condition='$orderInfo["order"]["orderStatus"] eq -1'/>已取消
 			        <elseif condition='$orderInfo["order"]["orderStatus"] eq 0'/>未受理
@@ -157,14 +156,12 @@
         	</div>
         </div>
     </div>
-    <div style="clear: both;"></div>
+    <div class="wst-clear"></div>
     <div style="height: 20px;"></div>
 	<include file="./Apps/Home/View/default/footer.html" />
 </body>
-
 <script src="__PUBLIC__/js/common.js"></script>
 <script src="__ROOT__/Apps/Home/View/default/js/index.js"></script>
 <script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
 <script src="__ROOT__/Apps/Home/View/default/js/orders.js"></script>
-
 </html>

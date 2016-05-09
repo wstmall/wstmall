@@ -1,5 +1,6 @@
 <script src="__PUBLIC__/js/jquery.min.js"></script>
 <script src="__PUBLIC__/plugins/lazyload/jquery.lazyload.min.js?v=1.9.1"></script>
+<script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
 <script type="text/javascript">
 var WST = ThinkPHP = window.Think = {
         "ROOT"   : "__ROOT__",
@@ -40,7 +41,7 @@ var WST = ThinkPHP = window.Think = {
 		</ul>
 	
 		<ul class="fr lh" style='float:right;'>
-			<li class="fore1" id="loginbar"><a href="{:U('Home/Orders/queryByPage')}"><span style='color:blue'>{$WST_USER['loginName']}</span></a> 欢迎您来到 <a href='{:WSTDomain()}'>{$CONF['mallName']}</a>！<s></s>&nbsp;
+			<li class="fore1" id="loginbar"><a href="{:U('Home/Orders/queryByPage')}"><span style='color:blue'>{$WST_USER['userName']?$WST_USER['userName']:$WST_USER['loginName']}</span></a> 欢迎您来到 <a href='{:WSTDomain()}'>{$CONF['mallName']}</a>！<s></s>&nbsp;
 			<span>
 				<if condition="!$WST_USER['userId']">
 				<a href="{:U('Home/Users/login')}">[登录]</a>

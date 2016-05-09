@@ -327,30 +327,18 @@ class GoodsAction extends BaseAction {
 		$rs = $m->sale();
 		$this->ajaxReturn($rs);
 	}
+	
+	
+	
 	/**
 	 * 核对商品信息
 	 */
-	public function checkGoodsStock(){	
-		
-		$m = D('Home/Goods');
-		$totalMoney = 0;
-		$shopcart = session("WST_CART")?session("WST_CART"):array();	
-		
-		$catgoods = array();		
-		foreach($shopcart as $key=>$cgoods){
-			if($cgoods['ischk']==1){
-				$temp = explode('_',$key);			
-				$goods = $m->getGoodsInfo((int)$temp[0],(int)$temp[1]);
-				if($goods["isBook"]==1){
-					$goods["goodsStock"] = $goods["goodsStock"]+$goods["bookQuantity"];
-				}
-				$goods["cnt"] = $cgoods["cnt"];
-				$totalMoney += $goods["cnt"]*$goods["shopPrice"];			
-				$catgoods[] = $goods;
-			}
-		}
-		
+	public function checkGoodsStock(){
+	
+		$m = D('Home/Cart');
+		$catgoods = $m->checkGoodsStock();
 		$this->ajaxReturn($catgoods);
+	
 	}
 	
 	/**

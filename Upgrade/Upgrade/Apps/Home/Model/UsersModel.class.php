@@ -206,7 +206,7 @@ class UsersModel extends BaseModel {
 	    	$data = array();
 	    	$data['lastTime'] = date('Y-m-d H:i:s');
 	    	$data['lastIP'] = get_client_ip();
-	    	$this->where(" userId=".$rs['userId'])->data($data)->save();	 		
+	    	$this->where(" userId=".$rd['userId'])->data($data)->save();	 		
 	    	//记录登录日志
 		 	$data = array();
 			$data["userId"] = $rd['userId'];
@@ -349,4 +349,76 @@ class UsersModel extends BaseModel {
     	session('findPass',null);
     	return $rs;
 	}
+	
+	/**
+	 * 检测第三方帐号是否已注册
+	 */
+	public function checkThirdIsReg($userFrom,$openId){
+		$openId = WSTAddslashes($openId);
+		$sql = "select userId, userName from __PREFIX__users where userFrom=$userFrom and openId='$openId'";
+		$row = $this->queryRow($sql);
+		if($row["userId"]>0){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	/**
+	 * 第三方注册
+	 */
+    public function thirdRegist($obj){
+    	$rd = array('status'=>-1);	   
+    	
+    	$data = array();
+    	$data['loginName'] = $this->randomLoginName(time());
+	    $data["loginSecret"] = rand(1000,9999);
+	    $data['loginPwd'] = "";
+	    $data['userType'] = 0;
+	    $data['userName'] = WSTAddslashes($obj["userName"]);
+	    $data['userQQ'] = "";
+	    $data['createTime'] = date('Y-m-d H:i:s');
+	    $data['userFlag'] = 1;
+	    $data['userFrom'] = $obj["userFrom"];
+	    $data['openId'] = WSTAddslashes($obj["openId"]);
+	   
+		$rs = $this->add($data);
+		if(false !== $rs){
+			$rd['status']= 1;
+			$rd['userId']= $rs;
+		}
+	   
+	    if($rd['status']>0){
+	    	$data = array();
+	    	$data['lastTime'] = date('Y-m-d H:i:s');
+	    	$data['lastIP'] = get_client_ip();
+	    	$this->where(" userId=".$rd['userId'])->data($data)->save();	 		
+	    	//记录登录日志
+		 	$data = array();
+			$data["userId"] = $rd['userId'];
+			$data["loginTime"] = date('Y-m-d H:i:s');
+			$data["loginIp"] = get_client_ip();
+			$m = M('log_user_logins');
+			$m->add($data);
+			
+			$user = self::get($rd['userId']);
+			if(!empty($user))session('WST_USER',$user);
+	    } 
+		return $rd;
+	}
+	/**
+	 * 第三方登录
+	 */
+	public function thirdLogin($obj){
+		$rd = array('status'=>-1);
+		$openId = WSTAddslashes($obj['openId']);
+		$sql = "select * from __PREFIX__users where userStatus=1 and userFlag=1 and userFrom=".$obj['userFrom']." and openId='".$openId."'";
+		$row = $this->queryRow($sql);
+		if($row["userId"]>0){
+			session('WST_USER',$row);
+			$rd["status"] = 1;
+		}
+		return $rd;
+	}
+	
 }

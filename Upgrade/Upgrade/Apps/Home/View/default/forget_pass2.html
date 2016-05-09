@@ -4,7 +4,6 @@
   		<meta charset="utf-8">
       	<meta http-equiv="X-UA-Compatible" content="IE=edge">
       	<link rel="shortcut icon" href="favicon.ico"/>
-      	<meta name="viewport" content="width=device-width, initial-scale=1">
       	<title>忘记密码 - {$CONF['mallTitle']}</title>
       	<meta name="keywords" content="{$CONF['mallKeywords']}" />
       	<meta name="description" content="{$CONF['mallDesc']},忘记密码" />
@@ -145,7 +144,7 @@
 	            return "手机验证码错误,请检查！";
 	        },
 	        buttons: $("#goform"),
-	        error: function(jqXHR, textStatus, errorThrown){alert("服务器没有返回数据，可能服务器忙，请重试"+errorThrown);},
+	        error: function(jqXHR, textStatus, errorThrown){WST.msg("服务器没有返回数据，可能服务器忙，请重试"+errorThrown);},
 	        onError : "手机验证码错误！",
 	        onWait : "正在对手机验证码进行合法性校验，请稍候..."
 	    });

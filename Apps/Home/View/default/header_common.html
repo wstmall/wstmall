@@ -42,17 +42,7 @@
 </div>
 <div class="headNav">
 		  <div class="navCon w1020">
-		  	<div class="wst-slide-controls">
-		  		<?php if($ishome == 1){ ?>
-		  		<volist name=":WSTAds(-1)" id="vo" key="k" >
-		  			<if condition="$k eq 1">
-		  		 		<span class="curr">{$k}</span>
-		  		  	<else/>
-		  		    	<span class="">{$k}</span>
-		  		 	</if>
-				</volist>
-				<?php } ?>
-			</div>
+		  	
 		    <div class="navCon-cate fl navCon_on" >
 		      <div class="navCon-cate-title"> <a href="{:U('Home/goods/getGoodsList')}">全部商品分类</a></div>
 		      
@@ -112,7 +102,19 @@
 		    <div class="navCon-menu fl">
 		      <ul class="fl">
 		        <volist name=":WSTNavigation(0)" id="vo" >
-		       	<li ><a href="{$vo['navUrl']}" <if condition="$vo['isOpen'] eq 1">target="_blank"</if> <if condition="$vo['active'] eq 1">class="curMenu"</if>>&nbsp;&nbsp;{$vo['navTitle']}&nbsp;&nbsp;</a></li>
+		       	<li >
+		       	<a href="{$vo['navUrl']}" <if condition="$vo['isOpen'] eq 1">target="_blank"</if> 
+		       	<if condition="$vo['active'] eq 1">
+		       		<?php if($actionName == 'toShopHome'){?>
+		       		<?php if($isSelf==1){?>class="curMenu"<?php } ?>
+		       		<?php }else{ ?>
+		       		class="curMenu"
+		       		<?php } ?>
+		       	</if>
+		       	>
+		       		&nbsp;&nbsp;{$vo['navTitle']}&nbsp;&nbsp;
+		       	</a>
+		       	</li>
 		       	</volist>
 		      </ul>
 		    </div>

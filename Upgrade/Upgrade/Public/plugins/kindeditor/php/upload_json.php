@@ -9,13 +9,13 @@
 
 require_once 'JSON.php';
 
-$php_path = dirname(dirname(dirname(dirname(__FILE__)))) . '/';
-$php_url = dirname(dirname(dirname(dirname($_SERVER['PHP_SELF'])))) . '/';
+$php_path = dirname(dirname(dirname(dirname(dirname(__FILE__))))) . '/';
+$php_url = dirname(dirname(dirname(dirname(dirname($_SERVER['PHP_SELF']))))) . '/';
 
 //文件保存目录路径
-$save_path = $php_path . '../Upload/';
+$save_path = $php_path . 'Upload/';
 //文件保存目录URL
-$save_url = $php_url . '../Upload/';
+$save_url = $php_url . 'Upload/';
 //定义允许上传的文件扩展名
 $ext_arr = array(
 	'image' => array('gif', 'jpg', 'jpeg', 'png', 'bmp'),

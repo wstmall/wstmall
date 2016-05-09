@@ -26,8 +26,8 @@ class CartAction extends BaseAction {
      */
 	public function addToCartAjax(){
    		$m = D('Home/Cart');
-   		$res = $m->addToCart();
-   		echo "{status:1}";
+   		$rs = $m->addToCart();
+   		$this->ajaxReturn($rs);
     }
     /**
      * 修改购物车商品
@@ -60,8 +60,7 @@ class CartAction extends BaseAction {
 	 * 获取购物车商品数量
 	 */
 	public function getCartGoodCnt(){
-		$shopcart = session("WST_CART")?session("WST_CART"):array();
-		echo json_encode(array("goodscnt"=>count($shopcart)));
+		echo json_encode(array("goodscnt"=>WSTCartNum()));
 	}
     
 	/**
@@ -83,8 +82,8 @@ class CartAction extends BaseAction {
 	 */
 	public function delCartGoods(){	
 		$m = D('Home/Cart');	
-		$res = $m->delCartGoods();
-		echo "{status:1}";
+		$rs = $m->delCartGoods();
+		$this->ajaxReturn($rs);
 		
 	}
 	
@@ -95,8 +94,8 @@ class CartAction extends BaseAction {
 	public function changeCartGoodsNum(){
 			
 		$m = D('Home/Cart');
-		$res = $m->changeCartGoodsnum();
-		echo "{status:1}";
+		$rs = $m->changeCartGoodsnum();
+		$this->ajaxReturn($rs);
 		
 	}
 	

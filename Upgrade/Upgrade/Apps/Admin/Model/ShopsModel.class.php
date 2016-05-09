@@ -69,7 +69,7 @@ class ShopsModel extends BaseModel {
 		$sdata["shopAddress"] = I("shopAddress");
 		$sdata["bankId"] = (int)I("bankId");
 		$sdata["bankNo"] = I("bankNo");
-		$data["bankUserName"] = I("bankUserName");
+		$sdata["bankUserName"] = I("bankUserName");
 		$sdata["serviceStartTime"] = I("serviceStartTime");
 		$sdata["serviceEndTime"] = I("serviceEndTime");
 		$sdata["shopTel"] = I("shopTel");

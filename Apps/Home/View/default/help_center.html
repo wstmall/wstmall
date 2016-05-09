@@ -4,7 +4,6 @@
   		<meta charset="utf-8">
       	<meta http-equiv="X-UA-Compatible" content="IE=edge">
       	<link rel="shortcut icon" href="favicon.ico"/>
-      	<meta name="viewport" content="width=device-width, initial-scale=1">
       	<title>{$carticle["articleTitle"]} - {$CONF['mallTitle']}</title>
       	<meta name="keywords" content="{$CONF['mallKeywords']},{$carticle["articleKey"]}" />
       	<meta name="description" content="{$CONF['mallDesc']},{$carticle["articleKey"]}" />
@@ -21,7 +20,7 @@
 			<dl class="fore1">
 			<volist name="articleList" key="key" id="articles">
 			<dt class='item'>
-				<b></b><strong>{$articles["catName"]}</strong>
+				<strong>{$articles["catName"]}</strong>
 			</dt>
 			<dd>
 				<volist name="articles['articlecats']" key="key2" id="article">

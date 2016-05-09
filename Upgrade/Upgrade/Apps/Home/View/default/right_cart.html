@@ -17,7 +17,7 @@
 		<div class="quick_link_mian">
 			<div class="quick_links_panel">
 				<div id="quick_links" class="quick_links">
-					<li><a href="#" class="my_qlinks" style="margin-top: 5px;"><i class="setting"></i></a>
+					<li id="userHeader"><a href="#" class="my_qlinks" style="margin-top: 5px;"><i class="setting"></i></a>
 						<div class="ibar_login_box status_login">
 							<if condition="$WST_USER['userId'] gt 0">
 							<div class="avatar_box">
@@ -37,41 +37,7 @@
 								<input type="button" value="我的订单" onclick="getMyOrders();"/>
 							</div>
 							<i class="icon_arrow_white"></i>
-						</div> <else />
-							<div style="margin: 0 auto;padding: 15px 0; width: 220px;">
-							<div class="ibar_recharge-field">
-								<label>帐号</label>
-								<div class="ibar_recharge-fl">
-									<div class="ibar_recharge-iwrapper">
-										<input id="loginName" name="loginName" value="{$loginName}" type="text" name="19" placeholder="用户名/手机号/邮箱" />
-									</div>
-									<i class="ibar_username-contact"></i>
-								</div>
-							</div>
-							<div class="ibar_recharge-field">
-								<label>密码</label>
-								<div class="ibar_recharge-fl">
-									<div class="ibar_recharge-iwrapper">
-										<input id="loginPwd" name="loginPwd" type="password" name="19" placeholder="密码" />
-									</div>
-									<i class="ibar_password-contact"></i>
-								</div>
-							</div>
-							<div class="ibar_recharge-field">
-								<label>验证码</label>
-								<div class="ibar_recharge-fl" style="width:80px;">
-									<div class="ibar_recharge-iwrapper">
-										<input id="verify" style="ime-mode:disabled;width:80px;" name="verify" class="text text-1" tabindex="6" autocomplete="off" maxlength="6" type="text" placeholder="验证码"/>
-									</div>
-								</div>
-								<label class="img" onclick="javascript:getVerify()">
-				                	<img style='vertical-align:middle;cursor:pointer;height:30px;width:93px;' class='verifyImg' src='__ROOT__/Apps/Home/View/default/images/clickForVerify.png' title='刷新验证码' onclick='javascript:getVerify()'/> 
-								</label>
-							</div>
-							<div class="ibar_recharge-btn">
-								<input type="button" value="登录" onclick="checkLoginInfo();"/>
-							</div>
-							</div>
+						</div>
 						</if></li>
 					<li id="shopCart"><a href="#" class="message_list"><i class="message"></i>
 					<div class="span">购物车</div> <span class="cart_num">0</span></a></li>
@@ -82,7 +48,6 @@
 						</a>
 					</li>
 					</if>
-					
 				</div>
 				<div class="quick_toggle">
 					<li><a href="#none"><i class="mpbtn_qrcode"></i></a>
@@ -92,7 +57,6 @@
 								width="148"  /><i class="icon_arrow_white"></i>
 						</div>
 					</li>
-					
 					<li><a href="#top" class="return_top"><i class="top"></i></a></li>
 				</div>
 			</div>
@@ -102,6 +66,8 @@
 	<script type="text/javascript">
 	var numberItem = {:WSTCartNum()};
 	$('.cart_num').html(numberItem);
+	
+	<PHP>if(session('WST_USER.userId')>0){</PHP>
 	$(".quick_links_panel li").mouseenter(function() {
 		getVerify();
 		$(this).children(".mp_tooltip").animate({
@@ -119,6 +85,12 @@
 		});
 		$(this).children(".ibar_login_box").css("display", "none");
 	});
+	<PHP>}else{</PHP>
+	$("#userHeader,#shopCart").click(function() {
+		loginWin();
+	});
+	
+	<PHP>}</PHP>
 	$(".quick_toggle li").mouseover(function() {
 		$(this).children(".mp_qrcode").show();
 	});
@@ -138,7 +110,7 @@
 		curvature : 0.0012, //控制抛物线弧度
 		complete : function() {
 			eleFlyElement.style.visibility = "hidden";
-			jQuery.post(WST.DOMAIN +"/index.php/Home/Cart/getCartGoodCnt/" ,{"axm":1},function(data) {
+			jQuery.post(ThinkPHP.U("Home/Cart/getCartGoodCnt"),{"axm":1},function(data) {
 				var cart = WST.toJson(data);
 				eleShopCart.querySelector("span").innerHTML = cart.goodscnt;
 			});
@@ -174,6 +146,6 @@
 	}
 
 	function getMyOrders(){
-		document.location.href = "{:U('Home/Orders/queryByPage/')}";
+		document.location.href = ThinkPHP.U("Home/Orders/queryByPage");
 	}
 </script>

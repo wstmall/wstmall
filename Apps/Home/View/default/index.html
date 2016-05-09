@@ -3,7 +3,6 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="shortcut icon" href="favicon.ico"/>
 <title>首页 - {$CONF['mallTitle']}</title>
 <meta name="keywords" content="{$CONF['mallKeywords']}" />
@@ -16,15 +15,28 @@
 <body>
 	<include file="./Apps/Home/View/default/header_common.html" />
 	<!----加载广告start----->
-	<div class="wst-ad">
+	<div class="wst-ad" >
 		<div class="wst-slide" id="wst-slide">
-			<ul class="wst-slide-items" style="min-width:1210px;">
+			<ul class="wst-slide-items">
 				<volist name=":WSTAds(-1)" id="vo" key="k">
 				<li style="z-index: 1;"><a target="_blank" onclick="addAccess({$vo['adId']})" href="{$vo['adURL']}">
 						<img src="__ROOT__/{$vo['adFile']}" height="360" width="100%" title="{$vo['adName']}" />
 				</a></li>
 				</volist>
 			</ul>
+			<div class="wst-slide-numbox">
+				<div class="wst-slide-controls">
+			  		<?php if($ishome == 1){ ?>
+			  		<volist name=":WSTAds(-1)" id="vo" key="k" >
+			  			<if condition="$k eq 1">
+			  		 		<span class="curr">{$k}</span>
+			  		  	<else/>
+			  		    	<span class="">{$k}</span>
+			  		 	</if>
+					</volist>
+					<?php } ?>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class='wst-clear'></div>
@@ -34,22 +46,21 @@
 		<volist name="catList" key="k1" id="vo1">
 		<div class="wst-floor">
 			<div class="wst-fl-left wst-fl{$k1}" style="position: relative;">
-				<div
-					style="position: absolute; top: 40px; width: 210px; height: 275px;">
+				<div class="wst-fl-catbox">
 					<volist name="catAds[$vo1['catId']]" id="vo" key="kv"> 
 					<a onclick="addAccess({$vo['adId']})" href="{$vo['adURL']}" target="_blank"> 
 						<img class='lazyImg' data-original="__ROOT__/{$vo['adFile']}" height="275" width="210" title="{$vo['adName']}" />
 					</a> 
 					</volist>
 				</div>
-				<div
-					style="position: absolute; top: 0px; left: 0px; width: 99%; height: 40px; padding-left: 10px; color: #ffffff; line-height: 38px; font-weight: bolder; background: url(__ROOT__/Apps/Home/View/default/images/{$k1}fhd.png) no-repeat 100% 100%;">
+				<div class="wst-fl-head"
+					style="background: url(__ROOT__/Apps/Home/View/default/images/{$k1}fhd.png) no-repeat 100% 100%;">
 					<a
 						href="{:U('Home/Goods/getGoodsList/',array('c1Id'=>$vo1['catId']))}">
 						<span style="font-size: 18px;">F{$k1}</span>{$vo1["catName"]}
 					</a>
 				</div>
-				<div class='wst-cat' style="height: 220px; overflow: hidden;">
+				<div class='wst-cat'>
 					<volist name="vo1['catChildren']" key="k2" id="vo2"> 
 						<volist name="vo2['catChildren']" key="k3" id="vo3"> 
 							<a href="{:U('Home/Goods/getGoodsList/',array('c1Id'=>$vo1['catId'],'c2Id'=>$vo2['catId'],'c3Id'=>$vo3['catId']))}">
@@ -57,22 +68,20 @@
 							</a> 
 						</volist> 
 					</volist>
-
 				</div>
 			</div>
 			<div class="wst-fl-right">
 				<div class="wst-fl-nvg{$k1}">
 					<ul>
-						<li id="fl_{$k1}_0" style="line-height: 32px; width: 100px;"
+						<li id="fl_{$k1}_0" class="wst-fl-tab"
 							onmouseover="gpanelOver(this);">精品推荐</li>
 						<volist name="vo1['catChildren']" key="k2" id="vo2">
-						<li id="fl_{$k1}_{$k2}" style="line-height: 32px; width: 100px;"
+						<li id="fl_{$k1}_{$k2}" class="wst-fl-tab"
 							onmouseover="gpanelOver(this);">{$vo2["catName"]}</li>
 						</volist>
 					</ul>
 				</div>
 				<div>
-
 					<div id="fl_{$k1}_0_pl" class="wst-goods-container">
 						<volist name="vo1['jpgoods']" key="k2" id="vo2">
 						<li class="wst-goodsbox">
@@ -89,7 +98,7 @@
 								</div>
 								<div>
 									<em class="wst-left wst-goods-price" id='shopGoodsPrice_{$vo2["goodsId"]}' dataId='{$vo2["goodsAttrId"]}'>￥{$vo2['shopPrice']|number_format=2}</em>
-									<a href="javascript:addCart({$vo2['goodsId']},0,'{$vo2['goodsThums']}')" class="wst-right btnCart"> 
+									<a href="javascript:addCart({$vo2['goodsId']},0,'{$vo2['goodsThums']}')" class="wst-right <if condition="session('WST_USER.userId') gt 0 ">btnCart</if>"> 
 									<img src="__ROOT__/Apps/Home/View/default/images/btn_addcart.png" width="85" />
 									</a>
 									<div class='wst-clear'></div>
@@ -119,7 +128,7 @@
 								</div>
 								<div>
 									<em class="wst-left wst-goods-price" id='shopGoodsPrice_{$vo3["goodsId"]}' dataId='{$vo3["goodsAttrId"]}'>￥{$vo3['shopPrice']|number_format=2}</em>
-									<a href="javascript:addCart({$vo3['goodsId']},0,'{$vo3['goodsThums']}')" class="wst-right btnCart" > <img
+									<a href="javascript:addCart({$vo3['goodsId']},0,'{$vo3['goodsThums']}')" class="wst-right <if condition="session('WST_USER.userId') gt 0 ">btnCart</if>" > <img
 										src="__ROOT__/Apps/Home/View/default/images/btn_addcart.png"
 										width="85" />
 									</a>
@@ -132,7 +141,7 @@
 						<div class='wst-clear'></div>
 					</div>
 					</volist>
-					<div style="float: right; width: 180px; height: 180px;">
+					<div class="wst-fl-recommendshop">
 						<volist name="vo1['recommendShops']" key="k2" id="vo2">
 						<div style="width: 180px; margin-top: 10px;">
 							<div style="width: 180px;">
@@ -146,7 +155,7 @@
 					</div>
 				</div>
 			</div>
-			<div style="clear: both; font-size: 0px;"></div>
+			<div class='wst-clear'></div>
 		</div>
 		</volist>
 	</div>

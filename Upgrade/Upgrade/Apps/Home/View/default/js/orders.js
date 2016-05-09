@@ -4,9 +4,7 @@ function toEditAddress(addressId){
 	changeAddress(addressId);
 }
 function changeAddress(addressId){
-	//var addressId = $('input:radio[name="seladdress"]:checked').val();	
-	//$("#seladdress_"+addressId).attr("checked",true);
-	//alert($("#seladdress_"+addressId).attr("checked"));
+
 	$("#consigneeId").val(addressId);
 	if(addressId>=1){
 		loadAddress(addressId);
@@ -320,8 +318,7 @@ function submitOrder(){
 				WST.msg("您选的商品不在配送区域内！", {icon: 5});
 				return ;
 			}
-			//params.orderunique = new Date().getTime();
-			
+
 			var ll = layer.msg('提交订单，请稍候...', {icon: 16,shade: [0.5, '#B3B3B3']});
 			jQuery.post(Think.U('Home/Orders/submitOrder') ,params,function(data) {
 				 var json = WST.toJson(data);	
@@ -422,7 +419,6 @@ $(function() {
 	$('input:radio[name="isself"]').click(function(){
 		if($(this).val()==0){//送货上门
 			$("#totalMoney_span").html($("#totalMoney").val());
-			//$("#pay_hd").attr("disabled",false);
 			$("[id^=tst_]").val("-1");
 			$("[id^=showwarnmsg_]").show();
 			$("[id^=deliveryMoney_span_]").each(function(){
@@ -431,8 +427,6 @@ $(function() {
 			});
 		}else{//自提
 			$("#totalMoney_span").html($("#gtotalMoney").val());
-			//$("#pay_ali").attr("checked",true);
-			//$("#pay_hd").attr("disabled",true);
 			$("[id^=tst_]").val("1");
 			$("[id^=showwarnmsg_]").hide();
 			$("[id^=deliveryMoney_span_]").each(function(){

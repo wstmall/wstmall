@@ -645,6 +645,7 @@
 
 #namelist {
 	background-color: white;
+	display:none;position:absolute;width:268px;top:36px;left:0px;border:1px solid #CCCCCC;
 }
 
 #namelist div {
@@ -658,3 +659,16 @@
 #namelist div img {
 	vertical-align: middle;
 }
+.reg-header{font-size:30px;color:black;padding-left:355px;border-bottom:dotted 1px #ddd;}
+.reg-logout-tips{line-height:150px;text-align: center;font-size:18px;}
+
+.yj-select select{height:30px;font-size:14px;margin-right:5px;}
+.ATRoot{padding:0px 5px;height:22px;line-height:22px;clear:both;}
+.ATNode{margin-right:5px;;line-height:22px;width:150px;float:left;margin-top:2px;}
+label{cursor:pointer;}
+.tleft{float:left;}
+.Hide{display:none;}
+dl.areaSelect{display: inline-block; width:100%; margin-bottom: 0;}
+dl.areaSelect:hover{border:1px solid #E5CD29;}
+dl.areaSelect:hover dd{display: block;}
+dl.areaSelect dd{margin-left:20px;width:100%;}

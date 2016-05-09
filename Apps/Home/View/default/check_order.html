@@ -5,7 +5,6 @@
       	<meta http-equiv="X-UA-Compatible" content="IE=edge">
       	<link rel="shortcut icon" href="favicon.ico"/>
       	<meta http-equiv="cache-control" content="no-cache">
-      	<meta name="viewport" content="width=device-width, initial-scale=1">
       	<title>填写核对订单信息 - {$CONF['mallTitle']}</title>
       	<meta name="keywords" content="{$CONF['mallKeywords']},填写核对订单信息" />
       	<meta name="description" content="{$CONF['mallDesc']},填写核对订单信息" />
@@ -28,7 +27,7 @@
                     <div class="success2" style="">
                         <div class="wst-chkod-blank"></div>
                         <div class="wst-chkod-step">
-                            <img src="__ROOT__/Apps/Home/View/default/images/step2.png" alt="" /><br />
+                            <img src="__ROOT__/Apps/Home/View/default/images/step2.png"/><br />
                             <span class="wst-chkod-step1">1.我的购物车</span>
                             <span class="wst-chkod-step2">2.填写核对订单信息</span>
                             <span class="wst-chkod-step3">3.成功提交订单</span>
@@ -213,7 +212,7 @@
                                 <input id="receipt_1" name="needreceipt" type="radio" value="1" />需要开发票
                             </label>
                             <div id="invoiceClientdiv" style="display: none;">
-                                	抬头：<input id="invoiceClient" name="invoiceClient" style="width: 573px;height: 25px;" />
+                                	抬头：<input id="invoiceClient" name="invoiceClient" />
                             </div>
                         </div>
                         <div style="padding-left: 40px;">
@@ -349,12 +348,12 @@
                         </volist>	
                     </div>
                     <?php if($CONF['isOpenScorePay']==1){ ?>
-                    <div style="padding:8px;background-color: #F3FBFE;line-height: 25px;">
-                    	<div style="float:left;width:500px;">
+                    <div id="wst-scorebox">
+                    	<div class="leftbox">
 				   		<if condition="$canUserScore eq 0">本次不符合积分使用规则，无可用积分<br/></if>
-						共{$userScore}个积分，本次可用 <span style="color:red;">{$canUserScore}</span> 个积分，<span id="scoreRule" onmouseover="showScoreRule()" style="cursor: pointer;"><img src="__ROOT__/Apps/Home/View/default/images/a5.jpg"/> 积分规则</span>
+						共{$userScore}个积分，本次可用 <span style="color:red;">{$canUserScore}</span> 个积分，<span id="scoreRule" onmouseover="showScoreRule()" onmouseout="closeScoreRule()" style="cursor: pointer;"><img src="__ROOT__/Apps/Home/View/default/images/a5.jpg"/> 积分规则</span>
 						</div>
-						<div style="float:right;width:500px;text-align: right;padding-right: 8px;">
+						<div class="rightbox">
 							<if condition="$canUserScore gt 0">
 							<label><input id="isScorePay" type="checkbox" scoreMoney="{$scoreMoney}" totalMoney="{$totalMoney}" />使用积分支付 ￥{$scoreMoney}</label>
 							</if>
@@ -363,7 +362,6 @@
                     </div>
                     <?php } ?>
                     <div class="checkout-buttons group" id="checkout-floatbar">
-                        <div class="sticky-placeholder hide" style="display: none;"></div>
                         <div class="wst-chkod-yf1">
                         	<span class="total">应付总额：<span style="color: red;">
 	                                <strong id="payPriceId">￥
@@ -379,15 +377,9 @@
                       	</div>
                       	</if>
                         <div class="sticky-wrap">
-                            <div class="wst-inner" style="padding:15px;">
-                            <button onclick="javascript:backCart();" class="wst-prev-btn">
-                                    	返回上一步                                   
-                                    <b></b>
-                                </button>
-                                <button class="wst-next-btn" onclick="javascript:submitOrder();" id="order-submit" class="checkout-submit" type="submit" >
-                                    	提交订单                                       
-                                    <b></b>
-                                </button>
+                            <div class="wst-inner">
+                            <button onclick="javascript:backCart();" class="wst-prev-btn">返回上一步</button>
+                          	<button class="wst-next-btn" onclick="javascript:submitOrder();" id="order-submit" class="checkout-submit" type="submit" >提交订单</button>
                             </div>
                         </div>
                     </div>
@@ -400,12 +392,15 @@
 		<include file="./Apps/Home/View/default/footer.html" />
 	</body>
 	<script type="text/javascript">
-	
+	var layerId = 0;
 	function showScoreRule(){
-		layer.tips('积分满 {:WSTOrderScore()} 即可使用：每次使用积分为 n*{:WSTOrderScore()}', '#scoreRule', {
+		layerId = layer.tips('积分满 {:WSTOrderScore()} 即可使用：每次使用积分为 n*{:WSTOrderScore()}', '#scoreRule', {
 			  tips: [1, '#87d7f5'],
-			  time: 4000
+			  time: 100000
 		});
+	}
+	function closeScoreRule(){
+		layer.close(layerId);
 	}
 	
 	function subCheckArea(){
@@ -413,7 +408,6 @@
 	    <volist name="shopColleges" key="key" id="shopCollege">
 			var shopCollege = ',{$shopCollege},';
 			var idx = shopCollege.indexOf(","+communityId+",");
-			
 			if(idx==-1){
 				$("#areaOk").val("0");	
 				WST.msg("店铺“"+$("#sp_{$key-1}").html()+"”中的商品不在配送区域内！");
@@ -437,7 +431,6 @@
 				$("#areaOk").val("1");
 			}
 		</volist>
-	
 		return true;
 	}
 	
@@ -548,7 +541,6 @@ function addDate(days){
     return d.getFullYear()+'-'+(m>=10?m:'0'+m)+'-'+(d.getDate()>=10?d.getDate():"0"+d.getDate());
 } 
 $(document).ready(function(){
-	//alert('#seladdress_{$addressList[0]["addressId"]}');
 	$('#seladdress_{$addressList[0]["addressId"]}').click();
 });
 </script>

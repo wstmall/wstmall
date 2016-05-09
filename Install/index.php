@@ -50,7 +50,7 @@ timezone_set();
 			
 			<p style='margin-top:10px;text-indent: 2em'>1. 使用本软件必须保留WSTMall软件页面页脚处的版权标识（Powered by WSTMall）和广州商淘信息科技有限公司下属网站（<a href='http://www.wstmall.com' target='_blank'>http://www.wstmall.com</a>） 的链接，您可以在遵守本协议的基础上，获得WSTMall授权应用于商业用途。</p>
 			<p style='text-indent: 2em'>2. 无论如何，即无论用途如何、是否经过修改或美化、修改程度如何，只要使用本软件的整体或任何部分，未经本公司书面授权许可，软件首页顶部及页脚处的版权标识（Powered by WSTMall）和广州商淘信息科技有限公司下属网站（<a href='http://www.wstmall.com' target='_blank'>http://www.wstmall.com</a>） 的链接都必须保留，不能清除或修改。</p>
-			<p style='text-indent: 2em'>3. 私自去除WSTMall版权属于侵权行为，如确实因为运营需要，需要将WSTMall系统版权去除的企业或个人，需支付授权费用，如有疑问可致电020-29806661咨询；</p>
+			<p style='text-indent: 2em'>3. 私自去除WSTMall版权属于侵权行为，如确实因为运营需要，需要将WSTMall系统版权去除的企业或个人，需支付授权费用，如有疑问可致电020-85289921咨询；</p>
 			<p style='text-indent: 2em'>4. 禁止在 WSTMall的整体或任何部分基础上以发展任何派生版本、修改版本或第三方版本用于重新分发。</p>
 			<p style='text-indent: 2em'>本协议一旦发生变更,广州商淘信息科技有限公司将在WSTMall官方网站 （<a href='http://www.wstmall.com' target='_blank'>http://www.wstmall.com</a>） 上公布修改内容。修改后的服务条款将有效代替原来的服务条款。 </p>
         </div>

@@ -337,9 +337,9 @@ class ShopsModel extends BaseModel {
     /**
 	  * 修改
 	  */
-	 public function edit($shopId){
+	 public function edit($shopId,$isApply=false){
 	 	$rd = array('status'=>-1);
-	 	if($shopId==0)return rd;
+	 	if($shopId==0)return $rd;
 	 	$m = M('shops');
 	 	//加载商店信息
 	 	$shops = $m->where('shopId='.$shopId)->find();
@@ -370,7 +370,9 @@ class ShopsModel extends BaseModel {
 		$data["bankId"] = (int)I("bankId");
 		$data["bankNo"] = I("bankNo");
 		$data["bankUserName"] = I("bankUserName");
-		
+		if($isApply){
+			$data["shopStatus"] = 0;
+		}
 		if($this->checkEmpty($data,true)){
 			$data["qqNo"] = I("qqNo");
 			$data["invoiceRemarks"] = I("invoiceRemarks");
@@ -481,6 +483,33 @@ class ShopsModel extends BaseModel {
 		$rs['relateCommunity'] = implode(',',$relateCommunity);
 		return $rs;
 	 } 
+	 
+	 public function getShopByUser($userId){
+	 	
+	 	$m = M('users');
+	 	$us = $m->where("userId=".$userId)->find();
+
+	 	$m = M('shops');
+	 	$rs = $m->where("userId=".$userId)->find();
+	 	
+	 	$rs['userName'] = $us['userName'];
+	 	$rs['userPhone'] = $us['userPhone'];
+	 	
+	 	//获取店铺社区关系
+	 	$m = M('shops_communitys');
+	 	$rc = $m->where('shopId='.(int)$rs["shopId"])->select();
+	 	$relateArea = array();
+	 	$relateCommunity = array();
+	 	if(count($rc)>0){
+	 		foreach ($rc as $v){
+	 			if($v['communityId']==0 && !in_array($v['areaId3'],$relateArea))$relateArea[] = $v['areaId3'];
+	 			if(!in_array($v['communityId'],$relateCommunity))$relateCommunity[] = $v['communityId'];
+	 		}
+	 	}
+	 	$rs['relateArea'] = implode(',',$relateArea);
+	 	$rs['relateCommunity'] = implode(',',$relateCommunity);
+	 	return $rs;
+	 }
 	 
 	 /**
 	  * 获取指定对象
@@ -811,7 +840,9 @@ class ShopsModel extends BaseModel {
 	 */
 	public function checkOpenShopStatus($userId){
 		$m = M('shops');
-		return $m->where('userId='.$userId." and shopFlag=1 ")->getField('shopStatus',true);
+		$sql = "select shopStatus,statusRemarks from __PREFIX__shops where userId=".$userId." and shopFlag=1 ";
+		$row = $this->queryRow($sql);
+		return $row;
 	}
 	
 	

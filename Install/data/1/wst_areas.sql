@@ -7,10 +7,10 @@ DROP TABLE IF EXISTS `wst_areas`;
 CREATE TABLE `wst_areas` (
   `areaId` int(11) NOT NULL AUTO_INCREMENT,
   `parentId` int(11) NOT NULL,
-  `areaName` varchar(20) DEFAULT NULL,
+  `areaName` varchar(100) NOT NULL,
   `isShow` tinyint(4) NOT NULL DEFAULT '1',
   `areaSort` int(11) NOT NULL DEFAULT '0',
-  `areaKey` char(255) NOT NULL,
+  `areaKey` char(10) NOT NULL,
   `areaType` tinyint(4) NOT NULL DEFAULT '1',
   `areaFlag` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`areaId`),

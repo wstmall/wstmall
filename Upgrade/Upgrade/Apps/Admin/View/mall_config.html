@@ -8,7 +8,7 @@
       <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
       <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
       <link href="__ROOT__/Apps/Admin/View/css/upload.css" rel="stylesheet" type="text/css" />
-      
+      <link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/webuploader/webuploader.css" />
       <!--[if lt IE 9]>
       <script src="__PUBLIC__/js/html5shiv.min.js"></script>
       <script src="__PUBLIC__/js/respond.min.js"></script>
@@ -18,11 +18,15 @@
       <script src="__PUBLIC__/js/common.js"></script>
       <script src="__PUBLIC__/plugins/plugins/plugins.js"></script>
       <script type="text/javascript" src="__ROOT__/Apps/Admin/View/js/upload.js"></script>
-
+	  <script type="text/javascript" src="__PUBLIC__/plugins/webuploader/webuploader.js"></script>
+      <script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
+      
    <script>
    var ThinkPHP = window.Think = {
-	        "ROOT"   : "__ROOT__"
-	}
+	        "ROOT"   : "__ROOT__",
+	        "PUBLIC" : "__PUBLIC__",
+	        "DOMAIN" : "{:WSTDomain()}"
+	};
    function getAreaList(parentId){
 	   var params = {};
 	   params.parentId = parentId;
@@ -42,7 +46,7 @@
 			$('#defaultCity').html(html.join(''));
 	   });
    }
-   var filetypes = ["gif","jpg","png","jpeg"];
+
       $(function(){
     	  $('#myTab a').click(function (e) {
     		  e.preventDefault();
@@ -59,8 +63,25 @@
   		  foreach($cf as $key =>$vo){
   			if($vo['fieldType']=='upload'){
   		  </php>
-    	  
     	  <php>}}}</php>
+    	  
+    	var uploading = null;
+  		uploadFile({
+  	    	  server:"{:U('Admin/Index/uploadPic')}",
+  	    	  pick:'#filePicker',
+  	    	  formData: {dir:'mall'},
+  	    	  callback:function(f){
+  	    		  layer.close(uploading);
+  	    		  var json = WST.toJson(f);
+  	    		  $('#preview').attr('src',ThinkPHP.DOMAIN+"/"+json.file.savepath+json.file.savethumbname);
+  	    		  $('#friendlinkIco').val(json.file.savepath+json.file.savename);
+  	    		  $('#preview').show();
+  		      },
+  		      progress:function(rate){
+  		  		 uploading = WST.msg('正在上传图片，请稍后...');
+  		      }
+  	    });
+  		
       })
       function save(){
     		var params = {};
@@ -96,6 +117,7 @@
 	      <li><a href="#tabc1" role="tab" data-toggle="tab">邮件设置</a></li>
 	      <li><a href="#tabc2" role="tab" data-toggle="tab">短信设置</a></li>
 	      <li><a href="#tabc3" role="tab" data-toggle="tab">运营设置</a></li>
+	      <li><a href="#tabc4" role="tab" data-toggle="tab">登录设置</a></li>
 	  </ul>
       <div class='tab-content wst-tab-content'>
       	  <iframe name="upload" style="display:none"></iframe>
@@ -141,30 +163,43 @@
 			          <input id='defaultCity_hidden' type='hidden' value='{$v['fieldValue']}'/>
                      <php>}</php>
                      <php>}else if($v['fieldType']=='upload'){</php>
-                       	<form id="uploadform_{$v['fieldCode']}p" autocomplete="off" enctype="multipart/form-data" method="POST" target="upload" action="{:U('Home/Shops/uploadPic')}" >
-							<div style="position:relative;">
-							<input id="{$v['fieldCode']}"  name="{$v['fieldCode']}" class="form-control wst-ipt" type="text" value="{$v['fieldValue']}" readonly style="margin-right:4px;float:left;margin-left:8px;width:250px;"/>
-							<div class="div1">
-								<div class="div2">浏览</div>
-								<input type="file" class="inputstyle" id="{$v['fieldCode']}p" name="{$v['fieldCode']}p" onchange="updfile('{$v[fieldCode]}p');" >
+                     	
+                     	<script type="text/javascript">
+                     	$(function(){
+					    	var uploading = null;
+					    	
+					  		uploadFile({
+					  	    	  server:"{:U('Admin/Index/uploadPic')}",
+					  	    	  pick:'#{$v["fieldCode"]}_picker',
+					  	    	  formData: {dir:'mall'},
+					  	    	  callback:function(f){
+					  	    		  layer.close(uploading);
+					  	    		  var json = WST.toJson(f);
+					  	    		  
+					  	    		  $('#{$v["fieldCode"]}_view').attr('src',ThinkPHP.DOMAIN+"/"+json.file.savepath+json.file.savethumbname);
+					  	    		  
+					  	    		  $('#{$v["fieldCode"]}').val(json.file.savepath+json.file.savename);
+					  	    		  $('#{$v["fieldCode"]}_view').show();
+					  		      },
+					  		      progress:function(rate){
+					  		  		 uploading = WST.msg('正在上传图片，请稍后...');
+					  		      }
+					  	    });
+					  		
+					      })
+                     	</script>
+                       	
+						<div style="position:relative;">
+							<input id="{$v['fieldCode']}"  name="{$v['fieldCode']}" class="form-control wst-ipt" type="hidden" value="{$v['fieldValue']}" />
+							<div>
+								<div id="{$v['fieldCode']}_picker" >上传图片</div>
 							</div>
 							<div style="clear:both;"></div>
-							<div >&nbsp;{$v['fieldTips']}</div>
-							<input type="hidden" name="dir" value="mall">
-							<input type="hidden" name="width" value="1400">
-							<input type="hidden" name="folder" value="Filedata">
-							<input type="hidden" name="sfilename" value="{$v['fieldCode']}">
-							<input type="hidden" name="fname" value="{$v['fieldCode']}">
-							<input type="hidden" id="s_{$v['fieldCode']}" name="s_{$v['fieldCode']}" value="">
-							
-							</div>
-						</form>
-                     <!-- 
-                     <input type='text'  id='{$v["fieldCode"]}Upload' class="form-control wst-ipt" autocomplete="off"/>{$v['fieldTips']}
-                     <input type='hidden' id='{$v["fieldCode"]}' value='{$v['fieldValue']}' autocomplete="off"/> -->
-                     <div id="preview_{$v['fieldCode']}">
-                     	<img id='{$v["fieldCode"]}Preview' src='__ROOT__/{$v['fieldValue']}' width="152" height="152"/>
-                     </div>
+							<div >{$v['fieldTips']}</div>
+						</div>
+                     	<div id="preview_{$v['fieldCode']}">
+                     		<img id='{$v["fieldCode"]}_view' src='__ROOT__/{$v['fieldValue']}' width="152" height="152"/>
+                     	</div>
                      <php>}</php>
                   </td>
                </tr>

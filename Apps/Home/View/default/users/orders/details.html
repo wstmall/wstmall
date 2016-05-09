@@ -24,8 +24,8 @@
         	<table cellspacing="0" cellpadding="0" class="wst-tab" width="920" style="border:1px solid #eeeeee;margin:0 auto;">
         		<caption class="wst-tab-cpt">日志信息
         		<span style="color:blue;float:right;">
-        			<if condition='($order["orderStatus"] eq -3) OR ($order["orderStatus"] eq -4)'>
-        			拒收(<if condition='$order["isRefund"] eq 1'>已退款<else/>未退款 </if>
+        			<if condition='($orderInfo["orderStatus"] eq -3) OR ($orderInfo["orderStatus"] eq -4)'>
+        			拒收<if condition='$orderInfo["isRefund"] eq 1'>(已退款)<else/>(未退款)</if>
 			        <elseif condition='$orderInfo["order"]["orderStatus"] eq -2'/>未付款
 			        <elseif condition='$orderInfo["order"]["orderStatus"] eq -1'/>已取消
 			        <elseif condition='$orderInfo["order"]["orderStatus"] eq 0'/>未受理

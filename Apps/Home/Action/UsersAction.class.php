@@ -23,6 +23,7 @@ class UsersAction extends BaseAction {
 		}else{
 			$this->assign('loginName','');
 		}
+		$this->assign('wxBackUrl',urlencode(U("Home/Users/wxLoginCallback","",true,true)));
 		$this->display('default/login');
 	}
 	
@@ -32,7 +33,6 @@ class UsersAction extends BaseAction {
 	 */
 	public function logout(){
 		session('WST_USER',null);
-		session("WST_CART",null);
 		echo "1";
 	}
 	
@@ -377,4 +377,101 @@ class UsersAction extends BaseAction {
     	$rs = $m->getScoreList();
     	$this->ajaxReturn($rs);
     }
+    
+    /**
+     * QQ登录回调方法
+     */
+	public function qqLoginCallback(){
+    	header ( "Content-type: text/html; charset=utf-8" );
+    	vendor ( 'ThirdLogin.QqLogin' );
+
+    	$appId = $GLOBALS['CONFIG']["qqAppId"];
+    	$appKey = $GLOBALS['CONFIG']["qqAppKey"];
+    	//回调接口，接受QQ服务器返回的信息的脚本
+    	$callbackUrl = U("Home/Users/qqLoginCallback","",true,true);
+    	//实例化qq登陆类，传入上面三个参数
+    	$qq = new \QqLogin($appId,$appKey,$callbackUrl);
+    	//得到access_token验证值
+    	$accessToken = $qq->getToken();
+    	if(!$accessToken){
+    		$this->redirect("Home/Users/login");
+    	}
+    	//得到用户的openid(登陆用户的识别码)和Client_id
+    	$arr = $qq->getClientId($accessToken);
+    	if(isset($arr['client_id'])){
+    		$clientId = $arr['client_id'];
+    		$openId = $arr['openid'];
+    		$um = D('Home/Users');
+    		//已注册，则直接登录
+    		if($um->checkThirdIsReg(1,$openId)){
+    			$obj["openId"] = $openId;
+    			$obj["userFrom"] = 1;
+    			$rd = $um->thirdLogin($obj);
+    			if($rd["status"]==1){
+    				$this->redirect("Home/Index/index");
+    			}else{
+    				$this->redirect("Home/Users/login");
+    			}
+    		}else{
+    			//未注册，则先注册
+    			$arr = $qq->getUserInfo($clientId,$openId,$accessToken);
+    			$obj["userName"] = $arr["nickname"];
+    			$obj["openId"] = $openId;
+    			$obj["userFrom"] = 1;
+    			$obj["userPhoto"] = $arr["figureurl_2"];
+    			$um->thirdRegist($obj);
+    			$this->redirect("Home/Index/index");
+    		}
+    	}else{
+    		$this->redirect("Home/Users/login");
+    	}
+    }
+    
+    /**
+     * 微信登录回调方法
+     */
+	public function wxLoginCallback(){
+    	header ( "Content-type: text/html; charset=utf-8" );
+    	vendor ( 'ThirdLogin.WxLogin' );
+
+    	$appId = $GLOBALS['CONFIG']["wxAppId"];
+    	$appKey = $GLOBALS['CONFIG']["wxAppKey"];
+
+    	$wx = new \WxLogin($appId,$appKey);
+    	//得到access_token验证值
+    	$accessToken = $wx->getToken();
+    	
+    	if(!$accessToken){
+    		$this->redirect("Home/Users/login");
+    	}
+    	//得到用户的openid(登陆用户的识别码)和Client_id
+    	$openId = $wx->getOpenId();
+    	if($openId!=""){
+    		$um = D('Home/Users');
+    		//已注册，则直接登录
+    		if($um->checkThirdIsReg(2,$openId)){
+    			$obj["openId"] = $openId;
+    			$obj["userFrom"] = 2;
+    			$rd = $um->thirdLogin($obj);
+    			if($rd["status"]==1){
+    				$this->redirect("Home/Index/index");
+    			}else{
+    				$this->redirect("Home/Users/login");
+    			}
+    		}else{
+    			//未注册，则先注册
+    			$arr = $wx->getUserInfo($openId,$accessToken);
+    			$obj["userName"] = $arr["nickname"];
+    			$obj["openId"] = $openId;
+    			$obj["userFrom"] = 2;
+    			$obj["userPhoto"] = $arr["headimgurl"];
+    			$um->thirdRegist($obj);
+    			$this->redirect("Home/Index/index");
+    		}
+    	}else{
+    		$this->redirect("Home/Users/login");
+    	}
+    }
+    
+    
 }

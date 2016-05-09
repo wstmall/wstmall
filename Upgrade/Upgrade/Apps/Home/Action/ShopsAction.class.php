@@ -52,6 +52,10 @@ class ShopsAction extends BaseAction {
 			
 			$m = D('Home/Favorites');
 			$this->assign("favoriteShopId",$m->checkFavorite($shopId,1));
+			$this->assign('actionName',ACTION_NAME);
+		
+			$this->assign('isSelf',$shops["isSelf"]);
+		
 		}
         $this->display("default/shop_home");
 	}
@@ -148,7 +152,6 @@ class ShopsAction extends BaseAction {
 	 */
 	public function logout(){
 		session('WST_USER',null);
-		session("WST_CART",null);
 		echo "1";
 	}
 	/**
@@ -170,14 +173,18 @@ class ShopsAction extends BaseAction {
 	 * 编辑商家资料
 	 */
 	public function toEdit(){
-		$this->isShopLogin();
+		$m = D('Home/Shops');
 		$USER = session('WST_USER');
+		$shop = $m->get((int)$USER['shopId']);
+		if($shop["shopStatus"]!=-1){
+			$this->isShopLogin();
+		}
 		//获取银行列表
 		$m = D('Admin/Banks');
 		$this->assign('bankList',$m->queryByList(0));
 		//获取商品信息
-		$m = D('Home/Shops');
-		$this->assign('object',$m->get((int)$USER['shopId']));
+		
+		$this->assign('object',$shop);
 		$this->assign("umark","toEdit");
 		$this->display("default/shops/edit_shop");
 	}
@@ -248,8 +255,9 @@ class ShopsAction extends BaseAction {
 		if(!empty($USER) && $USER['userType']==0){
 			//获取用户申请状态
 			$m = D('Home/Shops');
-			$shopStatus = $m->checkOpenShopStatus((int)$USER['userId']);
-			if(empty($shopStatus)){
+			$shop = $m->checkOpenShopStatus((int)$USER['userId']);
+			
+			if(empty($shop)){
 				//获取商品分类信息
 				$m = D('Home/GoodsCats');
 				$this->assign('goodsCatsList',$m->queryByList());
@@ -264,19 +272,61 @@ class ShopsAction extends BaseAction {
 				$m = D('Home/Banks');
 				$this->assign('bankList',$m->queryByList(0));
 				$object = $m->getModel();
+				$object['areaId1'] = $area['parentId'];
+				$object['areaId2'] = $area['areaId'];
 				$this->assign('object',$object);
 				$this->display("default/users/open_shop");
 			}else{
-				if($shopStatus[0]==1){
+				if($shop["shopStatus"]==1){
 					$shops = $m->loadShopInfo((int)$USER['userId']);
 					$USER = array_merge($USER,$shops);
 					session('WST_USER',$USER);
 					$this->assign('msg','您的申请已通过，请刷新页面后点击右上角的"卖家中心"进入店铺界面.');
 					$this->display("default/users/user_msg");
 				}else{
-					$this->assign('msg','您的申请正在审核中...');
+					if($shop["shopStatus"]==-1){
+						$this->assign('msg','您的申请审核不通过【原因：'.$shop["statusRemarks"].'】,请<a style="color:blue;" href="'.U('Home/Shops/toEditShopByUser').'"> 点击这里 </a>进行修改！');
+					}else{
+						$this->assign('msg','您的申请正在审核中...');
+					}
 					$this->display("default/users/user_msg");
 				}
+			}
+		}else{
+			$this->redirect("Shops/index");
+		}
+	}
+	
+	/**
+	 * 申请开店
+	 */
+	public function toEditShopByUser(){
+		$this->isUserLogin();
+		$USER = session('WST_USER');
+		if(!empty($USER) && $USER['userType']==0){
+			//获取用户申请状态
+			$sm = D('Home/Shops');
+			$shop = $sm->checkOpenShopStatus((int)$USER['userId']);
+				
+			if($shop["shopStatus"]==-1){
+				//获取商品分类信息
+				$m = D('Home/GoodsCats');
+				$this->assign('goodsCatsList',$m->queryByList());
+				//获取地区信息
+				$m = D('Home/Areas');
+				$this->assign('areaList',$m->getProvinceList());
+				//获取所在城市信息
+				$cityId = $this->getDefaultCity();
+				//$area = $m->getArea($cityId);
+				//$this->assign('area',$area);
+				//获取银行列表
+				$m = D('Home/Banks');
+				$this->assign('bankList',$m->queryByList(0));
+				//$object = $m->getModel();
+				$object = $sm->getShopByUser((int)$USER['userId']);
+
+				$this->assign('object',$object);
+				$this->display("default/users/open_shop");
 			}
 		}else{
 			$this->redirect("Shops/index");
@@ -308,11 +358,17 @@ class ShopsAction extends BaseAction {
 			$USER = session('WST_USER');
 			$m = D('Home/Shops');
 	    	$userId = (int)$USER['userId'];
-		 	//如果用户没注册则先建立账号
-			if($userId>0){
-		   	    $rs = $m->addByUser($userId);
-		    	if($rs['status']>0)$USER['shopStatus'] = 0;
-			}
+	    	$shop = $m->getShopByUser($userId);
+	    	if($shop['shopId']>0){
+	    		
+	    		$rs = $m->edit((int)$shop['shopId'],true);
+	    	}else{
+			 	//如果用户没注册则先建立账号
+				if($userId>0){
+			   	    $rs = $m->addByUser($userId);
+			    	if($rs['status']>0)$USER['shopStatus'] = 0;
+				}
+	    	}
     	}
     	$this->ajaxReturn($rs);
 	}

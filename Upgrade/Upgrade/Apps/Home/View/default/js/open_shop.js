@@ -143,7 +143,11 @@ function getCommunityForOpen(){
 						if(json[i].communitys && json[i].communitys.length){
 							html.push('<dd>');
 							for(var j=0;j<json[i].communitys.length;j++){
-							    html.push("<div class='ATNode' id='node_"+json[i]['areaId']+"_"+json[i].communitys[j]['communityId']+"'><input type='checkbox' id='ck_"+json[i]['areaId']+"_"+json[i].communitys[j]['communityId']+"' all='0' class='AreaNode' onclick='javascript:selectArea(this)' value='"+json[i].communitys[j]['communityId']+"'><label for='ck_"+json[i]['areaId']+"_"+json[i].communitys[j]['communityId']+"'>"+json[i].communitys[j]['communityName']+"</label></div>");
+								var isCommunitySelected = "";
+								if(typeof(relateCommunity)!="undefined"){
+									isCommunitySelected = ($.inArray(json[i].communitys[j]['communityId'],relateCommunity)>-1)?" checked ":"";
+								}
+							    html.push("<div class='ATNode' id='node_"+json[i]['areaId']+"_"+json[i].communitys[j]['communityId']+"'><input type='checkbox' "+isCommunitySelected+" id='ck_"+json[i]['areaId']+"_"+json[i].communitys[j]['communityId']+"' all='0' class='AreaNode' onclick='javascript:selectArea(this)' value='"+json[i].communitys[j]['communityId']+"'><label for='ck_"+json[i]['areaId']+"_"+json[i].communitys[j]['communityId']+"'>"+json[i].communitys[j]['communityName']+"</label></div>");
 							}
 							html.push('</dd>');
 						}
@@ -395,7 +399,7 @@ function userShopInit(){
     $("#shopName").formValidator({onShow:"",onFocus:"店铺名称不能超过20个字符",onCorrect:"输入正确"}).inputValidator({min:1,max:40,onError:"店铺名称长度不符合要求,请确认"}).ajaxValidator({
 			dataType : "json",
 			async : true,
-			url : Think.U('Home/Shops/checkShopName'),
+			url : Think.U('Home/Shops/checkShopName',{"id":$("#id").val()}),
 			success : function(data){
 				var json = WST.toJson(data);
 	            if( json.status == "1" ) {

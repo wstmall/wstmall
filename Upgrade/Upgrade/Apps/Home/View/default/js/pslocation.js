@@ -130,7 +130,6 @@ function getAreaListcallback(r,level){
 			getStockOpt($(this).attr("data-value"),$(this).html());
 		});
 		if(page_load){ //初始化加载
-			//alert("初始化加载");
 			currentAreaInfo.currentLevel = currentAreaInfo.currentLevel==2?3:4;
 			if(currentAreaInfo.currentAreaId && new Number(currentAreaInfo.currentAreaId)>0){
 				getStockOpt(currentAreaInfo.currentAreaId,currentDom.find("a[data-value='"+currentAreaInfo.currentAreaId+"']").html());
@@ -151,7 +150,6 @@ function getAreaListcallback(r,level){
 			getStockOpt($(this).attr("data-value"),$(this).html());
 		});
 		if(page_load){ //初始化加载
-			//alert("初始化加载");
 			currentAreaInfo.currentLevel = currentAreaInfo.currentLevel==2?3:4;
 			if(currentAreaInfo.currentAreaId && new Number(currentAreaInfo.currentAreaId)>0){
 				getStockOpt(currentAreaInfo.currentAreaId,currentDom.find("a[data-value='"+currentAreaInfo.currentAreaId+"']").html());
@@ -168,7 +166,6 @@ function chooseCity(cityId,cityName){
 	currentAreaInfo.currentCityId = cityId;
 	currentAreaInfo.currentCityName = cityName;
 	if(!page_load){
-		//alert("a");
 		currentAreaInfo.currentAreaId = 0;
 		currentAreaInfo.currentAreaName = "";
 		currentAreaInfo.currentTownId = 0;
@@ -242,7 +239,6 @@ var page_load = true;
 	}).find("dl").remove();
 	CurrentAreaInfoInit();
 	areaTabContainer.eq(0).find("a").click(function(){
-		//alert("a");
 		currentAreaInfo.currentLevel = 3;
 		areaTabContainer.removeClass("curr");
 		areaTabContainer.eq(0).addClass("curr").show();
@@ -252,7 +248,6 @@ var page_load = true;
 		
 	});
 	areaTabContainer.eq(1).find("a").click(function(){
-		//alert("b");
 		areaTabContainer.removeClass("curr");
 		areaTabContainer.eq(1).addClass("curr").show();
 		areaContainer.hide();

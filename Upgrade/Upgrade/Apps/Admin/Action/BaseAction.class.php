@@ -21,7 +21,7 @@ class BaseAction extends Controller {
 	}
     
 	/**
-	 * 上传图片
+	 * 单个上传图片
 	 */
     public function uploadPic(){
 	   $config = array(
@@ -32,15 +32,17 @@ class BaseAction extends Controller {
 		        'subName'       =>  array('date', 'Y-m'),
 		        'savePath'      =>  I('dir','uploads')."/"
 		);
+	 
 		$upload = new \Think\Upload($config);
 		$rs = $upload->upload($_FILES);
+		$Filedata = key($_FILES);
 		if(!$rs){
 			$this->error($upload->getError());
 		}else{
 			$images = new \Think\Image();
-			$images->open('./Upload/'.$rs['Filedata']['savepath'].$rs['Filedata']['savename']);
-			$newsavename = str_replace('.','_thumb.',$rs['Filedata']['savename']);
-			$vv = $images->thumb(I('width',300), I('height',300),I('thumb_type',1))->save('./Upload/'.$rs['Filedata']['savepath'].$newsavename);
+			$images->open('./Upload/'.$rs[$Filedata]['savepath'].$rs[$Filedata]['savename']);
+			$newsavename = str_replace('.','_thumb.',$rs[$Filedata]['savename']);
+			$vv = $images->thumb(I('width',300), I('height',300))->save('./Upload/'.$rs[$Filedata]['savepath'].$newsavename);
 		    if(C('WST_M_IMG_SUFFIX')!=''){
 		        $msuffix = C('WST_M_IMG_SUFFIX');
 		        $mnewsavename = str_replace('.',$msuffix.'.',$rs[$Filedata]['savename']);
@@ -49,9 +51,10 @@ class BaseAction extends Controller {
 			    $images->thumb(I('width',700), I('height',700))->save('./Upload/'.$rs[$Filedata]['savepath'].$mnewsavename);
 			    $images->thumb(I('width',250), I('height',250))->save('./Upload/'.$rs[$Filedata]['savepath'].$mnewsavename_thmb);
 			}
-			$rs['Filedata']['savepath'] = "Upload/".$rs['Filedata']['savepath'];
-			$rs['Filedata']['savethumbname'] = $newsavename;
+			$rs[$Filedata]['savepath'] = "Upload/".$rs[$Filedata]['savepath'];
+			$rs[$Filedata]['savethumbname'] = $newsavename;
 			$rs['status'] = 1;
+			
 			echo json_encode($rs);
 		}	
     }

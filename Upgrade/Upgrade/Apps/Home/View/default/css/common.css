@@ -383,7 +383,7 @@ a:hover {
 	width: 200px;
 	text-align: right;
 	left: 1000px;
-	top: 360px;
+	top: -40px;
 }
 
 .wst-slide-controls span {
@@ -584,7 +584,7 @@ button:hover{
 }
 
 .wst-footer{
-	text-align:center;line-height:25px;width:1210px;margin:0 auto;
+	text-align:center;line-height:25px;width:1210px;margin:0 auto; background-color: #F7F7F7;
 }
 
 .newMsg{
@@ -1025,7 +1025,7 @@ b, strong {
 .wst-footer-wz-ent{color:green;font-size:16px;}
 .wst-user-top{height:132px;text-align:center;}
 .wst-user-top-main{height:132px;width:1210px;margin:0 auto;text-align:left;}
-.wst-user-top-logo{float:left;width:240px;height:132px;}
+.wst-user-top-logo{float:left;width:240px;height:132px;text-align:center;}
 .wst-user-top-search{float:right;width:600px;height:120px;}
 .wst-user-top-search .search-box{height:36px;border:2px solid #e23c3d;position:relative;margin-top:60px;margin-left:20px;}
 .wst-search-ipt{border:0;width:493px;background: 0 0;padding-left:10px;line-height: 22px;padding-top: 8px; padding-bottom: 4px;font-size:15px;}

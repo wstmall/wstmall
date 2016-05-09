@@ -131,28 +131,31 @@ class OrdersModel extends BaseModel {
 		$morders = D('Home/Orders');
 		$totalMoney = 0;
 		$totalCnt = 0;
-		$userId = (int)$USER['userId'];
+		$userId = (int)session('WST_USER.userId');
 		
 		$consigneeId = (int)I("consigneeId");
 		$payway = (int)I("payway");
 		$isself = (int)I("isself");
 		$needreceipt = (int)I("needreceipt");
 		$orderunique = WSTGetMillisecond().$userId;
-		$shopcat = session("WST_CART")?session("WST_CART"):array();	
+
+		$sql = "select * from __PREFIX__cart where userId = $userId and isCheck=1 and goodsCnt>0";
+		$shopcart = $this->query($sql);
 		
 		$catgoods = array();	
 		$order = array();
-		if(empty($shopcat)){
+		if(empty($shopcart)){
 			$rd['msg'] = '购物车为空!';
 			return $rd;
 		}else{
 			//整理及核对购物车数据
 			$paygoods = session('WST_PAY_GOODS');
-			foreach($shopcat as $key=>$cgoods){
-				if($cgoods['ischk']==0)continue;//跳过未选中的商品
-				$temp = explode('_',$key);
-				$goodsId = (int)$temp[0];
-				$goodsAttrId = (int)$temp[1];
+			$cartIds = array();
+			for($i=0;$i<count($shopcart);$i++){
+				$cgoods = $shopcart[$i];
+				$goodsId = (int)$cgoods["goodsId"];
+				$goodsAttrId = (int)$cgoods["goodsAttrId"];
+				
 				if(in_array($goodsId, $paygoods)){
 					$goods = $goodsmodel->getGoodsSimpInfo($goodsId,$goodsAttrId);
 					//核对商品是否符合购买要求
@@ -168,25 +171,23 @@ class OrdersModel extends BaseModel {
 						$rd['msg'] = '对不起，商品库'.$goods['goodsName'].'已下架!';
 						return $rd;
 					}
-					$goods["cnt"] = $cgoods["cnt"];
+					$goods["cnt"] = $cgoods["goodsCnt"];
 					$catgoods[$goods["shopId"]]["shopgoods"][] = $goods;
 					$catgoods[$goods["shopId"]]["deliveryFreeMoney"] = $goods["deliveryFreeMoney"];//店铺免运费最低金额
 					$catgoods[$goods["shopId"]]["deliveryMoney"] = $goods["deliveryMoney"];//店铺免运费最低金额
-					$catgoods[$goods["shopId"]]["totalCnt"] = $catgoods[$goods["shopId"]]["totalCnt"]+$cgoods["cnt"];
+					$catgoods[$goods["shopId"]]["totalCnt"] = $catgoods[$goods["shopId"]]["totalCnt"]+$cgoods["goodsCnt"];
 					$catgoods[$goods["shopId"]]["totalMoney"] = $catgoods[$goods["shopId"]]["totalMoney"]+($goods["cnt"]*$goods["shopPrice"]);
+					$cartIds[] = $cgoods["cartId"];
 				}
 			}
 			$morders->startTrans();	
 			try{
 				$ordersInfo = $morders->addOrders($userId,$consigneeId,$payway,$needreceipt,$catgoods,$orderunique,$isself);
-				$newcart = array();
-				foreach($shopcat as $key=>$cgoods){
-					if(!in_array($key, $paygoods)){
-						$newcart[$key] = $cgoods;
-					}
-				}
 				$morders->commit();	
-				session("WST_CART",empty($newcart)?null:$newcart);
+				if(!empty($cartIds)){
+					$sql = "delete from __PREFIX__cart where userId = $userId and cartId in (".implode(",",$cartIds).")";
+					$this->execute($sql);
+				}
 				$rd['orderIds'] = implode(",",$ordersInfo["orderIds"]);
 				$rd['status'] = 1;
 				session("WST_ORDER_UNIQUE",$orderunique);
@@ -243,7 +244,7 @@ class OrdersModel extends BaseModel {
 			$data["userTel"] = $addressInfo["userTel"];
 			$data["userPhone"] = $addressInfo["userPhone"];
 			
-			$data['orderScore'] = floor($data["totalMoney"]+$data["deliverMoney"]);
+			$data['orderScore'] = floor($data["totalMoney"]);
 			$data["isInvoice"] = $needreceipt;		
 			$data["orderRemarks"] = $remarks;
 			$data["requireTime"] = I("requireTime");
@@ -295,24 +296,26 @@ class OrdersModel extends BaseModel {
 			
 			$morders = M('orders');
 			$orderId = $morders->add($data);	
-			if($GLOBALS['CONFIG']['isOpenScorePay']==1 && $isScorePay==1 && $useScore>0){//积分支付
-				$sql = "UPDATE __PREFIX__users set userScore=userScore-".$useScore." WHERE userId=".$userId;
-				$rs = $this->execute($sql);
-				
-				$data = array();
-				$m = M('user_score');
-				$data["userId"] = $userId;
-				$data["score"] = $useScore;
-				$data["dataSrc"] = 1;
-				$data["dataId"] = $orderId;
-				$data["dataRemarks"] = "订单支付-扣积分";
-				$data["scoreType"] = 2;
-				$data["createTime"] = date('Y-m-d H:i:s');
-				$m->add($data);
-			}
-	
+
 			//订单创建成功则建立相关记录
 			if($orderId>0){
+				
+				if($GLOBALS['CONFIG']['isOpenScorePay']==1 && $isScorePay==1 && $useScore>0){//积分支付
+					$sql = "UPDATE __PREFIX__users set userScore=userScore-".$useScore." WHERE userId=".$userId;
+					$rs = $this->execute($sql);
+				
+					$data = array();
+					$m = M('user_score');
+					$data["userId"] = $userId;
+					$data["score"] = $useScore;
+					$data["dataSrc"] = 1;
+					$data["dataId"] = $orderId;
+					$data["dataRemarks"] = "订单支付-扣积分";
+					$data["scoreType"] = 2;
+					$data["createTime"] = date('Y-m-d H:i:s');
+					$m->add($data);
+				}
+				
 				$orderIds[] = $orderId;
 				//建立订单商品记录表
 				$mog = M('order_goods');

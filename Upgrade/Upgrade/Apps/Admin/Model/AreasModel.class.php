@@ -26,7 +26,7 @@ class AreasModel extends BaseModel {
 		$data["areaName"] = I("areaName");
 		$data["isShow"] = (int)I("isShow",1);
 		$data["areaSort"] = (int)I("areaSort",0);
-		//$data["areaKey"] = I("areaKey");
+		$data["areaKey"] = WSTGetFirstCharter($data["areaName"]);
 		$data["areaType"] = $areaType;
 		$data["areaFlag"] = 1;
 	    if($this->checkEmpty($data,true)){
@@ -47,6 +47,7 @@ class AreasModel extends BaseModel {
 		$data["areaName"] = I("areaName");
 		$data["isShow"] = (int)I("isShow",1);
 		$data["areaSort"] = (int)I("areaSort",0);
+		$data["areaKey"] = WSTGetFirstCharter($data["areaName"]);
 		if($this->checkEmpty($data,true)){
 		    $rs = $this->where("areaId=".$id)->save($data);
 			if(false !== $rs){

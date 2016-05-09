@@ -168,69 +168,26 @@ class OrdersAction extends BaseAction {
 	 */
 	public function checkOrderInfo(){
 		$this->isUserLogin();
-		$mareas = D('Home/Areas');
-		$morders = D('Home/Orders');
-		$mgoods = D('Home/Goods');
 		$maddress = D('Home/UserAddress');
-		$gtotalMoney = 0;//商品总价（去除配送费）
-		$totalMoney = 0;//商品总价（含配送费）
-		$totalCnt = 0;
-		$shopcat = session("WST_CART")?session("WST_CART"):array();	
-		$catgoods = array();
-	
-		$shopColleges = array();
-		$startTime = 0;
-		$endTime = 24;
-	    if(empty($shopcat)){
+		$mcart = D('Home/Cart');
+		$rdata = $mcart->getPayCart();	
+	    if($rdata["cartnull"]==1){
 			$this->assign("fail_msg",'不能提交空商品的订单!');
 			$this->display('default/order_fail');
 			exit();
 		}
-		$paygoods = array();
-		foreach($shopcat as $key=>$cgoods){
-			$obj = array();
-			$temp = explode('_',$key);		
-			$obj["goodsId"] = (int)$temp[0];
-			$obj["goodsAttrId"] = (int)$temp[1];	
-			if($cgoods["ischk"]==1){
-				$paygoods[] = $obj["goodsId"];
-				$goods = $mgoods->getGoodsForCheck($obj);
-				if($goods["isBook"]==1){
-					$goods["goodsStock"] = $goods["goodsStock"]+$goods["bookQuantity"];
-				}
-				$goods["ischk"] = $cgoods["ischk"];
-				$goods["cnt"] = $cgoods["cnt"];
-				$totalCnt += $cgoods["cnt"];
-				$totalMoney += $goods["cnt"]*$goods["shopPrice"];
-				$gtotalMoney += $goods["cnt"]*$goods["shopPrice"];
-				$ommunitysId = $maddress->getShopCommunitysId($goods["shopId"]);
-				$shopColleges[$goods["shopId"]] = $ommunitysId;			
-				if($startTime<$goods["startTime"]){
-					$startTime = $goods["startTime"];
-				}
-				if($endTime>$goods["endTime"]){
-					$endTime = $goods["endTime"];
-				}
-	
-				$catgoods[$goods["shopId"]]["shopgoods"][] = $goods;
-				$catgoods[$goods["shopId"]]["deliveryFreeMoney"] = $goods["deliveryFreeMoney"];//店铺免运费最低金额
-				$catgoods[$goods["shopId"]]["deliveryMoney"] = $goods["deliveryMoney"];//店铺配送费
-				$catgoods[$goods["shopId"]]["deliveryStartMoney"] = $goods["deliveryStartMoney"];//店铺配送费
-				$catgoods[$goods["shopId"]]["totalCnt"] = $catgoods[$goods["shopId"]]["totalCnt"]+$cgoods["cnt"];
-				$catgoods[$goods["shopId"]]["totalMoney"] = $catgoods[$goods["shopId"]]["totalMoney"]+($goods["cnt"]*$goods["shopPrice"]);
-			}
-		}
-		
-		foreach($catgoods as $key=> $cshop){
-			if($cshop["totalMoney"]<$cshop["deliveryFreeMoney"]){
-				$totalMoney = $totalMoney + $cshop["deliveryMoney"];
-			}
-		}
-		session('WST_PAY_GOODS',$paygoods);
-		$USER = session('WST_USER');
+		$catgoods = $rdata["cartgoods"];
+		$shopColleges = $rdata["shopColleges"];
+		$startTime = $rdata["startTime"];
+		$endTime = $rdata["endTime"];
+		$gtotalMoney = $rdata["gtotalMoney"];//商品总价（去除配送费）
+		$totalMoney = $rdata["totalMoney"];//商品总价（含配送费）
+		$totalCnt = $rdata["totalCnt"];
+
+		$userId = session('WST_USER.userId');
 		//获取地址列表
         $areaId2 = $this->getDefaultCity();
-		$addressList = $maddress->queryByUserAndCity($USER['userId'],$areaId2);
+		$addressList = $maddress->queryByUserAndCity($userId,$areaId2);
 		$this->assign("addressList",$addressList);
 		$this->assign("areaId2",$areaId2);
 		//支付方式

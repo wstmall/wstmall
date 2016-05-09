@@ -67,9 +67,9 @@ class BaseAction extends Controller {
 		$USER = session('WST_USER');
 		if (empty($USER)){
 			if(IS_AJAX){
-			    $this->redirect($userType."/login");
+			    $this->ajaxReturn(array('status'=>-999,'url'=>$userType.'/login'));
 			}else{
-				$this->ajaxReturn(array('status'=>-999,'url'=>$userType.'/login'));
+				$this->redirect($userType."/login");
 			}
 		}
    }

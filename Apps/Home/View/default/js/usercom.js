@@ -243,7 +243,7 @@ function orderCancel(id,type){
 	        yes: function(index, layero){
 	        	var rejectionRemarks = $.trim($('#rejectionRemarks').val());
 	        	if(rejectionRemarks==''){
-	        		WST.msg('请输入拒收原因 !', {icon: 5});
+	        		WST.msg('请输入取消原因 !', {icon: 5});
 	        		return;
 	        	}
 	        	var ll = layer.load('数据处理中，请稍候...');

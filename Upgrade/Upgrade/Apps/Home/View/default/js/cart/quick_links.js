@@ -43,7 +43,9 @@ jQuery(function($){
 		$(".quick_links_panel").animate({"right":"0px"},100);
 	},
 	showQuickPop = function(type){
-		
+		if(WST.IS_LOGIN==0){
+			return;
+		}
 		if(quickPopXHR && quickPopXHR.abort){
 			quickPopXHR.abort();
 		}
@@ -80,7 +82,7 @@ jQuery(function($){
 							}
 							html.push(  "<div class='cart_item_price'><span class='cart_price'>￥"+goods.shopPrice+"</span></div>" +
 											"<div class='cart-close-box' style=''>" +
-											"<span class='cart-colse' onclick=removeCartGoods(this,'"+goods.goodsId+"','"+goods.goodsAttrId+"')></span></div>	" +
+											"<span class='cart-colse' price="+goods.shopPrice+" cnt="+goods.cnt+" onclick=removeCartGoods(this,'"+goods.goodsId+"','"+goods.goodsAttrId+"');></span></div>	" +
 											"<div class='cart_goods_box' style='position:absolute;bottom:0px;right:6px;'>" +
 											
 											"<span class='cart-minus'>-</span>" +
@@ -92,7 +94,7 @@ jQuery(function($){
 								);
 						}
 					}
-					html.push('</ul></div><div class="cart_handler"><div class="cart_handler_header"><span class="cart_handler_left">共<span class="cart_price">'+goodsnum+'</span>件商品</span><span class="cart_handler_right">￥'+totalmoney+'</span></div><div style="width:260px;"><a href="javascript:topay();" class="cart_go_btn" >去购物车结算</a></div></div></div>');
+					html.push('</ul></div><div class="cart_handler"><div class="cart_handler_header"><span class="cart_handler_left">共<span class="cart_gnum cart_price">'+goodsnum+'</span>件商品</span><span class="cart_handler_right">￥<span id="cart_handler_right_totalmoney">'+totalmoney+'</span></span></div><div style="width:260px;"><a href="javascript:topay();" class="cart_go_btn" >去购物车结算</a></div></div></div>');
 					fn.content = html.join("");
 					quickPop.html(ds.tmpl(popTmpl, fn));
 					fn.init.call(this, fn);
@@ -200,12 +202,20 @@ jQuery(function($){
 	quickLinkCollapsed && quickShell.addClass('quick_links_min');
 	resizeHandler();
 	scrollHandler();
+
 });
+
 function removeCartGoods(obj,goodsId,goodsAttrId){
 	jQuery.post(Think.U('Home/Cart/delCartGoods') ,{goodsId:goodsId,goodsAttrId:goodsAttrId},function(data) {
 		
 		var vd = WST.toJson(data);
 		$(obj).parent().parent().parent().remove();
-		
+		var price = $(obj).attr("price");
+		var cnt = $(obj).attr("cnt");
+		var totalMoney = parseFloat($("#cart_handler_right_totalmoney").html(),10);
+		$("#cart_handler_right_totalmoney").html(parseFloat(totalMoney - price*cnt,10).toFixed(2));
+		var cartNum = parseInt($('.cart_num').html(),10);
+		$('.cart_num').html(cartNum-1);
+		$(".cart_gnum").html(cartNum-1);
 	});	
 }

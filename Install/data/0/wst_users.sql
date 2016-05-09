@@ -38,6 +38,8 @@ CREATE TABLE `wst_users` (
   `createTime` datetime DEFAULT NULL,
   `lastIP` varchar(16) DEFAULT NULL,
   `lastTime` datetime DEFAULT NULL,
+  `userFrom` tinyint(4) DEFAULT '0',
+  `openId` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`userId`),
   KEY `userStatus` (`userStatus`,`userFlag`),
   KEY `loginName` (`loginName`),

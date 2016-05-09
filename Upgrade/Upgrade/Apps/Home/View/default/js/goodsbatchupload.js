@@ -1,37 +1,25 @@
 function uploadAblumInit() {
         var $wrap = $('#uploader'),
-
             // 图片容器
             $queue = $( '.filelist' ),
-                
-
             // 状态栏，包括进度和控制按钮
             $statusBar = $wrap.find( '.statusBar' ),
-
             // 文件总体选择信息。
             $info = $statusBar.find( '.info' ),
-
             // 上传按钮
             $upload = $wrap.find( '.uploadBtn' ),
-
             // 没选择文件之前的内容。
             $placeHolder = $wrap.find( '.placeholder' ),
-
             $progress = $statusBar.find( '.progress' ).hide(),
-
             // 添加的文件数量
             fileCount = 0,
-
             // 添加的文件总大小
             fileSize = 0,
-
             // 优化retina, 在retina下这个值是2
             ratio = window.devicePixelRatio || 1,
-
             // 缩略图大小
             thumbnailWidth = 110 * ratio,
             thumbnailHeight = 110 * ratio,
-
             // 可能有pedding, ready, uploading, confirm, done.
             state = 'pedding',
 
@@ -79,7 +67,6 @@ function uploadAblumInit() {
                 s = null;
                 return r;
             })(),
-
             // WebUploader实例
             uploader;
 
@@ -186,16 +173,6 @@ function uploadAblumInit() {
             return !denied;
         });
 
-        // uploader.on('filesQueued', function() {
-        //     uploader.sort(function( a, b ) {
-        //         if ( a.name < b.name )
-        //           return -1;
-        //         if ( a.name > b.name )
-        //           return 1;
-        //         return 0;
-        //     });
-        // });
-
         // 添加“添加文件”的按钮，
         uploader.addButton({
             id: '#filePicker2',
@@ -257,10 +234,6 @@ function uploadAblumInit() {
                     if( isSupportBase64 ) {
                         img = $('<img src="'+src+'">');
                         $wrap.empty().append( img );
-
-                     
-                     
-                       
                     } else {
                         $.ajax(WST.PUBLIC +'/plugins/webuploader/preview.php', {
                             method: 'POST',
@@ -303,7 +276,15 @@ function uploadAblumInit() {
                     $info.remove();
                     $prgress.css('display', 'block');
                 } else if ( cur === 'complete' ) {
-                    $li.append( '<span class="setdef" style="display:none;">默认</span><span class="setdel" onclick="imglidel(this)" style="display:none;">删除</span>' );
+                    $li.append( '<span class="setdef" style="display:none;">默认</span>' );
+                    var btn = $('<span class="setdel">删除</span>');
+                    $li.append(btn);
+                    btn.on('click',function(){
+                    	imglidel($(this),function(){
+                    		uploader.removeFile(file);
+            				uploader.refresh();
+                    	});
+        			});
                     $('.filelist li').css('border','1px solid rgb(59, 114, 165)');
                 }
 
@@ -346,27 +327,8 @@ function uploadAblumInit() {
                     });
                 } else {
                     $wrap.css( 'filter', 'progid:DXImageTransform.Microsoft.BasicImage(rotation='+ (~~((file.rotation/90)%4 + 4)%4) +')');
-                    // use jquery animate to rotation
-                    // $({
-                    //     rotation: rotation
-                    // }).animate({
-                    //     rotation: file.rotation
-                    // }, {
-                    //     easing: 'linear',
-                    //     step: function( now ) {
-                    //         now = now * Math.PI / 180;
-
-                    //         var cos = Math.cos( now ),
-                    //             sin = Math.sin( now );
-
-                    //         $wrap.css( 'filter', "progid:DXImageTransform.Microsoft.Matrix(M11=" + cos + ",M12=" + (-sin) + ",M21=" + sin + ",M22=" + cos + ",SizingMethod='auto expand')");
-                    //     }
-                    // });
                 }
-
-
             });
-
             $li.appendTo( $queue );
         }
 
@@ -391,8 +353,6 @@ function uploadAblumInit() {
             } );
 
             percent = total ? loaded / total : 0;
-
-
             spans.eq( 0 ).text( Math.round( percent * 100 ) + '%' );
             spans.eq( 1 ).css( 'width', Math.round( percent * 100 ) + '%' );
             updateStatus();
@@ -400,7 +360,6 @@ function uploadAblumInit() {
 
         function updateStatus() {
             var text = '', stats;
-
             if ( state === 'ready' ) {
                 stats = uploader.getStats();
                 text =  (fileCount-stats.successNum) + '张图片未上传，共' +
@@ -438,13 +397,6 @@ function uploadAblumInit() {
             state = val;
 
             switch ( state ) {
-                case 'pedding':
-                    $placeHolder.removeClass( 'element-invisible' );
-                    $queue.hide();
-                    $statusBar.addClass( 'element-invisible' );
-                    uploader.refresh();
-                    break;
-
                 case 'ready':
                     $placeHolder.addClass( 'element-invisible' );
                     $( '#filePicker2' ).removeClass( 'element-invisible');
@@ -486,17 +438,13 @@ function uploadAblumInit() {
                     }
                     break;
             }
-
             updateStatus();
         }
        
         uploader.onUploadSuccess=function(file,response) {
             oRet=response._raw;
             var obj = eval("(" + oRet + ")");
-
-            
             $('#'+file.id).append('<input type="hidden" class="gallery-img" iv="'+obj.Filedata.savepath + obj.Filedata.savethumbname+'" v="' +obj.Filedata.savepath + obj.Filedata.savename+'"/>');
-           
         }
 
         uploader.onUploadProgress = function( file, percentage ) {
@@ -576,7 +524,7 @@ function uploadAblumInit() {
         } );
 
         $info.on( 'click', '.ignore', function() {
-            //alert( 'todo' );
+        	
         } );
 
         $upload.addClass( 'state-' + state );

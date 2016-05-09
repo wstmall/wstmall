@@ -934,7 +934,6 @@ function editShop(){
 	   params.bankId = $('#bankId').val();
 	   params.bankNo = $('#bankNo').val();
 	   params.bankUserName = $('#bankUserName').val();
-	   alert( params.bankUserName );
 	   params.shopAtive = $("input[name='shopAtive']:checked").val();
 	   var relateArea = [0];
 	   var relateCommunity = [0];
