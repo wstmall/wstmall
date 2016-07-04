@@ -129,9 +129,6 @@ $(function() {
 		}
 	}
 	view.bind('scroll', resizeHandler);
-	if($("#wst-mallLicense").attr("data")!='1'){
-		onloadright();
-	}
 });
 
 
@@ -410,6 +407,7 @@ function checkUserLogin(){
 	param.loginName = $.trim($('#loginName').val());
 	param.loginPwd = $.trim($('#loginPwd').val());
 	param.verify = $.trim($('#verify').val());
+	param.rememberPwd = $("#rememberPwd").val();
 	if(param.loginName==""){
 		$("#loginName-tips").html("请输入账户名");
 		return;

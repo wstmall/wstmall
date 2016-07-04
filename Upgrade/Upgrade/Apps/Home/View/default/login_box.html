@@ -2,7 +2,7 @@
 		     <div class="item">		           
 		           <div class="item-ifo">
 		               <span class='label'>账户名：</span>
-		               <input id="loginName" name="loginName" class="text"  tabindex="1" autocomplete="off" placeholder='用户名/手机号/邮箱' type="text"/>
+		               <input id="loginName" name="loginName" class="text"  tabindex="1" value="{$loginName}" autocomplete="off" placeholder='用户名/手机号/邮箱' type="text"/>
 		               <div class="ico name"></div>
 		               <span id="loginName-tips" class="tips"></span>                       
 		           </div>
@@ -27,10 +27,12 @@
 		     </div>
 		     <div class="item" style='height:30px;'>
 		           <div class="item-ifo" style='height:30px;'>
-		                <label style='margin-left:60px;'><a target='_blank' href="{:U('Users/forgetPass')}">忘记密码?</a></label>
-		                <label><a target='_blank' href="{:U('Home/Users/regist')}" >免费注册</a></label>
+		                <input style='margin-left:60px;' class="checkbox" id="rememberPwd" name="rememberPwd" checked="checked" type="checkbox"/>
+		                <label class="mar">记住密码</label>&nbsp;&nbsp;
+		                <label><a target='_blank' href="{:U('Users/forgetPass')}">忘记密码?</a></label>&nbsp;&nbsp;
+		                <label><a target='_blank' href="{:U('Home/Users/regist')}" >免费注册</a></label>&nbsp;&nbsp;
 		                <if condition="$CONF['isOpenQQLogin'] eq 1">
-		                 	<a id="qqAuthorizationUrl" href="https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id={$CONF['qqAppId']}&redirect_uri={:U('Home/Users/qqLoginCallback','',true,true)}" class="qq">
+		                 	<a id="qqAuthorizationUrl" href="https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id={$CONF['qqAppId']}&redirect_uri={$qqBackUrl}" class="qq">
 		                 		<img src="__ROOT__/Apps/Home/View/default/images/qq_logo.png" alt="QQ登录" border="0" height="30">
 		                 	</a>
 		               	</if>

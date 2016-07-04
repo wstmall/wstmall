@@ -1,0 +1,139 @@
+body {
+	background: #F2F0F5;
+	font-size: 14px;
+}
+.orderlist-container {
+	padding-top: 90px;
+}
+.condition-area {
+	text-align: center;
+	background: white;
+    position: fixed;
+    top: 50px;
+    z-index: 999;
+    width: 100%;
+}
+.condition-li {
+	padding: 12px 0px 7px 0px;
+	cursor: pointer;
+	background: #fff;
+}
+.condition-li.condition-active {
+	border-bottom: 1px solid #ED7552;
+	color: #ED7552;
+}
+.orders {
+	margin: 10px 0px;
+	background: #fff;
+}
+.orders-top {
+	border-bottom: 1px solid #F0F0F0;
+	padding: 5px 0px;
+}
+.orders-shopname {
+	color: rgb(76, 73, 73);
+}
+.orders-top-right {
+	text-align: right;
+}
+.orders-status {
+	color: #ED7552;
+}
+.orders-middle {
+	padding: 10px 0px;
+}
+.orders-goods-name {
+	color: black;
+	font-weight: bold;
+}
+.orders-goods-img {
+	width: 100%;
+	max-width: 100px;
+	min-width: 50px;
+}
+.orders-goods-price-area {
+	text-align: right;
+}
+.orders-goods-price {
+	font-weight: bold;
+	display: block;
+	color: black;
+}
+.orders-goods-num {
+	color: black;
+}
+.orders-totalmoney {
+	font-weight: bold;
+}
+.orders-bottom {
+	border-top: 1px solid #F0F0F0;
+	padding: 5px 0px;
+}
+.cancel-order {
+	display: inline-block;
+	color: #ed7552;
+    cursor: pointer;
+    margin-right: 15px;
+}
+.loading-icon {
+	padding-top: 95px;
+    text-align: center;
+}
+
+/* 订单投诉 */
+.complains-container {
+	padding-top: 25px;
+}
+.com-orderinfo {
+	border-color: #0e90d2;
+    border-radius: 5px;
+    color: #0e90d2;
+    background: none;
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+.complains-hidden {
+	margin-top: 10px;
+}
+.complains-goods-img {
+	float: left;
+	width: 60px;
+	height: 60px;
+	margin: 3px 5px;
+}
+.order-icon-minus {
+	display: none;
+}
+.complains-img-area {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+.complains-annex {
+	float: left;
+	margin-top: 10px;
+}
+.complains-img {
+	float: left;
+	width: 60px;
+	height: 60px;
+	margin: 3px 5px;
+}
+.del-cover-icon {
+	color: #dd514c;
+    font-size: 17px;
+    left: -12px;
+    position: relative;
+    top: -12px;
+}
+.com-td-left {
+	width: 80px;
+}
+.comlist {
+	color: black;
+}
+.com-status {
+	color: #ed7552;
+}
+.com-time {
+	font-size: 1.2rem;
+}

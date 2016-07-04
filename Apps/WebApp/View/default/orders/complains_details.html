@@ -1,0 +1,102 @@
+<script type="text/x-handlebars-template" id="complainDetails">
+  <header data-am-widget="header" class="am-header am-header-default am-header-fixed wst-inner-page-nav">
+    <div class="am-header-left am-header-nav">
+      <a href="#"><i class="am-icon-angle-left am-icon-sm"></i></a>
+    </div>
+    <h1 class="am-header-title" style="margin:0 10%;">投诉详情</h1>
+  </header> 
+  <div class="details-container">
+    <div class="am-panel am-panel-default">
+      <div class="am-panel-hd">
+        <h4 class="am-panel-title">投诉信息</h4>
+      </div>
+      <table class="am-table am-table-bordered am-table-compact am-table-hover">
+        <tbody>
+          <tr>
+            <td class="com-td-left">订单编号：</td>
+            <td>{{info.orderNo}}</td>
+          </tr>
+          <tr>
+            <td class="com-td-left">投诉类型：</td>
+            <td>
+              {{#compare info.complainType 1}} 承诺的没有做到 {{/compare}}
+              {{#compare info.complainType 2}} 未按约定时间发货 {{/compare}}
+              {{#compare info.complainType 3}} 未按成交价格进行交易 {{/compare}}
+              {{#compare info.complainType 4}} 恶意骚扰 {{/compare}}
+            </td>
+          </tr>
+          <tr>
+            <td class="com-td-left">投诉内容：</td>
+            <td>{{info.complainContent}}</td>
+          </tr>
+          <tr>
+            <td class="com-td-left">附件：</td>
+            <td>{{#list info.complainAnnex}}{{/list}}</td>
+          </tr>
+          <tr>
+            <td class="com-td-left">投诉时间：</td>
+            <td>{{info.complainTime}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    {{#compare info.needRespond 1}}
+    <div class="am-panel am-panel-default">
+      <div class="am-panel-hd">
+        <h4 class="am-panel-title">应诉信息</h4>
+      </div>
+      <table class="am-table am-table-bordered am-table-compact am-table-hover">
+        <tbody>
+          <tr>
+            <td class="com-td-left">应诉内容：</td>
+            <td>{{info.respondContent}}</td>
+          </tr>
+          <tr>
+            <td class="com-td-left">附件：</td>
+            <td>{{#list info.respondAnnex}}{{/list}}</td>
+          </tr>
+          <tr>
+            <td class="com-td-left">应诉时间：</td>
+            <td>{{info.respondTime}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    {{/compare}}
+    <div class="am-panel am-panel-default">
+      <div class="am-panel-hd">
+        <h4 class="am-panel-title">仲裁信息【{{#compare info.complainStatus 0}}
+                等待处理
+              {{/compare}}
+              {{#compare info.complainStatus 1}}
+                等待被投诉方回应
+              {{/compare}}
+              {{#compare info.complainStatus 2}}
+                等待仲裁
+              {{/compare}}
+              {{#compare info.complainStatus 3}}
+                等待仲裁
+              {{/compare}}
+              {{#compare info.complainStatus 4}}
+                已仲裁
+              {{/compare}}】</h4>
+      </div>
+      <table class="am-table am-table-bordered am-table-compact am-table-hover">
+        <tbody>
+          {{#compare info.complainStatus 4}}
+          <tr>
+            <td class="com-td-left">仲裁结果：</td>
+            <td>
+              {{info.finalResult}}
+            </td>
+          </tr>
+          <tr>
+            <td class="com-td-left">仲裁时间：</td>
+            <td>{{info.finalResultTime}}</td>
+          </tr>
+          {{/compare}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</script>

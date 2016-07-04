@@ -1,0 +1,85 @@
+<!doctype html>
+<html class="no-js">
+<head>
+  <include file="./Apps/WebApp/View/default/common_meta.html" />
+  <title>商品列表 - {$CONF['mallTitle']}</title>
+  <link rel="stylesheet" href="__ROOT__/Apps/WebApp/View/default/AmazeUI/assets/css/amazeui.min.css">
+  <link rel="stylesheet" href="__ROOT__/Apps/WebApp/View/default/css/common.css?v={$WST_V}">
+  <link rel="stylesheet" href="__ROOT__/Apps/WebApp/View/default/css/wst_page_common.css?v={$WST_V}">
+  <link rel="stylesheet" href="__ROOT__/Apps/WebApp/View/default/css/goods_list.css?v={$WST_V}">
+</head>
+<body>
+  <div class="wst-page wst-page1" id="wst-page1">
+
+    <include file="./Apps/WebApp/View/default/common_header.html" />
+
+    <input type="hidden" name="" value="{$goodsCatId1}" id="goodsCatId1" autocomplete="off">
+    <input type="hidden" name="" value="{$goodsCatId2}" id="goodsCatId2" autocomplete="off">
+    <input type="hidden" name="" value="{$goodsCatId3}" id="goodsCatId3" autocomplete="off">
+    <input type="hidden" name="" value="{$searchKey}" id="searchKey" autocomplete="off">
+    <input type="hidden" name="" value="{$brandId}" id="brandId" autocomplete="off">
+    <input type="hidden" name="" value="10" id="pageSize" autocomplete="off">
+    <input type="hidden" name="" value="0" id="currPage" autocomplete="off">
+    <input type="hidden" name="" value="" id="totalPage" autocomplete="off">
+    <input type="hidden" name="" value="0" id="goodsOrderby" autocomplete="off">
+    <input type="hidden" name="" value="0" id="goodsOrder" autocomplete="off">
+
+    <div class="am-g goods-filter-area" id="goods-filter-area">
+      <div class="am-u-sm-4 goods-filter active" status="down" onclick="javascript:orderCondition(this,0);">
+        <img src="__ROOT__/Apps/WebApp/View/default/images/1_03.png" class="left-icon active-icon">
+        <img src="__ROOT__/Apps/WebApp/View/default/images/3_09.png" class="left-icon noactive-icon" style="display:none;"> 
+        价格 
+        <img src="__ROOT__/Apps/WebApp/View/default/images/4_09.png" class="right-icon noactive-icon"style="display:none;"> 
+        <img src="__ROOT__/Apps/WebApp/View/default/images/2_03.png" class="right-icon active-icon arrow-down">
+        <img src="__ROOT__/Apps/WebApp/View/default/images/arrow-up.png" class="right-icon active-icon arrow-up" style="display:none;"> 
+      </div>
+      <div class="am-u-sm-4 goods-filter" status="down" onclick="javascript:orderCondition(this,1);">
+        <img src="__ROOT__/Apps/WebApp/View/default/images/1_03.png" class="left-icon active-icon" style="display:none;">
+        <img src="__ROOT__/Apps/WebApp/View/default/images/3_09.png" class="left-icon noactive-icon"> 
+        购买人数 
+        <img src="__ROOT__/Apps/WebApp/View/default/images/4_09.png" class="right-icon noactive-icon">
+        <img src="__ROOT__/Apps/WebApp/View/default/images/2_03.png" class="right-icon active-icon arrow-down" style="display:none;">
+        <img src="__ROOT__/Apps/WebApp/View/default/images/arrow-up.png" class="right-icon active-icon arrow-up" style="display:none;">  
+      </div>
+      <div class="am-u-sm-4 goods-filter" status="down" onclick="javascript:orderCondition(this,2);">
+        <img src="__ROOT__/Apps/WebApp/View/default/images/1_03.png" class="left-icon active-icon" style="display:none;">
+        <img src="__ROOT__/Apps/WebApp/View/default/images/3_09.png" class="left-icon noactive-icon"> 
+        好评度 
+        <img src="__ROOT__/Apps/WebApp/View/default/images/4_09.png" class="right-icon noactive-icon">
+        <img src="__ROOT__/Apps/WebApp/View/default/images/2_03.png" class="right-icon active-icon arrow-down" style="display:none;">
+        <img src="__ROOT__/Apps/WebApp/View/default/images/arrow-up.png" class="right-icon active-icon arrow-up" style="display:none;">   
+      </div>
+    </div>
+    <div class="goods-list" id="goods-list"></div>
+    <div id="loading-icon" class="loading-icon" style="display:none;"><span class="am-icon-spinner am-icon-spin"></span></div>
+  </div>
+  <div class="wst-page wst-page2" id="wst-page2" style="display:none;"></div>
+
+  <div class="am-modal am-modal-loading am-modal-no-btn" tabindex="-1" id="wst-default-loading">
+    <div class="am-modal-dialog">
+      <div class="am-modal-hd" id="loadingTips">Loading...</div>
+      <div class="am-modal-bd">
+        <span class="am-icon-spinner am-icon-spin"></span>
+      </div>
+    </div>
+  </div>
+  <div class="am-modal am-modal-confirm" tabindex="-1" id="wst-confirm">
+    <div class="am-modal-dialog">
+      <div class="am-modal-hd" id="confirmMsg"></div>
+      <div class="am-modal-footer">
+        <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+        <span class="am-modal-btn" data-am-modal-confirm>确定</span>
+      </div>
+    </div>
+  </div>
+
+  <include file="./Apps/WebApp/View/default/common_footer.html" />
+  <include file="./Apps/WebApp/View/default/citys.html" /><!-- 城市列表页模板 --> 
+  <include file="./Apps/WebApp/View/default/common_js.html" /> 
+
+  <script src="__ROOT__/Apps/WebApp/View/default/AmazeUI/assets/js/handlebars.min.js"></script>
+  <script src="__ROOT__/Apps/WebApp/View/default/AmazeUI/assets/js/amazeui.widgets.helper.min.js"></script>
+  <script src="__ROOT__/Apps/WebApp/View/default/js/wst_page_common.js?v={$WST_V}"></script>
+  <script src="__ROOT__/Apps/WebApp/View/default/js/goods_list.js?v={$WST_V}"></script>
+</body>
+</html>

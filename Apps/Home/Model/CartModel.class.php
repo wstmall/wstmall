@@ -92,7 +92,7 @@ class CartModel extends BaseModel {
 					shop.deliveryFreeMoney,shop.deliveryMoney ,g.goodsSn,shop.serviceStartTime,shop.serviceEndTime
 					FROM __PREFIX__goods g, __PREFIX__shops shop
 					WHERE g.goodsId = $goodsId AND g.shopId = shop.shopId AND g.goodsFlag = 1 and g.isSale=1 and g.goodsStatus=1 ";
-			$goods = self::queryRow($sql);
+			$goods = $this->queryRow($sql);
 		    //如果商品有价格属性的话则获取其价格属性
 		    if(!empty($goods) && $goods['attrCatId']>0){
 		    	

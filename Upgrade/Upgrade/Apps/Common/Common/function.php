@@ -478,3 +478,54 @@ function WSTGetFirstCharter($str){
 	if($asc>=-11055 && $asc<=-10247) return 'Z';
 	return null;
 }
+
+/**
+ * 下载网络文件到本地服务器
+ * @param unknown $url
+ * @param unknown $folde
+ */
+function WSTDownFile($url,$folde='./Upload/image/'){
+	set_time_limit (24 * 60 * 60);
+	$newfname = $folde . basename($url);
+	$file = fopen ($url, "rb");
+	if ($file) {
+		$newf = fopen ($newfname, "wb");
+		if ($newf){
+			while(!feof($file)) {
+				fwrite($newf, fread($file, 1024 * 8 ), 1024 * 8 );
+			}
+		}
+	}
+	if ($file) {
+		fclose($file);
+	}
+	if ($newf) {
+		fclose($newf);
+	}
+}
+
+/**
+ * 自动登录
+ */
+function WSTAutoByCookie(){
+	$USER = session('WST_USER');
+	if(empty($USER))D('Home/Users')->autoLoginByCookie();
+}
+
+/**
+ * 根据IP获取城市
+ */
+function WSTIPAddress(){
+	$url = 'http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=json&ip='.get_client_ip(); 
+    $ch = curl_init($url); 
+    curl_setopt($ch, CURLOPT_ENCODING ,'utf8'); 
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10); 
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $location = curl_exec($ch); 
+    curl_close($ch);
+    if($location){
+    	$location = json_decode($location);
+    	return array('province'=>$location->province,'city'=>$location->city,'district'=>$location->district);
+    }
+    return array();
+}

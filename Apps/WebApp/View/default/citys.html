@@ -1,0 +1,19 @@
+<script type="text/x-handlebars-template" id="citys">
+    
+  <header data-am-widget="header" class="am-header am-header-default am-header-fixed wst-inner-page-nav">
+    <div class="am-header-left am-header-nav">
+      <a href="#" class="" id=""><i class="am-icon-angle-left am-icon-sm"></i></a>
+    </div>
+    <h1 class="am-header-title" style="margin:0 10%;">选择城市</h1>
+  </header>
+  <div class="wst-page-container">
+    <ul class="am-list">
+      {{#each citys}}
+        <li>
+          <a href="javascript:void(0);" class="am-text-truncate wst-city" onclick="javascript:setCity({{areaId}},'{{areaName}}');">{{areaName}}
+          </a>
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+</script>

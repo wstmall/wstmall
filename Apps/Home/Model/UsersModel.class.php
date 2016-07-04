@@ -110,18 +110,69 @@ class UsersModel extends BaseModel {
 				$data["loginTime"] = date('Y-m-d H:i:s');
 				$data["loginIp"] = get_client_ip();
 				M('log_user_logins')->add($data);
-			}
-			$rv = $rs;
-			setcookie("loginName", $loginName, time()+3600*24*60);
-			if($rememberPwd == "on"){			
-				setcookie("loginPwd", $userPwd, time()+3600*24*60);
-			}else{		
-				setcookie("loginPwd", "", time()-3600);
+				
+			    $rv = $rs;
+				//记住密码
+				setcookie("loginName", $loginName, time()+3600*24*90);
+				if($rememberPwd == "on"){
+					$datakey = md5($rs['loginName'])."_".md5($rs['loginPwd']);
+					$key = C('COOKIE_PREFIX')."_".$rs['loginSecret'];
+					//加密
+					$base64 = new \Think\Crypt\Driver\Base64();
+					$loginKey = $base64->encrypt($datakey, $key);		
+					setcookie("loginPwd", $loginKey, time()+3600*24*90);
+				}else{		
+					setcookie("loginPwd", null);
+				}
 			}
 		}
 		return $rv;
 	}
 	
+	/**
+	 * 根据cookie自动登录
+	 */
+	public function autoLoginByCookie(){
+		$loginName = WSTAddslashes($_COOKIE['loginName']);
+		$loginKey = $_COOKIE['loginPwd'];
+		if($loginKey!='' && $loginName!=''){
+			$sql ="SELECT * FROM __PREFIX__users WHERE (loginName='".$loginName."' OR userEmail='".$loginName."' OR userPhone='".$loginName."') AND userFlag=1 and userStatus=1 ";
+		    $rs = $this->queryRow($sql);
+		    if(!empty($rs) && $rs['userFlag'] == 1 && $rs['userStatus']==1){
+		    	//用数据库的记录记性加密核对
+			    $datakey = md5($rs['loginName'])."_".md5($rs['loginPwd']);
+				$key = C('COOKIE_PREFIX')."_".$rs['loginSecret'];
+					
+				$base64 = new \Think\Crypt\Driver\Base64();
+				$compareKey = $base64->encrypt($datakey, $key);
+				//验证成功的话则补上登录信息
+				if($compareKey==$loginKey){
+					$data = array();
+				    $data['lastTime'] = date('Y-m-d H:i:s');
+				    $data['lastIP'] = get_client_ip();
+				    $m = M('users');
+		    	    $m->where(" userId=".$rs['userId'])->data($data)->save();
+		    	    //如果是店铺则加载店铺信息
+		    	    if($rs['userType']>=1){
+		    		     $s = M('shops');
+			 		     $shops = $s->where('userId='.$rs['userId']." and shopFlag=1")->find();
+			 		     $shops["serviceEndTime"] = str_replace('.5',':30',$shops["serviceEndTime"]);
+		                 $shops["serviceEndTime"] = str_replace('.0',':00',$shops["serviceEndTime"]);
+		                 $shops["serviceStartTime"] = str_replace('.5',':30',$shops["serviceStartTime"]);
+		                 $shops["serviceStartTime"] = str_replace('.0',':00',$shops["serviceStartTime"]);
+			 		     $rs = array_merge($shops,$rs);
+		    	    }
+		    	    //记录登录日志
+				    $data = array();
+				    $data["userId"] = $rs['userId'];
+				    $data["loginTime"] = date('Y-m-d H:i:s');
+				    $data["loginIp"] = get_client_ip();
+				    M('log_user_logins')->add($data);
+				    session('WST_USER',$rs);
+				}
+			}
+		}
+	}
 	 
 	/**
 	 * 会员注册
@@ -377,6 +428,7 @@ class UsersModel extends BaseModel {
 	    $data['userType'] = 0;
 	    $data['userName'] = WSTAddslashes($obj["userName"]);
 	    $data['userQQ'] = "";
+	    $data['userPhoto'] = $obj["userPhoto"];
 	    $data['createTime'] = date('Y-m-d H:i:s');
 	    $data['userFlag'] = 1;
 	    $data['userFrom'] = $obj["userFrom"];

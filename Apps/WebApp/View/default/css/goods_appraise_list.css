@@ -1,0 +1,48 @@
+.appraise-filter-area {
+	text-align: center;
+	position: fixed;
+	background: white;
+	z-index: 999;
+	top: 50px;
+	font-size: 1.5rem;
+	border-bottom: 1px solid #F2F0F5;
+}
+.appraise-filter {
+	margin-top: 5px;
+	cursor: pointer;
+}
+.appraise-filter.active {
+	border-bottom: 3px solid #FFA229;
+	color: #FF9F2A;
+}
+.appraise-list {
+	border-top: 6px solid #F2F0F5;
+	padding-top: 100px;
+}
+.count {
+	display: block;
+	font-size: 1.2rem;
+}
+.single-appraise {
+	padding: 10px 0px;
+}
+.single-appraise:nth-child(n+2) {
+	border-top: 1px solid #F2F0F5;
+}
+.appraise-datetime {
+	font-size: 1.3rem;
+	text-align: right;
+}
+.score {
+	font-size: 1.2rem;
+	display: block;
+}
+.star {
+	width: 15px;
+}
+.appraises-content {
+	font-size: 1.4rem;
+}
+.score-area {
+	margin: 5px 0px;
+}

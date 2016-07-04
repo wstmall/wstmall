@@ -15,7 +15,8 @@ class OrderSettlementsModel extends BaseModel {
 	public function querySettlementsByPage(){
 		$settlementNo = WSTAddslashes(I('settlementNo',-1));
 		$isFinish = (int)I('isFinish');
-		$sql = "select * from __PREFIX__order_settlements where 1=1 ";
+		$shopId = (int)session('WST_USER.shopId');
+		$sql = "select * from __PREFIX__order_settlements where shopId=".$shopId;
 		if($settlementNo!='')$sql.=" and  settlementNo like '%".$settlementNo."%'";
 		if($isFinish>-1)$sql.=" and isFinish=".$isFinish;
 		$sql.=" order by settlementId desc";

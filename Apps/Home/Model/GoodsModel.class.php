@@ -89,7 +89,7 @@ class GoodsModel extends BaseModel {
 		}
 	   	$where .= " group by goodsId  ";
 	   	//排序-暂时没有按好评度排
-	   	$orderFile = array('1'=>'saleCount','6'=>'saleCount','7'=>'saleCount','8'=>'shopPrice','9'=>'(totalScore/totalUsers)','10'=>'saleTime',''=>'saleTime');
+	   	$orderFile = array('1'=>'saleCount','6'=>'saleCount','7'=>'saleCount','8'=>'shopPrice','9'=>'(totalScore/totalUsers)','10'=>'saleTime',''=>'saleTime','12'=>'saleCount');
 	   	$orderSort = array('0'=>'ASC','1'=>'DESC');
 		$where .= " ORDER BY ".$orderFile[$mark]." ".$orderSort[$msort].",g.goodsId ";
 
@@ -766,6 +766,9 @@ class GoodsModel extends BaseModel {
 			$hotgoods = $this->query($sql);
 			S("WST_CACHE_HOT_GOODS_".$shopId,$hotgoods,86400);
 		}
+		for($i=0;$i<count($hotgoods);$i++){
+			$hotgoods[$i]["goodsName"] = WSTMSubstr($hotgoods[$i]["goodsName"],0,25);
+		}
 		return  $hotgoods;
 	}
 	
@@ -966,6 +969,9 @@ class GoodsModel extends BaseModel {
 				ORDER BY FIELD(g.goodsId,$goodIds) limit 10";
 	
 		$goods = $m->query($sql);
+		for($i=0;$i<count($goods);$i++){
+			$goods[$i]["goodsName"] = WSTMSubstr($goods[$i]["goodsName"],0,25);
+		}
 		return  $goods;
 	
 	}

@@ -1,5 +1,6 @@
 var params_brands = {};
 $(function() {
+	loading = true;
 	getBrands();
 });
 

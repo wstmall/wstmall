@@ -1,0 +1,92 @@
+.goods-filter-area {
+	text-align: center;
+	height: 40px;
+	position: fixed;
+	background: white;
+	z-index: 999;
+	top: 50px;
+	font-size: 1.4rem;
+}
+.goods-filter {
+	height: 35px;
+	margin-top: 5px;
+	cursor: pointer;
+}
+.goods-filter.active {
+	border-bottom: 3px solid #FFA229;
+	border-radius: 2px;
+	color: #FF9F2A;
+}
+.goods-list {
+	border-top: 6px solid #F2F0F5;
+	padding-top: 90px;
+}
+.goods {
+	padding: 10px 0px;
+}
+.wst-goodsimage {
+	height: 85px;
+}
+.wst-goodsname {
+	margin-bottom: 0px;
+	font-size: 1em;
+	color: black;
+	font-size: 1.5rem;
+	display: block;
+	height: 25px;
+	overflow: hidden;
+  	text-overflow: ellipsis;
+  	-o-text-overflow: ellipsis;
+  	white-space: nowrap;
+}
+.goods-star {
+	height: 15px;
+	margin: 3px 0px;
+}
+.wst-price-area {
+	display: block;
+	color: #EF641F;
+	font-size: 0.85em;
+	margin-top:-8px;
+}
+.wst-price {
+	position: relative;
+	font-size: 2rem;
+}
+.deliveryStartMoney {
+	display: block;
+	margin-top: -5px;
+	color: #bababa;
+}
+.goodsname-bottom {
+	color: #BABABA;
+	font-size: 0.85em;
+}
+.alignright {
+	text-align: right;
+}
+.goods:nth-child(n+2) {
+	border-top: 2px solid #F1F1F3;
+}
+.wst-goodsimage-area {
+	text-align: center;
+	overflow: hidden;
+	padding: 0px 5px;
+}
+.left-icon {
+	width: 10px;
+}
+.right-icon {
+	width: 12px;
+}
+.goodlist-cart {
+	width: 40px;
+	cursor: pointer;
+}
+.userDistance {
+	display: block;
+	margin-top: 3px;
+}
+.loading-icon {
+    text-align: center;
+}

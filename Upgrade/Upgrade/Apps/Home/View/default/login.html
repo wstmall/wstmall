@@ -30,7 +30,7 @@
 		                <div class="item fore2">
 		                    <span>密码</span>
 		                    <div class="item-ifo">                       
-		                        <input id="loginPwd" name="loginPwd" value="{$loginPwd}" class="text" tabindex="2" autocomplete="off" type="password"/>                      
+		                        <input id="loginPwd" name="loginPwd" class="text" tabindex="2" autocomplete="off" type="password"/>                      
 		                        <div class="i-pass ico"></div>            
 		                    </div>
 		                </div>
@@ -54,7 +54,7 @@
 		                        <div style="min-height:10px;">
 		                        <if condition="$CONF['isOpenQQLogin'] eq 1 or $CONF['isOpenWxLogin'] eq 1"><label>第三方登录&nbsp;</label></if>
 		                        <if condition="$CONF['isOpenQQLogin'] eq 1">
-		                        <a id="qqAuthorizationUrl" href="https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id={$CONF['qqAppId']}&redirect_uri={:U('Home/Users/qqLoginCallback','',true,true)}" class="qq">
+		                        <a id="qqAuthorizationUrl" href="https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id={$CONF['qqAppId']}&redirect_uri={$qqBackUrl}" class="qq">
 		                        	<img src="__ROOT__/Apps/Home/View/default/images/qq_logo.png" alt="QQ登录" border="0" height="35">
 		                        </a>
 		                        </if>

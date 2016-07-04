@@ -1,0 +1,90 @@
+<script type="text/x-handlebars-template" id="editaddress">
+    
+  <header data-am-widget="header" class="am-header am-header-default am-header-fixed" style="background-color:#F36C2C;">
+    <div class="am-header-left am-header-nav">
+      <a href="#" class="" id=""><i class="am-icon-angle-left am-icon-sm"></i></a>
+    </div>
+    <h2 class="am-header-title" id="addressTitle" style="margin:0 10%;">新增收货地址</h2>
+  </header>
+  
+  <div class="am-g am-g-collapse address-edit-container">
+    <form class="am-form am-form-horizontal">
+      <div class="am-form-group">
+        <div class="am-u-sm-3 wst-item-title">收货人</div>
+        <div class="am-u-sm-9">
+          <input type="text" id="username" value="{{userName}}">
+        </div>
+      </div>
+
+      <div class="am-form-group">
+        <div class="am-u-sm-3 wst-item-title">手机号码</div>
+        <div class="am-u-sm-9">
+          <input type="text" id="cellphone" onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" value="{{userPhone}}" name="cellphone" maxlength="11">
+        </div>
+      </div>
+
+      <div class="am-form-group">
+        <div class="am-u-sm-3 wst-item-title">固定电话</div>
+        <div class="am-u-sm-9">
+          <input type="text" id="phone" onkeyup="javascript:WST.isChinese(this,1)" value="{{userTel}}" name="phone">
+        </div>
+      </div>
+
+      <div class="am-form-group">
+        <div class="am-u-sm-3 wst-item-title">省份</div>
+        <div class="am-u-sm-9">
+          <select data-am-selected="{maxHeight: 100}" id="areaId" onchange="javascript:getCitysByProvince(this.value);">
+            <option value="">请选择</option>
+              {{#each provinceList}}
+                <option value="{{areaId}}">{{areaName}}</option>
+              {{/each}}
+          </select>
+        </div>
+      </div>
+
+      <div class="am-form-group">
+        <div class="am-u-sm-3 wst-item-title">城市</div>
+        <div class="am-u-sm-9">
+          <select data-am-selected="{maxHeight: 50}" id="areaId2" onchange="javascript:getDistricts(this.value);">
+            <option value="">请选择</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="am-form-group">
+        <div class="am-u-sm-3 wst-item-title">区县</div>
+        <div class="am-u-sm-9">
+          <select data-am-selected="{maxHeight: 50}" id="areaId3" onchange="javascript:getCommunity(this.value);">
+            <option value="">请选择</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="am-form-group">
+        <div class="am-u-sm-3 wst-item-title">社区</div>
+        <div class="am-u-sm-9">
+          <select data-am-selected="{maxHeight: 50}" id="areaId4">
+            <option value="">请选择</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="am-form-group">
+        <div class="am-u-sm-3 wst-item-title">详细地址</div>
+        <div class="am-u-sm-9">
+          <input type="text" id="address" value="{{address}}">
+        </div>
+      </div>
+
+    </form>
+  </div>
+  <div class="am-g am-g-collapse save-area">
+    <div class="am-u-sm-9 default-address-area">
+      <i class="{{transformDefaultAddress isDefault}} isdefault" onclick="javascript:setToDefault(this)"></i>
+      <span class="default-address">默认地址</span>
+    </div>
+    <div class="am-u-sm-3"><button type="button" class="am-btn save-address" id="save-address" onclick="javascript:saveAddress({{addressId}});">保存</button></div>
+
+  </div>
+
+</script>

@@ -3,12 +3,14 @@
 	<volist name="goodslist" key="k" id="vo">
 		<div class="hotsale-goods-box">
 			<div class="hotsale-goods-img">
-				<img class='lazyImg2' data-original="__ROOT__/{$vo['goodsThums']}" width="65" height="65" />
+				<img class='lazyImg2' data-original="__ROOT__/{$vo['goodsThums']}" width="68" height="68" />
 			</div>
 			<div class="hotsale-goods-title">
 				<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo['goodsId']))}">{$vo['goodsName']}</a>
 				<div><span class="span1">￥{$vo['shopPrice']}</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="span2">￥{$vo['marketPrice']}</span></div>
+				已售出<span class="span1"> {$vo['totalnum']} </span>件
 			</div>
+			
 			<div class="wst-clear"></div>
 		</div>
 	</volist>

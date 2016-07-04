@@ -1,0 +1,76 @@
+body {
+	background: #F2F0F5;
+	font-size: 14px;
+}
+.orderlist-container {
+	padding-top: 40px;
+}
+.condition-area {
+	text-align: center;
+	background: white;
+    position: fixed;
+    top: 50px;
+    z-index: 999;
+    width: 100%;
+}
+.condition-li {
+	padding: 12px 0px 7px 0px;
+	cursor: pointer;
+	background: #fff;
+}
+.condition-li.condition-active {
+	border-bottom: 1px solid #ED7552;
+	color: #ED7552;
+}
+.orders {
+	margin: 10px 0px;
+	background: #fff;
+}
+.orders-top {
+	border-bottom: 1px solid #F0F0F0;
+	padding: 5px 0px;
+}
+.orders-shopname {
+	color: rgb(76, 73, 73);
+}
+.orders-top-right {
+	text-align: right;
+}
+.orders-status {
+	color: #ED7552;
+}
+.orders-middle {
+	padding: 10px 0px;
+}
+.orders-goods-name {
+	color: black;
+	font-weight: bold;
+}
+.orders-goods-img {
+	width: 100%;
+	max-width: 100px;
+	min-width: 50px;
+}
+.orders-goods-price-area {
+	text-align: right;
+}
+.orders-goods-price {
+	color: black;
+	font-weight: bold;
+	display: block;
+}
+.orders-goods-num {
+	color: black;
+}
+.orders-totalmoney {
+	font-weight: bold;
+}
+.orders-bottom {
+	border-top: 1px solid #F0F0F0;
+	padding: 5px 0px;
+}
+.cancel-order {
+	display: inline-block;
+	color: #ed7552;
+    cursor: pointer;
+}

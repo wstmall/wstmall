@@ -15,10 +15,10 @@ CREATE TABLE `wst_navs` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
-INSERT INTO `wst_navs` VALUES ('1', '0', '0', '0', '品牌街', 'index.php/Home/Brands/index.html', '1', '0', '2', '2015-07-12 20:08:22'),
+INSERT INTO `wst_navs` VALUES ('1', '0', '0', '0', '品牌街', 'index.php?m=Home&c=Brands&a=index', '1', '0', '2', '2015-07-12 20:08:22'),
 ('2', '0', '0', '0', '首页', 'index.php', '1', '0', '0', '2015-07-12 20:08:36'),
-('3', '0', '0', '0', '店铺街', 'index.php/Home/Shops/toShopStreet.html', '1', '0', '3', '2015-07-12 20:10:00'),
-('4', '0', '0', '0', '自营店铺', 'index.php/Home/Shops/toShopHome.html', '1', '0', '4', '2015-07-12 20:11:21'),
+('3', '0', '0', '0', '店铺街', 'index.php?m=Home&c=Shops&a=toShopStreet', '1', '0', '3', '2015-07-12 20:10:00'),
+('4', '0', '0', '0', '自营店铺', 'index.php?m=Home&c=Shops&a=toShopHome', '1', '0', '4', '2015-07-12 20:11:21'),
 ('5', '1', '0', '0', '关于我们', '#', '1', '0', '0', '2015-07-12 20:25:58'),
 ('7', '1', '0', '0', 'WST百科', '#', '1', '0', '0', '2015-07-12 23:02:39'),
 ('10', '1', '0', '0', '诚征英才', '#', '1', '0', '0', '2015-07-12 23:04:41'),

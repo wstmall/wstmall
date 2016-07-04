@@ -1,0 +1,43 @@
+<script type="text/x-handlebars-template" id="register">
+    
+  <header data-am-widget="header" class="am-header am-header-default am-header-fixed wst-inner-page-nav">
+      <div class="am-header-left am-header-nav">
+        <a href="#" class="" id=""><i class="am-icon-angle-left am-icon-sm"></i></a>
+      </div>
+      <h1 class="am-header-title" style="margin:0 10%;">注册</h1>
+    </header>
+
+    <div class="am-g login-area">
+      <div class="am-u-md-12">
+        <fieldset class="am-form-set">
+          <div class="am-form-group am-form-icon">
+            <i class="am-icon-user wst-login-icon"></i>
+            <input type="text" class="am-form-field wst-username" id="register-username" placeholder="用户名" autocomplete="off" value="" style="border-radius: 5px;height: 40px;">
+          </div>
+
+          <div class="am-form-group am-form-icon">
+            <i class="am-icon-lock wst-login-icon"></i>
+            <input type="password" class="am-form-field wst-password" id="register-password" placeholder="密码" autocomplete="off" value="" style="border-radius: 5px;height: 40px;">
+          </div>
+
+          <div class="am-form-group am-form-icon">
+            <i class="am-icon-lock wst-login-icon"></i>
+            <input type="password" class="am-form-field wst-password" id="register-password2" placeholder="请再输入一次密码" autocomplete="off" value="" style="border-radius: 5px;height: 40px;">
+          </div>
+
+          <div class="am-form">
+            <div class="am-g">
+              <div class="am-u-sm-6">
+                <input type="text" class="am-form-field wst-verifyCode" id="register-verifyCode" name="verifyCode" placeholder="验证码" style="border-radius: 5px;height: 40px;">
+              </div>
+              <div class="am-u-sm-6 verifyImg-area">
+                <img class='register-verifyImg verifyImg' id="register-verifyImg" src='__ROOT__/Apps/WebApp/View/default/images/clickForVerify.png' title='刷新验证码' onclick="javascript:getVerify('register-verifyImg');"/> 
+              </div>
+            </div>
+          </div>
+        </fieldset>
+        <button type="button" class="am-btn am-btn-block wst-login-button" id="wst-register" onclick="javascript:registerCheck();">注册</button>
+      </div>
+    </div>
+
+</script>

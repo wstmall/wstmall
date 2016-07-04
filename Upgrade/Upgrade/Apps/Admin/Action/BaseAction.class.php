@@ -32,7 +32,13 @@ class BaseAction extends Controller {
 		        'subName'       =>  array('date', 'Y-m'),
 		        'savePath'      =>  I('dir','uploads')."/"
 		);
-	 
+	 	
+    	$dirs = explode(",",C("WST_UPLOAD_DIR"));
+	   	if(!in_array(I('dir','uploads'), $dirs)){
+	   		echo '非法文件目录！';
+	   		return false;
+	   	}
+	   
 		$upload = new \Think\Upload($config);
 		$rs = $upload->upload($_FILES);
 		$Filedata = key($_FILES);

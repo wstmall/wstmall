@@ -48,6 +48,7 @@ class ShopsAction extends BaseAction {
 			$obj = array();
 			$obj["shopId"] = $shopId;
 			$shopScores = $mshops->getShopScores($obj);
+		
 			$this->assign("shopScores",$shopScores);
 			
 			$m = D('Home/Favorites');

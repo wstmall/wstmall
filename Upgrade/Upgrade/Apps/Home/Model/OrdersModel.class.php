@@ -844,7 +844,7 @@ class OrdersModel extends BaseModel {
         	$rs = $this->execute($sql);
         	
         	//修改积分
-        	if($GLOBALS['CONFIG']['isOrderScore']==1){
+        	if($GLOBALS['CONFIG']['isOrderScore']==1 && $rsv["orderScore"]>0){
 	        	$sql = "UPDATE __PREFIX__users set userScore=userScore+".$rsv["orderScore"].",userTotalScore=userTotalScore+".$rsv["orderScore"]." WHERE userId=".$userId;
 	        	$rs = $this->execute($sql);
 	        	

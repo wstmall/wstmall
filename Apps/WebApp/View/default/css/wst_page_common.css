@@ -1,0 +1,35 @@
+body {
+  width: 100%;
+  overflow-x: hidden;
+  padding: 0;
+  margin: 0;
+}
+.wst-page1 {
+  -webkit-transition: all .3s ease-in-out;
+  transition: all .3s ease-in-out;
+  -webkit-transform: translate(0%,0px);
+  -ms-transform: translate(0%,0px);
+  transform: translate(0%,0px);
+}
+.wst-page2 {
+  -webkit-transition: all .3s ease-in-out;
+  transition:all .3s ease-in-out;
+  -webkit-transform: translate(100%,0);
+  -ms-transform: translate(100%,0);
+  transform: translate(100%,0);
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.ajaxpage-active .wst-page1 {
+  -webkit-transform: translate(-100%,0px);
+  -ms-transform: translate(-100%,0px);
+  transform: translate(-100%,0px);
+}
+.ajaxpage-active .wst-page2 {
+  -webkit-transform: translate(0%,0);
+  -ms-transform: translate(0%,0);
+  transform: translate(0%,0);
+  z-index: 999;
+}

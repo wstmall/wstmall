@@ -15,6 +15,7 @@ class BaseAction extends Controller {
 		//初始化系统信息
 		$m = D('Home/System');
 		$GLOBALS['CONFIG'] = $m->loadConfigs();
+		WSTAutoByCookie();
 		$this->assign("WST_USER",session('WST_USER'));
 		$this->assign("WST_IS_LOGIN",(session('WST_USER.userId')>0)?1:0);
 		$areas= D('Home/Areas');
@@ -122,7 +123,12 @@ class BaseAction extends Controller {
 		        'subName'       =>  array('date', 'Y-m'),
 		        'savePath'      =>  I('dir','uploads')."/"
 		);
-	    $folder = I("folder");
+	   	$dirs = explode(",",C("WST_UPLOAD_DIR"));
+	   	if(!in_array(I('dir','uploads'), $dirs)){
+	   		echo '非法文件目录！';
+	   		return false;
+	   	}
+
 		$upload = new \Think\Upload($config);
 		$rs = $upload->upload($_FILES);
 		$Filedata = key($_FILES);
@@ -144,16 +150,9 @@ class BaseAction extends Controller {
 			$rs[$Filedata]['savepath'] = "Upload/".$rs[$Filedata]['savepath'];
 			$rs[$Filedata]['savethumbname'] = $newsavename;
 			$rs['status'] = 1;
-			if($folder=="Filedata"){
-				$sfilename = I("sfilename");
-				$fname = I("fname");
-				$srcpath = $rs[$Filedata]['savepath'].$rs[$Filedata]['savename'];
-				$thumbpath = $rs[$Filedata]['savepath'].$rs[$Filedata]['savethumbname'];
-				echo "<script>parent.getUploadFilename('$sfilename','$srcpath','$thumbpath','$fname');</script>";
-			}else{
-				echo json_encode($rs);
-			}
 			
+			echo json_encode($rs);
+
 		}	
     }
 	

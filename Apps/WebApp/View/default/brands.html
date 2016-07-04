@@ -1,0 +1,21 @@
+<script type="text/x-handlebars-template" id="brands">
+    
+  <header data-am-widget="header" class="am-header am-header-default am-header-fixed wst-inner-page-nav">
+    <div class="am-header-left am-header-nav">
+    <a href="#" class="" id=""><i class="am-icon-angle-left am-icon-sm"></i></a>
+    </div>
+    <h1 class="am-header-title" style="margin:0 10%;">品牌馆</h1>
+  </header>
+  <div class="wst-page-container">
+    <ul class="am-list am-list-border">
+      {{#each brands}}
+        <li>
+          <a href="javascript:void(0);" onclick="javascript:getGoodsListByBrands({{brandId}});" class="am-text-truncate brands-link">
+            <img src="{{../defaultImg}}" data-echo="{{../rooturl}}/{{brandIco}}" class="brands-img">{{brandName}}
+          </a>
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+
+</script>

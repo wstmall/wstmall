@@ -1,0 +1,167 @@
+body {
+  background: #EDEDED;
+  font-size: 1.6rem;
+  color: #333;
+}
+a {
+  color: #333;
+  font-size: 1.5rem;
+}
+.users-area {
+  padding: 65px 0px 15px 0px;
+}
+.user-photo {
+  width: 65px;
+  border-radius: 1000px;
+}
+.loginname {
+  display: block;
+  margin-top: 10px;
+  font-size: 1.6rem;
+}
+.userscore {
+  display: block;
+  font-size: 1.6rem;
+}
+.user-options {
+  background: #fff;
+  padding: 5px 0px;
+  margin-top: 3px;
+}
+.mine-options {
+  width: 30px;
+  height: 30px;
+  margin-right: 5px;
+  display: inline-block;
+  background-image: url(../images/mine-icon.png);
+  background-repeat: no-repeat;
+}
+.mine-options.option1 {
+  background-position: -7px -8px;
+}
+.mine-options.option2 {
+  background-position: -54px -8px;
+}
+.mine-options.option3 {
+  background-position: -105px -8px;
+}
+.mine-options.option4 {
+  background-position: -156px -8px;
+}
+.mine-options.option5 {
+  background-position: -206px -8px;
+}
+.mine-options.option6 {
+  background-position: -253px -8px;
+}
+.mine-text {
+  position: relative;
+  top: -7px;
+}
+.options-right {
+  text-align: right;
+  margin-top: 4px;
+}
+.logout-area {
+  margin-top: 30px;
+  text-align: center;
+}
+.user-logout {
+  width: 30%;
+  min-width: 100px;
+  border-radius: 5px;
+}
+.user-container {
+  margin-top: 55px;
+}
+
+/* 账号安全 */
+.pwd-confirm {
+  margin-top: 10px;
+  padding: 0px 20px;
+}
+.pwd-confirm button {
+  background: #F3F1E4;
+  border-radius: 5px;
+  color: white;
+}
+.pwd-confirm.active button {
+  background: #F26F27;
+}
+
+.orderstatus-area {
+  background: #fff none repeat scroll 0 0;
+  margin-top: 5px;
+  padding: 10px;
+  text-align: center;
+}
+.order-condition {
+  display: block;
+  font-size: 1.3rem;
+}
+.order-icon {
+  font-size: 25px;
+  color: #949494;
+}
+.order-count {
+  position: relative;
+  left: 15px;
+  top: -5px;
+  font-weight: 500;
+  font-size: 1rem;
+}
+.msgcount {
+  margin-left: 5px;
+}
+.icon-position {
+  position: absolute;
+}
+.condition-count {
+  margin-top: 10px;
+}
+.condition-nocount {
+  margin-top: -6px;
+}
+.pwd-label {
+  font-weight: normal;
+  color: black;
+}
+
+/* 商城消息 */
+.messageslist-container {
+  padding-top: 50px;
+}
+.msg-row {
+  background: #fff none repeat scroll 0 0;
+  margin-top: 1px;
+  padding: 10px 0;
+}
+.envelope-icon {
+  margin-right: 5px;
+  color: #EAEAEA;
+  font-size: 1.3rem;
+}
+.envelope-icon.active {
+  color: #f7b42e;
+}
+.middle-text {
+  text-align: center;
+  padding-left: 0.5rem;
+}
+.circle-icon {
+  font-size: 1.3rem;
+  color: #c9c9c9;
+  cursor: pointer;
+}
+.circle-icon.active {
+  color: rgb(242, 69, 102);
+}
+.msg-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.msg-detail-time {
+  font-size: 1.4rem;
+}

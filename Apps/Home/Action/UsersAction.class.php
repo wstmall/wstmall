@@ -23,7 +23,8 @@ class UsersAction extends BaseAction {
 		}else{
 			$this->assign('loginName','');
 		}
-		$this->assign('wxBackUrl',urlencode(U("Home/Users/wxLoginCallback","",true,true)));
+		$this->assign('qqBackUrl',urlencode(WSTDomain()."/Wstapi/thridLogin/qqlogin.php"));
+		$this->assign('wxBackUrl',urlencode(WSTDomain()."/Wstapi/thridLogin/wxlogin.php"));
 		$this->display('default/login');
 	}
 	
@@ -33,6 +34,7 @@ class UsersAction extends BaseAction {
 	 */
 	public function logout(){
 		session('WST_USER',null);
+		setcookie("loginPwd", null);
 		echo "1";
 	}
 	
@@ -353,6 +355,13 @@ class UsersAction extends BaseAction {
      * 跳去用户登录的页面
      */
     public function toLoginBox(){
+        if(isset($_COOKIE["loginName"])){
+			$this->assign('loginName',$_COOKIE["loginName"]);
+		}else{
+			$this->assign('loginName','');
+		}
+		$this->assign('qqBackUrl',urlencode(WSTDomain()."/Wstapi/thridLogin/qqlogin.php"));
+		$this->assign('wxBackUrl',urlencode(WSTDomain()."/Wstapi/thridLogin/wxlogin.php"));
     	$this->display('default/login_box');
     }
     
@@ -388,7 +397,7 @@ class UsersAction extends BaseAction {
     	$appId = $GLOBALS['CONFIG']["qqAppId"];
     	$appKey = $GLOBALS['CONFIG']["qqAppKey"];
     	//回调接口，接受QQ服务器返回的信息的脚本
-    	$callbackUrl = U("Home/Users/qqLoginCallback","",true,true);
+    	$callbackUrl = WSTDomain()."/Wstapi/thridLogin/qqlogin.php";
     	//实例化qq登陆类，传入上面三个参数
     	$qq = new \QqLogin($appId,$appKey,$callbackUrl);
     	//得到access_token验证值

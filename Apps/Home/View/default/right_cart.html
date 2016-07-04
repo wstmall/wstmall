@@ -22,8 +22,11 @@
 							<if condition="$WST_USER['userId'] gt 0">
 							<div class="avatar_box">
 								<p class="avatar_imgbox">
-									<img
-										src="__ROOT__/Apps/Home/View/default/images/no-img_mid_.jpg" />
+									<?php if($WST_USER['userPhoto']!=''){ ?>
+									<img src="__ROOT__/{$WST_USER['userPhoto']}" />
+									<?php }else{ ?>
+									<img src="__ROOT__/Apps/Home/View/default/images/no-img_mid_.jpg" />
+									<?php } ?>
 								</p>
 								<if condition="$WST_USER['userId'] gt 0">
 								<ul class="user_info">

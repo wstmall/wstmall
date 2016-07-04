@@ -130,8 +130,8 @@ function uploadAblumInit() {
             },
             formData: {
                 dir: "goods",
-            	width:152,
-            	height:152
+            	width:300,
+            	height:300
             },
           
             paste: '#uploader',

@@ -1,0 +1,134 @@
+<script type="text/x-handlebars-template" id="orderDetails">
+
+  <header data-am-widget="header" class="am-header am-header-default am-header-fixed wst-inner-page-nav">
+    <div class="am-header-left am-header-nav">
+      <a href="#"><i class="am-icon-angle-left am-icon-sm"></i></a>
+    </div>
+    <h1 class="am-header-title" style="margin:0 10%;">订单详情</h1>
+  </header> 
+  <div class="details-container">
+    <div class="am-panel am-panel-default">
+      <div class="am-panel-hd">
+        <h4 class="am-panel-title">日志信息：</h4>
+      </div>
+      <table class="am-table am-table-bordered am-table-compact am-table-hover">
+        <tbody>
+        {{#each info.logs}}
+        <tr>
+          <td class="record am-text-middle">{{logTime}}</td>
+          <td>{{logContent}}</td>
+        </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </div>
+    <div class="am-panel am-panel-default">
+      <div class="am-panel-hd">
+        <h4 class="am-panel-title">订单信息：</h4>
+      </div>
+      <table class="am-table am-table-bordered am-table-compact am-table-hover">
+        <tbody>
+        <tr>
+          <td class="orderinfo">订单编号：</td>
+          <td>{{info.order.orderNo}}</td>
+        </tr>
+        <tr>
+          <td class="orderinfo">支付方式：</td>
+          <td>
+            {{#compare info.order.payType 1}}
+              在线支付
+            {{else}}
+              货到付款
+            {{/compare}}
+          </td>
+        </tr>
+        <tr>
+          <td class="orderinfo">配送方式：</td>
+          <td>
+            {{#compare info.order.isSelf 1}}
+              自提
+            {{else}}
+              {{#compare info.order.deliverType 1}}
+                门店配送
+              {{else}}
+                商城配送
+              {{/compare}}
+            {{/compare}}
+          </td>
+        </tr>
+        <tr>
+          <td class="orderinfo">买家留言：</td>
+          <td>{{info.order.orderRemarks}}</td>
+        </tr>
+        <tr>
+          <td class="orderinfo">下单时间：</td>
+          <td>{{info.order.createTime}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="am-panel am-panel-default">
+      <div class="am-panel-hd">
+        <h4 class="am-panel-title">收货人信息：</h4>
+      </div>
+      <table class="am-table am-table-bordered am-table-compact am-table-hover">
+        <tbody>
+        <tr>
+          <td class="receipter">收货人姓名：</td>
+          <td>{{info.order.userName}}</td>
+        </tr>
+        <tr>
+          <td class="receipter">地址：</td>
+          <td>{{info.order.userAddress}}</td>
+        </tr>
+        <tr>
+          <td class="receipter">联系电话：</td>
+          <td>{{info.order.userPhone}}</td>
+        </tr>
+        <tr>
+          <td class="receipter">期望送达时间：</td>
+          <td>{{info.order.requireTime}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="am-panel am-panel-default">
+      <div class="am-panel-hd">
+        <h4 class="am-panel-title">商品信息：</h4>
+      </div>
+      <table class="am-table am-table-bordered am-table-centered am-table-compact">
+        <thead>
+          <tr>
+            <th class="goods-row-title">商品</th>
+            <th class="goods-row-title goods-price">价格</th>
+            <th class="goods-row-title goods-cnt">数量</th>
+            <th class="goods-row-title goods-price">金额</th>
+          </tr>
+        </thead>
+        <tbody>
+        {{#each info.goodsList}}
+        <tr>
+          <td class="am-text-middle goods-info">
+            <div class="am-g am-g-collapse" onclick="javascript:goToGoodsDetails({{goodsId}})">
+              <div class="am-u-sm-3">
+                <img src="{{../rooturl}}/{{goodsThums}}" class="goods-img">
+              </div>
+              <div class="am-u-sm-9">{{goodsName}}</div>
+            </div>
+          </td>
+          <td class="am-text-middle goods-info">￥{{shopPrice}}</td>
+          <td class="am-text-middle goods-info">{{goodsNums}}</td>
+          <td class="am-text-middle goods-info">￥{{money}}</td>
+        </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="total-area">
+      <span class="span-block"> 商品总金额： ￥{{info.order.totalMoney}} </span>
+      <span class="span-block"> + 运费：￥{{info.order.deliverMoney}} </span>
+      <span class="span-block order-total"> 订单总金额：<span class="total-money">￥{{info.order.needPay}}</span> </span>
+    </div>
+  </div>
+</script>

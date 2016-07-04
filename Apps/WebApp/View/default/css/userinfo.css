@@ -1,0 +1,95 @@
+body {
+  color: gray;
+}
+.options-right {
+  text-align: right;
+}
+.alink {
+  color: gray;
+}
+.alink:hover {
+  color: gray;
+}
+
+/* 个人信息 */
+.userinfo-row {
+  border-bottom: 1px solid #EDEDED;
+  padding: 10px 0px;
+  margin-top: 5px;
+}
+.userinfo {
+  margin-right: 5px;
+  color: #333;
+}
+.userinfo-container {
+  margin-top: 5px;
+}
+.user-photo {
+  width: 65px;
+  height: 65px;
+  border-radius: 1000px;
+}
+
+/* 修改昵称 */
+.nickName-area {
+  cursor: pointer;
+}
+.close-nickName {
+  cursor: pointer;
+}
+.editNickName {
+  cursor: pointer;
+}
+.userSex-area {
+  cursor: pointer;
+}
+.usersex {
+  cursor: pointer;
+  margin: 10px 0px;
+}
+.close-usersex {
+  cursor: pointer;
+}
+.usersex-check {
+  float: right;
+  color: #F36C2C;
+}
+
+/* 上传头像 */
+.uploadfile-input.userinfo {
+  height: 70px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+/* 绑定邮箱和手机 */
+.bindemail-area {
+  padding-top: 65px;
+}
+.email-row {
+  margin-bottom: 15px;
+}
+.verifyImg {
+  vertical-align: middle;
+  cursor: pointer;
+  height: 39px;
+  width: 100%;
+  max-width: 300px;
+  border-radius: 5px;
+}
+.sendemail {
+  background: #F36C2C;
+  border-radius: 5px;
+  color: white;
+}
+.bind-button {
+  background: #F36C2C;
+  border-radius: 5px;
+  color: white;
+  margin-top: 20px;
+}
+.bind-area {
+  display: none;
+  margin-top: 30px;
+}

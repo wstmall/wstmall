@@ -1,0 +1,46 @@
+<!doctype html>
+<html class="no-js">
+<head>
+  <include file="./Apps/WebApp/View/default/common_meta.html" />
+  <title>商品评价 - {$CONF['mallTitle']}</title>
+  <link rel="stylesheet" href="__ROOT__/Apps/WebApp/View/default/AmazeUI/assets/css/amazeui.min.css">
+  <link rel="stylesheet" href="__ROOT__/Apps/WebApp/View/default/css/common.css?v={$WST_V}">
+  <link rel="stylesheet" href="__ROOT__/Apps/WebApp/View/default/css/goods_appraise_list.css?v={$WST_V}">
+</head>
+<body>
+  <div class="wst-nav">
+    <div class="am-g">
+      <div class="am-u-sm-1 wst-nav-left">
+        <a href="javascript:history.back()" class="wst-back"><i class="am-icon-angle-left am-icon-sm"></i></a>
+      </div>
+      <div class="am-u-sm-11 wst-nav-center" style="font-size:1.25em;">商品评价</div>
+    </div>
+  </div> 
+
+  <input type="hidden" name="" value="{$goodsId}" id="goodsId" autocomplete="off">
+  <input type="hidden" name="" value="0" id="currPage" autocomplete="off">
+  <input type="hidden" name="" value="" id="totalPage" autocomplete="off">
+  <input type="hidden" name="" value="0" id="type" autocomplete="off">
+
+  <div class="am-g appraise-filter-area" id="appraise-filter-area">
+    <div class="am-u-sm-3 appraise-filter active" status="down" onclick="javascript:orderCondition(this,0);">
+      全部评价<span class="count">( <?php echo ($appraisesList['type']['all']>0) ? $appraisesList['type']['all'] : 0;?> )</span>
+    </div>
+    <div class="am-u-sm-3 appraise-filter" status="down" onclick="javascript:orderCondition(this,3);">
+       好评<span class="count">( <?php echo ($appraisesList['type']['good']>0) ? $appraisesList['type']['good'] : 0;?> )</span>
+    </div>
+    <div class="am-u-sm-3 appraise-filter" status="down" onclick="javascript:orderCondition(this,2);">
+      中评  <span class="count">( <?php echo ($appraisesList['type']['middle']>0) ? $appraisesList['type']['middle'] : 0;?> )</span>
+    </div>
+    <div class="am-u-sm-3 appraise-filter" status="down" onclick="javascript:orderCondition(this,1);">
+      差评 <span class="count">( <?php echo ($appraisesList['type']['bad']>0) ? $appraisesList['type']['bad'] : 0;?> )</span> 
+    </div>
+  </div>
+  <div class="appraise-list" id="appraise-list"></div>
+  <div id="loading-icon" class="loading-icon" style="display:none;text-align:center;"><span class="am-icon-spinner am-icon-spin"></span></div>
+
+  <include file="./Apps/WebApp/View/default/common_footer.html" /> 
+  <include file="./Apps/WebApp/View/default/common_js.html" /> 
+  <script src="__ROOT__/Apps/WebApp/View/default/js/goods_appraise_list.js?v={$WST_V}"></script>
+</body>
+</html>

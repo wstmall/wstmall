@@ -9,8 +9,10 @@
 
 require_once 'JSON.php';
 
+
+
 $php_path = dirname(dirname(dirname(dirname(dirname(__FILE__))))) . '/';
-$php_url = dirname(dirname(dirname(dirname(dirname($_SERVER['PHP_SELF']))))) . '/';
+$php_url = '/';
 
 //文件保存目录路径
 $save_path = $php_path . 'Upload/';

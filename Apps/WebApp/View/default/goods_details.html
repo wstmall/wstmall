@@ -1,0 +1,113 @@
+<!doctype html>
+<html class="no-js">
+<head>
+  <include file="./Apps/WebApp/View/default/common_meta.html" />
+  <title>商品详情 - {$CONF['mallTitle']}</title>
+  <link rel="stylesheet" href="__ROOT__/Apps/WebApp/View/default/AmazeUI/assets/css/amazeui.min.css">
+  <link rel="stylesheet" href="__ROOT__/Apps/WebApp/View/default/css/common.css?v={$WST_V}">
+  <link rel="stylesheet" href="__ROOT__/Apps/WebApp/View/default/css/goods_details.css?v={$WST_V}">
+</head>
+<body>
+    <div class="wst-nav">
+      <div class="am-g">
+        <div class="am-u-sm-1 wst-nav-left">
+          <a href="javascript:history.back()" class="wst-back"><i class="am-icon-angle-left am-icon-sm"></i></a>
+        </div>
+        <div class="am-u-sm-11 wst-nav-center" style="font-size:1.25em;">商品详情</div>
+      </div>
+    </div> 
+    <?php if( empty($goodsDetails) ){ ?>
+      <div class="am-g detail-empty">
+        <div class="am-u-sm-12 am-u-sm-centered" style="text-align:center;">对不起，没有找到该商品。</div>
+      </div>
+    <?php }else{ ?>
+      <input type="hidden" id="goodsAttrId" value="{$goodsDetails['goodsAttrId']}" autocomplete="off">
+      <div class="goods-detail-container">
+        <img src="__ROOT__/{$CONF['goodsImg']}" data-echo="__ROOT__/{$goodsDetails['goodsThums']}" style="width:100%;">
+        <div class="goods-container">
+          <div class="goods-title-area">
+            <div style="float:left;">
+              <img src="__ROOT__/Apps/WebApp/View/default/images/goods-title-icon.png" class="goods-title-icon">
+            </div>
+            <div class="goodsname-right">{$goodsDetails['goodsName']}</div>
+            <div style="clear:both;"></div>
+          </div>
+          <?php if( $goodsDetails['isSale'] != 1 ){ ?>
+            <div class="am-g am-g-collapse notsaletips">该商品已下架~</div>
+          <?php }else{ ?>
+            <div class="am-g am-g-collapse row2-area">
+              <div class="am-u-sm-6 goods-price-area"> 
+                <span class="goods-price" id="goodsPrice">￥{$goodsDetails['shopPrice']}</span>
+                  <?php if( $goodsDetails['goodsStock'] > 0 ){ ?>
+                    <span class="goods-stock" id="goodsStock">有货</span>
+                  <?php }else{ ?>
+                    <span class="goods-stock goods-stock-red" id="goodsStock">无货</span>
+                  <?php } ?>
+                  <?php if( $favoriteId ){ ?>
+                    <button type="button" class="am-btn am-btn-primary am-btn-xs favorite" disabled="disabled">已关注该商品</button>
+                  <?php }else{ ?>
+                    <button type="button" class="am-btn am-btn-primary am-btn-xs favorite" onclick="javascript:favorite(this, {$goodsDetails['goodsId']});">关注该商品</button>
+                  <?php } ?>
+              </div>
+              <div class="am-u-sm-6 goods-shopName-area">
+                <a href="javascript:void(0);" onclick="javascript:goToShopHome({$goodsDetails['shopId']},{$goodsDetails['isSelf']});">
+                  <span class="goods-shopName">{$goodsDetails['shopName']}</span>
+                </a>
+              </div>
+              <div style="clear:both;"></div>
+            </div>
+            <if condition="count($goodsDetails['priceAttrs']) gt 0">
+              <div class="attr-row">
+                {$goodsDetails["priceAttrName"]} &nbsp;
+                <volist name="goodsDetails['priceAttrs']" id="avo">
+                  <button type="button" class="am-btn am-btn-default am-btn-xs am-radius priceattr <if condition="$goodsDetails['goodsAttrId'] eq $avo['id']">active</if>" onclick="javascript:checkStock(this,{$avo['id']},{$goodsDetails['goodsId']});">{$avo['attrVal']}</button> 
+                </volist>
+              </div>
+            </if>
+            <div class="am-g am-g-collapse goods-desc-row" onclick="javascript:viewAppraises({$goodsDetails['goodsId']});">
+              <div class="am-u-sm-11">商品评价 (<?php echo ($goodsDetails['appraiseNum']>0) ? $goodsDetails['appraiseNum'] : 0;?>)</div>
+              <div class="am-u-sm-1" style="text-align:right;"><i class="am-icon-angle-right am-icon-sm"></i></div>
+            </div>
+            <div class="am-tabs" id="gdTabs" style="margin-top: 5px;" data-am-tabs>
+              <ul class="am-tabs-nav am-nav am-nav-tabs" style="font-size:0.9em;">
+                <li class="am-active"><a href="javascript:void(0);" id="goodsDetailsTab">商品介绍</a></li>
+                <li><a href="#goodsDetailsTab1">规格参数</a></li>
+              </ul> 
+              <div class="am-tabs-bd" style="border-bottom:0;">
+                <div class="am-tab-panel am-fade am-in am-active" id="goodsDetailsTab2">
+                  <div class="am-u-sm-12 goods-desc" id="goodsDesc"><?php echo html_entity_decode($goodsDetails['goodsDesc']);?></div>
+                </div>
+                <div class="am-tab-panel am-fade" id="goodsDetailsTab1">
+                  <?php if($goodsDetails['goodsSpec']!=''){ ?>
+                    <span class="spec">规格 : {$goodsDetails['goodsSpec']}</span>
+                  <?php } ?>
+                  <if condition="count($goodsDetails['attrs']) gt 0">
+                    <volist name="goodsDetails['attrs']" id="vo">
+                      <if condition="$vo['attrVal'] !='' ">
+                        <span class="spec">{$vo['attrName']} : {$vo['attrVal']}</span>
+                      </if>
+                    </volist>
+                  </if>
+                </div>
+              </div>
+            </div>
+            <div class="am-g am-g-collapse bottom-area">
+              <div class="am-u-sm-5">
+                <input type="button" value="-" id="goodscount-jian" class="goodscount goodscount-jian" onclick="javascript:changeGoodsNum(1);">
+                <input type="text" value="1" id="goodscount" class="goodscount goodscount-num" autocomplete="off" maxVal="{$goodsDetails['goodsStock']}" maxlength="3" onkeypress="return WST.isNumberKey(event);" onkeyup="javascript:changeGoodsNum(0);">
+                <input type="button" value="+" id="goodscount-jia" class="goodscount goodscount-jia" onclick="javascript:changeGoodsNum(2);">
+              </div>
+              <div class="am-u-sm-7 cart-area">
+                <input type="button" value="立即购买" id="buynow" class="buynow" onclick="javascript:buyItNow({$goodsDetails['goodsId']});">
+                <input type="button" value="加入购物车" id="add-to-cart" class="add-to-cart" onclick="javascript:addToCart({$goodsDetails['goodsId']});">
+              </div>
+            </div>
+          <?php } ?>
+        </div>
+      </div>
+    <?php } ?>
+  <include file="./Apps/WebApp/View/default/common_footer.html" /> 
+  <include file="./Apps/WebApp/View/default/common_js.html" /> 
+  <script src="__ROOT__/Apps/WebApp/View/default/js/goods_details.js?v={$WST_V}"></script>
+</body>
+</html>

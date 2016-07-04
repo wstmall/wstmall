@@ -1,0 +1,90 @@
+.shops-filter-area {
+	text-align: center;
+	height: 40px;
+	position: fixed;
+	background: white;
+	z-index: 999;
+	top: 50px;
+	font-size: 1.4rem;
+}
+.shops-filter {
+	height: 35px;
+	margin-top: 5px;
+	cursor: pointer;
+}
+.shops-filter.active {
+	border-bottom: 3px solid #FFA229;
+	border-radius: 2px;
+	color: #FF9F2A;
+}
+.shops-list {
+	border-top: 6px solid #F2F0F5;
+	padding-top: 90px;
+}
+.shops {
+	display: block;
+	padding: 10px 0px;
+}
+.wst-shopsimage-area {
+	text-align: center;
+	overflow: hidden;
+	padding: 0px 5px;
+}
+.wst-shopsimage {
+	width: 100%;
+	max-width: 120px;
+	min-width: 80px;
+	border-radius: 5px;
+}
+.wst-shopsname {
+	margin-bottom: 0px;
+	font-size: 1.4rem;
+	color: black;
+	overflow: hidden;
+  	text-overflow: ellipsis;
+  	-o-text-overflow: ellipsis;
+  	white-space: nowrap;
+}
+.wst-shopsname a {
+	color: black;
+}
+.wst-minmoney {
+	color: #FF6532;
+	font-size: 0.9rem;
+	text-align: right;
+}
+.shops-star {
+	height: 15px;
+	margin: 3px 0px;
+}
+.wst-trade {
+	display: block;
+	font-size: 1rem;
+	color: black;
+}
+.wst-distance {
+	color: #BABABA;
+	font-size: 0.9rem;
+	text-align: right;
+}
+.wst-address {
+	display: block;
+	font-size: 1rem;
+	color: black;
+}
+.alignright {
+	text-align: right;
+}
+.shops:nth-child(n+2) {
+	border-top: 2px solid #F1F1F3;
+}
+.left-icon {
+	width: 10px;
+}
+.right-icon {
+	width: 12px;
+}
+.loading-icon {
+	padding-top: 95px;
+    text-align: center;
+}

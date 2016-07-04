@@ -1,0 +1,77 @@
+<!doctype html>
+<html class="no-js">
+<head>
+  <include file="./Apps/WebApp/View/default/common_meta.html" />
+  <title>我的 - {$CONF['mallTitle']}</title>
+  <link rel="stylesheet" href="__ROOT__/Apps/WebApp/View/default/AmazeUI/assets/css/amazeui.min.css">
+  <link rel="stylesheet" href="__ROOT__/Apps/WebApp/View/default/css/common.css?v={$WST_V}">
+  <link rel="stylesheet" href="__ROOT__/Apps/WebApp/View/default/css/wst_page_common.css?v={$WST_V}">
+  <link rel="stylesheet" href="__ROOT__/Apps/WebApp/View/default/css/login.css?v={$WST_V}">
+</head>
+<body>
+  <div class="wst-page wst-page1" id="wst-page1">
+
+    <div class="wst-nav">
+      <div class="am-g">
+        <div class="am-u-sm-12 wst-nav-center">
+          <h2 class="am-header-title" style="margin:0 10%;">登录</h2>
+        </div>
+      </div>
+    </div> 
+
+    <div class="am-g login-area">
+      <div class="am-u-md-12">
+          <fieldset class="am-form-set">
+            <div class="am-form-group am-form-icon">
+              <i class="am-icon-user wst-login-icon"></i>
+              <input type="text" class="am-form-field wst-username" id="wst-username" value='{$loginName}' placeholder="用户名" autocomplete="off" style="border-radius: 5px;height: 40px;">
+            </div>
+
+            <div class="am-form-group am-form-icon">
+              <i class="am-icon-lock wst-login-icon"></i>
+              <input type="password" class="am-form-field wst-password" id="wst-password" placeholder="密码" autocomplete="off" style="border-radius: 5px;height: 40px;">
+            </div>
+
+            <div class="am-form">
+              <div class="am-g">
+                <div class="am-u-sm-6">
+                  <input type="text" class="am-form-field wst-verifyCode" id="wst-verifyCode" name="verifyCode" placeholder="验证码" style="border-radius: 5px;height: 40px;">
+                </div>
+                <div class="am-u-sm-6 verifyImg-area">
+                  <img class='login-verifyImg verifyImg' id="login-verifyImg" src='__ROOT__/Apps/WebApp/View/default/images/clickForVerify.png' title='刷新验证码' onclick="javascript:getVerify('login-verifyImg');"/> 
+                </div>
+              </div>
+            </div>
+            
+            <div class="am-form">
+              <div class="am-g"><div class="am-u-sm-12"><input class="checkbox" id="rememberPwd" name="rememberPwd" checked="checked" type="checkbox"/>记住密码</div></div>
+            </div>
+          </fieldset>
+          <button type="button" class="am-btn am-btn-block wst-login-button" id="wst-login" onclick="javascript:loginCheck();">登录</button>
+      </div>
+    </div>
+    <div class="register-now">
+      <a href="#register">立即注册</a>
+      <a href="#forgetpassword" class="forgetpwd">忘记密码</a>
+    </div>
+    <if condition="$CONF['isOpenQQLogin'] eq 1">
+    <div class="register-now">第三方登录&nbsp;
+	<a id="qqAuthorizationUrl" href="https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id={$CONF['qqAppId']}&redirect_uri={$qqBackUrl}?a=1" class="qq">
+		<img src="__ROOT__/Apps/Home/View/default/images/qq_logo.png" alt="QQ登录" border="0" height="35">
+	</a>
+	</div>
+	</if>
+  </div>
+  <div class="wst-page wst-page2" id="wst-page2" style="display:none;"></div>
+
+  <include file="./Apps/WebApp/View/default/common_footer.html" />  
+  <include file="./Apps/WebApp/View/default/register.html" /><!-- 注册页模板 --> 
+  <include file="./Apps/WebApp/View/default/forget_password.html" /><!-- 忘记密码页模板 --> 
+  <include file="./Apps/WebApp/View/default/common_js.html" /> 
+  
+  <script src="__ROOT__/Apps/WebApp/View/default/AmazeUI/assets/js/handlebars.min.js"></script>
+  <script src="__ROOT__/Apps/WebApp/View/default/AmazeUI/assets/js/amazeui.widgets.helper.js"></script>
+  <script src="__ROOT__/Apps/WebApp/View/default/js/wst_page_common.js?v={$WST_V}"></script>
+  <script src="__ROOT__/Apps/WebApp/View/default/js/login.js?v={$WST_V}"></script>
+</body>
+</html>

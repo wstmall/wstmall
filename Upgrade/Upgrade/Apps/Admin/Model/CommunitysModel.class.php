@@ -19,6 +19,7 @@ class CommunitysModel extends BaseModel {
 		$data["areaId2"] = (int)I("areaId2");
 		$data["areaId3"] = (int)I("areaId3");
 		$data["isService"] = I("isService");
+		$data['isShow'] = (int)I('isShow');
 		$data["communityName"] = I("communityName");
 		$data["communitySort"] = I("communitySort",0);
 		$data["communityFlag"] = 1;
@@ -42,6 +43,7 @@ class CommunitysModel extends BaseModel {
 		$data["areaId2"] = (int)I("areaId2");
 		$data["areaId3"] = (int)I("areaId3");
 		$data["isService"] = I("isService");
+		$data['isShow'] = (int)I('isShow');
 		$data["communityName"] = I("communityName");
 		$data["communitySort"] = (int)I("communitySort",0);
 	    if($this->checkEmpty($data)){	

@@ -1,0 +1,85 @@
+<script type="text/x-handlebars-template" id="invoiceInfo">
+    
+  <header data-am-widget="header" class="am-header am-header-default am-header-fixed wst-inner-page-nav">
+    <div class="am-header-left am-header-nav">
+      <a href="#"><i class="am-icon-angle-left am-icon-sm"></i></a>
+    </div>
+    <h2 class="am-header-title" style="margin:0 10%;">支付、配送、发票</h2>
+    <div class="am-header-right am-header-nav"><span class="save-order-info" id="saveOrderInfo" onclick="javascript:saveOrderInfo();">保存</span></div>
+  </header>
+
+  <div class="orderinfo-container">
+    <div class="part-title">支付信息</div>
+    <div class="am-g am-g-collapse part-title">
+      <div class="am-u-sm-4">支付方式： </div>
+      <div class="am-u-sm-8">
+        <div class="am-g am-g-collapse">
+          {{#each payInfo}}
+            <div class="am-u-sm-6 paytype-wrapper" style="float:left;">
+              <button type="button" class="am-btn am-btn-default am-btn-xs am-radius paytype {{#if payId}}{{#compare id payId}}active{{/compare}}{{else}}{{#compare index 0}}active{{/compare}}{{/if}}" payId="{{id}}" isOnline="{{isOnline}}" onclick="javascript:changePayType(this);">{{payName}}</button>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+    <div class="am-g am-g-collapse part-title">
+      <div class="am-u-sm-4">是否自提： </div>
+      <div class="am-u-sm-4 deliverytype-wrapper">
+        <button type="button" class="am-btn am-btn-default am-btn-xs am-radius paytype {{#compare deliveryType 0}}active{{/compare}}" deliverytypeValue="0" onclick="javascript:changeDeliveryType(this);">不自提</button> 
+      </div>
+      <div class="am-u-sm-4 deliverytype-wrapper">
+        <button type="button" class="am-btn am-btn-default am-btn-xs am-radius paytype {{#compare deliveryType 1}}active{{/compare}}" deliverytypeValue="1" onclick="javascript:changeDeliveryType(this);">自提</button> 
+      </div>
+    </div>
+
+    <div class="am-g am-g-collapse part-title">
+      {{#each goodslist}}
+        <div class="am-g am-g-collapse shop-invoice">
+          <div class="am-u-sm-2">
+            <img src="{{goodsImg}}" class="settlement-img"> 
+          </div>
+          <div class="am-u-sm-5">{{shopName}}</div>
+          <div class="am-u-sm-5">
+            <button type="button" class="am-btn am-btn-default am-btn-xs am-radius paytype {{#compare isInvoice 0}}red{{else}}active{{/compare}}">商家{{#compare isInvoice 0}}不{{/compare}}提供发票</button> 
+          </div>
+        </div>
+      {{/each}}
+    </div>
+
+    <div class="part-title">发票信息</div>
+    <div class="am-g am-g-collapse part-title">
+      <form class="am-form am-form-horizontal">
+        <div class="am-form-group am-form-icon am-form-feedback invoice-group">
+          <label class="am-u-sm-3 am-form-label invoice-label">发票抬头：</label>
+          <div class="am-u-sm-9">
+            <input type="text" id="invoiceClient" class="am-form-field" value="{{orderInfo.invoiceClient}}" {{#compare invoiceClientStatus 1}}disabled{{/compare}}>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="am-g am-g-collapse part-title">
+      <form class="am-form am-form-horizontal">
+        <div class="am-form-group am-form-icon am-form-feedback invoice-group">
+          <label class="am-u-sm-3 am-form-label invoice-label">订单备注：</label>
+          <div class="am-u-sm-9">
+            <input type="text" id="orderRemarks" class="am-form-field" value="{{orderInfo.orderRemarks}}">
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="am-g am-g-collapse part-title">
+      <form class="am-form am-form-horizontal">
+        <div class="am-form-group am-form-icon am-form-feedback invoice-group">
+          <label class="am-u-sm-3 am-form-label invoice-label">送达时间：</label>
+          <div class="am-u-sm-6">
+            <select data-am-selected="{maxHeight: 50}" id="requireDate" onchange="changeRequireDate(this)"></select>
+          </div>
+          <div class="am-u-sm-3">
+            <select data-am-selected="{maxHeight: 50}" id="requireTime"></select>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</script>
