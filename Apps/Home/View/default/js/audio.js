@@ -105,7 +105,7 @@ function playsound(){
 		
 	}else if(/i(Phone|P(o|a)d)/.test(navigator.userAgent)){		
 		currAudioId = "soundplay";
-		g_audio.push({song_id:"soundplay",song_fileUrl:"audio/sound.mp3"});	
+		g_audio.push({song_id:"soundplay",song_fileUrl:ThinkPHP.DOMAIN+"/Apps/Home/View/default/audio/sound.mp3"});	
 	}else{		
 		currAudioId = "soundplay";
 		audio = document.getElementById("soundplay");		

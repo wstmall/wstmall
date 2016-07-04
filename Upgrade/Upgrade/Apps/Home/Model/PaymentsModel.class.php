@@ -144,8 +144,9 @@ class PaymentsModel extends BaseModel {
      * 完成支付订单
      */
     public function complatePay ($obj){
-
+    	$rd = array('status'=>-1);
     	$trade_no = WSTAddslashes($obj["trade_no"]);
+    	
     	$orderType = (int)$obj["order_type"];
     	if($orderType==1){
     		$orderId = (int)$obj["out_trade_no"];
@@ -154,6 +155,14 @@ class PaymentsModel extends BaseModel {
     	}
 		$userId = (int)$obj["userId"];
 		$payFrom = (int)$obj["payFrom"];
+		if($payFrom>0){
+			$sql = "select count(*) cnt from __PREFIX__orders where payFrom=$payFrom and userId=$userId and tradeNo='$trade_no'";
+			$row = $this->queryRow($sql);
+			if($row["cnt"]>0){
+				return $rd;
+			}
+		}
+		
 		if($orderType==1){
 			$sql = "select og.orderId,og.goodsId,og.goodsNums,og.goodsAttrId from __PREFIX__order_goods og, __PREFIX__orders o where o.userId=$userId and og.orderId = o.orderId AND o.orderId = $orderId and o.payType = 1 and o.needPay > 0 and o.orderFlag=1 and o.orderStatus=-2";
 		}else{
@@ -166,7 +175,7 @@ class PaymentsModel extends BaseModel {
 		$data["orderStatus"] = 0;
 		$data["tradeNo"] = $trade_no;
 		$data["payFrom"] = $payFrom;
-		$rd = array('status'=>-1);
+		
 		$om = M('orders');
 		if($orderType==1){
 			$rs = $om->where("orderId = $orderId and payType = 1 and needPay > 0 and orderFlag=1 and orderStatus=-2")->save($data);

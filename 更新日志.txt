@@ -1,16 +1,33 @@
 本次版本要新增以下功能：
 
-1.QQ，微信登录兼容TP四种url访问模式【修改QQ登录回调地址为：http://xxx/Wstapi/thridLogin/qqlogin.php】
-2.修改侧栏用户头像无显示的bug
-3.修复编辑社区时，隐藏属性无效的bug
-4.帐号自动登录修改
-5.热销商品，最近浏览商品加入销量显示
-6.修复文本编辑器上传图片路径错误bug
-7.修复商品列表按日期筛选出错的bug
-8.修复品牌街初次加载品牌记录重复的bug.
-9.商品评价分数不对
-10.删除消息的有BUG，删不了消息
-11.系统代码优化
+1.右侧购物车与导航购物车同步
+2.社区加经纬度标记
+3.修复已结算订单bug
+4.订单加删除标识
+5.修复关注店铺点击会出现undefined的bug
+6.新增第三方登录日志
+7.隐藏店铺分类时，下架该分类下的商品
+8.统一店铺商品上架条件：如果店铺分类不显示或不存在，商品不允许上架
+9.修复文章标题过长引起重叠的bug
+10.修复店铺主页，个别分类名称过长时导致布局错乱的bug
+11.修复品牌街初次加载品牌记录重复的bug.
+12.修复商品销量统计bug
+13.系统代码优化
 
 *若已安装的用户请参照以下步骤：
-1.wstmall/Upgrade/Upgrade覆盖升级。
+1、wstmall/Upgrade/Upgrade覆盖升级。
+2、执行1.7.1.sql 数据库文件。
+
+其他版本升级可参照升级教程：http://www.wstmall.com/index.php?c=Help&a=view&catId=26&id=376
+
+如需官方技术协助升级可联系官方客服QQ：707563272 （资费说明：http://www.wstmall.com/index.php?c=License&a=index）
+
+WSTMall在成长的脚步上离不开大家的热心支持，大家有什么意见或者建议可通过以下渠道反馈给我们：
+WSTMall用户交流群：50056937
+WSTMall客服QQ：707563272
+WSTMall客服电话：020-85289921
+WSTMall邮箱： wstmall@qq.com
+WSTMall官网：http://www.wstmall.com
+百度贴吧：http://tieba.baidu.com/wstmall
+Github：https://github.com/wstmall/wstmall.git
+Oscgit：https://git.oschina.net/wstmall/wstmall.git

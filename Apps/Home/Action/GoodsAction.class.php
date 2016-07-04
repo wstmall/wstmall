@@ -99,7 +99,7 @@ class GoodsAction extends BaseAction {
 
 		$goods = D('Home/Goods');
 		$kcode = I("kcode");
-		$scrictCode = base64_encode(md5("wstmall".date("Y-m-d")));
+		$scrictCode = md5(base64_encode("wstmall".date("Y-m-d")));
 		
 		//查询商品详情		
 		$goodsId = (int)I("goodsId");
@@ -347,7 +347,7 @@ class GoodsAction extends BaseAction {
 	public function getGoodsVerify(){
 		$data = array();
 		$data["status"] = 1;
-		$verifyCode = base64_encode(md5("wstmall".date("Y-m-d")));
+		$verifyCode = md5(base64_encode("wstmall".date("Y-m-d")));
 		$data["verifyCode"] = $verifyCode;
 		$this->ajaxReturn($data);
 	}

@@ -224,7 +224,7 @@
 .wst-fl-tab{line-height: 32px; width: 100px;}
 .wst-fl-recommendshop{float: right; width: 180px; height: 180px;}
 .wst-slide{position: relative;}
-.wst-slide-numbox{width: 1210px;margin:0 auto;height:0px;position: relative;z-index: 1000;}
+.wst-slide-numbox{width: 1210px;margin:0 auto;height:0px;position: relative;z-index: 10;}
 .wst-slide-items{min-width:1210px;}
 
 .wst-fl-catbox{position: absolute; top: 40px; width: 210px; height: 275px;}

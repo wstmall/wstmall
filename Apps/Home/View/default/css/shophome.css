@@ -117,13 +117,15 @@
 	width: 1210px;
 	margin: 0 auto;
 	height: 40px;
+	overflow:hidden;
 	line-height: 45px;
 	background-image: url(../../../View/default/images/store_menubg.png);
 }
 
 .wst-shophome-nav-box li {
 	float: left;
-	width: 110px;
+	padding-left:10px;
+	padding-right:10px;
 	color: #ffffff;
 	font-weight: bolder;
 	text-align: center;

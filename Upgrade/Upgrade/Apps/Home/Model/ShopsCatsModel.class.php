@@ -59,6 +59,7 @@ class ShopsCatsModel extends BaseModel {
 			}
 		}
 		$rd['status'] = 1;
+		S("WST_CACHE_SHOP_CAT_".session('WST_USER.shopId'),null);
 		return $rd;
 	}
 	
@@ -144,7 +145,7 @@ class ShopsCatsModel extends BaseModel {
 	  */
 	  public function queryByList($shopId,$parentId){
 	     $m = M('shops_cats');
-		 return $m->where('shopId='.$shopId.' and catFlag=1 and parentId='.$parentId." and shopId=".$shopId)->order('catSort asc')->select();
+		 return $m->where('shopId='.$shopId.' and catFlag=1 and isShow=1 and parentId='.$parentId." and shopId=".$shopId)->order('catSort asc')->select();
 	  }
 	  
 	 /**
@@ -220,6 +221,11 @@ class ShopsCatsModel extends BaseModel {
 			$m->where("parentId=".$id." and shopId=".$shopId)->save($data);
 			if($parentId>0 && $isShow==1){
 				$m->where("catId=".$parentId." and shopId=".$shopId)->save($data);
+			}
+			//如果是隐藏的话还要下架的商品
+			if($isShow==0){
+				$sql = "update __PREFIX__goods set isSale=0 where (shopCatId1=".$id." or shopCatId2=".$id.") and shopId=".$shopId;
+				$this->execute($sql);
 			}
 			S("WST_CACHE_SHOP_CAT_".session('WST_USER.shopId'),null);
 		}

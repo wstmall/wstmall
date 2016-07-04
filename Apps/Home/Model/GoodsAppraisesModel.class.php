@@ -18,15 +18,14 @@ class GoodsAppraisesModel extends BaseModel {
 		$shopCatId2 = (int)I('shopCatId2',0);
 		$goodsName = WSTAddslashes(I('goodsName'));
         $pcurr = (int)I("pcurr",0);
-	 	$sql = "select gp.*,g.goodsName,g.goodsThums,u.loginName from 
-	 	           __PREFIX__goods_appraises gp ,__PREFIX__goods g, __PREFIX__users u
-	 	           where gp.userId=u.userId and gp.goodsId=g.goodsId and gp.shopId=".$shopId."";
+	 	$sql = "select gp.*,g.goodsName,g.goodsThums,u.loginName, og.goodsAttrName from 
+	 	           __PREFIX__goods_appraises gp ,__PREFIX__goods g, __PREFIX__users u, __PREFIX__order_goods og 
+	 	           where og.orderId = gp.orderId AND gp.goodsId = og.goodsId AND gp.goodsAttrId = og.goodsAttrId AND gp.userId=u.userId and gp.goodsId=g.goodsId and gp.shopId=".$shopId."";
 		if($shopCatId1>0)$sql.=" and shopCatId1=".$shopCatId1;
 		if($shopCatId2>0)$sql.=" and shopCatId2=".$shopCatId2;
 		if($goodsName!='')$sql.=" and (goodsName like '%".$goodsName."%' or goodsSn like '%".$goodsName."%')";
 		$sql.=" order by id desc";
 	 	$pages = $this->pageQuery($sql,$pcurr);	
-		
 		return $pages;
 	 }
 	 
@@ -35,7 +34,7 @@ class GoodsAppraisesModel extends BaseModel {
 	 */
 	public function getGoodsAppraises(){		
 		$goodsId = (int)I("goodsId");
-		$sql = "SELECT ga.*, u.userName,u.loginName, od.createTime as ocreateTIme 
+		$sql = "SELECT ga.*, u.userName,u.loginName, od.createTime as ocreateTime 
 				FROM __PREFIX__goods_appraises ga , __PREFIX__orders od , __PREFIX__users u 
 				WHERE ga.userId = u.userId AND ga.orderId = od.orderId AND ga.goodsId = $goodsId AND ga.isShow =1 order by id desc ";		
 		$data = $this->pageQuery($sql);	

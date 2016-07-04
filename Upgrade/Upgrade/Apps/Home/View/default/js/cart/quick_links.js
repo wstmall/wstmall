@@ -58,7 +58,7 @@ jQuery(function($){
 				fn.content = "<div class='ibar_plugin_content' style='height:100%;padding-top:100%;padding-left:80px;'><img src='"+WST.DOMAIN +"/Apps/Home/View/default/images/loading.gif' width='20'/>数据加载中...</div>";
 				quickPop.html(ds.tmpl(popTmpl, fn));
 				jQuery.post(Think.U('Home/Cart/getCartInfo') ,{"axm":1},function(data) {
-					var cart = WST.toJson(data);	
+					var cart = WST.toJson(data);
 					var html = new Array();
 					var totalmoney = 0, goodsnum = 0;
 					html.push('<div class="ibar_plugin_content"><div class="ibar_cart_group ibar_cart_product"><ul style="height:80%;overflow:auto;">');
@@ -94,6 +94,12 @@ jQuery(function($){
 								);
 						}
 					}
+					if(goodsnum==0){
+						html.push('<li class="wst-empty-cart">亲~您的购物车空空如也，赶快开始购物吧！</li>');
+					}
+					$(".cart_num").html(goodsnum);
+					$(".wst-nvg-cart-price").html(totalmoney);
+					
 					html.push('</ul></div><div class="cart_handler"><div class="cart_handler_header"><span class="cart_handler_left">共<span class="cart_gnum cart_price">'+goodsnum+'</span>件商品</span><span class="cart_handler_right">￥<span id="cart_handler_right_totalmoney">'+totalmoney+'</span></span></div><div style="width:260px;"><a href="javascript:topay();" class="cart_go_btn" >去购物车结算</a></div></div></div>');
 					fn.content = html.join("");
 					quickPop.html(ds.tmpl(popTmpl, fn));
@@ -205,17 +211,4 @@ jQuery(function($){
 
 });
 
-function removeCartGoods(obj,goodsId,goodsAttrId){
-	jQuery.post(Think.U('Home/Cart/delCartGoods') ,{goodsId:goodsId,goodsAttrId:goodsAttrId},function(data) {
-		
-		var vd = WST.toJson(data);
-		$(obj).parent().parent().parent().remove();
-		var price = $(obj).attr("price");
-		var cnt = $(obj).attr("cnt");
-		var totalMoney = parseFloat($("#cart_handler_right_totalmoney").html(),10);
-		$("#cart_handler_right_totalmoney").html(parseFloat(totalMoney - price*cnt,10).toFixed(2));
-		var cartNum = parseInt($('.cart_num').html(),10);
-		$('.cart_num').html(cartNum-1);
-		$(".cart_gnum").html(cartNum-1);
-	});	
-}
+

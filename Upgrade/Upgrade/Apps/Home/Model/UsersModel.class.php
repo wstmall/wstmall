@@ -251,9 +251,6 @@ class UsersModel extends BaseModel {
 		if(false !== $rs){
 			$rd['status']= 1;
 			$rd['userId']= $rs;
-		}
-	   
-	    if($rd['status']>0){
 	    	$data = array();
 	    	$data['lastTime'] = date('Y-m-d H:i:s');
 	    	$data['lastIP'] = get_client_ip();
@@ -438,9 +435,6 @@ class UsersModel extends BaseModel {
 		if(false !== $rs){
 			$rd['status']= 1;
 			$rd['userId']= $rs;
-		}
-	   
-	    if($rd['status']>0){
 	    	$data = array();
 	    	$data['lastTime'] = date('Y-m-d H:i:s');
 	    	$data['lastIP'] = get_client_ip();
@@ -467,8 +461,19 @@ class UsersModel extends BaseModel {
 		$sql = "select * from __PREFIX__users where userStatus=1 and userFlag=1 and userFrom=".$obj['userFrom']." and openId='".$openId."'";
 		$row = $this->queryRow($sql);
 		if($row["userId"]>0){
+			if($row['userType']==1){
+				$s = M('shops');
+			 	$shops = $s->where('userId='.$row['userId']." and shopFlag=1")->find();
+			    if(!empty($shops))$row = array_merge($shops,$row);			
+			}
 			session('WST_USER',$row);
 			$rd["status"] = 1;
+			//记录登录日志
+			$data = array();
+			$data["userId"] = $row['userId'];
+			$data["loginTime"] = date('Y-m-d H:i:s');
+			$data["loginIp"] = get_client_ip();
+			M('log_user_logins')->add($data);
 		}
 		return $rd;
 	}

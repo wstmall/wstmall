@@ -113,9 +113,21 @@
 		curvature : 0.0012, //控制抛物线弧度
 		complete : function() {
 			eleFlyElement.style.visibility = "hidden";
-			jQuery.post(ThinkPHP.U("Home/Cart/getCartGoodCnt"),{"axm":1},function(data) {
-				var cart = WST.toJson(data);
-				eleShopCart.querySelector("span").innerHTML = cart.goodscnt;
+			jQuery.post(Think.U('Home/Cart/getCartInfo') ,{"axm":1},function(data) {
+				var cart = WST.toJson(data);	
+				var totalmoney = 0, goodsnum = 0;
+				for(var shopId in cart.cartgoods){
+					var shop = cart.cartgoods[shopId];
+					for(var goodsId in shop.shopgoods){
+						var goods = shop.shopgoods[goodsId];
+						goodsnum++;
+						totalmoney = totalmoney + parseFloat(goods.shopPrice * goods.cnt);
+						totalmoney = totalmoney.toFixed(2);
+						
+					}
+				}
+				$(".cart_num").html(goodsnum);
+				$(".wst-nvg-cart-price").html(totalmoney);
 			});
 			
 		}
@@ -150,5 +162,26 @@
 
 	function getMyOrders(){
 		document.location.href = ThinkPHP.U("Home/Orders/queryByPage");
+	}
+	
+	function removeCartGoods(obj,goodsId,goodsAttrId){
+		jQuery.post(Think.U('Home/Cart/delCartGoods') ,{goodsId:goodsId,goodsAttrId:goodsAttrId},function(data) {
+			var cart = WST.toJson(data);	
+			$(obj).parent().parent().parent().remove();
+			var totalmoney = 0, goodsnum = 0;
+			for(var shopId in cart.cartgoods){
+				var shop = cart.cartgoods[shopId];
+				for(var goodsId in shop.shopgoods){
+					var goods = shop.shopgoods[goodsId];
+					goodsnum++;
+					totalmoney = totalmoney + parseFloat(goods.shopPrice * goods.cnt);
+					totalmoney = totalmoney.toFixed(2);
+				}
+			}
+			$("#cart_handler_right_totalmoney, .wst-nvg-cart-price").html(totalmoney);
+			$('.cart_num').html(goodsnum);
+			$(".cart_gnum").html(goodsnum);
+
+		});	
 	}
 </script>

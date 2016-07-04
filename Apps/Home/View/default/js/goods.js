@@ -104,8 +104,13 @@ function addCart(goodsId,type,goodsThums){
 	params.goodsAttrId = $('#shopGoodsPrice_'+goodsId).attr('dataId');
 	$("#flyItem img").attr("src",WST.DOMAIN  +"/"+ goodsThums)
 	jQuery.post(Think.U('Home/Cart/addToCartAjax') ,params,function(data) {
-		if(type==1){
-			location.href= Think.U('Home/Cart/toCart');
+		var json = WST.toJson(data);
+		if(json.status==1){
+			if(type==1){
+				location.href= Think.U('Home/Cart/toCart');
+			}
+		}else{
+			WST.msg(json.msg,{offset: '200px'});
 		}
 	});
 }
@@ -129,10 +134,18 @@ function getPriceAttrInfo(id){
 	jQuery.post( Think.U('Home/Goods/getPriceAttrInfo') ,{goodsId:goodsId,id:id},function(data) {
 		var json = WST.toJson(data);
 		if(json.id){
+			if(json.attrStock>0){
+				WST.showHide(1,'#haveGoodsToBuy,#buyBtn');
+				WST.showHide(0,'#noGoodsToBuy');
+			}else{
+				WST.showHide(0,'#haveGoodsToBuy,#buyBtn');
+				WST.showHide(1,'#noGoodsToBuy');
+			}
 			$('#shopGoodsPrice_'+goodsId).html("￥"+json.attrPrice);
 			var buyNum = parseInt($("#buy-num").val());
-			$("#buy-num").attr('maxVal',json.attrStock);
+			//$("#buy-num").attr('maxVal',json.attrStock);
 			$("#goodsStock").html(json.attrStock);
+			if(buyNum==0)$("#buy-num").val(1);
 			if(buyNum>json.attrStock){
 				$("#buy-num").val(json.attrStock);
 			}

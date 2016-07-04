@@ -26,9 +26,9 @@
 				<volist name="articles['articlecats']" key="key2" id="article">
 				<div class='sub-item'>
 					<if condition="$article['articleId'] eq $carticle['articleId']">
-					<img src="__ROOT__/Apps/Home/View/default/images/helpcenter_icon2.gif"/>&nbsp;&nbsp;<a style="color: red" href="{:U('Home/Articles/index/',array('articleId'=>$article['articleId']))}" rel="nofollow">{$article.articleTitle}</a>
+					<img src="__ROOT__/Apps/Home/View/default/images/helpcenter_icon2.gif"/>&nbsp;&nbsp;<a style="color: red" href="{:U('Home/Articles/index/',array('articleId'=>$article['articleId']))}" rel="nofollow">{:WSTMSubstr($article['articleTitle'],0,12)}</a>
 					<else/>
-					<img src="__ROOT__/Apps/Home/View/default/images/helpcenter_icon1.gif"/>&nbsp;&nbsp;<a href="{:U('Home/Articles/index/',array('articleId'=>$article['articleId']))}" rel="nofollow">{$article.articleTitle}</a>
+					<img src="__ROOT__/Apps/Home/View/default/images/helpcenter_icon1.gif"/>&nbsp;&nbsp;<a href="{:U('Home/Articles/index/',array('articleId'=>$article['articleId']))}" rel="nofollow">{:WSTMSubstr($article['articleTitle'],0,12)}</a>
 					</if>
 				</div>
 				</volist>

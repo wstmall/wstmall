@@ -71,10 +71,13 @@ $(function() {
 		$(".wst-nvg-cat-dw").show();
 	});
     
-	$("#wst-nvg-cart").mouseover(function(){
-		checkCart();
-	});
+    checkCart();
+    
 	$("#wst-nvg-cart").click(function(){
+		if($(".wst-cart-box").is(':hidden')){
+			$(".wst-cart-box").html("<div style='text-align:center;line-height:80px;'>数据加载中...</div>");
+			checkCart();
+		}
 		$(".wst-cart-box").toggle();
 	});
 	
@@ -179,38 +182,35 @@ function checkCart(){
 		var cart = WST.toJson(data);	
 		var html = new Array();
 		var flag = false;
-		var goodsnum = 0;
+		var goodsnum = 0,totalmoney = 0;
 		for(var shopId in cart.cartgoods){
 			var shop = cart.cartgoods[shopId];
 			for(var goodsId in shop.shopgoods){
 				var goods = shop.shopgoods[goodsId];
-				//if(i<cart.cartgoods.length-1){
-					html.push("<div style='border-bottom:1px dotted #E13335'>");
-				//}else{
-					//html.push("<div>");
-				//}【{$goods['attrName']}:{$goods['attrVal']}】
+					html.push("<div style='border-bottom:1px dotted #009237'>");
 				var url = Think.U('Home/Goods/getGoodsDetails','goodsId='+goods.goodsId);
-				html.push(  "<div style='float:left;'>" +
+					html.push(  "<div style='float:left;'>" +
 									"<a href='"+url+"'><img src='"+WST.DOMAIN +"/"+goods.goodsThums+"' width='65' height='65'/></a>" +
 									"</div>" +
-							"<div style='float:left;width:280px;padding:4px;overflow: hidden;'>");
-				html.push(  "<a target='_blank' href='"+url+"'>"+goods.goodsName+"</a><br/>");
+							"<div style='float:left;width:280px;padding:4px;overflow: hidden;font-size:12px;'>");
+				html.push(  "<a target='_blank' href='"+url+"' style='color:#707070;'>"+goods.goodsName+"</a><br/>");
 				if(goods.attrName){
 					html.push(  goods.attrName+"："+goods.attrVal+"<br/>");
 				}
-				html.push( "￥"+goods.shopPrice+"元&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数量："+goods.cnt+
+				html.push( "<span class='cart_price'>¥"+goods.shopPrice+"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数量："+goods.cnt+
 							"</div><div style='clear:both;'></div>" +
 							"</div>"
 						);
 				goodsnum++;
+				totalmoney = totalmoney + parseFloat(goods.shopPrice * goods.cnt);
 			}
 			flag = true;
 		}
 	
 		if(flag){
-			html.push(  "<div id='wst-topay' style='text-align:right;margin-top:2px;'><li onclick='topay();'></li></div>");
-			$(".wst-nvg-cart-cnt").html(goodsnum);
-			$(".wst-nvg-cart-price").html(cart.totalMoney);
+			html.push(  "<div id='wst-topay' style='text-align:right;margin-top:2px;'><div class='settle-btn' style='margin:0;'><a href='javascript:topay();' class='cart_go_btn' style='margin:0 auto;float:none;'>去购物车结算</a></div></div>");
+			$(".cart_num").html(goodsnum);
+			$(".wst-nvg-cart-price").html(totalmoney);
 			$(".wst-cart-box").html(html.join(""));
 		}else{
 			
@@ -220,6 +220,7 @@ function checkCart(){
 		}
 	});
 }
+
 function topay(){
 	location.href = Think.U('Home/Cart/getCartInfo','rnd='+Math.round(Math.random()*10000000));
 }

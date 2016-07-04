@@ -20,7 +20,9 @@ class CartModel extends BaseModel {
 		$userId = (int)session('WST_USER.userId');
 		$goodsId = (int)I("goodsId");
 		$goodsAttrId = (int)I("goodsAttrId");
-
+        $goods = D('Home/Goods')->getGoodsSimpInfo($goodsId,$goodsAttrId);
+        if(empty($goods))return array('status'=>-1,'msg'=>'找不到指定的商品!');
+        if($goods['goodsStock']<=0)return array('status'=>-1,'msg'=>'对不起，商品'.$goods['goodsName'].'库存不足!');
 		$goodsCnt = ((int)I("gcount")>0)?(int)I("gcount"):1;
 		$isCheck = 1;
 		$rs = false;

@@ -133,9 +133,9 @@
 						<div class="cate-title">商品分类</div>
 						<div class="hotsale-goods-box" >
 							<volist name="shopscates" key="k" id="vo">
-								<li data="pcate-{$k}" class="pcate-{$k} pcate" style=""><span id="pcate-{$k}-s" class="span2"></span>&nbsp;&nbsp;&nbsp;&nbsp;{$vo["catName"]}</li>
+								<li data="pcate-{$k}" class="pcate-{$k} pcate" style=""><span id="pcate-{$k}-s" class="span2"></span>&nbsp;&nbsp;&nbsp;&nbsp;{:WSTMSubstr($vo["catName"],0,12)}</li>
 								<volist name="vo['children']" key="k2" id="vo2">
-									<a href="{:U('Home/Shops/toShopHome/',array('shopId'=>$vo2['shopId'],'ct1'=>$vo['catId'],'ct2'=>$vo2['catId']))}"><li class="pcate-{$k}-c ccate" ><img src="__ROOT__/Apps/Home/View/default/images/icon_dire_more.png" width="5" height="10"/>&nbsp;{$vo2["catName"]}</li></a>
+									<a href="{:U('Home/Shops/toShopHome/',array('shopId'=>$vo2['shopId'],'ct1'=>$vo['catId'],'ct2'=>$vo2['catId']))}"><li class="pcate-{$k}-c ccate" ><img src="__ROOT__/Apps/Home/View/default/images/icon_dire_more.png" width="5" height="10"/>&nbsp;{:WSTMSubstr($vo2["catName"],0,12)}</li></a>
 								</volist>
 							</volist>
 						</div>

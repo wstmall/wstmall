@@ -22,6 +22,9 @@ class CommunitysModel extends BaseModel {
 		$data['isShow'] = (int)I('isShow');
 		$data["communityName"] = I("communityName");
 		$data["communitySort"] = I("communitySort",0);
+		$data["longitude"] = (float)I("longitude");
+		$data["latitude"] = (float)I("latitude");
+		$data["mapLevel"] = (int)I("mapLevel",13);
 		$data["communityFlag"] = 1;
 	    if($this->checkEmpty($data)){
 	    	$data["communityKey"] = I("communityKey");
@@ -46,6 +49,9 @@ class CommunitysModel extends BaseModel {
 		$data['isShow'] = (int)I('isShow');
 		$data["communityName"] = I("communityName");
 		$data["communitySort"] = (int)I("communitySort",0);
+		$data["longitude"] = (float)I("longitude");
+		$data["latitude"] = (float)I("latitude");
+		$data["mapLevel"] = (int)I("mapLevel",13);
 	    if($this->checkEmpty($data)){	
 	    	$data["communityKey"] = I("communityKey");
 		    $rs = $this->where("communityId=".$id)->save($data);

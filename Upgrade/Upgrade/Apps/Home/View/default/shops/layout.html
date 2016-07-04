@@ -49,9 +49,9 @@
             <div class='wst-menu'>
             	<span class='wst-menu-title'><span></span>交易管理</span>
             	<ul>
-              	<li onclick="goBack(this)" data='{:U("Home/Orders/toShopOrdersList")}' <if condition='$umark eq "toShopOrdersList"'> class='liselect'</if>>订单管理<span style="display:none;" class="wst-msg-tips-box"></span></li>
-            	<li onclick="goBack(this)" data="{:U('Home/OrderComplains/queryShopComplainByPage')}" <if condition='$umark eq "queryShopComplainByPage"'> class='selected'</if>>投诉订单</li>
-            	<li onclick="goBack(this)" data="{:U('Home/OrderSettlements/toSettlementIndex')}" <if condition='$umark eq "toSettlementIndex"'> class='selected'</if>>订单结算</li>
+              	<li onclick="goBack(this)" data='{:U("Home/Orders/toShopOrdersList")}' <if condition='$umark eq "toShopOrdersList"'> class='liselect'</if>>订单管理<span id="wst_orders_cnt" style="display:none;" class="wst-msg-tips-box"></span></li>
+            	<li onclick="goBack(this)" data="{:U('Home/OrderComplains/queryShopComplainByPage')}" <if condition='$umark eq "queryShopComplainByPage"'> class='liselect'</if>>投诉订单</li>
+            	<li onclick="goBack(this)" data="{:U('Home/OrderSettlements/toSettlementIndex')}" <if condition='$umark eq "toSettlementIndex"'> class='liselect'</if>>订单结算</li>
             	</ul>
             	<span class='wst-menu-title'><span></span>商品管理</span>
             	<ul>

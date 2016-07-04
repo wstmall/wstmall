@@ -22,6 +22,7 @@ class CommunitysAction extends BaseAction{
     	}else{
     		$this->checkPrivelege('sqlb_01');
     		$object = $m->getModel();
+    		$object['mapLevel'] = 13;
     	}
     	$a = D('Admin/Areas');
     	$this->assign('areaList',$a->queryShowByList(0));

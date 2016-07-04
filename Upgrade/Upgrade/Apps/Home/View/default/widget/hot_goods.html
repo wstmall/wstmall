@@ -6,7 +6,7 @@
 								<img class='lazyImg' data-original="__ROOT__/{$vo['goodsThums']}" width="68" height="68" />
 							</div>
 							<div class="hotsale-goods-title">
-								<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo['goodsId']))}">{$vo['goodsName']}</a>
+								<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo['goodsId']))}">{:WSTMSubstr($vo['goodsName'],0,18)}</a>
 								<div><span class="span1">￥{$vo['shopPrice']}</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="span2">￥{$vo['marketPrice']}</span></div>
 								<div>已售出<span class="span1"> {$vo['totalnum']} </span>件</div>
 							</div>

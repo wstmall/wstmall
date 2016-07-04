@@ -322,6 +322,7 @@ class GoodsModel extends BaseModel {
 			}else{
 				$m->isSale = 0;
 			}
+			if($m->isSale==1)$m->saleTime=date('Y-m-d H:i:s');
 			$m->goodsDesc = I('goodsDesc');
 			$m->attrCatId = (int)I("attrCatId");
 			$m->goodsStatus = ($GLOBALS['CONFIG']['isGoodsVerify']==1)?0:1;
@@ -434,6 +435,7 @@ class GoodsModel extends BaseModel {
 			}else{
 				$m->isSale = 0;
 			}
+			if($m->isSale==1)$m->saleTime=date('Y-m-d H:i:s');
 			$m->goodsDesc = I('goodsDesc');
 			$m->attrCatId = (int)I("attrCatId");
 			$m->goodsStatus = ($GLOBALS['CONFIG']['isGoodsVerify']==1)?0:1;
@@ -505,6 +507,12 @@ class GoodsModel extends BaseModel {
 							}
 							$sql .= " where goodsId=".$goodsId;
 							$m->execute($sql);
+							//删除已经失效的用户购物车商品记录
+							$sql = "delete from __PREFIX__cart where goodsId=".$goodsId;
+							$m->execute($sql);
+							//删除首页缓存
+							S("WST_CACHE_GOODS_CAT_GOODS_WEB_".(int)session('WST_USER.areaId2'),null);
+						    S('WST_CACHE_GOODS_CAT_GOODS_WP_'.(int)session('WST_USER.areaId2'),null);
 						}
 					}
 				}
@@ -664,6 +672,7 @@ class GoodsModel extends BaseModel {
 			 		//商品上架操作
 				 	$data = array();
 					$data["isSale"] = 1;
+					$data["saleTime"] = date('Y-m-d H:i:s');
 				 	$rs = $m->where("shopId=".$shopId." and goodsId =".$v['goodsId'])->save($data);
 				    if(false !== $rs){
 						$rd['num']++;
@@ -820,7 +829,8 @@ class GoodsModel extends BaseModel {
 				FROM __PREFIX__goods g, __PREFIX__shops sp 
 				WHERE g.shopId = sp.shopId AND g.goodsId = $goodsId AND g.isSale=1 AND g.goodsFlag = 1 AND g.goodsStatus = 1";
 		$rs = $this->queryRow($sql);
-	    if(!empty($rs) && $rs['attrCatId']>0){
+		if(empty($rs))return array();
+	    if($rs['attrCatId']>0){
         	$sql = "select ga.id,ga.attrPrice,ga.attrStock,a.attrName,ga.attrVal,ga.attrId from __PREFIX__attributes a,__PREFIX__goods_attributes ga
 			        where a.attrId=ga.attrId and a.catId=".$rs['attrCatId']." 
 			        and ga.goodsId=".$rs['goodsId']." and id=".$goodsAttrId;
@@ -925,9 +935,9 @@ class GoodsModel extends BaseModel {
 	 * 修改 推荐/精品/新品/热销/上架
 	 */
 	public function changSaleStatus(){
-		$rdata= array("status"=>-1);
+		$rdata= array("status"=>-1,'msg'=>'操作失败!');
 		$goodsId = (int)I("goodsId");
-		$tamk = (int)I("tamk");
+		$tamk = ((int)I("tamk")==1)?1:0;
 		$flag = (int)I("flag");
 		$data = array();
 		if($tamk==0){
@@ -945,6 +955,15 @@ class GoodsModel extends BaseModel {
 			$data["isHot"] = $tamk;
 		}else if($flag==5){
 			$data["isSale"] = $tamk;
+			if($data["isSale"]==1){
+				//核对商品是否符合上架的条件
+	 		    $sql = "select g.goodsId from __PREFIX__goods g,__PREFIX__shops_cats sc2,__PREFIX__goods_cats gc3 
+	 		  	    where sc2.shopId=".(int)session('WST_USER.shopId')." and g.shopCatId2=sc2.catId and sc2.catFlag=1 and sc2.isShow=1 and g.goodsCatId3=gc3.catId and gc3.catFlag=1 and gc3.isShow=1
+	 		  	    and g.goodsId = ".$goodsId;
+	 		    $goodsRs = $this->queryRow($sql);
+	 		    if(empty($goodsRs))return array('status'=>-1,'msg'=>'上架失败，请核对商品信息是否完整!');
+	 		    $data["saleTime"] = date('Y-m-d H:i:s');
+			}
 		}
 	
 		M('goods')->where("goodsId=$goodsId")->save($data);
@@ -1054,6 +1073,7 @@ class GoodsModel extends BaseModel {
             $goods['goodsDesc'] = trim($sheet->getCell("Q".$row)->getValue());
             $goods['goodsStatus'] = 0;
             $goods['goodsFlag'] = 1;
+            $goods["saleTime"] = date('Y-m-d H:i:s');
             $goods['createTime'] = date('Y-m-d H:i:s');
             $readData[] = $goods;
             $importNum++;

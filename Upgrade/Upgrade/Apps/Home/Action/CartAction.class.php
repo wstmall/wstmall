@@ -82,10 +82,11 @@ class CartAction extends BaseAction {
 	 */
 	public function delCartGoods(){	
 		$m = D('Home/Cart');	
-		$rs = $m->delCartGoods();
-		$this->ajaxReturn($rs);
-		
+		$res = $m->delCartGoods();
+		$cartInfo = $m->getCartInfo();
+		echo json_encode($cartInfo);
 	}
+	
 	
 	/**
 	 * 修改购物车中的商品数量

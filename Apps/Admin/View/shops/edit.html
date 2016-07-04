@@ -210,7 +210,7 @@ dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
 		$("#serviceStartTime").attr("disabled",false).unFormValidator(false); //解除校验
 		$("#serviceEndTime").attr("disabled",false).unFormValidator(false); //解除校验
 	}
-   function ShopMapInit(option){
+   function ShopMapInit(){
 	   var opts = {zoom:$('#mapLevel').val(),longitude:$('#longitude').val(),latitude:$('#latitude').val()};
 	   if(shopMap)return;
 	   $('#shopMap').show();
@@ -256,7 +256,7 @@ dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
 		   $('#areaId3').html('<option value="">请选择</option>');
 	   }else{
 		   if(t==1 && $('#areaId2').find("option:selected").text()!=''){
-			   shopMap.setZoom();
+			   shopMap.setZoom(15);
 			   shopMap.setCity($('#areaId2').find("option:selected").text());
 			   $('#showLevel').val(shopMap.getZoom());
 		   }

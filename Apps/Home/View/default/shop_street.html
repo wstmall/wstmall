@@ -26,7 +26,11 @@
 				</volist>
 			</div>
 		</div>
-		<div class="wst-shadow">
+		
+		
+		<!----加载店铺街start----->
+		<div class="wst-container">
+			<div class="wst-shadow">
 			<div class="wst-street-schbox">
 				&nbsp;&nbsp;&nbsp;&nbsp;您附近有<span id="spcnt" class="wst-street-spcnt"><?php echo count($dsplist[0]['ctlist']) ?></span>个相关地址：您的位置
 				<select id="cityId" onchange="getDistrictsShops();">
@@ -63,7 +67,7 @@
 						
 					</div>
 					<div class="wst-street-sch-bx2">
-						<div class="wst-street-scp-dp">
+						<div class="wst-street-scp-dp" style="height: 28px;">
 							<input id="shopName" class="wst-street-scp-sn" placeholder="搜索 店铺" autocomplete="off" value='{$keyWords}'>
 							<div class="wst-street-scp-sk" onclick="getDistrictsShops();">搜&nbsp;索</div>
 						</div>				
@@ -73,10 +77,6 @@
 				<div style="wst-clear"></div>
 			</div>
 		</div>
-		
-		<!----加载店铺街start----->
-		<div class="wst-container">
-			
 			<div class="wst-shadow">
 			    <script id="tblist2" type="text/html">
                 {{# for(var i = 0; i < d.length; i++){ }}

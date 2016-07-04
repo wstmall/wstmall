@@ -26,7 +26,10 @@
 				</volist>
 			</div>
 		</div>
-		<div class="wst-shadow">
+		
+		<!----品牌----->
+		<div class="wst-container">
+			<div class="wst-shadow">
 				<div class="wst-brands-area">
 					&nbsp;&nbsp;&nbsp;&nbsp;请选择品牌所在区域
 					<select id="areaId" onchange="changeAreaBrands();">
@@ -35,15 +38,13 @@
 					</volist>
 					</select>
 					<div style="float:right;">
-						<div class='wst-brands-search'>
+						<div class='wst-brands-search' style="height: 28px;">
 							<input id="brandName" class='brands-ipt' placeholder="品牌名称" autocomplete="off">
 							<div class='search' onclick="changeAreaBrands();">搜&nbsp;索</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		<!----品牌----->
-		<div class="wst-container">
 			<div >
 			    <script id="tblist2" type="text/html">
                 {{# for(var i = 0; i < d.length; i++){ }}

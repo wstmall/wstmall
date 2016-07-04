@@ -1263,7 +1263,7 @@ function changSaleStatus(goodsId,flag){
 			
 			
 		}else{
-			WST.msg('修改失败!', {icon: 5}); 
+			WST.msg(json.msg, {icon: 5}); 
 		}
 	});
 }
@@ -1449,6 +1449,16 @@ function getShopMsgTips(){
 			}else{
 				$("#wst-msg-li-"+i+" .wst-order-tips-box").hide();
 			}
+			
+			if(i==0){
+				if(json[i]>0){
+					$("#wst_orders_cnt").show();
+				}else{
+					$("#wst_orders_cnt").hide();
+				}
+				$("#wst_orders_cnt").html(json['0']);
+			}
+			
 			if((i==0 && json[i]>0) || json['100']>0){
 				playsound();
 			}

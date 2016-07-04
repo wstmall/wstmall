@@ -41,10 +41,14 @@ $(document).ready(function(){
                <div style='width:300px;'>
 	               <div style='width:55px;float:left'>
 	               <a target='_blank' href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo['goodsId']))}">
-							<img src="__ROOT__/{$vo['goodsThums']}" height="50" width="50"/>
+						<img src="__ROOT__/{$vo['goodsThums']}" height="50" width="50"/>
 				   </a>
 				   </div>
-				   <div style='width:245px;float:left'>{$vo['goodsName']}</div>
+				   <div style='width:245px;float:left'>
+				 	<a target='_blank' href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo['goodsId']))}">
+				   	{$vo['goodsName']}<if condition="$vo['goodsAttrName'] neq ''">【{$vo['goodsAttrName']}】</if>
+				   	</a>
+				   </div>
                </div>
                </td>
                <td>

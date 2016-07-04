@@ -130,6 +130,15 @@
 								    <td></td>
 								    <td></td>
 								</tr>
+								<tr>
+									<td style="position: relative;">
+									<div id='qrBox' style='position:absolute ;top:-50px;left:450px;padding:2px;'>
+										<div id='qrcode' style='width:132px;height:132px;border:1px solid #ddd;margin-bottom:2px;'></div>
+										<div>下载移动客户端扫一扫</div>
+									</div>
+									</td>
+									<td></td>
+								</tr>
 								<if condition="$goodsDetails['shopServiceStatus'] eq 1">
 								<tr>
 									<td width="70"><span style="display:inline-block;width:70px;">购买数量：</span></td>
@@ -143,7 +152,7 @@
 											<div class='wst-goods-stock'>库存：<span id='goodsStock'>{$goodsDetails['goodsStock']}</span>{$goodsDetails['goodsUnit']}</div>
 										</div>
 										<div id="noGoodsToBuy" <if condition="$goodsDetails['goodsStock'] gt 0">style="display:none;"</if>>
-											<div style="font-weight: bold;">所选地区该商品暂时无货，非常抱歉！</div>
+											<div style="font-weight: bold;">非常抱歉，所商品暂时无货！</div>
 											<div style="clear: both;"></div>
 											<br />
 											<div>
@@ -163,17 +172,7 @@
 									</td>
 								</tr>
 								</if>
-								<tr>
-									<td style="position: relative;">
-									<div id='qrBox' style='position:absolute ;top:-50px;left:450px;padding:2px;'>
-										<div id='qrcode' style='width:132px;height:132px;border:1px solid #ddd;margin-bottom:2px;'></div>
-										<div>下载移动客户端扫一扫</div>
-									</div>
-									</td>
-									<td></td>
-								</tr>
-								<if condition="$goodsDetails['goodsStock'] gt 0">
-								<tr>
+								<tr id="buyBtn" <if condition="$goodsDetails['goodsStock'] elt 0">style="display:none;"</if>>
 									<td width="70"></td>
 									<td>
 										<if condition="$comefrom eq 1">
@@ -192,7 +191,6 @@
 										</if>
 									</td>
 								</tr>
-								</if>
 							</tbody>
 						</table>
 						
