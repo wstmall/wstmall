@@ -80,6 +80,15 @@ class WSTWechat{
 	}
 	
 	/**
+	 * 获取用户详细信息
+	 */
+	public function UserInfo($wdata){
+		$url = 'https://api.weixin.qq.com/sns/userinfo?access_token='.$wdata['access_token'].'&openid='.$wdata['openid'].'&lang=zh_CN';
+		$data = $this->http($url);
+		return json_decode($data, true);
+	}
+	
+	/**
 	 * 发送模板消息
 	 */
 	public function sendTemplateMessage($data){

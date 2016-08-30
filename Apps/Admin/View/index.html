@@ -330,6 +330,9 @@
                                 <php>if(in_array('gggl_00',$WST_STAFF['grant'])){</php>
 					            <li><a href="{:U('Admin/Ads/index')}" target='pageContent'>广告管理</a></li>
 					            <php>}</php>
+					            <php>if(in_array('ggwzgl_00',$WST_STAFF['grant'])){</php>
+					            <li><a href="{:U('Admin/AdPositions/index')}" target='pageContent'>广告位置</a></li>
+					            <php>}</php>
                                 <php>if(in_array('yhgl_00',$WST_STAFF['grant'])){</php>
 					            <li><a href="{:U('Admin/Banks/index')}" target='pageContent'>银行管理</a></li>
 					            <php>}</php>

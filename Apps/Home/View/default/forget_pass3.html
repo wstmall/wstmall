@@ -80,8 +80,8 @@
 	        },
 	        ajaxPrompt : '有数据正在异步验证，请稍等...'
 	    });
-	   $("#loginPwd").formValidator({onShow:"请输入密码",onFocus:"至少6个字符,最多50个字符",onCorrect:"密码合法"}).inputValidator({min:6,max:50,onError:"你输入的密码非法,请确认"});
-	    $("#repassword").formValidator({onShow:"输再次输入密码",onFocus:"至少6个字符,最多50个字符",onCorrect:"密码一致"}).compareValidator({desID:"loginPwd",operateor:"=",onError:"2次密码不一致,请确认"});   
+	   $("#loginPwd").formValidator({onShow:"请输入密码",onFocus:"至少6个字符,最多20个字符",onCorrect:"密码合法"}).inputValidator({min:6,max:50,onError:"你输入的密码非法,请确认"});
+	    $("#repassword").formValidator({onShow:"输再次输入密码",onFocus:"至少6个字符,最多20个字符",onCorrect:"密码一致"}).compareValidator({desID:"loginPwd",operateor:"=",onError:"2次密码不一致,请确认"});   
 	});
 	</script>
 </html>

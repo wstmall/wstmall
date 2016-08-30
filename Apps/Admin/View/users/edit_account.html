@@ -6,10 +6,10 @@
 				   edit();
 			       return false;
 			}});
-		$("#loginPwd").formValidator({
-			onShow:"",onFocus:"登录密码长度应该为5-20位之间"
+	   $("#loginPwd").formValidator({
+			onShow:"登录密码长度应该为6-20位之间",onFocus:"登录密码长度应该为6-20位之间"
 			}).inputValidator({
-				min:5,max:50,onError:"登录密码长度应该为5-20位之间"
+				min:6,max:20,onError:"登录密码长度应该为6-20位之间"
 			}).unFormValidator(true);
 		$("#loginPwd").blur(function(){
 			  if($("#loginPwd").val()==''){

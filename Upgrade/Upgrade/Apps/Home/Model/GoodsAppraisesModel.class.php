@@ -118,6 +118,7 @@ class GoodsAppraisesModel extends BaseModel {
 		$data["isShow"] = 1;
 		$data["createTime"] = date('Y-m-d H:i:s');
 		$data["orderId"] = (int)I("orderId");
+		if(I('appraiseAnnex')!='')$data['appraisesAnnex'] = I('appraiseAnnex');
 		$rs = $m->add($data);
 		if(false !== $rs){
 			$data["totalScore"] = $data["goodsScore"]+$data["timeScore"]+$data["serviceScore"];

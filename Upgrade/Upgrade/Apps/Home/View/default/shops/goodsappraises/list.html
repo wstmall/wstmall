@@ -34,6 +34,7 @@ $(document).ready(function(){
              </tr>
            </thead>
            <tbody>
+           	<?php $c=1;?>
             <volist name="Page['root']" id="vo" key='k'>
              <tr>
                <td rowspan='2'>{$k}</td>
@@ -73,10 +74,20 @@ $(document).ready(function(){
 				</div>
                </td>
              </tr>
+
              <tr>
-               <td colspan='3'>评价[{$vo['loginName']}]：{$vo['content']}</td>
+               <td colspan='3'>评价[{$vo['loginName']}]：{$vo['content']}
+               		 
+               		<div id="layer-photos-appraise{$c}"  style="margin-bottom:10px"> 
+               		  <?php foreach($vo['appraisesAnnex'] as $q=>$v):?>
+					  <img  layer-src="__ROOT__/<?=$v?>" width="50" src="__ROOT__/<?=str_replace('.','_thumb.',$v)?>" alt="{$vo['content']}">
+					  <?php endforeach;?>
+					</div>
+               </td>
              </tr>
+             <?php ++$c;?>
              </volist>
+             
            </tbody>
            <tfoot>
              <tr>
@@ -112,6 +123,13 @@ $(document).ready(function(){
 					});
 			    });
 				</if>
+				<?php for($i=1;$i<$c;++$i) {?>
+             			layer.photos({
+						    photos: '#layer-photos-appraise'+<?=$i?>
+						  });
+             	<?php }?>
+				
+
 				</script>
                 </td>
              </tr>

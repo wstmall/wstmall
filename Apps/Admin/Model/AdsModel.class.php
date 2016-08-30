@@ -15,6 +15,7 @@ class AdsModel extends BaseModel {
 	 public function insert(){
 	 	$rd = array('status'=>-1);
 		$data = array();
+		$data["positionType"] = (int)I("positionType");
 		$data["adPositionId"] = (int)I("adPositionId");
 		$data["adFile"] = I("adFile");
 		$data["adStartDate"] = I("adStartDate");
@@ -25,6 +26,8 @@ class AdsModel extends BaseModel {
 		    $data["adURL"] = I("adURL");
 			$data["areaId1"] = I("areaId1");
 			$data["areaId2"] = I("areaId2");
+			$data["areaId3"] = I("areaId3");
+			$data["communityId"] = I("communityId");
 			$rs = $this->add($data);
 		    if(false !== $rs){
 				$rd['status']= 1;
@@ -38,6 +41,7 @@ class AdsModel extends BaseModel {
 	 public function edit(){
 	 	$rd = array('status'=>-1);
 	 	$id = (int)I("id",0);
+	 	$data["positionType"] = (int)I("positionType");
 		$data["adPositionId"] = (int)I("adPositionId");
 		$data["adFile"] = I("adFile");
 		$data["adStartDate"] = I("adStartDate");
@@ -48,6 +52,8 @@ class AdsModel extends BaseModel {
 			$data["adURL"] = I("adURL");
 	    	$data["areaId1"] = (int)I("areaId1");
 			$data["areaId2"] = (int)I("areaId2");
+			$data["areaId3"] = I("areaId3");
+			$data["communityId"] = I("communityId");
 		    $rs = $this->where("adId=".$id)->save($data);
 			if(false !== $rs){
 				$rd['status']= 1;
@@ -68,15 +74,27 @@ class AdsModel extends BaseModel {
      	$adPositionId = (int)I('adPositionId');
      	$adDateRange = I('adDateRange');
      	$adName = WSTAddslashes(I('adName'));
-	 	$sql = "select a.*,a1.areaName areaName1,a2.areaName areaName2
+	 	$sql = "select a.*,a1.areaName areaName1,a2.areaName areaName2,a3.areaName areaName3,c.communityName 
 	 	        from __PREFIX__ads a left join __PREFIX__areas a1 on a.areaId1=a1.areaId 
-	 	        left join __PREFIX__areas a2 on a.areaId2 = a2.areaId where 1=1 ";
+	 	        left join __PREFIX__areas a2 on a.areaId2 = a2.areaId 
+	 	        left join __PREFIX__areas a3 on a.areaId3 = a3.areaId 
+	 	        left join __PREFIX__communitys c on a.communityId = c.communityId where 1=1 ";
 	 	if($adPositionId!="")$sql.="  and adPositionId=".$adPositionId;
-	 	if($adName!=""){
-	 		$sql.="  and a.adName like '%$adName%'";
-	 	}
 	 	$sql.=' order by adId desc';
-		return $this->pageQuery($sql);
+		$rs = $this->pageQuery($sql);
+		if(count($rs[root])>0){
+			//获取广告位置
+			$sql = "select positionId,positionName from __PREFIX__ad_positions where positionFlag=1";
+			$p = $this->query($sql);
+			$ps = array();
+			foreach ($p as $key =>$v){
+				$ps["-".$v['positionId']] = $v['positionName'];
+			}
+			foreach ($rs['root'] as $key =>$v){
+				$rs['root'][$key]['positionName'] = $ps[$v['adPositionId']];
+			}
+		}
+		return $rs;
 	 }
 	 /**
 	  * 获取列表

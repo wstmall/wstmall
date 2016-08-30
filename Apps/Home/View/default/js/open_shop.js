@@ -28,11 +28,11 @@ function visitorShopInit(){
   			onWait : "请稍候..."
   		}).defaultPassed();
   	   $("#loginPwd").formValidator({
-  			onShow:"",onFocus:"登录密码长度应该为5-20位之间"
+  			onShow:"",onFocus:"登录密码长度应该为6-20位之间"
   			}).inputValidator({
-  				min:5,max:50,onError:"登录密码长度应该为5-20位之间"
+  				min:6,max:20,onError:"登录密码长度应该为6-20位之间"
   			});
-  	  $("#reUserPwd").formValidator({onShow:"",onFocus:"至少1个长度",onCorrect:"密码一致"}).inputValidator({min:1,empty:{leftEmpty:false,rightEmpty:false,emptyError:"重复密码两边不能有空符号"},onError:"重复密码不能为空,请确认"}).compareValidator({desID:"loginPwd",operateor:"=",onError:"2次密码不一致,请确认"});
+  	  $("#reUserPwd").formValidator({onShow:"",onFocus:"密码长度应该为6-20位",onCorrect:"密码一致"}).inputValidator({min:1,empty:{leftEmpty:false,rightEmpty:false,emptyError:"重复密码两边不能有空符号"},onError:"重复密码不能为空,请确认"}).compareValidator({desID:"loginPwd",operateor:"=",onError:"2次密码不一致,请确认"});
   		$("#userPhone").inputValidator({min:0,max:11,onError:"你输入的手机号码非法,请确认"}).regexValidator({
   			regExp:"mobile",dataType:"enum",onError:"手机号码格式错误"
   		}).ajaxValidator({

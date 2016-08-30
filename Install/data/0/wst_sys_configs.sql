@@ -45,8 +45,8 @@ INSERT INTO `wst_sys_configs` VALUES ('1', '0', '商城名称', 'mallName', 'tex
 ('31', '0', 'QQ', 'qqNo', 'text', null, null, '707563272', null, '11'),
 ('32', '0', '默认城市', 'defaultCity', 'other', null, null, '440100', null, '5'),
 ('33', '0', '热搜索词', 'hotSearchs', 'text', null, null, 'WSTMall，O2O开源商城', '以，号分隔', '12'),
-('34', '2', '开启短信发送验证码', 'smsVerfy', 'radio', '是||否', '1,0', '1', '', '4'),
-('36', '2', '开启手机验证', 'phoneVerfy', 'radio', '是||否', '1,0', '1', '', '5'),
+('34', '2', '开启短信发送验证码', 'smsVerfy', 'radio', '是||否', '1,0', '0', '', '4'),
+('36', '2', '开启手机验证', 'phoneVerfy', 'radio', '是||否', '1,0', '0', '', '5'),
 ('37', '0', '注册禁用关键字', 'limitAccountKeys', 'textarea', null, null, 'admin，system', null, '13'),
 ('38', '3', '结算金额设置', 'settlementStartMoney', 'text', null, null, '', '（结算金额少于该金额将不能进行结算）', '6'),
 ('39', '3', '开启积分支付', 'isOpenScorePay', 'radio', '是||否', '1,0', '1', null, '1'),
@@ -61,4 +61,9 @@ INSERT INTO `wst_sys_configs` VALUES ('1', '0', '商城名称', 'mallName', 'tex
 ('48', '4', 'QQ APP KEY', 'qqAppKey', 'text', '', '', '', '', '3'),
 ('49', '4', '开启微信登录', 'isOpenWxLogin', 'radio', '是||否', '1,0', '0', null, '4'),
 ('50', '4', '微信 APP ID', 'wxAppId', 'text', '', '', '', '', '5'),
-('51', '4', '微信 APP KEY', 'wxAppKey', 'text', '', '', '', '', '6');
+('51', '4', '微信 APP KEY', 'wxAppKey', 'text', '', '', '', '', '6'), 
+('52', '5', '开启微信版', 'isOpenWeiXin', 'radio','是||否','1,0',0,'',1), 
+('53', '5', '微信 APP ID', 'WeiXinAppId', 'text','','','','',2), 
+('54', '5', '微信 APP KEY', 'WeiXinAppKey', 'text','','','','',3), 
+('55', '5', '微信验证代码', 'WeiXinAppCode', 'text','','','','',4);
+

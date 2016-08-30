@@ -12,6 +12,7 @@ CREATE TABLE `wst_goods_cats` (
   `priceSection` text,
   `catSort` int(11) NOT NULL DEFAULT '0',
   `catFlag` tinyint(4) NOT NULL DEFAULT '1',
+  `isFloor` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`catId`),
   KEY `parentId` (`parentId`,`isShow`,`catFlag`) USING BTREE
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

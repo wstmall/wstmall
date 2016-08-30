@@ -11,6 +11,7 @@ CREATE TABLE `wst_goods_appraises` (
   `serviceScore` int(11) NOT NULL DEFAULT '0',
   `timeScore` int(11) NOT NULL DEFAULT '0',
   `content` text NOT NULL,
+  `appraisesAnnex` varchar(255),
   `isShow` tinyint(4) NOT NULL DEFAULT '1',
   `createTime` datetime NOT NULL,
   PRIMARY KEY (`id`),

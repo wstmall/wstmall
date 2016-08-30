@@ -407,16 +407,19 @@ $(function() {
 	});
 	
 	$("#isScorePay").click(function(){
+		var isself = $('input:radio[name="isself"]:checked').val();
+		var totalMoney = (isself==1)?$(this).attr("gtotalMoney"):$(this).attr("totalMoney");
 		if($("#isScorePay").prop('checked')){
-			var totalMoney = $(this).attr("totalMoney");
+			
 			var scoreMoney = $(this).attr("scoreMoney");
 			$("#totalMoney_span").html((totalMoney-scoreMoney).toFixed(2));
 		}else{
-			$("#totalMoney_span").html($(this).attr("totalMoney"));
+			$("#totalMoney_span").html(totalMoney);
 		}
 	});
 	
 	$('input:radio[name="isself"]').click(function(){
+		$("#isScorePay").attr("disabled",true);
 		if($(this).val()==0){//送货上门
 			$("#totalMoney_span").html($("#totalMoney").val());
 			$("[id^=tst_]").val("-1");
@@ -434,6 +437,20 @@ $(function() {
 				$(this).html("¥0");
 			});
 		}
+		jQuery.post(Think.U("Home/Orders/checkUseScore"),{'isself':$(this).val()},function(data) {
+			
+			var json = WST.toJson(data);
+			if(json.scoreMoney==0){
+				$("#scorePayLab").hide();
+			}else{
+				$("#scorePayLab").show();
+			}
+			$("#isScorePay").attr("scoremoney",json.scoreMoney);
+			$("#canUserScore").html(json.canUserScore);
+			$("#scoreMoney").html(json.scoreMoney);
+			$("#isScorePay").attr("disabled",false);
+			$("#isScorePay").attr("checked",false);
+		});
 	});
 	
 });

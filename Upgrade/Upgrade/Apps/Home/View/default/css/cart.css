@@ -178,7 +178,7 @@
 .quick_leave_message .btn span{ background-position:100% -356px; font-size:12px; padding-right:20px; *height:29px;}
 .quick_leave_message .btn:hover span{ background-position:100% -386px;}
 .quick_links_pop .no_data{ color:#333; font-size:14px; padding:35px 10px; text-align:center;}
-.quick_links_pop .no_data i{ display:inline-block; background:url(../images/cart_new.png) no-repeat 0 -188px; margin:0 10px 0 0; height:36px; width:60px; vertical-align:middle;}
+.quick_links_pop .no_data i{ display:inline-block;  margin:0 10px 0 0; height:36px; width:60px; vertical-align:middle;}
 .quick_links_pop .links li{ border-top:1px solid #f1f1f1; vertical-align:top;}
 .quick_links_pop .links a{ display:block; background:#FCFCFC; color:#333; font-size:14px; padding:12px 15px;}
 .quick_links_pop .links a:hover{ background-color:#F2F3F4; color:#4467a7;}

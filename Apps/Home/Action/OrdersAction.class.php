@@ -235,6 +235,31 @@ class OrdersAction extends BaseAction {
 		$this->display('default/check_order');
 	}
 	
+	
+	public function checkUseScore(){
+		$mcart = D('Home/Cart');
+		$rdata = $mcart->getPayCart();
+		if((int)I("isself")){
+			$totalMoney = $rdata["gtotalMoney"];//商品总价（去除配送费）
+		}else{
+			$totalMoney = $rdata["totalMoney"];//商品总价（含配送费）
+		}
+		
+		$baseScore = WSTOrderScore();
+		$baseMoney = WSTScoreMoney();
+		$um = D('Home/Users');
+		$user = $um->getUserById(array("userId"=>session('WST_USER.userId')));
+		$useScore = $baseScore*floor($user["userScore"]/$baseScore);
+		$scoreMoney = $baseMoney*floor($user["userScore"]/$baseScore);
+		if($totalMoney<$scoreMoney){//订单金额小于积分金额
+			$useScore = $baseScore*floor($totalMoney/$baseMoney);
+			$scoreMoney = $baseMoney*floor($totalMoney/$baseMoney);
+		}
+		$rs["canUserScore"] = $useScore;
+		$rs["scoreMoney"] = $scoreMoney;
+		$this->ajaxReturn($rs);
+	}
+	
 	/**
 	 * 提交订单信息
 	 * 

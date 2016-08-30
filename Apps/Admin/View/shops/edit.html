@@ -76,9 +76,9 @@ dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
 			onWait : "请稍候..."
 		}).defaultPassed();
 	   $("#loginPwd").formValidator({
-			onShow:"",onFocus:"登录密码长度应该为5-20位之间"
+			onShow:"",onFocus:"登录密码长度应该为6-20位之间"
 			}).inputValidator({
-				min:5,max:50,onError:"登录密码长度应该为5-20位之间"
+				min:6,max:20,onError:"登录密码长度应该为6-20位之间"
 			});
 		$("#userPhone").inputValidator({min:11,max:11,onError:"你输入的手机号码非法,请确认"}).ajaxValidator({
 			dataType : "json",
@@ -453,7 +453,7 @@ dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
            </tr>
            <tr>
              <th align='right'>登录密码<font color='red'>*</font>：</th>
-             <td><input type='password' id='loginPwd' class="form-control wst-ipt" value='{$object.loginPwd}' maxLength='25'/></td>
+             <td><input type='password' id='loginPwd' class="form-control wst-ipt" value='{$object.loginPwd}' maxLength='20'/></td>
            </tr>
            </if>
            <tr>

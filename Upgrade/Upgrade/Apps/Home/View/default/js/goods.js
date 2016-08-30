@@ -169,9 +169,26 @@ function getGoodsappraises(goodsId,p){
 			var html = new Array();		    	
 			for(var j=0;j<json.root.length;j++){
 			    var appraises = json.root[j];	
-			    html.push('<tr height="75" style="border:1px dotted #eeeeee;">');
+			    html.push('<tr height="75" style="border-bottom:1px dotted #eeeeee;">');
 				    html.push('<td width="150" style="padding-left:6px;"><div>'+(appraises.userName?appraises.userName:"匿名")+'</div></td>');
-				    html.push('<td width="*"><div>'+appraises.content+'</div></td>');
+				    html.push('<td style="padding-bottom:10px;" width="*"><div style="padding:10px 0px;">'+appraises.content+'</div>');
+
+				    //显示图片
+				    if(appraises.appraisesAnnex != '')
+				    {
+				    	html.push('<div id="layer-photos-appraise'+j+'" class="layer-photos-appraise">');
+				    	var img = appraises.appraisesAnnex.split(',');
+				    	for(var i=0;i<img.length;i++)
+				    	{
+				    		html.push('<img onmouseover="appraiseImg()" layer-src="'+WST.DOMAIN+'/'+img[i]+'" src="'+WST.DOMAIN+'/'+img[i]+'" alt="'+appraises.content+'">');
+				    	}
+				    	html.push('</div>');
+				    }	
+
+				    html.push('</td>')
+
+
+
 				    html.push('<td width="180">');
 				    html.push('<div>商品评分：');
 					for(var i=0;i<appraises.goodsScore;i++){
@@ -193,6 +210,18 @@ function getGoodsappraises(goodsId,p){
 			    html.push('</tr>');	
 			}
 			$("#appraiseTab").html(html.join(""));
+
+			for(var j=0;j<json.root.length;j++){
+				//调用layer相册
+				layer.ready(function(){ //为了layer.ext.js加载完毕再执行
+					layer.photos({
+					photos: '#layer-photos-appraise'+j
+					});
+				}); 
+			}
+
+
+
 			if(json.totalPage>1){
 				laypage({
 				    cont: 'wst-page-items',

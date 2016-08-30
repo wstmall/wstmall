@@ -1,3 +1,4 @@
+
 <include file="./Apps/Home/View/default/header_nav.html" />
 <div style="height:132px;">
 <div id="mainsearchbox" style="text-align:center;">
@@ -101,21 +102,15 @@
 		    
 		    <div class="navCon-menu fl">
 		      <ul class="fl">
-		        <volist name=":WSTNavigation(0)" id="vo" >
-		       	<li >
-		       	<a href="{$vo['navUrl']}" <if condition="$vo['isOpen'] eq 1">target="_blank"</if> 
-		       	<if condition="$vo['active'] eq 1">
-		       		<?php if($actionName == 'toShopHome'){?>
-		       		<?php if($isSelf==1){?>class="curMenu"<?php } ?>
-		       		<?php }else{ ?>
-		       		class="curMenu"
-		       		<?php } ?>
-		       	</if>
-		       	>
-		       		&nbsp;&nbsp;{$vo['navTitle']}&nbsp;&nbsp;
-		       	</a>
-		       	</li>
-		       	</volist>
+		        <?php foreach(WSTNavigation(0) as $k=>$v):  ?>
+				<li >
+				<a href="<?=$v['navUrl']?>" 
+				<?=(CONTROLLER_NAME.'/'.ACTION_NAME==$v['curUrl'])?'class="curMenu"':'';?>
+				>
+					&nbsp;&nbsp;<?=$v['navTitle'];?>&nbsp;&nbsp;
+				</a>
+				</li>
+				<?php endforeach;?>
 		      </ul>
 		    </div>
 		    <li id="wst-nvg-cart">

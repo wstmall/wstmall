@@ -29,8 +29,7 @@
 	        "ROOT"   : "__ROOT__",
 	        "PUBLIC" : "__PUBLIC__",
 	        "DOMAIN" : "{:WSTDomain()}"
-	};
-
+   };
    $(function () {
 	   changAdCat(document.getElementById('adPositionId'));
 	   $.formValidator.initConfig({
@@ -44,7 +43,12 @@
 	   $("#adName").formValidator({empty:false,onFocus:"请输入广告标题"}).inputValidator({min:1,onError: "请输入广告标题"});
 	   $('#adDateRange').daterangepicker({format:'YYYY-MM-DD',separator:' 至 '});
 	   <if condition="$object['adId'] !=0 ">
-	   getAreaList("areaId2",{$object.areaId1},0,{$object.areaId2});
+	   getAreaList("areaId2",{$object.areaId1},0,{$object.areaId2},function(){
+		   getAreaList("areaId3",'{$object.areaId2}',1,'{$object.areaId3}',function(){
+			   getCommunitys('{$object.communityId}');
+		   });
+	   });
+	   getAdPositions({$object.positionType},'{$object.adPositionId}');
 	   </if>
 	   var uploading = null;
 	   uploadFile({
@@ -63,19 +67,18 @@
 		      }
 	    });
    });
-   function getAreaList(objId,parentId,t,id){
+   function getAreaList(objId,parentId,t,id,callback){
 	   var params = {};
 	   params.parentId = parentId;
 	   $('#'+objId).empty();
-	   if(t<1){
-		   $('#areaId3').empty();
-		   $('#areaId3').html('<option value="">请选择</option>');
-	   }
+	   if(t<1)$('#areaId3 option[value!=""]').remove();
+	   $('#communityId option[value!=""]').remove();
+	   
 	   var html = [];
-	   $.post("{:U('Admin/Areas/queryByList')}",params,function(data,textStatus){
+	   $.post("{:U('Admin/Areas/queryShowByList')}",params,function(data,textStatus){
 		    html.push('<option value="">请选择</option>');
 			var json = WST.toJson(data);
-			if(json.status=='1' && json.list.length>0){
+			if(json.status=='1' && json.list && json.list.length>0){
 				var opts = null;
 				for(var i=0;i<json.list.length;i++){
 					opts = json.list[i];
@@ -83,19 +86,32 @@
 				}
 			}
 			$('#'+objId).html(html.join(''));
+			if(callback)callback();
 	   });
+	   
    }
+   function getCommunitys(id){
+		var v = $('#areaId3').val();
+		if(v && v!=''){
+			$('#communityId option[value!=""]').remove();
+			$.post("{:U('Admin/Communitys/queryByList')}",{areaId3:v},function(data,textStatus){
+				var json = data;
+				if(json.list){
+					var html = [];
+					json = json.list;
+					for(var i=0;i<json.length;i++){
+						opts = json[i];
+						html.push('<option value="'+opts.communityId+'" '+((id==opts.communityId)?'selected':'')+'>'+opts.communityName+'</option>');
+				    }
+					$('#communityId').append(html.join(''));
+				}
+			});
+		}else{
+			$('#communityId option[value!=""]').remove();
+		}
+	}
    function edit(){
-	   var params = {};
-	   params.id = $('#id').val();
-	   params.areaId1 = $('#areaId1').val();
-	   params.areaId2 = $('#areaId2').val();
-	   params.areaId3 = $('#areaId3').val();
-     params.adPositionId = $('#adPositionId').val();
-	   params.adSort = $('#adSort').val();
-	   params.adName = $.trim($('#adName').val());
-	   params.adFile = $.trim($('#adFile').val());
-	   params.adURL = $.trim($('#adURL').val());
+	   var params = WST.fillForm('.ipt');
 	   var date = $('#adDateRange').val().split(' 至 ');
 	   params.adStartDate = date[0];
 	   params.adEndDate = date[1];
@@ -116,45 +132,66 @@
 			}
 		});
    }
+   function getAdPositions(v,id){
+	   if(v>-1){
+		   $('#adPositionId option').each(function(){
+			   if(parseInt($(this).attr('value'),10)<0)$(this).remove();
+		   });
+		   $.post("{:U('Admin/AdPositions/queryByList')}",{positionType:v},function(data,textStatus){
+				var json = WST.toJson(data);
+				if(json.status=='1' && json.list){
+					var html = [];
+					for(var i=0;i<json.list.length;i++){
+						html.push("<option value='-"+json.list[i].positionId+"' w='"+json.list[i].positionWidth+"' h='"+json.list[i].positionHeight+"' "+((id==("-"+json.list[i].positionId))?"selected":"")+">"+json.list[i].positionName+"</option>");
+					}
+					$("#adPositionId").append(html.join(''));
+				}
+			});
+	   }else{
+		   $('#adPositionId option').each(function(){
+			   if(parseInt($(this).attr('value'),10)<0)$(this).remove();
+		   });
+	   }
+    }
    
    function changAdCat(obj){
-		var catId = obj.value;
-		switch(catId){
-			case '-1':$("#img_size").html("1400 x 360");break;
-			case '-2':
-			case '-3':$("#img_size").html("1210 x 350");break;
-			default:$("#img_size").html("210 x 275");
+	    if($('#adPositionId option:selected').val()=='0'){
+	    	$("#img_size").html("");
+	    	return;
+	    }
+		if(parseInt($('#adPositionId').val(),10)>0){
+			if($('#positionType').val()==0){
+				$("#img_size").html("210 x 275");
+			}else{
+				$("#img_size").html("");
+			}
+		}else{
+			$("#img_size").html($('#adPositionId option:selected').attr('w')+"x"+$('#adPositionId option:selected').attr('h'));
 		}
   }
    </script>
    <body class="wst-page">
    
        <form name="myform" method="post" id="myform" autocomplete="off">
-        <input type='hidden' id='id' value='{$object.adId}'/>
+        <input type='hidden' id='id' class='ipt' value='{$object.adId}'/>
         <table class="table table-hover table-striped table-bordered wst-form">
            <tr>
-             <th align='right'>广告城市：</th>
+             <th align='right'>位置类型<font color='red'>*</font>：</th>
              <td>
-             <select id='areaId1' onchange='javascript:getAreaList("areaId2",this.value,0)'>
-                <option value=''>请选择</option>
-                <volist name="areaList" id="vo">
-                <option value='{$vo['areaId']}' <if condition="$object['areaId1'] == $vo['areaId'] ">selected</if>>{$vo['areaName']}</option>
-                </volist>
+             <select id='positionType' class='ipt' onchange='javascript:getAdPositions(this.value)'>
+                <option value='-1'>请选择</option>
+                <option value='0' <if condition="$object['positionType'] == 0 ">selected</if>>PC版</option>
+                <if condition="$CONF['isOpenWeiXin'] == 1 ">
+                <option value='2' <if condition="$object['positionType'] == 2 ">selected</if>>微信版</option>
+                </if>
              </select>
-             <select id='areaId2'>
-               <option value=''>请选择</option>
-             </select>
-             (不选则默认整个商城)
              </td>
            </tr>
            <tr>
              <th align='right'>广告位置<font color='red'>*</font>：</th>
              <td>
-             <select id='adPositionId' onchange="changAdCat(this)">
-                <option value=''>请选择</option>
-                <option value='-1' <if condition="$object['adPositionId'] == -1 ">selected</if>>首页主广告</option>
-                <option value='-2' <if condition="$object['adPositionId'] == -2 ">selected</if>>品牌汇广告</option>
-                <option value='-3' <if condition="$object['adPositionId'] == -3 ">selected</if>>店铺街广告</option>
+             <select id='adPositionId' class='ipt' onchange="changAdCat(this)">
+                <option value='0'>请选择</option>
                 <volist name="goodsCatList" id="vo">
                 <option value='{$vo['catId']}' <if condition="$object['adPositionId'] == $vo['catId'] ">selected</if>>(商品分类){$vo['catName']}</option>
                 </volist>
@@ -162,15 +199,36 @@
              </td>
            </tr>
            <tr>
+             <th align='right'>广告城市：</th>
+             <td>
+             <select id='areaId1' class='ipt' onchange='javascript:getAreaList("areaId2",this.value,0)'>
+                <option value=''>请选择</option>
+                <volist name="areaList" id="vo">
+                <option value='{$vo['areaId']}' <if condition="$object['areaId1'] == $vo['areaId'] ">selected</if>>{$vo['areaName']}</option>
+                </volist>
+             </select>
+             <select id='areaId2' class='ipt' onchange='javascript:getAreaList("areaId3",this.value,1);'>
+               <option value=''>请选择</option>
+             </select>
+             <select id='areaId3' class='ipt' onchange='javascript:getCommunitys();'>
+               <option value=''>请选择</option>
+             </select>
+             <select id='communityId' class='ipt' >
+               <option value=''>请选择</option>
+             </select>
+             (不选则默认整个商城)
+             </td>
+           </tr>
+           <tr>
              <th width='120' align='right'>广告标题<font color='red'>*</font>：</th>
-             <td><input type='text' id='adName' class="form-control wst-ipt" value='{$object.adName}' maxLength='25'/></td>
+             <td><input type='text' id='adName' class="form-control wst-ipt ipt" value='{$object.adName}' maxLength='25'/></td>
            </tr>
            <tr style="height:70px;">
              <th align='right'>广告图片<font color='red'>*</font>：</th>
              <td>
              <div>
              	<div id="filePicker" style='margin-left:0px;float:left'>上传图片</div>
-             	    <div style='margin-left:5px;float:left'>图片大小:150 x 150 (px)，格式为 gif, jpg, jpeg, png</div>
+             	    <div style='margin-left:5px;float:left'>图片大小:<span id='img_size'></span> (px)，格式为 gif, jpg, jpeg, png</div>
              	</div>
              	
              </td>
@@ -184,7 +242,7 @@
 	            <else/>
                 <img id='preview' src='' ref='' width='100' height='100' style='display:none'/> 
                 </if>
-                <input id="adFile" name="adFile" class="text wstipt" tabindex="3" autocomplete="off" style="" type="hidden" value="{$object.adFile}"/>
+                <input id="adFile" name="adFile" class="text wstipt ipt" tabindex="3" autocomplete="off" style="" type="hidden" value="{$object.adFile}"/>
                 </div>
              	
              </td>
@@ -192,7 +250,7 @@
            <tr>
              <th align='right'>广告网址：</th>
              <td>
-             <input type='text' id='adURL' class="form-control wst-ipt" value='{$object.adURL}'/>
+             <input type='text' id='adURL' class="form-control wst-ipt ipt" value='{$object.adURL}'/>
              </td>
            </tr>
            <tr>
@@ -204,7 +262,7 @@
            <tr>
              <th align='right'>广告排序号：</th>
              <td>
-             <input type='text' id='adSort' class="form-control"  value='{$object.adSort}' style='width:80px' onkeypress="return WST.isNumberKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='8'/>
+             <input type='text' id='adSort' class="form-control ipt"  value='{$object.adSort}' style='width:80px' onkeypress="return WST.isNumberKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='8'/>
              </td>
            </tr>
            <tr>

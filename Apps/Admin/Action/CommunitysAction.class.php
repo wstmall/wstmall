@@ -80,7 +80,7 @@ class CommunitysAction extends BaseAction{
     public function queryByList(){
     	$this->isLogin();
 		$m = D('Admin/Communitys');
-		$list = $m->queryList();
+		$list = $m->queryByList((int)I('areaId3'));
 		$rs = array();
 		$rs['status'] = 1;
 		$rs['list'] = $list;

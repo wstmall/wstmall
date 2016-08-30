@@ -34,22 +34,50 @@
 				});
 	   }});
    }
+   function getAdPositions(v,id){
+	   if(v>-1){
+		   $('#adPositionId option').each(function(){
+			   if(parseInt($(this).attr('value'),10)<0)$(this).remove();
+		   });
+		   $.post("{:U('Admin/AdPositions/queryByList')}",{positionType:v},function(data,textStatus){
+				var json = WST.toJson(data);
+				if(json.status=='1' && json.list){
+					var html = [];
+					for(var i=0;i<json.list.length;i++){
+						html.push("<option value='-"+json.list[i].positionId+"'>"+json.list[i].positionName+"</option>");
+					}
+					 $("#adPositionId").append(html.join(''));
+				}
+				$('#adPositionId option').each(function(){
+					if($(this).attr('value')==id)$(this).prop('checked',true);
+				});
+			});
+	   }else{
+		   $('#adPositionId option').each(function(){
+			   if(parseInt($(this).attr('value'),10)<0)$(this).remove();
+		   });
+	   }
+   }
+   getAdPositions({$positionType},'{$adPositionId}');
    </script>
    <body class='wst-page'>
    	<div style="padding-top: 6px;">
        <div class='wst-tbar' style='height:25px;'>
        <form method='post' action='{:U("Admin/Ads/index")}' autocomplete="off">
-   		<div style="float:left;width:950px;">      
-		  广告位置：<select name="adPositionId">
-                <option value=''>请选择</option>
-                <option value='-1' <if condition="$params['adPositionId'] == -1 ">selected</if>>首页主广告</option>
-                <option value='-2' <if condition="$params['adPositionId'] == -2 ">selected</if>>品牌汇广告</option>
-                <option value='-3' <if condition="$params['adPositionId'] == -3 ">selected</if>>店铺街广告</option>
+   		<div style="float:left;width:950px;">
+   		  广告类型：<select name="positionType" name='positionType' onchange='javascript:getAdPositions(this.value)'>
+   		          <option value='-1'>请选择</option>
+   		          <option value='0' <if condition="$positionType == 0 ">selected</if>>PC版</option>
+   		          <if condition="$CONF['isOpenWeiXin'] == 1 ">
+   		          <option value='2' <if condition="$positionType == 2 ">selected</if>>微信版</option>
+   		          </if>
+   		       </select>     
+		  广告位置：<select name="adPositionId" id="adPositionId">
+                <option value='-1'>请选择</option>
                 <volist name="goodsCatList" id="vo">
-                <option value='{$vo['catId']}' <if condition="$params['adPositionId'] == $vo['catId'] ">selected</if>>(商品分类){$vo['catName']}</option>
+                <option value='{$vo['catId']}' <if condition="$adPositionId == $vo['catId'] ">selected</if>>(商品分类){$vo['catName']}</option>
                 </volist>
-             </select>
-                      广告标题：<input type='text' name='adName' value='{$params[adName]}' autocomplete="off"/>  
+             </select> 
   		<button type="submit" class="btn btn-primary glyphicon glyphicon-search">查询</button> 
 		  </form>
        	</div>
@@ -82,14 +110,12 @@
                <td>{$i}</td>
                <td>{$vo['adName']}</td>
                <td>
-               <if condition="$vo['adPositionId'] == -1 ">首页主广告
-               <elseif condition="$vo['adPositionId'] == -2 "/>品牌汇广告
-               <elseif condition="$vo['adPositionId'] == -3 "/>店铺街广告
+               <if condition="$vo['adPositionId'] lt 0">{$vo['positionName']}
                <else/>首页分层广告</if>
                </td>
                <td>{$vo['adURL']}</td>
                <td>{$vo['adStartDate']}至{$vo['adEndDate']}</td>
-               <td>{$vo['areaName1']}{$vo['areaName2']}</td>
+               <td>{$vo['areaName1']}{$vo['areaName2']}{$vo['areaName3']}{$vo['communityName']}</td>
                <td><img src='__ROOT__/{$vo['adFile']}' width='60' height='30'></td>
                <td>{$vo['adClickNum']}</td>
                <td>

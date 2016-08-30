@@ -86,9 +86,11 @@ class CommunitysModel extends BaseModel {
 	 /**
 	  * 获取列表
 	  */
-	  public function queryByList(){
-	     $sql = "select * from __PREFIX__communitys order by communityId desc";
-		 return $this->select($sql);
+	  public function queryByList($areaId3 = 0){
+	     $sql = "select * from __PREFIX__communitys where 1=1 ";
+	     if($areaId3>0)$sql.=" and areaId3=".$areaId3;
+	     $sql.=" order by communityId desc";
+		 return $this->query($sql);
 	  }
 	  
 	 /**

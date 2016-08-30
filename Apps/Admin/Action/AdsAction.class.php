@@ -30,6 +30,7 @@ class AdsAction extends BaseAction{
     		$object = $m->getModel();
     		$object['adStartDate'] = date('Y-m-d');
     		$object['adEndDate'] = date('Y-m-d');
+    		$object['positionType'] = -1;
     	}
     	$this->assign('object',$object);
 		$this->view->display('/ads/edit');
@@ -76,6 +77,8 @@ class AdsAction extends BaseAction{
     	$pager->setConfig('header','个会员');
     	$page['pager'] = $pager->show();
     	$this->assign('Page',$page);
+    	$this->assign('positionType',(int)I('positionType',-1));
+    	$this->assign('adPositionId',(int)I('adPositionId'));
         $this->display("/ads/list");
 	}
 	/**

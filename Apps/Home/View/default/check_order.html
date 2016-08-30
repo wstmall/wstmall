@@ -351,11 +351,11 @@
                     <div id="wst-scorebox">
                     	<div class="leftbox">
 				   		<if condition="$canUserScore eq 0">本次不符合积分使用规则，无可用积分<br/></if>
-						共{$userScore}个积分，本次可用 <span style="color:red;">{$canUserScore}</span> 个积分，<span id="scoreRule" onmouseover="showScoreRule()" onmouseout="closeScoreRule()" style="cursor: pointer;"><img src="__ROOT__/Apps/Home/View/default/images/a5.jpg"/> 积分规则</span>
+						共{$userScore}个积分，本次可用 <span id="canUserScore" data="{$canUserScore}" style="color:red;">{$canUserScore}</span> 个积分，<span id="scoreRule" onmouseover="showScoreRule()" onmouseout="closeScoreRule()" style="cursor: pointer;"><img src="__ROOT__/Apps/Home/View/default/images/a5.jpg"/> 积分规则</span>
 						</div>
 						<div class="rightbox">
 							<if condition="$canUserScore gt 0">
-							<label><input id="isScorePay" type="checkbox" scoreMoney="{$scoreMoney}" totalMoney="{$totalMoney}" />使用积分支付 ￥{$scoreMoney}</label>
+							<label id="scorePayLab"><input id="isScorePay" type="checkbox" scoreMoney="{$scoreMoney}" totalMoney="{$totalMoney}" gtotalMoney="{$gtotalMoney}" />使用积分支付 ￥<span id="scoreMoney">{$scoreMoney}</span></label>
 							</if>
 						</div>
 						<div style="clear:both"></div>

@@ -210,11 +210,12 @@ class OrdersModel extends BaseModel {
 		$remarks = I("remarks");
 		
 		$addressInfo = UserAddressModel::getAddressDetails($consigneeId);
-        $m = M('orderids');
+        
         
 		foreach ($catgoods as $key=> $shopgoods){
+			$m = M('orderids');
 			//生成订单ID
-			$orderSrcNo = $m->add(array('rnd'=>microtime(true)));
+			$orderSrcNo = $m->add(array('rnd'=>time()));
 			$orderNo = $orderSrcNo."".(fmod($orderSrcNo,7));
 			//创建订单信息
 			$data = array();
