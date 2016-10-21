@@ -131,7 +131,7 @@
 	        		<tr>
 	        			<td class="wst-align-left">
 	        			<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}" target="_blank">
-	        			   <img style='margin:5px;' src="__ROOT__/{$goods['goodsThums']}" width='50' height='50'/>
+	        			   <img style='margin:5px;' class='lazyImg' data-original="__ROOT__/{$goods['goodsThums']}" width='50' height='50'/>
 	        			</a>
 	        			<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}" target="_blank">
 	        			{$goods["goodsName"]}

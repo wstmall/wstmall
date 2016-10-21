@@ -73,7 +73,7 @@
    		          </if>
    		       </select>     
 		  广告位置：<select name="adPositionId" id="adPositionId">
-                <option value='-1'>请选择</option>
+                <option value=''>请选择</option>
                 <volist name="goodsCatList" id="vo">
                 <option value='{$vo['catId']}' <if condition="$adPositionId == $vo['catId'] ">selected</if>>(商品分类){$vo['catName']}</option>
                 </volist>

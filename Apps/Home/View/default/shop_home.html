@@ -18,8 +18,8 @@
 		</style>
    	</head>
    	<body>
-   		<input type="hidden" id="msort" value="{$msort}"/>   		
-   		<input type="hidden" id="sj" value="{$sj}"/>
+   		<input type="hidden" id="msort" value="{$msort}"/>
+   		<input type="hidden" id="mdesc" value="{$mdesc}"/>   		
    		<input type="hidden" id="shopId" value="{$shopId}"/>
    		<input type="hidden" id="ct1" value="{$ct1}"/>
    		<input type="hidden" id="ct2" value="{$ct2}"/>
@@ -153,12 +153,12 @@
 					</div>
 					<div class="wst-goods-list">
 						<div class="wst-goods-header">
-							<li <if condition="$msort eq 1">class="licurr"</if> onclick="searchShopsGoods(1);">综合排序<s <if condition="$msort eq 1">class="bscurr"</if>></s></li>
-							<li <if condition="$msort eq 2">class="licurr"</if> onclick="searchShopsGoods(2);">人气<s <if condition="$msort eq 2">class="bscurr"</if>></s></li>
-							<li <if condition="$msort eq 3">class="licurr"</if> onclick="searchShopsGoods(3);">销量<s <if condition="$msort eq 3">class="bscurr"</if>></s></li>
-							<li <if condition="$msort eq 4 or $msort eq 5">class="licurr"</if> onclick="searchShopsGoods(4);">价格<b <if condition="$msort eq 4">class="bscurr"</if><if condition="$msort eq 5">class="bscurr_up"</if>></b></li>
-							<li <if condition="$msort eq 6">class="licurr"</if> onclick="searchShopsGoods(6);">好评度<s <if condition="$msort eq 6">class="bscurr"</if>></s></li>
-							<li <if condition="$msort eq 7">class="licurr"</if> onclick="searchShopsGoods(7);">上架时间<s <if condition="$msort eq 7">class="bscurr"</if>></s></li>
+							<li <if condition="$msort eq 1">class="licurr"</if> onclick="searchShopsGoods(1);">综合排序<b <if condition="$msort eq 1 AND $mdesc eq 1">class="bscurr"</if><if condition="$msort eq 1 AND $mdesc eq 0">class="bscurr_up"</if>></b></li>
+							<li <if condition="$msort eq 2">class="licurr"</if> onclick="searchShopsGoods(2);">人气<b <if condition="$msort eq 2 AND $mdesc eq 1">class="bscurr"</if><if condition="$msort eq 2 AND  $mdesc eq 0">class="bscurr_up"</if>></b></li>
+							<li <if condition="$msort eq 3">class="licurr"</if> onclick="searchShopsGoods(3);">销量<b <if condition="$msort eq 3 AND $mdesc eq 1">class="bscurr"</if><if condition="$msort eq 3 AND $mdesc eq 0">class="bscurr_up"</if>></b></li>
+							<li <if condition="$msort eq 4">class="licurr"</if> onclick="searchShopsGoods(4);">价格<b <if condition="$msort eq 4 AND $mdesc eq 1">class="bscurr"</if><if condition="$msort eq 4 AND $mdesc eq 0">class="bscurr_up"</if>></b></li>
+							<li <if condition="$msort eq 5">class="licurr"</if> onclick="searchShopsGoods(5);">好评度<b <if condition="$msort eq 5 AND $mdesc eq 1">class="bscurr"</if><if condition="$msort eq 5 AND $mdesc eq 0">class="bscurr_up"</if>></b></li>
+							<li <if condition="$msort eq 6">class="licurr"</if> onclick="searchShopsGoods(6);">上架时间<b <if condition="$msort eq 6 AND $mdesc eq 1">class="bscurr"</if><if condition="$msort eq 6 AND $mdesc eq 0">class="bscurr_up"</if>></b></li>
 							<div style="float:left;position: relative;">
 								&nbsp;&nbsp;&nbsp;&nbsp;
 								<s class="rmb1"></s>

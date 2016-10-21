@@ -20,6 +20,11 @@ $(function () {
 	uploadFile({
     	  server:Think.U('Home/shops/uploadPic'),pick:'#shopBannerPicker',
     	  formData: {dir:'shops'},
+    	  accept: {
+    	        title: 'Images',
+    	        extensions: 'gif,jpg,jpeg,png',
+    	        mimeTypes: 'image/*'
+    	  },
     	  callback:function(f){
     		  layer.close(uploading);
     		  var json = WST.toJson(f);
@@ -81,7 +86,7 @@ function imglidel(obj){
                 <div id="shopBannerPicker" style='margin-left:0px;margin-top:5px;height:30px;overflow:hidden'>上传顶部广告图片</div>
              	<div>图片大小:1400 x 120 (px)(格式为 gif, jpg, jpeg, png)</div>
              	<div style="margin-top:5px;">
-             		<img height="60" id='shopBannerPreview' <if condition="$object.shopBanner neq ''">src="__ROOT__/{$object.shopBanner}"<else />src="__ROOT__/Apps/Home/View/default/images/s.gif"</if>/>
+             		<img height="60" id='shopBannerPreview' class='lazyImg' <if condition="$object.shopBanner neq ''">data-original="__ROOT__/{$object.shopBanner}"<else />data-original="__ROOT__/Apps/Home/View/default/images/s.gif"</if>/>
              	</div>
              </td>
            </tr>
@@ -134,7 +139,7 @@ function imglidel(obj){
                                  	<volist name="object['shopAds']" id="vo" key='i'>
 								       <li style="border: 1px solid rgb(59, 114, 165)" order="100" onmouseover="imglimouseover(this)" onmouseout="imglimouseout(this)">
 								       		<input type="hidden" class="gallery-img" iv="{$vo.adImg_thumb}" v="{$vo.adImg}" />
-									       <img width="152" height="152" src="__ROOT__/{$vo.adImg_thumb}"><span class="setdef" style="display:none">默认</span><span class="setdel" onclick="imglidel(this)" style="display:none">删除</span>
+									       <img width="152" height="152" class='lazyImg' data-original="__ROOT__/{$vo.adImg_thumb}"><span class="setdef" style="display:none">默认</span><span class="setdel" onclick="imglidel(this)" style="display:none">删除</span>
 								       	   <input class="gallery-img-url"  placeholder="广告路径" type="text" style="width:118px;" value="{$vo.adUrl}"/>
 								       </li>
 									</volist>

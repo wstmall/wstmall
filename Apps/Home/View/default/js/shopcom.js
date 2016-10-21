@@ -156,12 +156,12 @@ $.fn.imagePreview = function(options){
 		   $("#preview").css("top",(e.pageY - xOffset) + "px").css("left",(e.pageX + yOffset) + "px");
 	});
 }
-function getShopCatListForEdit(v,id){
+function getShopCatListForEdit(v,id,catId){
 	   var params = {};
 	   params.id = v;
-	   $('#shopCatId2').empty();
+	   $('#'+catId).empty();
 	   if(v==0){
-		   $('#shopCatId2').html('<option value="">请选择</option>');
+		   $('#'+catId).html('<option value="">请选择</option>');
 		   return;
 	   }
 	   var html = [];
@@ -175,7 +175,7 @@ function getShopCatListForEdit(v,id){
 					html.push('<option value="'+opts.catId+'" '+((id==opts.catId)?'selected':'')+'>'+opts.catName+'</option>');
 				}
 			}
-			$('#shopCatId2').html(html.join(''));
+			$('#'+catId).html(html.join(''));
 	   });
 }
 function getBrands(catId){
@@ -262,7 +262,16 @@ function editGoods(menuId){
 				   params['attr_name_'+$(this).attr('dataId')] = $.trim($(this).val());
 			   }
 		   });
-	   }
+	   	}
+	
+		params.packageCnt = $("#packages_list tr").length;
+		$("#packages_list tr").each(function(index,el){
+			var pkId = $(this).attr("id");
+			params["packageId_"+index] = $(this).attr("packageId");
+			params["packageName_"+index] = $("#"+pkId+" .package_name").val();
+			params["goodsIds_"+index] = $("#"+pkId+" .package_goodsIds").val();
+			params["goodsDiffPrices_"+index] = $("#"+pkId+" .package_goodsDiffPrices").val();
+		});
 	   
 	   var gallery = [];
 	   $('.gallery-img').each(function(){
@@ -935,6 +944,7 @@ function editShop(){
 	   params.bankNo = $('#bankNo').val();
 	   params.bankUserName = $('#bankUserName').val();
 	   params.shopAtive = $("input[name='shopAtive']:checked").val();
+	   params.isDistributAll = $("input[name='isDistributAll']:checked").val();
 	   var relateArea = [0];
 	   var relateCommunity = [0];
 	   $('.AreaNode').each(function(){
@@ -1498,6 +1508,146 @@ function getCashConfigsList(p){
 	       		$('#wst-page').empty();
 	       	}
        
+	});
+}
+
+/*************************商品优惠套餐****************************/
+function getGoodsByCat(catId){
+	$("#pk_l_goods").empty();
+	$.post(Think.U('Home/Goods/getGoodsByCat'),{"catId":catId},function(data,textStatus){
+		var json = WST.toJson(data);
+		var html = [];
+		var opts = [];
+		$("#pk_r_goods option").each(function(){
+			opts.push( $(this).val());
+		});
+		for(var i=0;i<json.length;i++){
+			var obj = json[i];
+			if(opts.toString().indexOf(obj.goodsId)==-1){
+				html.push("<option value='"+obj.goodsId+"' price='"+obj.shopPrice+"' txt='"+obj.goodsName+"' diffPrice='0'>"+obj.goodsName+"</option>");
+			}
+		}
+		$("#pk_l_goods").html(html.join(""));
+	});
+}
+
+function selGoods(objId){
+	$("#diffPrice").val(0);
+	$("#show_price").html($("#"+objId+" option:selected").attr("price"));
+}
+
+function optTo(fromId,toId){
+	var currOpt = $("#"+fromId+" option:selected");
+	if(currOpt.length>0){
+		var txt = $(currOpt).attr("txt");
+		var val = $(currOpt).val();
+		var price = $(currOpt).attr("price");
+		var diffPrice = parseFloat($("#diffPrice").val());
+			diffPrice = (diffPrice>0)?diffPrice:0;
+		if(fromId=="pk_l_goods"){
+			$("#"+toId).append("<option value='"+val+"' txt='"+txt+"' price='"+price+"' diffPrice='"+diffPrice+"'>"+txt+"【差价："+diffPrice+"】"+"</option>");
+		}else{
+			$("#"+toId).append("<option value='"+val+"' txt='"+txt+"' price='"+price+"'>"+txt+"</option>");
+		}
+		currOpt.remove();
+	}
+}
+
+
+function editGoodsPackages(){
+	
+	var packageId = $("#packageId").val();
+	var packageName = $("#packageName").val();
+	if(packageName==""){
+		WST.msg('请输入套餐名称！');
+		return;
+	}
+	var goodsIds = [];
+	var goodsNames = [];
+	var goodsDiffPrices = [];
+	$("#pk_r_goods option").each(function(){
+		goodsIds.push( $(this).val());
+		goodsNames.push( $(this).text());
+		goodsDiffPrices.push( $(this).attr("diffPrice"));
+	});
+	if(goodsIds.length<=0){
+		WST.msg('请选择需套餐的商品！');
+		return;
+	}
+	var row = [];
+	var cols = [];
+	var tempId = packageId;
+	if(packageId<=0){
+		tempId = $("#packages_list tr").length+1;
+	}
+	
+	cols.push("<td onclick='getCurrPackage(this)' package='"+tempId+"' width='35'><span class='package_num'>"+tempId+"</span></td>");
+	cols.push("<td onclick='getCurrPackage(this)' package='"+tempId+"' width='150'><input type='hidden' class='package_name' value='"+packageName+"'/>"+packageName+"</td>");
+	cols.push("<td onclick='getCurrPackage(this)' package='"+tempId+"'><input type='hidden' class='package_goodsIds' value='"+goodsIds.join(",")+"'/>"+goodsNames.join("<span style='color:red'>|&nbsp;</span>")+"</td>");
+	cols.push("<td width='60' class='wst-align-c'><input type='hidden' class='package_goodsDiffPrices' value='"+goodsDiffPrices.join(",")+"'/><span onclick='delPackage(this)' package='"+tempId+"'>删除</span></td>");
+		
+	if(packageId>0){
+		$("#package_"+tempId).html(cols.join(""));
+	}else{
+		row.push("<tr id='package_"+tempId+"' packageId='0'>");
+		row.push(cols.join(""));
+		row.push("</tr>");
+		$("#packages_list").append(row.join(""));
+	}
+	$("#packageId").val("");
+	$("#packageName").val("");
+	$("#show_price").html("~");
+	$("#diffPrice").val(0);
+	$("#pk_r_goods").empty();
+	$("#packages_list tr").removeClass("currRow");
+}
+
+function getCurrPackage(obj){
+	var packageId = $(obj).attr("package");
+	if($("#package_"+packageId).hasClass("currRow")){
+		$("#packages_list tr").removeClass("currRow");
+		$("#packageId").val("");
+		$("#packageName").val("");
+		$("#show_price").html("~");
+		$("#diffPrice").val(0);
+		$("#pk_r_goods").empty();
+	}else{
+		$("#packages_list tr").removeClass("currRow");
+		$("#package_"+packageId).addClass("currRow");
+		$("#packageId").val(packageId);
+		$("#packageName").val($("#package_"+packageId+" .package_name").val());
+		var goodsIds = $("#package_"+packageId+" .package_goodsIds").val();
+		var goodsDiffPrices = $("#package_"+packageId+" .package_goodsDiffPrices").val();
+		jQuery.post(Think.U('Home/Goods/getPackageGoods') ,{"goodsIds":goodsIds},function(data) {
+			 var json = WST.toJson(data);
+			 var html = [];
+			 var prices = goodsDiffPrices.split(",")
+			 for(var i=0;i<json.length;i++){
+				var obj = json[i];
+				html.push("<option value='"+obj.goodsId+"' price='"+obj.shopPrice+"' txt='"+obj.goodsName+"' diffPrice='0'>"+obj.goodsName+"【差价："+prices[i]+"】</option>");
+			 }
+			 $("#pk_r_goods").html(html.join(""));
+	   });
+	}
+}
+
+
+function delPackage(obj){
+	var packageId = $(obj).attr("package");
+	$("#packageId").val("");
+	$("#packageName").val("");
+	$("#show_price").html("~");
+	$("#diffPrice").val(0);
+	$("#pk_r_goods").empty();
+	$("#package_"+packageId).remove();
+	var params = {};
+		params.packageCnt = $("#packages_list tr").length;
+	$("#packages_list tr").each(function(index,el){
+		var pkId = $(this).attr("id");
+		params["packageId_"+index] = $(this).attr("packageId");
+		params["packageName_"+index] = $("#"+pkId+" .package_name").html();
+		params["goodsIds_"+index] = $("#"+pkId+" .package_goodsIds").html();
+		params["goodsDiffPrices_"+index] = $("#"+pkId+" .package_goodsDiffPrices").html();
 	});
 }
 

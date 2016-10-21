@@ -294,16 +294,18 @@ function appraiseOrder(id){
 	});
 }
 
-function appraiseInit(){
+function appraiseInit(id){
+	var filePicker = '#filePicker-'+id;
+	var picBox = '#picBox-'+id;
 	var uploading = null;
 	var uploader = WebUploader.create({
 	      auto: true,
 	      swf: WST.PUBLIC +'/plugins/webuploader/Uploader.swf',
   	  server:Think.U('Home/GoodsAppraises/uploadPic'),
-  	  pick:'#filePicker',
+  	  pick:filePicker,
   	  accept: {
 		    title: 'Images',
-		    extensions: 'gif,jpg,jpeg,bmp,png',
+		    extensions: 'gif,jpg,jpeg,png',
 		    mimeTypes: 'image/*'
 	      },
 	      fileNumLimit:5,
@@ -317,7 +319,7 @@ function appraiseInit(){
 			             "<img class='appraise_pic' width='100' height='100' src='"+WST.DOMAIN+"/"+json.file.savepath+json.file.savename+"'></div>");
 			var btn = $('<div style="position:relative;top:-115px;left:40px;cursor:pointer;" ><img src="'+WST.DOMAIN+'/Apps/Home/View/default/images/action_delete.gif"></div>');
 			tdiv.append(btn);
-			$('#picBox').append(tdiv);
+			$(picBox).append(tdiv);
 			btn.on('click','img',function(){
 				uploader.removeFile(file);
 				$(this).parent().parent().remove();
@@ -343,7 +345,7 @@ function complainInit(){
   	  pick:'#filePicker',
   	  accept: {
 		    title: 'Images',
-		    extensions: 'gif,jpg,jpeg,bmp,png',
+		    extensions: 'gif,jpg,jpeg,png',
 		    mimeTypes: 'image/*'
 	      },
 	      fileNumLimit:5,
@@ -357,7 +359,7 @@ function complainInit(){
 			             "<img class='complain_pic' width='100' height='100' src='"+WST.DOMAIN+"/"+json.file.savepath+json.file.savename+"'></div>");
 			var btn = $('<div style="position:relative;top:-100px;left:80px;cursor:pointer;" ><img src="'+WST.DOMAIN+'/Apps/Home/View/default/images/action_delete.gif"></div>');
 			tdiv.append(btn);
-			$('#picBox').append(tdiv);
+			$(picBox).append(tdiv);
 			btn.on('click','img',function(){
 				uploader.removeFile(file);
 				$(this).parent().parent().remove();
@@ -539,6 +541,8 @@ function getOrdersList(type){
 		location.href=Think.U('Home/Orders/queryCancelOrders',params);
 	}else if(type==6){
 		location.href=Think.U('Home/Orders/queryRefundByPage',params);
+	}else if(type==7){
+		location.href=Think.U('Home/Orders/queryCompleteOrders',params);
 	}
 	
 }

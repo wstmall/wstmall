@@ -143,9 +143,9 @@ function getPriceAttrInfo(id){
 			}
 			$('#shopGoodsPrice_'+goodsId).html("￥"+json.attrPrice);
 			var buyNum = parseInt($("#buy-num").val());
-			//$("#buy-num").attr('maxVal',json.attrStock);
+			$("#buy-num").attr('maxVal',json.attrStock);
 			$("#goodsStock").html(json.attrStock);
-			if(buyNum==0)$("#buy-num").val(1);
+			if(buyNum<=0)$("#buy-num").val(1);
 			if(buyNum>json.attrStock){
 				$("#buy-num").val(json.attrStock);
 			}
@@ -174,7 +174,7 @@ function getGoodsappraises(goodsId,p){
 				    html.push('<td style="padding-bottom:10px;" width="*"><div style="padding:10px 0px;">'+appraises.content+'</div>');
 
 				    //显示图片
-				    if(appraises.appraisesAnnex != '')
+				    if(appraises.appraisesAnnex)
 				    {
 				    	html.push('<div id="layer-photos-appraise'+j+'" class="layer-photos-appraise">');
 				    	var img = appraises.appraisesAnnex.split(',');
@@ -291,3 +291,127 @@ function cancelFavorites(id,type){
 	});
 }
 
+
+var layerll = 0;
+function addPackages(packageId){
+	var wh = ($(window).height() - 245);
+	$("#wst-package-"+packageId).height(wh-200);
+	layerll = layer.open({
+	    type: 1,
+	    title: '优惠套餐',
+	    shadeClose: true,
+	    shade: 0.4,
+	    area: ['1000px', ($(window).height() - 350) +'px'],
+	    content: $("#wst-package-"+packageId),
+	    yes: function(index, layero){
+	    	layer.close(index);
+	    }
+	});
+}
+
+function checkAttrStock(obj,goodsId,hasAttr,packageId){
+	if(hasAttr==1){
+		$(obj).addClass('wst-goods-attrs-on').siblings().removeClass('wst-goods-attrs-on');
+	}else{
+		$(obj).addClass('wst-pattr-box-on').removeClass('wst-pattr-box');
+	}
+	var attrStock = $(obj).attr("attrStock");
+	$(".wst-pstock-"+goodsId).html(attrStock);
+	if(attrStock<=0){
+		$("#wst-goods-notice-"+goodsId).html("商品库存不足");
+		$("#wst-goods-notice-"+goodsId).show();
+	}else{
+		$("#wst-goods-notice-"+goodsId).hide();
+	}
+	var packagePrice = 0;
+	var flag = 1;
+	$("#wst-package-"+packageId+" div[class^=wst-pattr-box]").each(function(){
+		var hasAttr = $(this).attr("hasAttr");
+		if(hasAttr==0){
+			if($(this).hasClass("wst-pattr-box-on")){
+				packagePrice += parseFloat($(this).attr("attrPrice"),10);
+			}else{
+				flag = 0;
+			}
+		}else{
+			var gattr = $(this).find(".wst-goods-attrs-on");
+			if(gattr.length>0){
+				packagePrice += parseFloat(gattr.attr("attrPrice"),10);
+			}else{
+				flag = 0;
+			}
+		}
+	});
+	if(flag==1){
+		$(".wst-package-price-"+packageId).html(packagePrice);
+	}else{
+		$(".wst-package-price-"+packageId).html($("#wst-package-price-"+packageId).attr("allPrice"));
+	}
+}
+
+function addCartPackage(obj,packageId,goodsThums){
+	$(obj).attr("disabled",true);
+	var flag = 1;
+	var gflag = 1;
+	var goodsAttrIds = [];
+	$("#wst-package-"+packageId+" div[class^=wst-pattr-box]").each(function(){
+		var goodsId = $(this).attr("goodsId");
+		var attrId = 0;
+		var hasAttr = $(this).attr("hasAttr");
+		
+		var attrStock = $(this).attr("attrStock");
+		$("#wst-package-"+packageId+" .wst-pstock-"+goodsId).html(attrStock);
+		if(attrStock<=0){
+			$("#wst-package-"+packageId+" .wst-goods-notice-"+goodsId).html("商品库存不足").show();
+			gflag = 0;
+		}else{
+			$("#wst-package-"+packageId+" .wst-goods-notice-"+goodsId).hide();
+		}
+		
+		if(hasAttr==0){
+			if($(this).hasClass("wst-pattr-box-on")){
+				attrId = $(this).attr("attrId");
+				$("#wst-package-"+packageId+" .wst-goods-notice-"+goodsId).hide();
+			}else{
+				
+				$("#wst-package-"+packageId+" .wst-goods-notice-"+goodsId).html("请选择商品").show();
+				flag = 0;
+			}
+		}else{
+			var gattr = $(this).find(".wst-goods-attrs-on");
+			if(gattr.length>0){
+				attrId = gattr.attr("attrId");
+				$("#wst-package-"+packageId+" .wst-goods-notice-"+goodsId).hide();
+			}else{
+				$("#wst-package-"+packageId+" .wst-goods-notice-"+goodsId).html("请选择商品").show();
+				flag = 0;
+			}
+		}
+		goodsAttrIds.push(goodsId+"_"+attrId+"_"+1);
+	});
+	
+	if(flag==0){
+		$("#wst-package-"+packageId+" .wst-package-notice").show();
+	}else{
+		$("#wst-package-"+packageId+" .wst-package-notice").hide();
+	}
+	if(flag==0 || gflag==0){
+		$(obj).attr("disabled",false);
+		return;
+	}
+	
+	var params = {};
+		params.goodsAttrIds = goodsAttrIds.join("@");
+		params.packageId = packageId;
+	$("#flyItem img").attr("src",WST.DOMAIN  +"/"+ goodsThums)
+	jQuery.post(Think.U('Home/Cart/addCartPackage') ,params,function(data) {
+		var json = WST.toJson(data);
+		$(obj).attr("disabled",false);
+		if(json.status==1){
+			layer.close(layerll);
+			location.href= Think.U('Home/Cart/toCart');
+		}else{
+			WST.msg(json.msg,{offset: '200px'});
+		}
+	});
+}

@@ -44,7 +44,7 @@
 							<div>
 								<div style="float: left;width: 65px;">
 								<a href="{:U('Home/Goods/getGoodsDetails',array('goodsId'=>$goods['goodsId']))}" target="_blank">
-								<img src="__ROOT__/{$goods['goodsThums']}" width="60" height="60" class='goods-img'/>
+								<img class='goods-img' src="__ROOT__/{$goods['goodsThums']}" width="60" height="60"/>
 								</a>
 								</div>
 								<div class='goods-name2 goods-txt' style="line-height:normal;padding-top:25px;">
@@ -98,8 +98,8 @@
 								<div style="clear: both;"></div>
 							</div>
 							<div class="item">
-								<div id='picBox' style='height:120px;width:735px;padding:5px;'>
-								<div id="filePicker" style='margin-left:0px;width:300px;'>上传附件(最多5张)</div>
+								<div id='picBox-{$goods['goodsId']}' style='height:120px;width:735px;padding:5px;'>
+								<div id="filePicker-{$goods['goodsId']}" style='margin-left:0px;width:300px;'>上传附件(最多5张)</div>
 								<div style="clear: both;"></div>
 							</div>
 
@@ -130,7 +130,7 @@
 	     <script type="text/javascript" src="__PUBLIC__/plugins/raty/jquery.raty.min.js"></script>
     	 <script type="text/javascript">
     	 	$(function(){
-			   appraiseInit();
+			   appraiseInit({$goods['goodsId']});
 		   });
 
 

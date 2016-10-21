@@ -3,7 +3,7 @@ namespace Home\Model;
 /**
  * ============================================================================
  * WSTMall开源商城
- * 官网地址:http://www.wstmall.com 
+ * 官网地址:http://www.wstmall.net
  * 联系QQ:707563272
  * ============================================================================
  * 会员服务类
@@ -425,7 +425,7 @@ class UsersModel extends BaseModel {
 	    $data['userType'] = 0;
 	    $data['userName'] = WSTAddslashes($obj["userName"]);
 	    $data['userQQ'] = "";
-	    $data['userPhoto'] = $obj["userPhoto"];
+	    $data['userPhoto'] = WSTDownFile($obj["userPhoto"],'./Upload/users/'.date("Y-m/"));
 	    $data['createTime'] = date('Y-m-d H:i:s');
 	    $data['userFlag'] = 1;
 	    $data['userFrom'] = $obj["userFrom"];
@@ -468,6 +468,11 @@ class UsersModel extends BaseModel {
 			}
 			session('WST_USER',$row);
 			$rd["status"] = 1;
+			//修改最后登录时间
+		    $ldata = array();
+		    $ldata['lastTime'] = date('Y-m-d H:i:s');
+		    $ldata['lastIP'] = get_client_ip();
+		    $this->where('userId='.$row['userId'])->save($ldata);
 			//记录登录日志
 			$data = array();
 			$data["userId"] = $row['userId'];

@@ -3,7 +3,7 @@ namespace Admin\Action;
 /**
  * ============================================================================
  * WSTMall开源商城
- * 官网地址:http://www.wstmall.com 
+ * 官网地址:http://www.wstmall.net
  * 联系QQ:707563272
  * ============================================================================
  * 首页（默认）控制器
@@ -60,6 +60,8 @@ class IndexAction extends BaseAction {
      * 跳去登录页面
      */
     public function toLogin(){
+		//触发定时任务
+		D('Admin/CronJobs')->autoComplate();
     	$this->display("/login");
     }
     /**

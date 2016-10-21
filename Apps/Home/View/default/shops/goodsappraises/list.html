@@ -42,7 +42,7 @@ $(document).ready(function(){
                <div style='width:300px;'>
 	               <div style='width:55px;float:left'>
 	               <a target='_blank' href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo['goodsId']))}">
-						<img src="__ROOT__/{$vo['goodsThums']}" height="50" width="50"/>
+						<img class='lazyImg' data-original="__ROOT__/{$vo['goodsThums']}" height="50" width="50"/>
 				   </a>
 				   </div>
 				   <div style='width:245px;float:left'>
@@ -80,7 +80,7 @@ $(document).ready(function(){
                		 
                		<div id="layer-photos-appraise{$c}"  style="margin-bottom:10px"> 
                		  <?php foreach($vo['appraisesAnnex'] as $q=>$v):?>
-					  <img  layer-src="__ROOT__/<?=$v?>" width="50" src="__ROOT__/<?=str_replace('.','_thumb.',$v)?>" alt="{$vo['content']}">
+					  <img  layer-src="__ROOT__/<?php echo $v?>" width="50" src="__ROOT__/<?php echo str_replace('.','_thumb.',$v)?>" alt="{$vo['content']}">
 					  <?php endforeach;?>
 					</div>
                </td>
@@ -125,7 +125,7 @@ $(document).ready(function(){
 				</if>
 				<?php for($i=1;$i<$c;++$i) {?>
              			layer.photos({
-						    photos: '#layer-photos-appraise'+<?=$i?>
+						    photos: '#layer-photos-appraise'+<?php echo $i?>
 						  });
              	<?php }?>
 				

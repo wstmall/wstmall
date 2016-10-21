@@ -66,8 +66,13 @@ $(function () {
 		});
 		var uploading = null;
 		uploadFile({
-		    server:Think.U('Home/users/uploadPic'),pick:'#userPhotoPicker',
+		    server:Think.U('Home/users/uploadPic'),pick:'#filePicker',
 		    formData: {dir:'users'},
+		    accept: {
+	  	        title: 'Images',
+	  	        extensions: 'gif,jpg,jpeg,png',
+	  	        mimeTypes: 'image/*'
+	  	    },
 		    callback:function(f){
 		    	layer.close(uploading);
 		    	var json = WST.toJson(f);
@@ -99,12 +104,12 @@ $(function () {
              <input type='text' id='userName' name='userName' value="{$user['userName']}"/>
              </td>
              <td rowspan='5'>
-                <div>
-		           <img id='userPhotoPreview' src='<if condition="$user['userPhoto'] =='' ">__ROOT__/{$CONF['goodsImg']}<else/>__ROOT__/{$user['userPhoto']}</if>' height='100'/><br/>
+                <div style="margin-bottom: 10px;">
+		           <img id='userPhotoPreview' class='lazyImg' data-original='<if condition="$user['userPhoto'] =='' ">__ROOT__/{$CONF['goodsImg']}<else/>{:WSTImgPath($user['userPhoto'])}</if>' height='100'/><br/>
 	            </div>
 	            <input type='hidden' id='userPhoto' class='wstipt' value='{$user["userPhoto"]}'/>
-             	<div id="userPhotoPicker" style='margin-left:0px;margin-top:5px;height:30px;overflow:hidden'>上传用户头像</div>
-             	<div>图片大小:150 x 150 (px)，格式为 gif, jpg, jpeg, png</div>
+	            <div id="filePicker" style='margin-left:0px;float:left'>上传店铺图标</div>
+             	<div style="clear: both;">图片大小:150 x 150 (px)，格式为 gif, jpg, jpeg, png</div>
              </td>
            </tr>
            <tr>

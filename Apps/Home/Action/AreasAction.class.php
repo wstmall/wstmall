@@ -3,7 +3,7 @@
 /**
  * ============================================================================
  * WSTMall开源商城
- * 官网地址:http://www.wstmall.com 
+ * 官网地址:http://www.wstmall.net
  * 联系QQ:707563272
  * ============================================================================
  * 区域控制器
@@ -43,6 +43,13 @@ class AreasAction extends BaseAction{
 		$m = D('Home/Areas');
 		$cityList = $m->getCityListByProvince($provinceId);
 		$this->ajaxReturn($cityList);
+	}
+	
+	public function getAreasByParentId(){
+		$parentId = (int)I('parentId');
+		$m = D('Home/Areas');
+		$rs = $m->getAreasByParentId($parentId);
+		$this->ajaxReturn($rs);
 	}
 };
 ?>

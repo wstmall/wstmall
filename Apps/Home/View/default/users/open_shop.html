@@ -45,6 +45,13 @@ dl.areaSelect dd{margin-left:20px;width:100%;}
    			getAreas("areaId3",$(this).val(),"","areaId3");
    			getCommunityForOpen();
    		});
+   		$("input[name='isDistributAll']").click(function(){
+ 		   if($(this).val()==1){
+ 			   $("#delivery_tr").hide();
+ 		   }else{
+ 			   $("#delivery_tr").show();
+ 		   }
+ 	   });
     });
 
    </script>	
@@ -75,7 +82,7 @@ dl.areaSelect dd{margin-left:20px;width:100%;}
              	</div>
              	<div style='clear:both;'>
              	<if condition="$object['shopImg'] !='' ">
-	             		<img height="100" id='preview' src='__ROOT__/{$object.shopImg}'>
+	             		<img height="100" id='preview' class='lazyImg' data-original='__ROOT__/{$object.shopImg}'>
 	            <else/>
                 <img id='preview' src='' ref='' width='100' height='100' style='display:none'/> 
                 </if>
@@ -114,8 +121,8 @@ dl.areaSelect dd{margin-left:20px;width:100%;}
              <td><input type='text' id='shopAddress' class="wstipt" style='width:350px;' maxLength='100' value='{$object.shopAddress}'/></td>
            </tr>
            <tr id='shopMap' style='display:none'>
-             <td>&nbsp;</td>
-             <td>
+             <td width='120'>&nbsp;</td>
+             <td  width='860'>
              <div id="mapContainer" style='height:400px;width:90%;'>等待地图初始化...</div>
              <div style='display:none'>
 	             <input type='hidden' id='latitude' name='latitude' class="wstipt" value="{$object['latitude']}"/>
@@ -148,6 +155,17 @@ dl.areaSelect dd{margin-left:20px;width:100%;}
              </td>
            </tr>
            <tr>
+             <th align='right'>配送范围<font color='red'>*</font>：</th>
+             <td>
+             <label>
+             <input type='radio' name='isDistributAll' class='wstipt' value='0' <if condition="$object['isDistributAll'] ==0 ">checked</if> />区域配送&nbsp;&nbsp;
+             </label>
+             <label>
+             <input type='radio' name='isDistributAll' class='wstipt' value='1' <if condition="$object['isDistributAll'] ==1 ">checked</if> />全国配送
+             </label>
+             </td>
+           </tr>
+           <tr id="delivery_tr" style="display: {$object['isDistributAll'] ==1?'none':''}">
              <th width='120' align='right'>配送区域<font color='red'>*</font>：</th>
              <td>
              <div class="text-gray Hide">展开全部：<input type="checkbox" id="expendAll" <if condition="$WST_USER['isSelf'] == 1">disabled</if>></div>

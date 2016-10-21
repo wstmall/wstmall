@@ -3,7 +3,7 @@
 /**
  * ============================================================================
  * WSTMall开源商城
- * 官网地址:http://www.wstmall.com 
+ * 官网地址:http://www.wstmall.net
  * 联系QQ:707563272
  * ============================================================================
  * 店铺分类控制器
@@ -78,7 +78,7 @@ class ShopsCatsAction extends BaseAction{
 	
 	public function changeCatStatus(){
 		$m = D('Home/ShopsCats');
-		$rs = $m->changeCatStatus($USER['shopId']);
+		$rs = $m->changeCatStatus();
 		$this->ajaxReturn($rs);
 	}
 };

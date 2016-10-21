@@ -245,8 +245,6 @@
 }
 
 .wst-goods-header li:hover b{
-    background-image: url("../../../View/default/images/sprite.png");
-    background-position: -30 0;
     display: inline-block;
     height: 14px;
     width: 14px;

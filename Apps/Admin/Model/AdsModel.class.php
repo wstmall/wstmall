@@ -3,7 +3,7 @@
 /**
  * ============================================================================
  * WSTMall开源商城
- * 官网地址:http://www.wstmall.com 
+ * 官网地址:http://www.wstmall.net
  * 联系QQ:707563272
  * ============================================================================
  * 广告服务类
@@ -71,7 +71,7 @@ class AdsModel extends BaseModel {
 	  * 分页列表
 	  */
      public function queryByPage(){
-     	$adPositionId = (int)I('adPositionId');
+     	$adPositionId = I('adPositionId');
      	$adDateRange = I('adDateRange');
      	$adName = WSTAddslashes(I('adName'));
 	 	$sql = "select a.*,a1.areaName areaName1,a2.areaName areaName2,a3.areaName areaName3,c.communityName 
@@ -79,7 +79,7 @@ class AdsModel extends BaseModel {
 	 	        left join __PREFIX__areas a2 on a.areaId2 = a2.areaId 
 	 	        left join __PREFIX__areas a3 on a.areaId3 = a3.areaId 
 	 	        left join __PREFIX__communitys c on a.communityId = c.communityId where 1=1 ";
-	 	if($adPositionId!="")$sql.="  and adPositionId=".$adPositionId;
+	 	if($adPositionId!="")$sql.="  and adPositionId=".(int)$adPositionId;
 	 	$sql.=' order by adId desc';
 		$rs = $this->pageQuery($sql);
 		if(count($rs[root])>0){

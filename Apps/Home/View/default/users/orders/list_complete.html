@@ -1,0 +1,113 @@
+<extend name="./Apps/Home/View/default/users/layout.html" />
+<block name="content">
+
+    <div class="wst-body"> 
+       <div class='wst-page-header'>买家中心 > 待评价交易</div>
+       <div class='wst-page-content'>
+       	<div style="padding:6px;">
+       		订单编号:<input id="orderNo" value="{$params['orderNo']}" style="width:80px;" autocomplete="off"/>
+       		店铺名称:<input id="shopName" value="{$params['shopName']}" style="width:80px;" autocomplete="off"/>
+       		收货人:<input id="userName" value="{$params['userName']}" style="width:80px;" autocomplete="off"/>
+       		<button class="wst-btn-query" onclick="javascript:getOrdersList(7)">查询</button>
+       	</div>
+        <table class='wst-list' style="font-size:13px;">
+           <thead>
+             <tr>
+               <th width='80'>订单编号</th>
+               <th width='*'>商品信息</th>
+               <th width='100'>店铺名称</th>
+               <th width='100'>收货人</th>
+               <th width='70'>订单金额</th>
+               <th width='70'>实付金额</th>
+               <th width='140'>下单时间</th>
+               <th width='60'>状态</th>
+               <th width='130'>操作</th>
+             </tr>
+           </thead>
+           <tbody>
+            <volist name="appraiseOrders['root']" id="order" key='key1'>
+             <tr height="60">
+             	<td width='80' style="padding-top:10px;vertical-align:top;">{$order["orderNo"]}</td>
+                <td width='*'>
+					<volist name="order['goodslist']" id="goods" key='key2'>
+						<a target='_blank' href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}">
+							<img data-original="__ROOT__/{$goods['goodsThums']}" height="50" width="50" class='lazyImg wst-goods-tb'/>
+						</a>
+					</volist>
+				</td>
+				<td width='100' style="padding-top:10px;vertical-align:top;"><a href="{:U('Home/Shops/toShopHome/',array('shopId'=>$order['shopId']))}" target="_blank">{$order["shopName"]}</a></td>
+               	<td width='100' style="padding-top:10px;vertical-align:top;">{$order["userName"]}</td>
+               	<td width='70' style="padding-top:10px;vertical-align:top;">{$order["totalMoney"]}</td>
+               	<td width='70'><span style="font-weight: bold;">{$order["realTotalMoney"]}</span></td>
+               	<td width='140' style="padding-top:10px;vertical-align:top;">{$order["createTime"]}</td>
+               	<td width='60' style="padding-top:10px;vertical-align:top;">
+               		<if condition='$order["orderStatus"] eq -3'>拒收
+               		<elseif condition='$order["orderStatus"] eq -2'/>未付款
+               		<elseif condition='$order["orderStatus"] eq -1'/>已取消
+               		<elseif condition='$order["orderStatus"] eq 0'/>未受理
+               		<elseif condition='$order["orderStatus"] eq 1'/>已受理
+               		<elseif condition='$order["orderStatus"] eq 2'/>打包中
+               		<elseif condition='$order["orderStatus"] eq 3'/>配送中
+               		<elseif condition='$order["orderStatus"] eq 4'/>已到货
+               		<elseif condition='$order["orderStatus"] eq 5'/>确认收货
+               		</if>
+               	</td>
+               	<td width='130' style="padding-top:10px;vertical-align:top;">
+					<a href="javascript:;" onclick="showOrder({$order['orderId']})">查看</a> | 
+					<if condition="$order['isAppraises'] eq 1">
+					已评价
+					<else/>
+					<a  href="javascript:;" onclick="appraiseOrder({$order['orderId']})">评价</a>
+					</if>
+					<if condition="$order['complainId'] eq ''">
+					<a href='{:U("Home/OrderComplains/complain",array("orderId"=>$order["orderId"]))}'>投诉</a>
+					</if>
+				</td>
+             </tr>
+             </volist>
+             <if condition="$appraiseOrders['totalPage'] gt 1">
+             <tfoot>
+             <tr>
+                <td colspan='8' align='center' style="height:30px;border-bottom: 0px;">
+					<div class="wst-page" style="float:right;padding-bottom:10px;">
+						<div id="wst-page-items">
+						</div>
+					</div>
+				</td>
+             </tr>
+             </tfoot>
+             </if>
+           </tbody>
+        </table>
+        </div>
+    </div>
+    <script>
+    <if condition="$appraiseOrders['totalPage'] gt 1">
+    $(document).ready(function(){
+		laypage({
+		    cont: 'wst-page-items',
+		    pages: {$appraiseOrders['totalPage']}, //总页数
+		    skip: true, //是否开启跳页
+		    skin: '#e23e3d',
+		    groups: 3, //连续显示分页数
+		    curr: function(){ //通过url获取当前页，也可以同上（pages）方式获取
+		        var page = location.search.match(/pcurr=(\d+)/);
+		        return page ? page[1] : 1;
+		    }(), 
+		    jump: function(e, first){ //触发分页后的回调
+		        if(!first){ //一定要加此判断，否则初始时会无限刷新
+		        	var nuewurl = WST.splitURL("pcurr");
+		        	var ulist = nuewurl.split("?");
+		        	if(ulist.length>1){
+		        		location.href = nuewurl+'&pcurr='+e.curr;
+		        	}else{
+		        		location.href = '?pcurr='+e.curr;
+		        	}
+		            
+		        }
+		    }
+		});
+    });
+	</if>
+	</script>
+</block> 

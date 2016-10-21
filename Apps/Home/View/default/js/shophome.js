@@ -16,22 +16,11 @@ $(function() {
 });
 
 function searchShopsGoods(obj){
-	if(obj==4){
-		var sj = $("#sj").val();
-		if(sj==2){
-			$("#sj").val(1);
-			$("#msort").val(4);
-		}else{
-			$("#sj").val(2);
-			$("#msort").val(5);
-		}		
-	}else{
-		$("#sj").val(0);
-		$("#msort").val(obj);
-	}	
+	var msort = $("#msort").val(obj);
+	var mdesc = $('#mdesc').val();
 	var params = new Array();
 	params.push("msort=" + $("#msort").val());
-	params.push("sj=" + $("#sj").val());	
+	params.push("mdesc=" + ((mdesc=="0")?"1":"0"));
 	params.push("sprice=" + $("#sprice").val());
 	params.push("eprice=" + $("#eprice").val());
 	params.push("shopId=" + $("#shopId").val());

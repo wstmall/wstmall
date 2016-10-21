@@ -146,7 +146,7 @@
 
                 <div id="layer-photos-appraise{$c}"  style="margin-bottom:10px"> 
                 <?php foreach($vo['appraisesAnnex'] as $q=>$v):?>
-                <img  layer-src="__ROOT__/<?=$v?>" width="50" src="__ROOT__/<?=str_replace('.','_thumb.',$v)?>" alt="{$vo['content']}">
+                <img  layer-src="__ROOT__/<?php echo $v;?>" width="50" src="__ROOT__/<?php echo str_replace('.','_thumb.',$v);?>" alt="{$vo['content']}">
                 <?php endforeach;?>
                 </div>
 
@@ -167,7 +167,7 @@
 <script>
   <?php for($i=1;$i<$c;++$i) {?>
       layer.photos({
-          photos: '#layer-photos-appraise'+<?=$i?>
+          photos: '#layer-photos-appraise'+<?php echo $i;?>
         });
   <?php }?>
 </script>

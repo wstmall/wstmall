@@ -144,7 +144,7 @@
             fileVal:'Filedata',
              accept: {
                  title: 'Images',
-                 extensions: 'gif,jpg,jpeg,bmp,png',
+                 extensions: 'gif,jpg,jpeg,png',
                  mimeTypes: 'image/*'
              },
 
@@ -503,7 +503,12 @@
         });
 
         uploader.onError = function( code ) {
-        	WST.msg( '图片已在列表，请勿重复上传！', {icon: 5});
+        	if(code=='F_DUPLICATE'){
+        		WST.msg( '图片已在列表，请勿重复上传！', {icon: 5});
+        	}
+        	if(code=='Q_TYPE_DENIED'){
+        		WST.msg( '图片格式不正确，请重复上传！', {icon: 5});
+        	}
         };
 
         $upload.on('click', function() {

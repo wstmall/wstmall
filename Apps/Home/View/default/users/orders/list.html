@@ -6,7 +6,7 @@
        
 	   <div class="wst-order-userinfo-box" style="">
 	   		<div class="wst-userimg-box">
-	   			<img src="<empty name="WST_USER['userPhoto']">__ROOT__/Apps/Home/View/default/images/logo.png<else/>__ROOT__/{$WST_USER['userPhoto']}</empty>" height="100" width="100" />
+	   			<img class='lazyImg' data-original="<empty name="WST_USER['userPhoto']">__ROOT__/Apps/Home/View/default/images/logo.png<else/>{:WSTImgPath($WST_USER['userPhoto'])}</empty>" height="100" width="100" />
 	   		</div>
 	   		<div class="wst-userlogin-box">
 	   			<div><span style="font-size:16px;">欢迎您：</span><span style="font-weight:bolder;color:#fff100;">{$WST_USER["loginName"]}</span><if condition='$WST_USER["userRank"]["rankName"] neq ""'>({$WST_USER["userRank"]['rankName']})</if></div>
@@ -44,7 +44,7 @@
        					<td width="150">
        						<volist name="order['goodslist']" id="goods" key='key2'>
 								<a href="{:U('Home/Goods/getGoodsDetails',array('goodsId'=>$goods['goodsId']))}">
-									<img src="__ROOT__/{$goods['goodsThums']}" height="50" width="50"/>
+									<img class='lazyImg' data-original="__ROOT__/{$goods['goodsThums']}" height="50" width="50"/>
 								</a>
 							</volist>
        					</td>

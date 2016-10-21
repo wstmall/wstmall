@@ -369,7 +369,7 @@
 }
 .wst-goods-header li b{
     background-image: url("../../../View/default/images/sprite.png");
-    background-position: 0 0;
+    background-position: -2px -1px;
     display: inline-block;
     height: 11px;
     width: 12px;
@@ -401,8 +401,7 @@
 }
 
 .wst-goods-header li:hover b{
-    background-image: url("../../../View/default/images/sprite.png");
-    background-position: -60 0;
+    
     display: inline-block;
     height: 11px;
     width: 12px;
@@ -410,7 +409,7 @@
 
 .wst-goods-list .wst-goods-header .bscurr{
 	background-image: url("../../../View/default/images/sprite.png");
-    background-position: -60 0;
+    background-position: -1px -1px;
     display: inline-block;
     height: 11px;
     width: 12px;
@@ -418,7 +417,7 @@
 
 .wst-goods-list .wst-goods-header .bscurr_up{
 	background-image: url("../../../View/default/images/sprite.png");
-    background-position: -90 0;
+    background-position: -31px -1px;
     display: inline-block;
     height: 11px;
     width: 12px;

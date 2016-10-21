@@ -54,7 +54,7 @@ function getDistrictsShops(){
 	params.shopAtive = $("#shopAtive").val();
 	params.searchType = $("#wst-search-type").val();
 	if(params.searchType==2){
-		params.keyWords = $.trim($("#keyword").val());
+		$("#keyword").val(params.shopName);
 	}
 	$.post(Think.U('Home/Shops/getDistrictsShops') , params ,function(data) {		
 		var json = WST.toJson(data);

@@ -2,7 +2,7 @@
 /**
  * ============================================================================
  * WSTMall开源商城
- * 官网地址:http://www.wstmall.com 
+ * 官网地址:http://www.wstmall.net 
  * 联系QQ:707563272
  * ============================================================================
  * 微信接口类
@@ -11,18 +11,14 @@ class WSTWechat{
 	public $appId;
 	public $secret;
 	private $tokenId;
-	private $jsapi_ticket;
 	private $error;
-	private $evnName;
 	
 	/**
 	 * 初始微信配置信息
 	 */
-    public function __construct($appId, $secret,$evnName = 'WSTMall') {
+    public function __construct($appId, $secret) {
         $this->appId = $appId;
         $this->secret = $secret;
-        $this->evnName = $evnName;
-        $this->initEnv();
         $this->getToken();
     }
     /**
@@ -53,21 +49,23 @@ class WSTWechat{
 	 * 获取访问令牌
 	 */
 	public function getToken(){
-		//没有过期则继续用，过期了就重新获取一次
-    	if($this->getEvn('token_expire')<time()){
-	    	$url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.$this->appId.'&secret='.$this->secret;
-		    $data = $this->http($url);
-		    $data = json_decode($data, true);
-		    if($data['access_token']!=''){
-		    	$this->tokenId = $data['access_token'];
-		    	$this->setEnv('token_expire', time()+7000);
-		    	return $this->tokenId;
-		    }else{
-		        $this->error = $data;
-		    }
-		    return false;
-    	}
-    	return $this->tokenId;
+		$access_token = S('access_token');
+		if($access_token) { //已缓存，直接使用
+			$this->tokenId = $access_token;
+			return $this->tokenId;
+		} else { //获取access_token
+			$url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid='.$this->appId.'&secret='.$this->secret;
+			$data = $this->http($url);
+			if($data['access_token']!=''){
+				$data = json_decode($data, true);
+				S('access_token',$data['access_token'],7000);
+				$this->tokenId = $data['access_token'];
+				return $this->tokenId;
+			}else{
+				$this->error = $data;
+			}
+			return false;
+		}
 	}
 	
 	/**
@@ -132,26 +130,25 @@ class WSTWechat{
 	 */
 	public function getJsSignature($url){
 		//如果jsapi_ticket过期的话就重新获取，否则就继续用原来的
-		if($this->getEvn('jsapi_ticket_expire')<time()){
-			$tokenId = $this->getToken();
+		$jsapi_ticket = S('jsapi_ticket_'.md5($url));
+		if($jsapi_ticket){
+			return $jsapi_ticket;
+		}else{
 			$ticket = $this->getJsApiTicket();
 			if($ticket['errcode']==0){
-				$this->jsapi_ticket = $ticket['ticket'];
-				$this->setEnv('jsapi_ticket_expire',time()+7000);
 				$data = array();
 				$data['status'] = 1;
 				$data['noncestr'] = $this->getRadomStr();
 				$data['timestamp'] = time();
 				$data['jsapi_ticket'] = $ticket['ticket'];
 			    $data['signature'] = sha1('jsapi_ticket='.$ticket['ticket'].'&noncestr='.$data['noncestr'].'&timestamp='.$data['timestamp'].'&url='.$url);
-			    //echo 'jsapi_ticket='.$ticket['ticket'].'&noncestr='.$data['noncestr'].'&timestamp='.$data['timestamp'].'&url='.$url;
+			    S('jsapi_ticket_'.md5($url),$data,7000);
 			    return $data;
 			}else{
 				$this->error = $ticket;
 			}
 			return array('status'=>-1,'errcode'=>$ticket['errcode'],'errmsg'=>$ticket['errmsg']);
 		}
-		return $this->jsapi_ticket;
 	}
 	
     /**
@@ -160,28 +157,6 @@ class WSTWechat{
      */
     public function getError(){
     	return $this->error;
-    }
-    
-    /**
-     * 初始化全局参数
-     */
-    private function initEnv(){
-    	if(empty($GLOBALS[$this->evnName])){
-    		$GLOBALS[$this->evnName]['token_expire'] = 0;
-    		$GLOBALS[$this->evnName]['jsapi_ticket_expire'] = 0;
-    	}
-    }
-    /**
-     * 保存全局参数
-     */
-    private function setEnv($name,$time){
-    	$GLOBALS[$this->evnName][$name] = $time;
-    }
-    /**
-     * 获取全局参数
-     */
-    private function getEvn($name){
-    	return $GLOBALS[$this->evnName][$name];
     }
 	
 }

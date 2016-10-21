@@ -23,7 +23,7 @@
 			<ul class="wst-slide-items">
 				<volist name=":WSTAds(-1)" id="vo" key="k">
 				<li style="z-index: 1;"><a target="_blank" onclick="addAccess({$vo['adId']})" href="{$vo['adURL']}">
-						<img src="__ROOT__/{$vo['adFile']}" height="360" width="100%" title="{$vo['adName']}" />
+						<img class='lazyImg' data-original="__ROOT__/{$vo['adFile']}" height="360" width="100%" title="{$vo['adName']}" />
 				</a></li>
 				</volist>
 			</ul>

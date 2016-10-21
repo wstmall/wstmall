@@ -476,17 +476,17 @@ function WSTGetFirstCharter($str){
 	if($asc>=-12556 && $asc<=-11848) return 'X';
 	if($asc>=-11847 && $asc<=-11056) return 'Y';
 	if($asc>=-11055 && $asc<=-10247) return 'Z';
-	return null;
+	return '';
 }
 
 /**
  * 下载网络文件到本地服务器
- * @param unknown $url
- * @param unknown $folde
  */
 function WSTDownFile($url,$folde='./Upload/image/'){
 	set_time_limit (24 * 60 * 60);
-	$newfname = $folde . basename($url);
+	WSTCreateDir(WSTRootPath().$folde);
+	$postfix = WSTGetExtension(WSTRootPath() . $folde . basename($url));
+	$newfname = $folde . time().rand(10,100).".".($postfix!=''?$postfix:"jpg");
 	$file = fopen ($url, "rb");
 	if ($file) {
 		$newf = fopen ($newfname, "wb");
@@ -502,7 +502,24 @@ function WSTDownFile($url,$folde='./Upload/image/'){
 	if ($newf) {
 		fclose($newf);
 	}
+	return $newfname;
 }
+
+/**
+ * 获取文件后缀
+ */
+function WSTGetExtension($file){
+	return pathinfo($file, PATHINFO_EXTENSION);
+}
+
+function WSTImgPath($url){
+	if (preg_match('/(http:\/\/)|(https:\/\/)/i', $url)) {
+	  	return $url;
+	}else{
+		return __ROOT__."/".$url;
+	}
+}
+
 
 /**
  * 自动登录
@@ -521,9 +538,9 @@ function WSTIPAddress(){
     curl_setopt($ch, CURLOPT_ENCODING ,'utf8'); 
     curl_setopt($ch, CURLOPT_TIMEOUT, 10); 
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $location = curl_exec($ch); 
+    $location = curl_exec($ch);
     curl_close($ch);
-    if($location){
+    if(is_array($location)){
     	$location = json_decode($location);
     	return array('province'=>$location->province,'city'=>$location->city,'district'=>$location->district);
     }

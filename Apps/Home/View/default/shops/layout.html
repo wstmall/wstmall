@@ -9,6 +9,8 @@
   		<meta http-equiv="Expires" content="0">
 		<meta http-equiv="Pragma" content="no-cache">
 		<meta http-equiv="Cache-control" content="no-cache">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+      	<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta http-equiv="Cache" content="no-cache">
   		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/shop.css">
@@ -23,7 +25,7 @@
 			<div class="wst-user-top-main">
 					<div class='wst-user-top-logo'>
 						<a href="{:WSTDomain()}"  title='商城首页'>
-						<img src="{:WSTDomain()}/{$CONF['mallLogo']}" style="max-width: 240px; height: 132px;"/>	
+						<img class='lazyImg' data-original="{:WSTDomain()}/{$CONF['mallLogo']}" style="max-width: 240px; height: 132px;"/>	
 						</a>
 					</div>
 					<div class='wst-user-top-search'>
@@ -106,5 +108,5 @@
       	<script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
       	<script src="__ROOT__/Apps/Home/View/default/js/audio.js"></script>
       	<script type="text/javascript" src="__PUBLIC__/plugins/webuploader/webuploader.js"></script>
-        <script type="text/javascript" src="__ROOT__/Apps/Home/View/default/js/goodsbatchupload.js"></script>
+      	<script type="text/javascript" src="__ROOT__/Apps/Home/View/default/js/goodsbatchupload.js"></script>
 </html>

@@ -11,7 +11,7 @@
         	   <div class='wst-complain-order-goods'>
         	   <volist name="data['order']['goodsList']" id="goods" key='key2'>
 				  <a target='_blank' href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}" title="{$goods['goodsName']}">
-					<img src="__ROOT__/{$goods['goodsThums']}" height="55" width="55" class='wst-goods-tb'/>
+					<img data-original="__ROOT__/{$goods['goodsThums']}" height="55" width="55" class='wst-goods-tb lazyImg'/>
 				  </a>
 			   </volist>
         	   </div>

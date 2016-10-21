@@ -41,7 +41,7 @@
                 <div class="wst-cartlist-box">
                     <div class="wst-cartlist-head">
                         <div class="wst-head-title1">
-		                	<input type="checkbox" id="chk_all"/>&nbsp;全选
+		                	<input type="checkbox" onclick='cartChkAll(this)' id="chk_all"/>&nbsp;全选
 						</div>
                         <div class="wst-head-title2">商品</div> 
                         <div class="wst-head-title3">店铺名称</div>                      
@@ -63,31 +63,94 @@
                 <div id="wst_cart_shop_{$key}" data="{$key}">
                 <div>
                 	<div class="wst-head-check">
-                		<input type="checkbox" id="chk_shop_{$key}" value="{$key}" name="chk_shop"/>
+                		<input type="checkbox" onclick='cartChkShop(this)' id="chk_shop_{$key}" value="{$key}" name="chk_shop"/>
                 	</div>
              		<div class="wst-cart-dp-pb1">
-                 		<span class="wst-cart-shop-span"><span id="sp_{$shopgoods['shopgoods'][0]['shopId']}">{$shopgoods["shopgoods"][0]["shopName"]}</span></span>&nbsp;&nbsp;&nbsp;&nbsp;
-             			<if condition="$shopgoods['shopgoods'][0]['qqNo'] neq ''">
-							<a href="tencent://message/?uin={$shopgoods['shopgoods'][0]['qqNo']}&Site=QQ交谈&Menu=yes">
-								<img border="0" src="http://wpa.qq.com/pa?p=1:{$shopgoods['shopgoods'][0]['qqNo']}:7" alt="QQ交谈" width="71" height="24" />
+                 		<span class="wst-cart-shop-span"><span id="sp_{$shopgoods['shopId']}">{$shopgoods["shopName"]}</span></span>&nbsp;&nbsp;&nbsp;&nbsp;
+             			<if condition="$shopgoods['qqNo'] neq ''">
+							<a href="tencent://message/?uin={$shopgoods['qqNo']}&Site=QQ交谈&Menu=yes">
+								<img border="0" src="http://wpa.qq.com/pa?p=1:{$shopgoods['qqNo']}:7" alt="QQ交谈" width="71" height="24" />
 							</a>
 						</if>
              		</div>
              		<div class="wst-goods-tips">
-                 		 包邮起步价：¥{$shopgoods["shopgoods"][0]["deliveryFreeMoney"]}元
+             			<if condition="$shopgoods['shopAtive'] eq 0">
+                 		<span class="label-warning">&nbsp;休息中&nbsp;</span>&nbsp;
+                 		</if>
+                 		包邮起步价：¥{$shopgoods["deliveryFreeMoney"]}元
                 	</div>
             		<div style="clear: both;"></div>
           		</div>
                 <div class="wst-cartlist-box">
                     
                     <div id="catgoodsList">
+                    	<volist name="shopgoods['packages']" key="key2" id="package">
+                    		<div class="wst-cartlist-item" id="selgoods_{$package['packageId']}_{$package['batchNo']}" class="selgoods" <if condition="$package['goodsStock'] lt $package['goodsCnt'] OR $package['goodsStock'] eq 0">style="border:2px solid red;"</if>>
+		                        <input type="hidden" value="<if condition="$package['goodsStock'] lt $package['goodsCnt']">-1</if>" class="goodsStockFlag"/>
+		                        <div class="wst-cartlist-vb">
+		                            <input type="checkbox" onclick='pkgCartChkGoods(this)' isPackage='1' id="chk_goods_{$package['packageId']}_{$package['batchNo']}" name="chk_goods_{$package['shopId']}" value="{$package['packageId']}" parent="{$package['shopId']}" dataId="{$package['batchNo']}" isBook="0" <if condition="$package['ischk'] eq 1">checked</if>/>
+									<input type="hidden" class="cgoodsId" isPackage='1' dataId="{$package['batchNo']}" value="{$package['packageId']}" />
+		                            <input type="hidden" id="price_{$package['packageId']}_{$package['batchNo']}" value="{$package['shopPrice']}" />
+		                        </div>
+		                        <div class="wst-cartlist-item-col1">
+		                        	<div style="color: #e43e41;font-weight: bold; ">{$package['packageName']}</div>
+		                        	<volist name="package['goods']" key="key2" id="goods">
+		                            <div>
+		                                <div class="wst-cartlist-bximg">
+		                                 	<a target="_blank" href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}" target="_blank">
+		                                        <img src="__ROOT__/{$goods['goodsThums']}" width="60" height="60" />
+		                                    </a>
+		                                </div>
+		                                <div class="wst-cartlist-gsname">
+		                                    <a target="_blank" href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}" target="_blank">
+		                                    {$goods["goodsName"]}<if condition="$goods['attrVal'] neq ''">【{$goods['attrName']}:{$goods['attrVal']}】</if>
+		                                    </a>
+		                                </div>
+		                            </div>
+		                            <div class="wst-clear"></div>
+		                            </volist>
+		                        </div>
+		                        <div class="wst-cartlist-item-col2">
+		                        	<a target="_blank" href="{:U('Home/Shops/toShopHome/',array('shopId'=>$goods['shopId']))}" title="{$package['goods'][0]['shopName']}">{$package['goods'][0]['shopName']}</a>
+		                        </div>
+		                        <div class="wst-cartlist-item-col3">
+		                        	<div>¥{$package["shopPrice"]}元</div> 
+		                        	<volist name="package['goods']" key="key2" id="goods">
+		                            <div style="height:54px;line-height:20px;">
+		                               <div style="margin-top:2px;">¥{$goods["shopPrice"]}元</div> 
+		                               <div style="text-decoration:line-through;color:#666666;">¥{$goods["oshopPrice"]}元</div> 
+		                            </div>
+		                            <div class="wst-clear"></div>
+		                            </volist>
+		                        </div>
+		                        <div class="wst-cartlist-item-col4" id="stock_{$package['batchNo']}">			                       
+			                		<if condition="$package['goodsStock'] egt $package['goodsCnt'] AND $package['goodsCnt'] gt 0 ">
+	                                                                                                有货
+	                        		<elseif condition="$package['goodsStock'] eq 0"/>
+	                                   	<span style="color:red;">无货</span>
+	                           		<else/>
+	                                    <span style="color:red;">库存不足,仅剩{$package['goodsStock']}份</span>
+	                         		</if>
+		                        </div>
+		                        <div class="wst-cartlist-item-col5">
+		                            <div class="wrap-input" style="">
+		                                <button id="numl_{$package['packageId']}_{$package['batchNo']}" class="wst-cartlist-plus" onclick="changePkgCatGoodsnum(1,{$package['shopId']},{$package['packageId']},{$package['batchNo']})">-</button>
+		                                <input id="buy-num_{$package['packageId']}_{$package['batchNo']}" dataId="{$goods['goodsAttrId']}" class="text" style="width: 30px; text-align: center;" maxlength="3" value="{$package['goodsCnt']}" onkeypress="return WST.isNumberKey(event);" onkeyup="changePkgCatGoodsnum(0,{$package['shopId']},{$package['packageId']},{$package['batchNo']});" />
+		                                <button id="numr_{$package['packageId']}_{$package['batchNo']}" class="wst-cartlist-add" onclick="changePkgCatGoodsnum(2,{$package['shopId']},{$package['packageId']},{$package['batchNo']})">+</button>
+		                            </div>
+		                        </div>
+		                        <div class="wst-cartlist-item-col7">¥<span id="prc_{$package['packageId']}_{$package['batchNo']}">{$package["shopPrice"] * $package["goodsCnt"]}</span>元</div>
+		                        <div class="wst-cartlist-item-col8"><a href="javascript:delPckCatGoods({$package['shopId']},{$package['packageId']},{$package['batchNo']});">删除</a></div>
+		                        <div class="wst-clear"></div>
+		                    </div>
+                    	</volist>
                         <volist name="shopgoods['shopgoods']" key="key2" id="goods">
                             
 							<div class="wst-cartlist-item" id="selgoods_{$goods['goodsId']}_{$goods['goodsAttrId']}" class="selgoods" <if condition="$goods['goodsStock'] lt $goods['cnt'] OR $goods['goodsStock'] eq 0">style="border:2px solid red;"</if>>
 		                        <input type="hidden" value="<if condition="$goods['goodsStock'] lt $goods['cnt']">-1</if>" class="goodsStockFlag"/>
 		                        <div class="wst-cartlist-vb">
-		                            <input type="checkbox" id="chk_goods_{$goods['goodsId']}_{$goods['goodsAttrId']}" name="chk_goods_{$goods['shopId']}" value="{$goods['goodsId']}" parent="{$goods['shopId']}" dataId="{$goods['goodsAttrId']}" isBook="{$goods['isBook']}" <if condition="$goods['ischk'] eq 1">checked</if>/>
-									<input type="hidden" class="cgoodsId" dataId="{$goods['goodsAttrId']}" value="{$goods['goodsId']}" />
+		                            <input type="checkbox" onclick='cartChkGoods(this)' isPackage='0' id="chk_goods_{$goods['goodsId']}_{$goods['goodsAttrId']}" name="chk_goods_{$goods['shopId']}" value="{$goods['goodsId']}" parent="{$goods['shopId']}" dataId="{$goods['goodsAttrId']}" isBook="{$goods['isBook']}" <if condition="$goods['ischk'] eq 1">checked</if>/>
+									<input type="hidden" class="cgoodsId" isPackage='0' dataId="{$goods['goodsAttrId']}" value="{$goods['goodsId']}" />
 		                            <input type="hidden" id="price_{$goods['goodsId']}_{$goods['goodsAttrId']}" value="{$goods['shopPrice']}" />
 		                        </div>
 		                        <div class="wst-cartlist-item-col1">
@@ -146,7 +209,7 @@
                         <div class="wst-chkod-yf1">
                         	<span class="total">应付总额(不含运费)：<span style="color: red;">
 	                                <strong id="payPriceId">￥
-		                                <span id="wst_cart_totalmoney" class="wst-cart-totalmoney">{$cartInfo['totalMoney']}</span>
+		                                <span id="wst_cart_totalmoney" class="wst-cart-totalmoney">{$cartInfo['gtotalMoney']}</span>
 	                                </strong>元</span>
                                 </span>
                         </div>

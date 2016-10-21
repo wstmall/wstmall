@@ -3,7 +3,7 @@ namespace Home\Action;
 /**
  * ============================================================================
  * WSTMall开源商城
- * 官网地址:http://www.wstmall.com 
+ * 官网地址:http://www.wstmall.net
  * 联系QQ:707563272
  * ============================================================================
  * 店铺控制器
@@ -31,8 +31,8 @@ class ShopsAction extends BaseAction {
 			$this->assign('shopId',$shopId);
 			$this->assign('ct1',(int)I("ct1"));
 			$this->assign('ct2',(int)I("ct2"));
-			$this->assign('msort',(int)I("msort"));
-			$this->assign('sj',I("sj",0));
+			$this->assign('msort',(int)I("msort",1));
+			$this->assign('mdesc',I("mdesc",0));
 			$this->assign('sprice',I("sprice"));//上架开始时间
 			$this->assign('eprice',I("eprice"));//上架结束时间
 			$this->assign('goodsName',urldecode(I("goodsName")));//上架结束时间

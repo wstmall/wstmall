@@ -49,7 +49,14 @@ dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
    		$("#expendAll").click(function(){
    			if ($(this).prop('checked')==true) {$("dl.areaSelect dd").removeClass('Hide')}
    			else{$("dl.areaSelect dd").addClass('Hide')}
-   		})
+   		});
+   		$("input[name='isDistributAll']").click(function(){
+ 		   if($(this).val()==1){
+ 			   $("#delivery_tr").hide();
+ 		   }else{
+ 			   $("#delivery_tr").show();
+ 		   }
+ 	   });
 	   $.formValidator.initConfig({
 		   theme:'Default',mode:'AutoTip',formID:"myform",debug:true,submitOnce:true,onSuccess:function(){
 				   edit();
@@ -372,7 +379,7 @@ dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
 	   params.isInvoice = $("input[name='isInvoice']:checked").val();
 	   params.invoiceRemarks = $('#invoiceRemarks').val();
 	   params.serviceStartTime = $('#serviceStartTime').val();
-	   params.serviceEndTime = $('#serviceEndTime').val();	   
+	   params.serviceEndTime = $('#serviceEndTime').val();	  
 	   if(parseInt(params.serviceStartTime,10)>parseInt(params.serviceEndTime,10)){
 		   Plugins.Tips({title:'信息提示',icon:'error',content:'开始营业时间不能大于结束营业时间!',timeout:1000});
 		   return;
@@ -386,6 +393,7 @@ dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
 		   }
 	   }
 	   params.shopAtive = $("input[name='shopAtive']:checked").val();
+	   params.isDistributAll = $("input[name='isDistributAll']:checked").val();
 	   var relateArea = [0];
 	   var relateCommunity = [0];
 	   $('.AreaNode').each(function(){
@@ -399,7 +407,7 @@ dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
 	   });
 	   params.relateAreaId=relateArea.join(',');
 	   params.relateCommunityId=relateCommunity.join(',');
-	   if(params.relateAreaId=='0' && params.relateCommunityId=='0' && params.shopStatus!=-1){
+	   if(params.relateAreaId=='0' && params.relateCommunityId=='0' && params.shopStatus!=-1 && params.isDistributAll!=1){
 		   Plugins.Tips({title:'信息提示',icon:'error',content:'请选择配送区域!',timeout:1000});
 		   return;
 	   }
@@ -423,6 +431,7 @@ dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
 				Plugins.Tips({title:'信息提示',icon:'error',content:'操作失败!',timeout:1000});
 			}
 		});
+	   
    }
    function initTime(objId,val){
 	   val = parseInt(val,10);
@@ -564,6 +573,17 @@ dl.areaSelect dd{ float: left; margin-left: 20px; cursor: pointer;}
              </td>
            </tr>
            <tr>
+             <th align='right'>配送范围<font color='red'>*</font>：</th>
+             <td>
+             <label>
+             <input type='radio' name='isDistributAll' value='0' <if condition="$object['isDistributAll'] ==0 ">checked</if> />区域配送&nbsp;&nbsp;
+             </label>
+             <label>
+             <input type='radio' name='isDistributAll' value='1' <if condition="$object['isDistributAll'] ==1 ">checked</if> />全国配送
+             </label>
+             </td>
+           </tr>
+           <tr id="delivery_tr" style="display: {$object['isDistributAll'] ==1?'none':''}">
              <th align='right'>配送区域<font color='red'>*</font>：</th>
              <td>
              <div class="text-gray Hide">展开全部：<input type="checkbox" id="expendAll"></div>

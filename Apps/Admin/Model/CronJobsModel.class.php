@@ -3,12 +3,29 @@
 /**
  * ============================================================================
  * WSTMall开源商城
- * 官网地址:http://www.wstmall.com 
+ * 官网地址:http://www.wstmall.net
  * 联系QQ:707563272
  * ============================================================================
  * 定时任务服务类
  */
 class CronJobsModel extends BaseModel {
+	/**
+	* 管理员登录时调用
+	*/
+	public function autoComplate(){
+		$today = date('Y-m-d');
+		$has = S('today');
+		if($has != $today){//缓存中的值不等于今天
+			//执行定时任务
+			$this->autoReceivie();
+			$this->autoGoodAppraise();
+			$this->autoSettlement();
+			//存一份缓存
+			S('today',$today,0);
+		}
+		
+		
+	}
     /**
 	  * 自动收货
 	  */

@@ -82,6 +82,11 @@ function visitorShopInit(){
 		uploadFile({
 	    	  server:Think.U('Home/Shops/uploadPic'),pick:'#filePicker',
 	    	  formData: {dir:'shops'},
+	    	  accept: {
+	    	        title: 'Images',
+	    	        extensions: 'gif,jpg,jpeg,png',
+	    	        mimeTypes: 'image/*'
+	    	  },
 	    	  callback:function(f){
 	    		  layer.close(uploading);
 	    		  var json = WST.toJson(f);
@@ -320,7 +325,7 @@ function visitorOpenShop(){
 	});
 	params.relateAreaId=relateArea.join(',');
 	params.relateCommunityId=relateCommunity.join(',');
-	if(params.relateAreaId=='0' && params.relateCommunityId=='0'){
+	if(params.relateAreaId=='0' && params.relateCommunityId=='0' && params.isDistributAll!=1){
 	    WST.msg('请选择配送区域!', {icon: 5});
 	    return;
 	}
@@ -448,6 +453,11 @@ function userShopInit(){
 	uploadFile({
     	  server:Think.U('Home/Shops/uploadPic'),pick:'#filePicker',
     	  formData: {dir:'shops'},
+    	  accept: {
+  	        title: 'Images',
+  	        extensions: 'gif,jpg,jpeg,png',
+  	        mimeTypes: 'image/*'
+    	  },
     	  callback:function(f){
     		  layer.close(uploading);
     		  var json = WST.toJson(f);
@@ -484,7 +494,7 @@ function userOpenShop(){
 	});
 	params.relateAreaId=relateArea.join(',');
 	params.relateCommunityId=relateCommunity.join(',');
-	if(params.relateAreaId=='0' && params.relateCommunityId=='0'){
+	if(params.relateAreaId=='0' && params.relateCommunityId=='0' && params.isDistributAll!=1){
 		WST.msg('请选择配送区域!', {icon: 5});
 		return;
 	}

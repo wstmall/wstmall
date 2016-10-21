@@ -104,10 +104,10 @@
 		      <ul class="fl">
 		        <?php foreach(WSTNavigation(0) as $k=>$v):  ?>
 				<li >
-				<a href="<?=$v['navUrl']?>" 
-				<?=(CONTROLLER_NAME.'/'.ACTION_NAME==$v['curUrl'])?'class="curMenu"':'';?>
+				<a href="<?php echo $v['navUrl']?>" 
+				<?php echo (CONTROLLER_NAME.'/'.ACTION_NAME==$v['curUrl'])?'class="curMenu"':'';?>
 				>
-					&nbsp;&nbsp;<?=$v['navTitle'];?>&nbsp;&nbsp;
+					&nbsp;&nbsp;<?php echo $v['navTitle'];?>&nbsp;&nbsp;
 				</a>
 				</li>
 				<?php endforeach;?>
@@ -115,7 +115,7 @@
 		    </div>
 		    <li id="wst-nvg-cart">
 		    	<div class='wst-nvg-cart-cost'>
-		       		&nbsp;<span class="wst-nvg-cart-cnt cart_num">0</span>件&nbsp;|&nbsp;<span class="wst-nvg-cart-price">0.00</span>元
+		       		已选<span class="wst-nvg-cart-cnt cart_gnum_chk">0</span>件&nbsp;|&nbsp;<span class="wst-nvg-cart-price">0.00</span>元
 		       	</div>
 			</li>
 			<div class="wst-cart-box"><div class="wst-nvg-cart-goods">购物车中暂无商品</div></div>

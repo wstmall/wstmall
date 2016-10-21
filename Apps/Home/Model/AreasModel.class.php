@@ -3,7 +3,7 @@ namespace Home\Model;
 /**
  * ============================================================================
  * WSTMall开源商城
- * 官网地址:http://www.wstmall.com 
+ * 官网地址:http://www.wstmall.net
  * 联系QQ:707563272
  * ============================================================================
  * 区域服务类
@@ -147,4 +147,10 @@ class AreasModel extends BaseModel {
 	  
 	  }
 	  
+	  public function getAreasByParentId($parentId){
+	  	$sql = "SELECT * FROM __PREFIX__areas WHERE parentId=$parentId  AND areaFlag = 1 AND isShow =1";
+	  	$rs = $this->query($sql);
+	  	return $rs;
+	  
+	  }
 }

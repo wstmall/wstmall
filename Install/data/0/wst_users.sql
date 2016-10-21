@@ -25,13 +25,14 @@ CREATE TABLE `wst_users` (
   `lastTime` datetime DEFAULT NULL,
   `userFrom` tinyint(4) DEFAULT '0',
   `openId` varchar(50) DEFAULT NULL,
+  `wxOpenId` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`userId`),
   KEY `userStatus` (`userStatus`,`userFlag`),
   KEY `loginName` (`loginName`),
   KEY `userPhone` (`userPhone`),
   KEY `userEmail` (`userEmail`),
   KEY `userType` (`userType`,`userFlag`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of wst_users

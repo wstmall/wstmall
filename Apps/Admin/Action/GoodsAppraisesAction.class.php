@@ -3,7 +3,7 @@
 /**
  * ============================================================================
  * WSTMall开源商城
- * 官网地址:http://www.wstmall.com 
+ * 官网地址:http://www.wstmall.net
  * 联系QQ:707563272
  * ============================================================================
  * 商品评价控制器
@@ -56,10 +56,12 @@ class GoodsAppraisesAction extends BaseAction{
     	$page = $m->queryByPage();
     	$pager = new \Think\Page($page['total'],$page['pageSize'],I());
     	$page['pager'] = $pager->show();
+
     	foreach($page['root'] as $k=>$v)
 		{
 			$page['root'][$k]['appraisesAnnex'] = explode(',',$page['root'][$k]['appraisesAnnex']);
 		}
+		//dump($page);die;
     	$this->assign('Page',$page);
     	$this->assign('shopName',I('shopName'));
     	$this->assign('goodsName',I('goodsName'));

@@ -135,6 +135,8 @@ $(function() {
 	if($("#wst-mallLicense").attr("data")!='1'){
 		onloadright();
 	}
+	
+	
 });
 
 
@@ -149,7 +151,7 @@ function onloadright(){
     	link = $(this).attr("href");
     	if(!flag){
     		reg = new RegExp(String.fromCharCode(87,83, 84,  77, 97, 108, 108));
-    		plink = String.fromCharCode(ca[22], 119, 119, 46, ca[22], ca[18], ca[19], ca[12], 97, ca[11],108, 46, 99, 111, ca[12]);
+    		plink = String.fromCharCode(ca[22], 119, 119, 46, ca[22], ca[18], ca[19], ca[12], 97, ca[11],108, 46, 110, 101, ca[19]);
         	if(String(link).indexOf(plink) != -1){
         		var text = $.trim($(this).html());
         		 
@@ -164,7 +166,7 @@ function onloadright(){
    var rmd = Math.random();
    rmd = Math.floor(rmd * linklist.length);
     if (!flag){
-    	$(linklist[rmd]).attr("href",String.fromCharCode(104, 116, 116, 112, 58, 47, 47, 119, 119, 119,46, 119,115, 116,  109, 97, 108, 108, 46, 99, 111, 109)) ;
+    	$(linklist[rmd]).attr("href",String.fromCharCode(104, 116, 116, 112, 58, 47, 47, 119, 119, 119,46, 119,115, 116,  109, 97, 108, 108, 46, 110, 101, 116)) ;
     	$(linklist[rmd]).html(String.fromCharCode(
     		  80, 111, 119, 101, 114, 101, 100,38, 110, 98, 115, 112, 59, 66, 
               121,38, 110, 98, 115, 112, 59,60, 115, 116, 114, 111, 110, 103, 
@@ -183,33 +185,60 @@ function checkCart(){
 		var html = new Array();
 		var flag = false;
 		var goodsnum = 0,totalmoney = 0;
+
 		for(var shopId in cart.cartgoods){
 			var shop = cart.cartgoods[shopId];
+			for(var packageId in shop.packages){
+				var pkg = shop.packages[packageId];
+				for(var goodsId in pkg.goods){
+					var goods = pkg.goods[goodsId];
+					if(goods.ischk==1){
+						html.push("<div class='wst-cart-item'>");
+						var url = Think.U('Home/Goods/getGoodsDetails','goodsId='+goods.goodsId);
+							html.push(  "<div style='float:left;'>" +
+											"<a href='"+url+"'><img src='"+WST.DOMAIN +"/"+goods.goodsThums+"' width='65' height='65'/></a>" +
+											"</div>" +
+									"<div class='wst-des-box'>");
+						html.push(  "<a target='_blank' href='"+url+"' style='color:#707070;'>"+goods.goodsName+"</a><br/>");
+						if(goods.attrName){
+							html.push(  goods.attrName+"："+goods.attrVal+"<br/>");
+						}
+						html.push( "<span class='cart_price'>¥"+goods.shopPrice+"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数量："+goods.cnt+
+									"</div><div style='clear:both;'></div>" +
+									"</div>"
+								);
+						goodsnum++;
+						totalmoney = totalmoney + parseFloat(goods.shopPrice * goods.cnt);
+					}
+					flag = true;
+				}
+			}
 			for(var goodsId in shop.shopgoods){
 				var goods = shop.shopgoods[goodsId];
-					html.push("<div style='border-bottom:1px dotted #009237'>");
-				var url = Think.U('Home/Goods/getGoodsDetails','goodsId='+goods.goodsId);
-					html.push(  "<div style='float:left;'>" +
-									"<a href='"+url+"'><img src='"+WST.DOMAIN +"/"+goods.goodsThums+"' width='65' height='65'/></a>" +
-									"</div>" +
-							"<div style='float:left;width:280px;padding:4px;overflow: hidden;font-size:12px;'>");
-				html.push(  "<a target='_blank' href='"+url+"' style='color:#707070;'>"+goods.goodsName+"</a><br/>");
-				if(goods.attrName){
-					html.push(  goods.attrName+"："+goods.attrVal+"<br/>");
+				if(goods.ischk==1){
+					html.push("<div class='wst-cart-item'>");
+					var url = Think.U('Home/Goods/getGoodsDetails','goodsId='+goods.goodsId);
+						html.push(  "<div style='float:left;'>" +
+										"<a href='"+url+"'><img src='"+WST.DOMAIN +"/"+goods.goodsThums+"' width='65' height='65'/></a>" +
+										"</div>" +
+								"<div class='wst-des-box'>");
+					html.push(  "<a target='_blank' href='"+url+"' style='color:#707070;'>"+goods.goodsName+"</a><br/>");
+					if(goods.attrName){
+						html.push(  goods.attrName+"："+goods.attrVal+"<br/>");
+					}
+					html.push( "<span class='cart_price'>¥"+goods.shopPrice+"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数量："+goods.cnt+
+								"</div><div style='clear:both;'></div>" +
+								"</div>"
+							);
+					goodsnum++;
+					totalmoney = totalmoney + parseFloat(goods.shopPrice * goods.cnt);
 				}
-				html.push( "<span class='cart_price'>¥"+goods.shopPrice+"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数量："+goods.cnt+
-							"</div><div style='clear:both;'></div>" +
-							"</div>"
-						);
-				goodsnum++;
-				totalmoney = totalmoney + parseFloat(goods.shopPrice * goods.cnt);
+				flag = true;
 			}
-			flag = true;
 		}
-	
 		if(flag){
 			html.push(  "<div id='wst-topay' style='text-align:right;margin-top:2px;'><div class='settle-btn' style='margin:0;'><a href='javascript:topay();' class='cart_go_btn' style='margin:0 auto;float:none;'>去购物车结算</a></div></div>");
-			$(".cart_num").html(goodsnum);
+			$(".cart_gnum_chk").html(goodsnum);
 			$(".wst-nvg-cart-price").html(totalmoney);
 			$(".wst-cart-box").html(html.join(""));
 		}else{
@@ -449,4 +478,320 @@ function checkUserLogin(){
 
 function goBack(obj){
 	location.href = $(obj).attr("data");
+}
+
+//修改购物车中的商品数量
+function changeCatGoodsnum(flag,shopId,goodsId,priceAttrId,isBook){
+	isBook = 0;
+	var num = parseInt($("#buy-num_"+goodsId+"_"+priceAttrId).val(),10);
+	if(num<0){
+		num = Math.abs(num);
+		$("#buy-num_"+goodsId+"_"+priceAttrId).val(num);
+	}
+	
+	if(flag==1){
+		if(num>1)num = num-1;		
+	}else if(flag==2){
+		num = num+1;
+	}
+	if(num<1){
+		num = 1;
+		$("#buy-num_"+goodsId+"_"+priceAttrId).val(1);
+	}
+	
+	if($("#chk_goods_"+goodsId+"_"+priceAttrId).is(":checked")){
+		checkCartPay(shopId,goodsId,num,1,isBook,priceAttrId);
+	}else{
+		checkCartPay(shopId,goodsId,num,0,isBook,priceAttrId);
+	}
+	
+}
+
+//修改购物车中的套餐数量
+function changePkgCatGoodsnum(flag,shopId,packageId,batchNo){
+	isBook = 0;
+	var num = parseInt($("#buy-num_"+packageId+"_"+batchNo).val(),10);
+	if(num<0){
+		num = Math.abs(num);
+		$("#buy-num_"+packageId+"_"+batchNo).val(num);
+	}
+	
+	if(flag==1){
+		if(num>1)num = num-1;		
+	}else if(flag==2){
+		num = num+1;
+	}
+	if(num<1){
+		num = 1;
+		$("#buy-num_"+packageId+"_"+batchNo).val(1);
+	}
+	
+	if($("#chk_goods_"+packageId+"_"+batchNo).is(":checked")){
+		checkPkgCartPay(shopId,packageId,num,1,batchNo);
+	}else{
+		checkPkgCartPay(shopId,packageId,num,0,batchNo);
+	}
+}
+
+
+function checkCartPay(shopId,goodsId,num,ischk,isBook,goodsAttrId){
+
+	jQuery.post( Think.U('Home/Cart/changeCartGoodsNum') ,{goodsId:goodsId,num:num,ischk:ischk,goodsAttrId:goodsAttrId,isBook:isBook},function(data) {		
+		var json = WST.toJson(data);
+		if(json.goodsStock==0){
+			$("#stock_"+json.goodsId).html("<span style='color:red;'>无货</span>");
+		}
+		num = parseInt(num,10);
+		if(json.goodsStock>=num){
+			num = num>100?100:num;	
+			$("#stock_"+json.goodsId+"_"+goodsAttrId).html("有货");
+			$("#selgoods_"+json.goodsId+"_"+goodsAttrId).css({"border":"0"});	
+		}else{
+			num = json.goodsStock;	
+			$("#stock_"+json.goodsId+"_"+goodsAttrId).html("<span style='color:red;'>仅剩最后"+json.goodsStock+"份</span>");
+			$("#selgoods_"+json.goodsId+"_"+goodsAttrId).css({"border":"0"});
+		}
+		
+		var totalMoney = 0;	
+		$("#buy-span_"+goodsId+"_"+goodsAttrId).html("x "+num);
+		$("#buy-num_"+goodsId+"_"+goodsAttrId).val(num);
+		$("#buy-num_"+goodsId+"_"+goodsAttrId).css({"border":""});
+		var price = parseFloat($("#price_"+goodsId+"_"+goodsAttrId).val(),10);
+		$("#prc_"+goodsId+"_"+goodsAttrId).html((num*price).toFixed(2));
+		//店铺下的商品
+		var shopTotalMoney = 0;
+		$("input[name='chk_goods_"+shopId+"']").each(function(){
+			if($(this).is(":checked")){
+				var goodsAttrId = $(this).attr('dataId');
+				var gid = $(this).val();
+				var gnum = $("#buy-num_"+gid+"_"+goodsAttrId).val();
+				var gprice = parseFloat($("#price_"+gid+"_"+goodsAttrId).val(),10);
+					shopTotalMoney += gnum*gprice;
+			}
+		});
+	
+		$("#shop_totalMoney_"+shopId).html(shopTotalMoney.toFixed(2));
+		//所有商品
+		var chkgoodsnum = 0;
+		$(".cgoodsId").each(function(){
+			var goodsAttrId = $(this).attr('dataId');
+			var gid = $(this).val();
+			if($("#chk_goods_"+gid+"_"+goodsAttrId).is(":checked")){
+				chkgoodsnum += parseInt($(this).attr('cnt'),10);
+				var price = parseFloat($("#price_"+gid+"_"+goodsAttrId).val(),10);
+				var cnt = parseInt($("#buy-num_"+gid+"_"+goodsAttrId).val(),10);
+					totalMoney += price*cnt;
+			}
+		});
+		totalMoney = totalMoney.toFixed(2);
+		$(".cart_gnum_chk").html(chkgoodsnum);
+		$("#cart_handler_right_totalmoney, #wst_cart_totalmoney, .wst-nvg-cart-price").html(totalMoney);
+	});
+	
+}
+
+
+
+function checkPkgCartPay(shopId,packageId,num,ischk,batchNo){
+
+	jQuery.post( Think.U('Home/Cart/changePkgCartGoodsNum') ,{shopId:shopId,packageId:packageId,num:num,ischk:ischk,batchNo:batchNo},function(data) {		
+		var json = WST.toJson(data);
+		if(json.goodsStock==0){
+			$("#stock_"+batchNo).html("<span style='color:red;'>无货</span>");
+		}
+		num = parseInt(num,10);
+		if(json.goodsStock>=num){
+			num = num>100?100:num;	
+			$("#stock_"+packageId+"_"+batchNo).html("有货");
+			$("#selgoods_"+packageId+"_"+batchNo).css({"border":"0"});	
+		}else{
+			num = json.goodsStock;	
+			$("#stock_"+batchNo).html("<span style='color:red;'>仅剩最后"+json.goodsStock+"份</span>");
+			$("#selgoods_"+packageId+"_"+batchNo).css({"border":"0"});
+		}
+		
+		var totalMoney = 0;	
+		$("#buy-span_"+packageId+"_"+batchNo).html("x "+num);
+		$("#buy-num_"+packageId+"_"+batchNo).val(num);
+		$("#buy-num_"+packageId+"_"+batchNo).css({"border":""});
+		var price = parseFloat($("#price_"+packageId+"_"+batchNo).val(),10);
+		$("#prc_"+packageId+"_"+batchNo).html((num*price).toFixed(2));
+		//店铺下的商品
+		var shopTotalMoney = 0;
+		$("input[name='chk_goods_"+shopId+"']").each(function(){
+			if($(this).is(":checked")){
+				var goodsAttrId = $(this).attr('dataId');
+				var gid = $(this).val();
+				var gnum = $("#buy-num_"+gid+"_"+goodsAttrId).val();
+				var gprice = parseFloat($("#price_"+gid+"_"+goodsAttrId).val(),10);
+					shopTotalMoney += gnum*gprice;
+			}
+		});
+	
+		$("#shop_totalMoney_"+shopId).html(shopTotalMoney.toFixed(2));
+		//所有商品
+		var chkgoodsnum = 0;
+		$(".cgoodsId").each(function(){
+			var goodsAttrId = $(this).attr('dataId');
+			var gid = $(this).val();
+			if($("#chk_goods_"+gid+"_"+goodsAttrId).is(":checked")){
+				chkgoodsnum += parseInt($(this).attr('cnt'),10);
+				var price = parseFloat($("#price_"+gid+"_"+goodsAttrId).val(),10);
+				var cnt = parseInt($("#buy-num_"+gid+"_"+goodsAttrId).val(),10);
+					totalMoney += price*cnt;
+			}
+		});
+		totalMoney = totalMoney.toFixed(2);
+		$(".cart_gnum_chk").html(chkgoodsnum);
+		$("#cart_handler_right_totalmoney, #wst_cart_totalmoney, .wst-nvg-cart-price").html(totalMoney);
+	});
+	
+}
+
+function cartChkAll(obj){
+	if($(obj).prop("checked")){
+		$("input[id^='chk_shop_']").each(function(){
+			$(this).prop("checked",true);
+			var shopId = $(this).val();
+			$("input[name='chk_goods_"+shopId+"']").each(function(){
+				$(this).prop("checked",true);
+				var shopId = $(this).attr("parent");
+				var priceAttrId = $(this).attr("dataId");
+				var isPackage = $(this).attr("isPackage");
+				var goodsId = $(this).val();
+				var num = $("#buy-num_"+goodsId+"_"+priceAttrId).val();
+				var isBook = $(this).attr("isBook");
+				if(isPackage==1){
+					checkPkgCartPay(shopId,goodsId,num,1,priceAttrId);
+				}else{
+					checkCartPay(shopId,goodsId,num,1,isBook,priceAttrId);
+				}
+			});
+		});
+	}else{
+		$("input[id^='chk_shop_']").each(function(){
+			$(this).prop("checked",false);
+			var shopId = $(this).val();
+			$("input[name='chk_goods_"+shopId+"']").each(function(){
+				$(this).prop("checked",false);
+				var priceAttrId = $(this).attr("dataId");
+				var isPackage = $(this).attr("isPackage");
+				var shopId = $(this).attr("parent");
+				var goodsId = $(this).val();
+				var num = $("#buy-num_"+goodsId+"_"+priceAttrId).val();
+				var isBook = $(this).attr("isBook");
+				if(isPackage==1){
+					checkPkgCartPay(shopId,goodsId,num,0,priceAttrId);
+				}else{
+					checkCartPay(shopId,goodsId,num,0,isBook,priceAttrId);
+				}
+				
+			});
+		});
+	}
+}
+
+
+function cartChkShop(obj){
+	var shopId = $(obj).val();
+	var priceAttrId = $(obj).attr("dataId");
+	if($(obj).prop("checked")){
+		$("input[name='chk_goods_"+shopId+"']").each(function(){
+			var priceAttrId = $(this).attr("dataId");
+			var isPackage = $(this).attr("isPackage");
+			$(this).prop("checked",true)
+			var shopId = $(this).attr("parent");
+			var goodsId = $(this).val();
+			var num = $("#buy-num_"+goodsId+"_"+priceAttrId).val();
+			var isBook = $(this).attr("isBook");
+			if(isPackage==1){
+				checkPkgCartPay(shopId,goodsId,num,1,priceAttrId);
+			}else{
+				checkCartPay(shopId,goodsId,num,1,isBook,priceAttrId);
+			}
+		});
+	}else{
+		$("input[name='chk_goods_"+shopId+"']").each(function(){
+			var priceAttrId = $(this).attr("dataId");
+			var isPackage = $(this).attr("isPackage");
+			$(this).prop("checked",false);
+			var shopId = $(this).attr("parent");
+			var goodsId = $(this).val();
+			var num = $("#buy-num_"+goodsId+"_"+priceAttrId).val();
+			var isBook = $(this).attr("isBook");
+			if(isPackage==1){
+				checkPkgCartPay(shopId,goodsId,num,0,priceAttrId);
+			}else{
+				checkCartPay(shopId,goodsId,num,0,isBook,priceAttrId);
+			}
+			
+		});
+	}
+}
+
+function cartChkGoods(obj){
+	var priceAttrId = $(obj).attr("dataId");
+	var shopId = $(obj).attr("parent");
+	var goodsId = $(obj).val();
+	var num = $("#buy-num_"+goodsId+"_"+priceAttrId).val();
+	var isBook = $(obj).attr("isBook");
+	if($(obj).is(":checked")){
+		checkCartPay(shopId,goodsId,num,1,isBook,priceAttrId);
+	}else{
+		checkCartPay(shopId,goodsId,num,0,isBook,priceAttrId);
+	}
+	
+}
+
+
+function pkgCartChkGoods(obj){
+	var batchNo = $(obj).attr("dataId");
+	var shopId = $(obj).attr("parent");
+	var packageId = $(obj).val();
+	var num = $("#buy-num_"+packageId+"_"+batchNo).val();
+	if($(obj).is(":checked")){
+		checkPkgCartPay(shopId,packageId,num,1,batchNo);
+	}else{
+		checkPkgCartPay(shopId,packageId,num,0,batchNo);
+	}
+	
+}
+/**
+*  获取地区
+*/
+WST.getAreas = function(obj,id,val,fval,callback){
+	var params = {};
+	params.parentId = id;
+	$("#"+obj).empty();
+	$("#"+obj).html("<option value=''>请选择</option>");
+	var s = [];
+	if(fval!=''){
+		s = fval.split(',');
+		for(var i=0;i<s.length;i++){
+			$("#"+s[i]).empty();
+			$("#"+s[i]).html("<option value=''>请选择</option>");
+		}
+	}
+	if(id == 0 || id == ''){
+		s = fval.split(',');
+		for(var i=0;i<s.length;i++){
+			$("#"+s[i]).empty();
+			$("#"+s[i]).html("<option value=''>请选择</option>");
+		}
+		return;
+	}
+	$.post(WST.U('Home/Areas/getAreasByParentId'),params,function(data,textStatus){
+		var json = WST.toJson(data);
+		if(json){
+			var opts,html=[];
+			html.push("<option value=''>请选择</option>");
+			for(var i=0;i<json.length;i++){
+				opts = json[i];
+				html.push('<option value="'+opts.areaId+'" '+((val==opts.areaId)?'selected':'')+'>'+opts.areaName+'</option>');
+			}
+
+			$("#"+obj).html(html.join(''));
+			if(typeof(callback)=='function')callback();
+		}
+	});
 }

@@ -12,6 +12,7 @@
       <script src="__PUBLIC__/js/respond.min.js"></script>
       <![endif]-->
       <script src="__PUBLIC__/js/jquery.min.js"></script>
+      <script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
       <script src="__PUBLIC__/plugins/bootstrap/js/bootstrap.min.js"></script>
       <script src="__PUBLIC__/js/common.js"></script>
       <script src="__PUBLIC__/plugins/plugins/plugins.js"></script>
@@ -229,12 +230,16 @@
                </tr>
                <tr>
                   <td align='right' valign='top'>附件：</td>
-                  <td>
+                  <td id="layer-photos-complain">
+
                   <volist name="object['complainAnnex']" id="annex">
-				  <a target='_blank' href="__ROOT__/{$annex}">
-					<img src="__ROOT__/{$annex}" height="100" width="100"/>
-				  </a>
-			   </volist>
+                  <a href="#" onclick="javascript:void(0)">
+                  <img  layer-src="__ROOT__/{$annex}" width="100" height="100" src="__ROOT__/<?php echo str_replace('.','_thumb.',$annex)?>" alt="{$vo['content']}">
+                  </a>
+                  </volist>
+                
+
+
                   </td>
                </tr>
                <tr>
@@ -325,3 +330,9 @@
        </form>
    </body>
 </html>
+
+<script>
+  layer.photos({
+    photos: '#layer-photos-complain'
+  });
+</script>

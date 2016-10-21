@@ -349,3 +349,6 @@ input, textarea {
 .wst-complain-order-info dd{overflow: hidden;color: #666;padding: 1px 0;width:170px;display: block;height:20px;}
 .wst-complain-box{border-bottom:1px solid #ddd;width:735px;padding:5px;}
 .wst-complain-footer{clear:both;width:100%;text-align:center;padding:5px 0;}
+
+.wst-appsaler{text-align: center;}
+

@@ -3,7 +3,7 @@ namespace Home\Action;
 /**
  * ============================================================================
  * WSTMall开源商城
- * 官网地址:http://www.wstmall.com 
+ * 官网地址:http://www.wstmall.net
  * 联系QQ:707563272
  * ============================================================================
  * 商品控制器
@@ -105,6 +105,10 @@ class GoodsAction extends BaseAction {
 		$goodsId = (int)I("goodsId");
 		$this->assign('goodsId',$goodsId);
 		$obj["goodsId"] = $goodsId;	
+		
+		$packages = $goods->getGoodsPackages($goodsId,1);
+		$this->assign('packages',$packages);
+		
 		$goodsDetails = $goods->getGoodsDetails($obj);
 		if($kcode==$scrictCode || ($goodsDetails["isSale"]==1 && $goodsDetails["goodsStatus"]==1)){
 			if($kcode==$scrictCode){//来自后台管理员
@@ -157,7 +161,7 @@ class GoodsAction extends BaseAction {
 			$m = D('Home/Favorites');
 			$this->assign("favoriteShopId",$m->checkFavorite($shopId,1));
 			//客户端二维码
-		$this->assign("qrcode",base64_encode("{type:'goods',content:'".$goodsId."',key:'wstmall'}"));
+			$this->assign("qrcode",base64_encode("{type:'goods',content:'".$goodsId."',key:'wstmall'}"));
 			$this->display('default/goods_details');
 		}else{
 			$this->display('default/goods_notexist');
@@ -260,6 +264,9 @@ class GoodsAction extends BaseAction {
 		//获取商品分类信息
 		$m = D('Home/GoodsCats');
 		$this->assign('goodsCatsList',$m->queryByList());
+		$sm = D('Home/ShopsCats');
+		$pkShopCats = $sm->getCatAndChild($USER['shopId']);
+		$this->assign('pkShopCats',$pkShopCats);
 		//获取商家商品分类
 		$m = D('Home/ShopsCats');
 		$this->assign('shopCatsList',$m->queryByList($USER['shopId'],0));
@@ -268,8 +275,11 @@ class GoodsAction extends BaseAction {
 		$this->assign('attributeCatsCatsList',$m->queryByList());
 		$m = D('Home/Goods');
 		$object = array();
-    	if(I('id',0)>0){
+		$goodsId = (int)I('id',0);
+    	if($goodsId>0){
     		$object = $m->get();
+    		$packages = $m->getGoodsPackages($goodsId);
+    		$this->assign('packages',$packages);
     	}else{
     		$object = $m->getModel();
     	}
@@ -423,6 +433,27 @@ class GoodsAction extends BaseAction {
     	    $rv = $m->importGoods($rs);
 		}
     	$this->ajaxReturn($rv);
+    }
+    
+    public function getGoodsByCat() {
+    	$this->isShopLogin();
+    	$m = D('Home/Goods');
+    	$rs = $m->getGoodsByCat();
+    	$this->ajaxReturn($rs);
+    }
+    
+    public function getPackageGoods(){
+    	$this->isShopLogin();
+    	$m = D('Home/Goods');
+    	$rs = $m->getPackageGoods();
+    	$this->ajaxReturn($rs);
+    }
+    
+    public function editGoodsPackages(){
+    	$this->isShopLogin();
+    	$m = D('Home/Goods');
+    	$rs = $m->editGoodsPackages();
+    	$this->ajaxReturn($rs);
     }
 	
 }

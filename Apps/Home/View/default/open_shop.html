@@ -154,7 +154,19 @@
 					            </label>	                           
 	                        </div>
 	                    </div>
-	                    <div class="item" style='height:auto;'>
+	                   
+	                    <div class="item" >
+	                        <span class="label"><b class="ftx04">*</b>配送范围：</span>	
+	                        <div class="fl item-ifo yj-select" style='width:670px;'>
+             					 <label>
+					             <input type='radio' name='isDistributAll' value='0' class='wstipt' style='float:none;' checked />区域配送&nbsp;&nbsp;
+					             </label>
+					             <label>
+					             <input type='radio' name='isDistributAll' value='1' class='wstipt' style='float:none;' />全国配送
+					             </label>                      
+	                        </div>
+	                    </div>
+	                    <div id="delivery_tr" class="item" style="height:auto;">
 	                        <span class="label"><b class="ftx04">*</b>配送区域：</span>	
 	                        <div class="fl item-ifo yj-select" style='width:670px;'>
              					 <div id='areaTree'></div>	                           
@@ -315,6 +327,13 @@
     	   $('#areaId2').change(function(){
 	    		getCommunityForOpen();
 	    		getAreas("areaId3",$(this).val(),"","areaId3");
+    	   });
+    	   $("input[name='isDistributAll']").click(function(){
+    		   if($(this).val()==1){
+    			   $("#delivery_tr").hide();
+    		   }else{
+    			   $("#delivery_tr").show();
+    		   }
     	   });
        })
    </script>

@@ -35,7 +35,7 @@
                 <td width='*'>
 					<volist name="order['goodslist']" id="goods" key='key2'>
 						<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}">
-							<img src="__ROOT__/{$goods['goodsThums']}" height="50" width="50" class='wst-goods-tb'/>
+							<img data-original="__ROOT__/{$goods['goodsThums']}" height="50" width="50" class='lazyImg wst-goods-tb'/>
 						</a>
 					</volist>
 				</td>

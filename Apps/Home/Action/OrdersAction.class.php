@@ -3,7 +3,7 @@ namespace Home\Action;
 /**
  * ============================================================================
  * WSTMall开源商城
- * 官网地址:http://www.wstmall.com 
+ * 官网地址:http://www.wstmall.net
  * 联系QQ:707563272
  * ============================================================================
  * 订单控制器
@@ -120,6 +120,20 @@ class OrdersAction extends BaseAction {
 		$this->display("default/users/orders/list_appraise");
 	} 
 	
+	/**
+	 * 获取待评价订单
+	 */
+	public function queryCompleteOrders(){
+		$this->isUserLogin();
+		$USER = session('WST_USER');
+		$morders = D('Home/Orders');
+		self::WSTAssigns();
+		$obj["userId"] = (int)$USER['userId'];
+		$appraiseOrders = $morders->queryCompleteOrders($obj);
+		$this->assign("umark","queryCompleteOrders");
+		$this->assign("appraiseOrders",$appraiseOrders);
+		$this->display("default/users/orders/list_complete");
+	}
 	
 	/**
 	 * 订单詳情-买家专用
@@ -178,6 +192,7 @@ class OrdersAction extends BaseAction {
 		}
 		$catgoods = $rdata["cartgoods"];
 		$shopColleges = $rdata["shopColleges"];
+		$distributAll = $rdata["distributAll"]; 
 		$startTime = $rdata["startTime"];
 		$endTime = $rdata["endTime"];
 		$gtotalMoney = $rdata["gtotalMoney"];//商品总价（去除配送费）
@@ -197,8 +212,9 @@ class OrdersAction extends BaseAction {
 		
 		//获取当前市的县区
 		$m = D('Home/Areas');
-		$areaList2 = $m->getDistricts($areaId2);
-		$this->assign("areaList2",$areaList2);
+		$provinces = $m->getProvinceList();
+		$this->assign("provinces",$provinces);
+		
 		if($endTime==0){
 			$endTime = 24;
 			$cstartTime = (floor($startTime))*4;
@@ -218,6 +234,7 @@ class OrdersAction extends BaseAction {
 		$this->assign("startTime",$cstartTime);
 		$this->assign("endTime",$cendTime);
 		$this->assign("shopColleges",$shopColleges);
+		$this->assign("distributAll",$distributAll);
 		$this->assign("catgoods",$catgoods);
 		$this->assign("gtotalMoney",$gtotalMoney);
 		$this->assign("totalMoney",$totalMoney);

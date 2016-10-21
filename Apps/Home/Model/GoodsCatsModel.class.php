@@ -3,7 +3,7 @@ namespace Home\Model;
 /**
  * ============================================================================
  * WSTMall开源商城
- * 官网地址:http://www.wstmall.com 
+ * 官网地址:http://www.wstmall.net
  * 联系QQ:707563272
  * ============================================================================
  * 商品分类服务类
@@ -47,9 +47,10 @@ class GoodsCatsModel extends BaseModel {
 					//查询二级分类下的商品
 					$sql = "SELECT sp.shopName, g.saleCount , sp.shopId , g.goodsId , g.goodsName,g.goodsImg, g.goodsThums,g.shopPrice, g.goodsSn,ga.id goodsAttrId,ga.attrPrice
 							FROM __PREFIX__goods g left join __PREFIX__goods_attributes ga on g.goodsId=ga.goodsId and ga.isRecomm=1, __PREFIX__shops sp
-							WHERE g.shopId = sp.shopId AND sp.shopStatus = 1 AND g.goodsFlag = 1 AND g.isSale = 1 AND g.goodsStatus = 1 AND g.goodsCatId2 = $cat2Id AND sp.areaId2=$areaId2
+							WHERE g.shopId = sp.shopId AND sp.shopStatus = 1 AND g.goodsFlag = 1 AND g.isSale = 1 AND g.goodsStatus = 1 AND g.goodsCatId2 = $cat2Id AND (sp.areaId2=$areaId2 or sp.isDistributAll=1)
 							ORDER BY g.saleCount desc limit 8";
 					$grs = $this->query($sql);
+				
 					foreach ($grs as $gkey => $v){
 						if(intval($v['goodsAttrId'])>0)$grs[$gkey]['shopPrice'] = $v['attrPrice'];
 					}
@@ -60,7 +61,7 @@ class GoodsCatsModel extends BaseModel {
 				//查询二级分类下的商品
 				$sql = "SELECT sp.shopName, g.saleCount , sp.shopId , g.goodsId , g.goodsName,g.goodsImg, g.goodsThums,g.shopPrice, g.goodsSn,ga.id goodsAttrId,ga.attrPrice
 						FROM __PREFIX__goods g left join __PREFIX__goods_attributes ga on g.goodsId=ga.goodsId and ga.isRecomm=1, __PREFIX__shops sp
-						WHERE g.shopId = sp.shopId AND sp.shopStatus = 1 AND g.goodsFlag = 1 AND g.isAdminBest = 1 AND g.isSale = 1 AND g.goodsStatus = 1 AND g.goodsCatId1 = $cat1Id AND sp.areaId2=$areaId2
+						WHERE g.shopId = sp.shopId AND sp.shopStatus = 1 AND g.goodsFlag = 1 AND g.isAdminBest = 1 AND g.isSale = 1 AND g.goodsStatus = 1 AND g.goodsCatId1 = $cat1Id AND (sp.areaId2=$areaId2 or sp.isDistributAll=1)
 						ORDER BY g.saleCount desc limit 8";
 				$jgrs = $this->query($sql);
 			    foreach ($jgrs as $gkey => $v){
@@ -102,7 +103,7 @@ class GoodsCatsModel extends BaseModel {
 		$goodsCatId1 = $obj["goodsCatId1"];
 		$sql = "SELECT  COUNT(odr.orderId) as shopcnt, shop.shopId,shop.shopName,shop.shopImg FROM __PREFIX__shops shop
 					LEFT JOIN __PREFIX__orders odr ON shop.shopId = odr.shopId
-					WHERE shop.goodsCatId1 = $goodsCatId1 AND shopFlag = 1 AND shopStatus = 1 AND shopAtive = 1 AND shop.areaId2 = $areaId2
+					WHERE shop.goodsCatId1 = $goodsCatId1 AND shopFlag = 1 AND shopStatus = 1 AND shopAtive = 1 AND (shop.areaId2=$areaId2 or shop.isDistributAll=1)
 					GROUP BY shop.shopId ORDER BY shopcnt DESC limit 4 ";
 		$recommendShops = $this->query($sql);
 		return $recommendShops;

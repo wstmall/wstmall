@@ -3,7 +3,7 @@
 /**
  * ============================================================================
  * WSTMall开源商城
- * 官网地址:http://www.wstmall.com 
+ * 官网地址:http://www.wstmall.net
  * 联系QQ:707563272
  * ============================================================================
  * 店铺服务类
@@ -103,6 +103,7 @@ class ShopsModel extends BaseModel {
 				$sdata["isInvoice"] = (int)I("isInvoice",1);
 				$sdata["shopStatus"] = (int)I("shopStatus",1);
 				$sdata["shopAtive"] = (int)I("shopAtive",1);
+				$sdata["isDistributAll"] = (int)I("isDistributAll",0);
 				$sdata["shopFlag"] = 1;
 				$sdata["createTime"] = date('Y-m-d H:i:s');
 			    $sdata['statusRemarks'] = I('statusRemarks');
@@ -118,39 +119,40 @@ class ShopsModel extends BaseModel {
 				    $m = M('shop_scores');
 				    $m->add($data);
 					//建立店铺和社区的关系
-					
-					$relateArea = self::formatIn(",", I('relateAreaId'));
-					$relateCommunity = self::formatIn(",", I('relateCommunityId'));
-					if($relateArea!=''){
-						$m = M('shops_communitys');
-						$relateAreas = explode(',',$relateArea);
-						foreach ($relateAreas as $v){
-							if($v=='' || $v=='0')continue;
-							$tmp = array();
-							$tmp['shopId'] = $shopId;
-							$tmp['areaId1'] = (int)I("areaId1");
-							$tmp['areaId2'] = (int)I("areaId2");
-							$tmp['areaId3'] = $v;
-							$tmp['communityId'] = 0;
-							$ra = $m->add($tmp);
-						}
-					}
-				    if($relateCommunity!=''){
-				        $m = M('communitys');
-				        $lc = $m->where('communityFlag=1 and (communityId in(0,'.$relateCommunity.") or areaId3 in(0,".$relateArea."))")->select();
-				        if(count($lc)>0){
-				        	$m = M('shops_communitys');
-							foreach ($lc as $key => $v){
+				    if($sdata["isDistributAll"]==0){
+						$relateArea = self::formatIn(",", I('relateAreaId'));
+						$relateCommunity = self::formatIn(",", I('relateCommunityId'));
+						if($relateArea!=''){
+							$m = M('shops_communitys');
+							$relateAreas = explode(',',$relateArea);
+							foreach ($relateAreas as $v){
+								if($v=='' || $v=='0')continue;
 								$tmp = array();
 								$tmp['shopId'] = $shopId;
-								$tmp['areaId1'] = $v['areaId1'];
-								$tmp['areaId2'] = $v['areaId2'];
-								$tmp['areaId3'] = $v['areaId3'];
-								$tmp['communityId'] = $v['communityId'];
+								$tmp['areaId1'] = (int)I("areaId1");
+								$tmp['areaId2'] = (int)I("areaId2");
+								$tmp['areaId3'] = $v;
+								$tmp['communityId'] = 0;
 								$ra = $m->add($tmp);
 							}
 						}
-					}
+					    if($relateCommunity!=''){
+					        $m = M('communitys');
+					        $lc = $m->where('communityFlag=1 and (communityId in(0,'.$relateCommunity.") or areaId3 in(0,".$relateArea."))")->select();
+					        if(count($lc)>0){
+					        	$m = M('shops_communitys');
+								foreach ($lc as $key => $v){
+									$tmp = array();
+									$tmp['shopId'] = $shopId;
+									$tmp['areaId1'] = $v['areaId1'];
+									$tmp['areaId2'] = $v['areaId2'];
+									$tmp['areaId3'] = $v['areaId3'];
+									$tmp['communityId'] = $v['communityId'];
+									$ra = $m->add($tmp);
+								}
+							}
+						}
+				    }
 				}
 				
 			}
@@ -209,7 +211,10 @@ class ShopsModel extends BaseModel {
 		$data["serviceEndTime"] = I("serviceEndTime");
 		$data["shopStatus"] = (int)I("shopStatus",0);
 		$data["shopAtive"] = (int)I("shopAtive",1);
+		$isDistributAll = (int)I("isDistributAll",0);
+		$data["isDistributAll"] = $isDistributAll;
 		$data["shopTel"] = I("shopTel");
+		
 		if($this->checkEmpty($data,true)){
 			$data['qqNo'] = I('qqNo');
 			$data["invoiceRemarks"] = I("invoiceRemarks");
@@ -253,41 +258,44 @@ class ShopsModel extends BaseModel {
 		        $urs = $m->where("userId=".$shops['userId'])->save($data);
 				$rd['status']= 1;
 				
-		        //建立店铺和社区的关系
-				$relateArea = self::formatIn(",", I('relateAreaId'));
-				$relateCommunity = self::formatIn(",", I('relateCommunityId'));
-				
-				$m = M('shops_communitys');
-				$m->where('shopId='.$shopId)->delete();
-				if($relateArea!=''){
-					$relateAreas = explode(',',$relateArea);
-					foreach ($relateAreas as $v){
-						if($v=='' || $v=='0')continue;
-						    $tmp = array();
-							$tmp['shopId'] = $shopId;
-							$tmp['areaId1'] = (int)I("areaId1");
-							$tmp['areaId2'] = (int)I("areaId2");
-							$tmp['areaId3'] = $v;
-							$tmp['communityId'] = 0;
-							$ra = $m->add($tmp);
-					}
-				}
-				if($relateCommunity!=''){
-				    $m = M('communitys');
-				    $lc = $m->where('communityFlag=1 and (communityId in(0,'.$relateCommunity.") or areaId3 in(0,".$relateArea."))")->select();
-				    if(count($lc)>0){
-				    	$m = M('shops_communitys');
-						foreach ($lc as $key => $v){
-							$tmp = array();
-							$tmp['shopId'] = $shopId;
-							$tmp['areaId1'] = $v['areaId1'];
-							$tmp['areaId2'] = $v['areaId2'];
-							$tmp['areaId3'] = $v['areaId3'];
-							$tmp['communityId'] = $v['communityId'];
-							$ra = $m->add($tmp);
+				$scm = M('shops_communitys');
+				$cm = M('communitys');
+				if($isDistributAll==0){
+			        //建立店铺和社区的关系
+					$relateArea = self::formatIn(",", I('relateAreaId'));
+					$relateCommunity = self::formatIn(",", I('relateCommunityId'));
+					
+					$scm->where('shopId='.$shopId)->delete();
+					if($relateArea!=''){
+						$relateAreas = explode(',',$relateArea);
+						foreach ($relateAreas as $v){
+							if($v=='' || $v=='0')continue;
+							    $tmp = array();
+								$tmp['shopId'] = $shopId;
+								$tmp['areaId1'] = (int)I("areaId1");
+								$tmp['areaId2'] = (int)I("areaId2");
+								$tmp['areaId3'] = $v;
+								$tmp['communityId'] = 0;
+								$ra = $scm->add($tmp);
 						}
 					}
-				}
+					if($relateCommunity!=''){
+					    $lc = $cm->where('communityFlag=1 and (communityId in(0,'.$relateCommunity.") or areaId3 in(0,".$relateArea."))")->select();
+					    if(count($lc)>0){
+							foreach ($lc as $key => $v){
+								$tmp = array();
+								$tmp['shopId'] = $shopId;
+								$tmp['areaId1'] = $v['areaId1'];
+								$tmp['areaId2'] = $v['areaId2'];
+								$tmp['areaId3'] = $v['areaId3'];
+								$tmp['communityId'] = $v['communityId'];
+								$ra = $scm->add($tmp);
+							}
+						}
+					}
+				}else{//全国配送
+			    	 $scm->where('shopId='.$shopId)->delete();
+			    }
 			}
 		}
 	
@@ -417,6 +425,10 @@ class ShopsModel extends BaseModel {
 		//删除登录账号
 		$sql = "update __PREFIX__users set userFlag=-1 where userId=".$shop['userId'];
 		$this->execute($sql);
+		
+		$scm = M('shops_communitys');
+		$scm->where('shopId='.$shopId)->delete();
+		
 		//标记店铺删除状态
 	    $data = array();
 		$data["shopFlag"] = -1;

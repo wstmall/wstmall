@@ -25,7 +25,14 @@ $(function () {
 	   $("#expendAll").click(function(){
 			if ($(this).prop('checked')==true) {$("dl.areaSelect dd").removeClass('Hide')}
 			else{$("dl.areaSelect dd").addClass('Hide')}
-	   })
+	   });
+	   $("input[name='isDistributAll']").click(function(){
+		   if($(this).val()==1){
+			   $("#delivery_tr").hide();
+		   }else{
+			   $("#delivery_tr").show();
+		   }
+	   });
 	   $.formValidator.initConfig({
 		   theme:'Default',mode:'AutoTip',formID:"myform",debug:true,submitOnce:true,onSuccess:function(){
 			   editShop();
@@ -52,6 +59,11 @@ $(function () {
 		uploadFile({
 	    	  server:Think.U('Home/Shops/uploadPic'),pick:'#filePicker',
 	    	  formData: {dir:'shops'},
+	    	  accept: {
+	    	        title: 'Images',
+	    	        extensions: 'gif,jpg,jpeg,png',
+	    	        mimeTypes: 'image/*'
+	    	  },
 	    	  callback:function(f){
 	    		  layer.close(uploading);
 	    		  var json = WST.toJson(f);
@@ -117,7 +129,7 @@ function ShopMapInit(option){
              	</div>
              	<div style='clear:both;'>
 	             	<if condition="$object['shopImg'] !='' ">
-	             		<img height="100" id='preview' src='__ROOT__/{$object.shopImg}'>
+	             		<img height="100" id='preview' class='lazyImg' data-original='__ROOT__/{$object.shopImg}'>
 	             	</if>
 	             </div>
              </td>
@@ -151,14 +163,25 @@ function ShopMapInit(option){
              <th align='right'>营业状态<font color='red'>*</font>：</th>
              <td>
              <label>
-             <input type='radio' id='shopAtive1' name='shopAtive' value='1' <if condition="$object['shopAtive'] ==1 ">checked</if> />营业中&nbsp;&nbsp;
+             <input type='radio' name='shopAtive' value='1' <if condition="$object['shopAtive'] ==1 ">checked</if> />营业中&nbsp;&nbsp;
              </label>
              <label>
-             <input type='radio' id='shopAtive0' name='shopAtive' value='0' <if condition="$object['shopAtive'] ==0 ">checked</if> />休息中
+             <input type='radio' name='shopAtive' value='0' <if condition="$object['shopAtive'] ==0 ">checked</if> />休息中
              </label>
              </td>
            </tr>
            <tr>
+             <th align='right'>配送范围<font color='red'>*</font>：</th>
+             <td>
+             <label>
+             <input type='radio' name='isDistributAll' value='0' <if condition="$object['isDistributAll'] ==0 ">checked</if> />区域配送&nbsp;&nbsp;
+             </label>
+             <label>
+             <input type='radio' name='isDistributAll' value='1' <if condition="$object['isDistributAll'] ==1 ">checked</if> />全国配送
+             </label>
+             </td>
+           </tr>
+           <tr id="delivery_tr" style="display: {$object['isDistributAll'] ==1?'none':''}">
              <th align='right'>配送区域<font color='red'>*</font>：</th>
              <td id="wst_shop_area">
              <div class="text-gray Hide">展开全部：<input type="checkbox" id="expendAll" checked <if condition="$WST_USER['isSelf'] == 1">disabled</if> ></div>

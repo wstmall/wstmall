@@ -26,13 +26,16 @@
 			},onError:function(msg){
 		}});
 	   $("#areaName").formValidator({onShow:"",onFocus:"地区名称至少要输入1个字符",onCorrect:"输入正确"}).inputValidator({min:1,max:20,onError:"你输入的长度不正确,请确认"});
-	   
+	   $("#areaKey").formValidator({onShow:"",onFocus:"请输入归类字母",onCorrect:"输入正确"}).regexValidator({
+	       regExp:"letter",dataType:"enum",onError:"只能输入字母"
+		});
    });
    function edit(){
 	   var params = {};
 	   params.id = $('#id').val();
 	   params.areaName = $('#areaName').val();
 	   params.parentId = $('#parentId').val();
+	   params.areaKey = $('#areaKey').val();
 	   params.isShow = $("input[name='isShow']:checked").val();
 	   params.areaSort = $('#areaSort').val();
 	   Plugins.waitTips({title:'信息提示',content:'正在提交数据，请稍后...'});
@@ -48,6 +51,7 @@
 			}
 		});
    }
+   
    </script>
    <body class="wst-page">
        <form name="myform" method="post" id="myform" autocomplete="off">
@@ -68,6 +72,12 @@
              <label>
              <input type='radio' id='isShow0' name='isShow' value='0' <if condition="$object['isShow'] ==0 ">checked</if> />隐藏
              </label>
+             </td>
+           </tr>
+           <tr>
+             <th align='right'>归类字母<font color='red'>*</font>：</th>
+             <td>
+             <input type='text' id='areaKey' class="form-control wst-ipt" value='{$object.areaKey}' style='width:80px' maxLength='1'/>
              </td>
            </tr>
            <tr>

@@ -3,7 +3,7 @@ namespace Home\Model;
 /**
  * ============================================================================
  * WSTMall开源商城
- * 官网地址:http://www.wstmall.com 
+ * 官网地址:http://www.wstmall.net
  * 联系QQ:707563272
  * ============================================================================
  * 订单服务类
@@ -139,31 +139,54 @@ class OrdersModel extends BaseModel {
 		$needreceipt = (int)I("needreceipt");
 		$orderunique = WSTGetMillisecond().$userId;
 
-		$sql = "select * from __PREFIX__cart where userId = $userId and isCheck=1 and goodsCnt>0";
-		$shopcart = $this->query($sql);
 		
-		$catgoods = array();	
+		$sql = "select count(cartId) cnt from __PREFIX__cart where userId = $userId and isCheck=1 and goodsCnt>0";
+		$rcnt = $this->queryRow($sql);
+		
+		$cartgoods = array();	
 		$order = array();
-		if(empty($shopcart)){
+		if($rcnt['cnt']==0){
 			$rd['msg'] = '购物车为空!';
 			return $rd;
 		}else{
-			//整理及核对购物车数据
-			$paygoods = session('WST_PAY_GOODS');
-			$cartIds = array();
+			
+			$sql = "select * from __PREFIX__cart where userId = $userId and packageId>0 group by batchNo";
+			$shopcart = $this->query($sql);
+			$batchNos = array();
 			for($i=0;$i<count($shopcart);$i++){
 				$cgoods = $shopcart[$i];
-				$goodsId = (int)$cgoods["goodsId"];
-				$goodsAttrId = (int)$cgoods["goodsAttrId"];
-				
-				if(in_array($goodsId, $paygoods)){
+				$package = array();
+				$batchNo = $cgoods["batchNo"];
+				$package["batchNo"] = $batchNo;
+				$batchNos[] = $batchNo;
+				$pkgShopPrice = 0;
+				$pckMinStock = 0;
+				$sql = "select * from __PREFIX__cart where userId = $userId and batchNo=$batchNo";
+				$pkgList = $this->query($sql);
+				for($j=0;$j<count($pkgList);$j++){
+					$pgoods = $pkgList[$j];
+					$packageId = $pgoods["packageId"];
+					$goodsId = (int)$pgoods["goodsId"];
+					$package["packageId"] = $packageId;
+					$package["goodsCnt"] = (int)$pgoods["goodsCnt"];
+			
+					$sql = "select p.shopId, p.packageName, gp.diffPrice from __PREFIX__goods_packages gp, __PREFIX__packages p where p.packageId =$packageId and gp.packageId=p.packageId and gp.goodsId = $goodsId";
+					$pkg = $this->queryRow($sql);
+			
+					$diffPrice = (float)$pkg["diffPrice"];
+					if($pkg["shopId"]>0){
+						$package["packageName"] = $pkg["packageName"];
+						$package["shopId"] = $pkg["shopId"];
+					}
+					$goodsAttrId = (int)$pgoods["goodsAttrId"];
 					$goods = $goodsmodel->getGoodsSimpInfo($goodsId,$goodsAttrId);
+					
 					//核对商品是否符合购买要求
 					if(empty($goods)){
-						$rd['msg'] = '找不到指定的商品!';
+						$rd['msg'] = '找不到指定的商品aa!';
 						return $rd;
 					}
-					if($goods['goodsStock']<=0){
+					if($goods['goodsStock']<$package["goodsCnt"]){
 						$rd['msg'] = '对不起，商品'.$goods['goodsName'].'库存不足!';
 						return $rd;
 					}
@@ -171,21 +194,72 @@ class OrdersModel extends BaseModel {
 						$rd['msg'] = '对不起，商品库'.$goods['goodsName'].'已下架!';
 						return $rd;
 					}
-					$goods["cnt"] = $cgoods["goodsCnt"];
-					$catgoods[$goods["shopId"]]["shopgoods"][] = $goods;
-					$catgoods[$goods["shopId"]]["deliveryFreeMoney"] = $goods["deliveryFreeMoney"];//店铺免运费最低金额
-					$catgoods[$goods["shopId"]]["deliveryMoney"] = $goods["deliveryMoney"];//店铺免运费最低金额
-					$catgoods[$goods["shopId"]]["totalCnt"] = $catgoods[$goods["shopId"]]["totalCnt"]+$cgoods["goodsCnt"];
-					$catgoods[$goods["shopId"]]["totalMoney"] = $catgoods[$goods["shopId"]]["totalMoney"]+($goods["cnt"]*$goods["shopPrice"]);
-					$cartIds[] = $cgoods["cartId"];
+			
+					$goods['oshopPrice'] = $goods['shopPrice'];
+					$goods['shopPrice'] = ($goods['shopPrice']>$diffPrice)?($goods['shopPrice']-$diffPrice):$goods['shopPrice'];
+					$pckMinStock = ($pckMinStock==0 || $goods['goodsStock']<$pckMinStock)?$goods['goodsStock']:$pckMinStock;
+					$pkgShopPrice += $goods['shopPrice'];
+			
+			
+					$goods["cnt"] = $pgoods["goodsCnt"];
+					$goods["ischk"] = $pgoods["isCheck"];
+					$totalMoney += $goods["cnt"]*$goods["shopPrice"];
+					$cartgoods[$goods["shopId"]]["ischk"] = 1;
+					$package["goods"][] = $goods;
+			
+					$cartgoods[$goods["shopId"]]["deliveryFreeMoney"] = $goods["deliveryFreeMoney"];//店铺免运费最低金额
+					$cartgoods[$goods["shopId"]]["deliveryMoney"] = $goods["deliveryMoney"];//店铺配送费
+					$cartgoods[$goods["shopId"]]["totalCnt"] = $cartgoods[$goods["shopId"]]["totalCnt"]+$cgoods["goodsCnt"];
+					$cartgoods[$goods["shopId"]]["totalMoney"] = $cartgoods[$goods["shopId"]]["totalMoney"]+($goods["cnt"]*$goods["shopPrice"]);
 				}
+
+				$package["goodsStock"] = $pckMinStock;
+				$package["shopPrice"] = $pkgShopPrice;
+				$cartgoods[$goods["shopId"]]["packages"][] = $package;
+			}
+			
+			$sql = "select * from __PREFIX__cart where userId = $userId and isCheck=1 and goodsCnt>0 and packageId=0";
+			$shopcart = $this->query($sql);
+			//整理及核对购物车数据
+			$cartIds = array();
+			for($i=0;$i<count($shopcart);$i++){
+				$cgoods = $shopcart[$i];
+				$goodsId = (int)$cgoods["goodsId"];
+				$goodsAttrId = (int)$cgoods["goodsAttrId"];
+				
+				$goods = $goodsmodel->getGoodsSimpInfo($goodsId,$goodsAttrId);
+				//核对商品是否符合购买要求
+				if(empty($goods)){
+					$rd['msg'] = '找不到指定的商品v!';
+					return $rd;
+				}
+				if($goods['goodsStock']<=0){
+					$rd['msg'] = '对不起，商品'.$goods['goodsName'].'库存不足!';
+					return $rd;
+				}
+				if($goods['isSale']!=1){
+					$rd['msg'] = '对不起，商品库'.$goods['goodsName'].'已下架!';
+					return $rd;
+				}
+				$goods["cnt"] = $cgoods["goodsCnt"];
+				$cartgoods[$goods["shopId"]]["shopgoods"][] = $goods;
+				$cartgoods[$goods["shopId"]]["deliveryFreeMoney"] = $goods["deliveryFreeMoney"];//店铺免运费最低金额
+				$cartgoods[$goods["shopId"]]["deliveryMoney"] = $goods["deliveryMoney"];//店铺免运费最低金额
+				$cartgoods[$goods["shopId"]]["totalCnt"] = $cartgoods[$goods["shopId"]]["totalCnt"]+$cgoods["goodsCnt"];
+				$cartgoods[$goods["shopId"]]["totalMoney"] = $cartgoods[$goods["shopId"]]["totalMoney"]+($goods["cnt"]*$goods["shopPrice"]);
+				$cartIds[] = $cgoods["cartId"];
+				
 			}
 			$morders->startTrans();	
 			try{
-				$ordersInfo = $morders->addOrders($userId,$consigneeId,$payway,$needreceipt,$catgoods,$orderunique,$isself);
+				$ordersInfo = $morders->addOrders($userId,$consigneeId,$payway,$needreceipt,$cartgoods,$orderunique,$isself);
 				$morders->commit();	
-				if(!empty($cartIds)){
+				if(count($cartIds)>0){
 					$sql = "delete from __PREFIX__cart where userId = $userId and cartId in (".implode(",",$cartIds).")";
+					$this->execute($sql);
+				}
+				if(count($batchNos)>0){
+					$sql = "delete from __PREFIX__cart where userId = $userId and batchNo in (".implode(",",$batchNos).")";
 					$this->execute($sql);
 				}
 				$rd['orderIds'] = implode(",",$ordersInfo["orderIds"]);
@@ -219,11 +293,16 @@ class OrdersModel extends BaseModel {
 			$orderNo = $orderSrcNo."".(fmod($orderSrcNo,7));
 			//创建订单信息
 			$data = array();
+			$packages = $shopgoods["packages"];
+			$shopId = (int)$packages[0]["shopId"];
+			$deliverType = intval($packages[0]["deliveryType"]);
+			
 			$pshopgoods = $shopgoods["shopgoods"];
-			$shopId = $pshopgoods[0]["shopId"];
+			$shopId = ($shopId>0)?$shopId:($pshopgoods[0]["shopId"]);
+			
 			$data["orderNo"] = $orderNo;
 			$data["shopId"] = $shopId;	
-			$deliverType = intval($pshopgoods[0]["deliveryType"]);
+			$deliverType = ($deliverType>0)?$deliverType:intval($pshopgoods[0]["deliveryType"]);
 			$data["userId"] = $userId;	
 				
 			$data["orderFlag"] = 1;
@@ -320,6 +399,21 @@ class OrdersModel extends BaseModel {
 				$orderIds[] = $orderId;
 				//建立订单商品记录表
 				$mog = M('order_goods');
+				foreach ($packages as $key=> $package){
+					foreach ($package['goods'] as $key2=> $sgoods){
+						$data = array();
+						$data["orderId"] = $orderId;
+						$data["goodsId"] = $sgoods["goodsId"];
+						$data["goodsAttrId"] = (int)$sgoods["goodsAttrId"];
+						if($sgoods["attrVal"]!='')$data["goodsAttrName"] = $sgoods["attrName"].":".$sgoods["attrVal"];
+						$data["goodsNums"] = $sgoods["cnt"];
+						$data["goodsPrice"] = $sgoods["shopPrice"];
+						$data["goodsName"] = $sgoods["goodsName"];
+						$data["goodsThums"] = $sgoods["goodsThums"];
+						$mog->add($data);
+					}
+				}
+				
 				foreach ($pshopgoods as $key=> $sgoods){
 					$data = array();
 					$data["orderId"] = $orderId;
@@ -337,7 +431,7 @@ class OrdersModel extends BaseModel {
 					//建立订单记录
 					$data = array();
 					$data["orderId"] = $orderId;
-					$data["logContent"] = ($pshopgoods[0]["deliverType"]==0)? "下单成功":"下单成功等待审核";
+					$data["logContent"] = ($deliverType==0)? "下单成功":"下单成功等待审核";
 					$data["logUserId"] = $userId;
 					$data["logType"] = 0;
 					$data["logTime"] = date('Y-m-d H:i:s');
@@ -359,6 +453,17 @@ class OrdersModel extends BaseModel {
 					}
 					
 					//修改库存
+					foreach ($packages as $key=> $package){
+						foreach ($package['goods'] as $key2=> $sgoods){
+							$sql="update __PREFIX__goods set goodsStock=goodsStock-".$sgoods['cnt']." where goodsId=".$sgoods["goodsId"];
+							$this->execute($sql);
+							if((int)$sgoods["goodsAttrId"]>0){
+								$sql="update __PREFIX__goods_attributes set attrStock=attrStock-".$sgoods['cnt']." where id=".$sgoods["goodsAttrId"];
+								$this->execute($sql);
+							}
+						}
+					}
+					
 					foreach ($pshopgoods as $key=> $sgoods){
 						$sql="update __PREFIX__goods set goodsStock=goodsStock-".$sgoods['cnt']." where goodsId=".$sgoods["goodsId"];
 						$this->execute($sql);
@@ -367,6 +472,7 @@ class OrdersModel extends BaseModel {
 							$this->execute($sql);
 						}
 					}
+					
 				}else{
 					$data = array();
 					$data["orderId"] = $orderId;
@@ -724,7 +830,7 @@ class OrdersModel extends BaseModel {
 		$pcurr = (int)I("pcurr",0);
 		$sql = "SELECT o.orderId,o.orderNo,o.shopId,o.orderStatus,o.userName,o.totalMoney,o.realTotalMoney,
 		        o.createTime,o.payType,o.isRefund,o.isAppraises,sp.shopName ,oc.complainId
-		        FROM __PREFIX__orders o left join __PREFIX__order_complains oc on oc.orderId=o.orderId,__PREFIX__shops sp WHERE o.orderFlag=1 and o.userId = $userId AND o.shopId=sp.shopId ";	
+		        FROM __PREFIX__orders o left join __PREFIX__order_complains oc on oc.orderId=o.orderId,__PREFIX__shops sp WHERE o.orderFlag=1 and o.isAppraises=0 and o.userId = $userId AND o.shopId=sp.shopId ";	
 		if($orderNo!=""){
 			$sql .= " AND o.orderNo like '%$orderNo%'";
 		}
@@ -762,6 +868,58 @@ class OrdersModel extends BaseModel {
 		}
 		return $pages;
 	}
+	
+	/**
+	 * 获取已完成交易
+	 */
+	public function queryCompleteOrders($obj){
+		$userId = (int)$obj["userId"];
+		$orderNo = WSTAddslashes(I("orderNo"));
+		$goodsName = WSTAddslashes(I("goodsName"));
+		$shopName = WSTAddslashes(I("shopName"));
+		$userName = WSTAddslashes(I("userName"));
+		$pcurr = (int)I("pcurr",0);
+		$sql = "SELECT o.orderId,o.orderNo,o.shopId,o.orderStatus,o.userName,o.totalMoney,o.realTotalMoney,
+				o.createTime,o.payType,o.isRefund,o.isAppraises,sp.shopName ,oc.complainId
+				FROM __PREFIX__orders o left join __PREFIX__order_complains oc on oc.orderId=o.orderId,__PREFIX__shops sp WHERE o.orderFlag=1 and o.isAppraises=1 and o.userId = $userId AND o.shopId=sp.shopId ";
+		if($orderNo!=""){
+		$sql .= " AND o.orderNo like '%$orderNo%'";
+		}
+		if($userName!=""){
+			$sql .= " AND o.userName like '%$userName%'";
+		}
+		if($shopName!=""){
+			$sql .= " AND sp.shopName like '%$shopName%'";
+		}
+		$sql .= " AND o.orderStatus = 4";
+		$sql .= " order by o.orderId desc";
+		$pages = $this->pageQuery($sql,$pcurr);
+		$orderList = $pages["root"];
+		if(count($orderList)>0){
+			$orderIds = array();
+			for($i=0;$i<count($orderList);$i++){
+				$order = $orderList[$i];
+				$orderIds[] = $order["orderId"];
+			}
+			//获取涉及的商品
+			$sql = "SELECT og.goodsId,og.goodsName,og.goodsThums,og.orderId FROM __PREFIX__order_goods og
+					WHERE og.orderId in (".implode(',',$orderIds).")";
+			$glist = $this->query($sql);
+			$goodslist = array();
+			for($i=0;$i<count($glist);$i++){
+				$goods = $glist[$i];
+				$goodslist[$goods["orderId"]][] = $goods;
+			}
+			//放回分页数据里
+			for($i=0;$i<count($orderList);$i++){
+				$order = $orderList[$i];
+				$order["goodslist"] = $goodslist[$order['orderId']];
+				$pages["root"][$i] = $order;
+			}
+		}
+		return $pages;
+	}
+	
 	/**
 	 * 取消订单
 	 */

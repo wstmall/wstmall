@@ -3,7 +3,7 @@
 /**
  * ============================================================================
  * WSTMall开源商城
- * 官网地址:http://www.wstmall.com 
+ * 官网地址:http://www.wstmall.net
  * 联系QQ:707563272
  * ============================================================================
  * 会员地址服务类
@@ -122,7 +122,7 @@ class UserAddressModel extends BaseModel {
 	              left join __PREFIX__areas a2 on a2.areaId=ua.areaId2 and a2.isShow=1 and a2.areaFlag=1
 	              left join __PREFIX__areas a3 on a3.areaId=ua.areaId3 and a3.isShow=1 and a3.areaFlag=1
 	              left join __PREFIX__communitys c on c.communityId=ua.communityId and c.isShow=1
-	              where ua.userId=".(int)$userId." and a2.areaId=".$cityId." order by isDefault desc";
+	              where ua.userId=".(int)$userId." order by isDefault desc";
 		 return $this->query($sql);
 	  }
 	  
@@ -148,13 +148,19 @@ class UserAddressModel extends BaseModel {
 		      WHERE ad.addressId=$addressId AND ad.addressFlag=1 and ad.userId=".(int)session('WST_USER.userId');
 	
 		$rs = $this->queryRow($sql);
-		if(empty($rs))return array();
+		//if(empty($rs))return array();
 		
-		$area3List = self::getDistricts($rs["areaId2"]);
-		$rs["area3List"] = $area3List;
+		//$area1List = self::getAreasByParentId(0);
+		//$rs["area1List"] = $area1List;
 		
-		$collegesList = self::getCommunitys($rs["areaId3"]);
-		$rs["communitysList"] = $collegesList;
+		//$area2List = self::getAreasByParentId($rs["areaId1"]);
+		//$rs["area2List"] = $area2List;
+		
+		//$area3List = self::getDistricts($rs["areaId2"]);
+		//$rs["area3List"] = $area3List;
+		
+		//$collegesList = self::getCommunitys($rs["areaId3"]);
+		//$rs["communitysList"] = $collegesList;
 		return $rs;
 	}
 	
@@ -164,6 +170,7 @@ class UserAddressModel extends BaseModel {
 		$rs = $this->query($sql);		
 		return $rs;
 	}	
+	
 	
 	
 	public function getDistricts($cityId){

@@ -87,7 +87,7 @@ function WSTGoodsCats(){
 function WSTCartNum(){
 	$m = M();
 	$userId = session('WST_USER.userId');
-	$sql = "select count(*) cnt from __PREFIX__cart where userId=$userId";
+	$sql = "select count(c.goodsId) cnt from __PREFIX__cart c INNER JOIN __GOODS__ g ON (c.goodsId=g.goodsId AND g.isSale=1)  where userId=$userId";
 	$rows = $m->query($sql);
 	$count = $rows[0]["cnt"]?$rows[0]["cnt"]:0;
 	return $count;
