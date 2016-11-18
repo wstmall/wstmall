@@ -351,4 +351,4 @@ input, textarea {
 .wst-complain-footer{clear:both;width:100%;text-align:center;padding:5px 0;}
 
 .wst-appsaler{text-align: center;}
-
+#startDate, #endDate{width:100px;line-height:16px;height:auto;}

@@ -5,7 +5,7 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `wst_users`;
 CREATE TABLE `wst_users` (
-  `userId` int(11) NOT NULL AUTO_INCREMENT,
+   `userId` int(11) NOT NULL AUTO_INCREMENT,
   `loginName` varchar(20) NOT NULL,
   `loginSecret` int(11) NOT NULL,
   `loginPwd` varchar(50) NOT NULL,
@@ -26,6 +26,11 @@ CREATE TABLE `wst_users` (
   `userFrom` tinyint(4) DEFAULT '0',
   `openId` varchar(50) DEFAULT NULL,
   `wxOpenId` varchar(100) DEFAULT NULL,
+  `userMoney` decimal(11,2) DEFAULT '0.00',
+  `lockMoney` decimal(11,2) DEFAULT '0.00',
+  `distributMoney` decimal(11,2) DEFAULT '0.00',
+  `isBuyer` tinyint(4) DEFAULT '0',
+  `payPwd` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`userId`),
   KEY `userStatus` (`userStatus`,`userFlag`),
   KEY `loginName` (`loginName`),

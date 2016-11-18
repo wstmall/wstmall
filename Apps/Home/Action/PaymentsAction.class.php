@@ -16,10 +16,7 @@ class PaymentsAction extends BaseAction{
     public function getAlipayURL(){
     	$this->isUserLogin();
     	$morders = D('Home/Orders');
-		$USER = session('WST_USER');
-		$obj["userId"] = (int)$USER['userId'];
-
-		$data = $morders->checkOrderPay($obj);
+		$data = $morders->checkOrderPay();
     	if($data["status"]==1){
     		$m = D('Home/Payments');
     		$url =  $m->getAlipayUrl();
@@ -31,10 +28,7 @@ class PaymentsAction extends BaseAction{
 	public function getWeixinURL(){
 		$this->isUserLogin();
 		$morders = D('Home/Orders');
-		$USER = session('WST_USER');
-		$obj["userId"] = (int)$USER['userId'];
-		
-		$data = $morders->checkOrderPay($obj);
+		$data = $morders->checkOrderPay();
 		if($data["status"]==1){
 			$m = D('Home/Payments');
 			$orderId = (int)I("orderId");

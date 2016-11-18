@@ -66,4 +66,10 @@ class IndexAction extends BaseAction {
     	$this->getDefaultCity();
     }
     
+    
+    public function getAreasByExp(){
+    	$m = D('Home/Areas');
+    	$cityList = $m->getAreasByExp();
+    	echo "done";
+    }
 }

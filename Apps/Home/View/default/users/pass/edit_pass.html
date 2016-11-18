@@ -1,0 +1,120 @@
+<extend name="./Apps/Home/View/default/users/layout.html" />
+<block name="content">
+<script>
+   var statusMark = 0;
+   $(function () {
+		$('#tab').TabPanel({tab:statusMark,callback:function(tab){
+			statusMark = tab;
+			if(statusMark==0){
+				   $.formValidator.initConfig({
+					   theme:'Default',mode:'AutoTip',formID:"myform",debug:true,submitOnce:true,onSuccess:function(){
+						   editPass();
+						   return false;
+						},onError:function(msg){
+					}});
+				   $("#oldPass").formValidator({onShow:"",onFocus:"",onCorrect:"输入正确"}).inputValidator({min:5,max:20,onError:"密码长度为5到20位"});
+				   $("#newPass").formValidator({onShow:"",onFocus:"",onCorrect:"输入正确"}).inputValidator({min:6,max:20,onError:"新密码长度为6到20位"});
+				   $("#reNewPass").formValidator({onShow:"",onFocus:"",onCorrect:"输入正确"}).inputValidator({min:6,max:20,onError:"新密码长度为6到20位"}).compareValidator({desID:"newPass",operateor:"=",onError:"两次密码不一致,请确认"});
+			}else{
+				   $.formValidator.initConfig({
+					   theme:'Default',mode:'AutoTip',formID:"payform",debug:true,submitOnce:true,onSuccess:function(){
+						   editPwd();
+						   return false;
+						},onError:function(msg){
+					}});
+				   $("#oldPwd").formValidator({onShow:"",onFocus:"",onCorrect:"输入正确"}).inputValidator({min:6,onError:"密码长度为6位数字"});
+				   $("#newPwd").formValidator({onShow:"",onFocus:"",onCorrect:"输入正确"}).inputValidator({min:6,onError:"新密码长度为6位数字"});
+				   $("#reNewPwd").formValidator({onShow:"",onFocus:"",onCorrect:"输入正确"}).inputValidator({min:6,onError:"新密码长度为6位数字"}).compareValidator({desID:"newPwd",operateor:"=",onError:"两次密码不一致,请确认"});
+			}
+		}});
+   });
+</script>
+   	<div class="wst-body" style="margin-bottom: 8px;"> 
+		<div class='wst-page-header'>买家中心 > 修改密码</div>
+		<div class='wst-page-content' style="padding-top:10px;">
+		   <div id='tab' class="wst-tab-box">
+			<ul class="wst-tab-nav">
+				<li id="wst-msg-li-0">登录密码</li>
+				<li id="wst-msg-li-1">支付密码</li>
+			</ul>
+			<div class="wst-tab-content" style='width:98%;padding:0px 5px 5px 5px;'>
+				<div class='wst-tab-item'>
+					   <div class='wst-list-content'>
+				       <form name="myform" method="post" id="myform" autocomplete="off">
+				        <table class="table table-hover table-striped table-bordered wst-form">
+				           <tr>
+				             <th align='right' width="120">原始登录密码 <font color='red'>*</font>：</th>
+				             <td>
+				             <input type='password' id='oldPass' name='oldPass' style='width:250px;' maxLength='16'/>
+				             </td>
+				           </tr>
+				           <tr>
+				             <th align='right' width="120">新登录密码 <font color='red'>*</font>：</th>
+				             <td>
+				             <input type='password' id='newPass' name='newPass' style='width:250px;' maxLength='16'/>
+				             </td>
+				           </tr>
+				           <tr>
+				             <th align='right'>再次确认密码 <font color='red'>*</font>：</th>
+				             <td>
+				             <input type='password' id='reNewPass' name='reNewPass' style='width:250px;' maxLength='16'/>
+				             </td>
+				           </tr>
+				           <tr>
+				             <td colspan='2' style='padding-left:250px;'>
+				                 <button class='wst-btn-query' type="submit">保&nbsp;存</button>
+				                 <button class='wst-btn-query' type="reset">重&nbsp;置</button>
+				             </td>
+				           </tr>
+				        </table>
+				       </form>
+					   <ul class='wst-goods-page' style='width:950px;border:1px soild blue;'></ul>
+					   <div style='clear:both;'></div>
+					</div>
+					<div id="wst-page-0" class='wst-page' style="padding-bottom:10px;"></div>		
+				</div>
+				<div class='wst-tab-item' style="display:none;">
+					   <div class='wst-list-content'>
+					   <form name="payform" method="post" id="payform" autocomplete="off">
+				        <table class="table table-hover table-striped table-bordered wst-form">
+				        <?php if($pwdType == 1){ ?>
+				           <tr>
+				             <th align='right' width="120">原始支付密码 <font color='red'>*</font>：</th>
+				             <td>
+				             <input type='password' id='oldPwd' name='oldPwd' style='width:250px;' onkeypress="return WST.isNumberKey(event);" maxLength='6'/>
+				             </td>
+				           </tr>
+				        <?php } ?>
+				           <tr>
+				             <th align='right' width="120">新支付密码 <font color='red'>*</font>：</th>
+				             <td>
+				             <input type='password' id='newPwd' name='newPwd' style='width:250px;' onkeypress="return WST.isNumberKey(event);" maxLength='6'/>
+				             </td>
+				           </tr>
+				           <tr>
+				             <th align='right'>再次确认密码 <font color='red'>*</font>：</th>
+				             <td>
+				             <input type='password' id='reNewPwd' name='reNewPwd' style='width:250px;' onkeypress="return WST.isNumberKey(event);" maxLength='6'/>
+				             </td>
+				           </tr>
+				           <tr>
+				             <td colspan='2' style='padding-left:250px;'>
+				                 <button class='wst-btn-query' type="submit">保&nbsp;存</button>
+				                 <button class='wst-btn-query' type="reset">重&nbsp;置</button>
+				            	 <a href="{:U('Users/forgetPwd')}" target="_blank">忘记支付密码？</a>
+				             </td>
+				           </tr>
+				        </table>
+				       </form>
+					   <ul class='wst-shops-page' style='width:950px;border:1px soild blue;'></ul>
+					   <div style='clear:both;'></div>
+					</div>
+					<div id="wst-page-1" class='wst-page' style="padding-bottom:10px;"></div>
+				</div>
+				
+			</div>
+			</div>
+		</div>
+		<div style='clear:both;'></div>
+	</div>
+</block>  

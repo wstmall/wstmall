@@ -180,6 +180,7 @@
                             <span class="wst-chkod-pay-tt">支付方式 </span>
                         </div>
                         <div id="newaddress">
+                        	<?php if($distCnt==0){ ?>
                         	<if condition="count($payments['unlines']) gt 0">
                             <div>
                                 <div style="width:200px;float:left;">
@@ -193,6 +194,7 @@
                                 <div style="clear:both;"></div>
                             </div>
                             </if>
+                            <?php } ?>
                             <if condition="count($payments['onlines']) gt 0">
                             <div>
                                 <div style="width:200px;float:left;">

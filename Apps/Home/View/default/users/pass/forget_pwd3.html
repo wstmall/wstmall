@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+  		<meta charset="utf-8">
+      	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+      	<link rel="shortcut icon" href="favicon.ico"/>
+      	<title>忘记支付密码  - {$CONF['mallTitle']}</title>
+      	<meta http-equiv="refresh" content="3;url={:U('Index/index')}">
+      	<meta name="keywords" content="{$CONF['mallKeywords']}" />
+      	<meta name="description" content="{$CONF['mallDesc']},忘记密码" />
+      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css">
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/footer.css">
+   	</head>
+   	<body>
+	<div id="shortcut-2013">
+		<include file="./Apps/Home/View/default/header_nav.html" />
+	</div>
+	<div class="main">
+	    <div class="main-top">
+	        <div class="forget-pwd">
+	            <h5>找回支付密码</h5>
+	            <div id="stepflex" class="stepflex" style='width:500px;'>
+	                <dl class="normal done">
+	                    <dt class="s-num">1</dt>
+	                    <dd class="s-text">验证身份<s></s><b></b></dd>
+	                </dl>
+	                <dl class="normal done">
+	                    <dt class="s-num">2</dt>
+	                    <dd class="s-text">设置新支付密码<s></s><b></b></dd>
+	                </dl>
+	                <dl class="last doing">
+	                    <dt class="s-num">&nbsp;</dt>
+	                    <dd class="s-text">完成<s></s><b></b></dd>
+	                </dl>
+	            </div>
+	            <h5 class="txt-center">修改支付密码成功，请记住新密码！</h5>
+	            <h5 class="txt-center" style='font-size:13px'>3秒后返回买家中心，<a href="<?php echo U('Users/index') ?>" style='color:red;'>点击返回买家中心</a></h5>
+	            </div>
+	            <div class="clearfix"></div>
+	        </div>
+	    </div>
+	</div>
+	<!--footer start--> 
+	<include file="./Apps/Home/View/default/footer.html" />
+	<!--footer end-->
+	</body>
+	<script src="__PUBLIC__/plugins/formValidator/formValidator-4.1.3.js"></script>
+    <script src="__PUBLIC__/js/common.js"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
+	
+</html>

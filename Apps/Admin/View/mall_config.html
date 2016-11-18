@@ -119,6 +119,7 @@
 	      <li><a href="#tabc3" role="tab" data-toggle="tab">运营设置</a></li>
 	      <li><a href="#tabc4" role="tab" data-toggle="tab">登录设置</a></li>
 	      <li><a href="#tabc5" role="tab" data-toggle="tab">微信公众号设置</a></li>
+	      <li><a href="#tabc6" role="tab" data-toggle="tab">分销设置</a></li>
 	  </ul>
       <div class='tab-content wst-tab-content'>
       	  <iframe name="upload" style="display:none"></iframe>
@@ -137,7 +138,7 @@
                      <php>
                      if($v['fieldType']=='text'){
                      </php>
-                     <input type='text' autocomplete="off" class="form-control wst-ipt" id='{$v["fieldCode"]}' name='{$v["code"]}' value="{$v['fieldValue']}" />{$v['fieldTips']}
+                     <input type='text' autocomplete="off" class="form-control wst-ipt" id='{$v["fieldCode"]}' name='{$v["code"]}' value="{$v['fieldValue']}" /><span style="color:red;">{$v['fieldTips']}</span>
                      <php>
                      }else if($v['fieldType']=='radio'){
                         foreach($v['txt'] as $kt => $vt){
@@ -147,9 +148,9 @@
 			           </label>
 			         <php>
 			            }
-			         </php>{$v['fieldTips']}
+			         </php><span style="color:red;">{$v['fieldTips']}</span>
                      <php>}else if($v['fieldType']=='textarea'){</php>
-                     <textarea id='{$v["fieldCode"]}' autocomplete="off" name='{$vo["fieldCode"]}' style='width:400px;height:100px;'>{$v['fieldValue']}</textarea>{$v['fieldTips']}
+                     <textarea id='{$v["fieldCode"]}' autocomplete="off" name='{$vo["fieldCode"]}' style='width:400px;height:100px;'>{$v['fieldValue']}</textarea><span style="color:red;">{$v['fieldTips']}</span>
                      <php>}else if($v['fieldType']=='other'){</php>
                      <php>if($v['fieldCode']=='defaultCity'){</php>
                      <select name='areaId1' id='areaId1' onchange='javascript:getAreaList(this.value)'>
@@ -196,7 +197,7 @@
 								<div id="{$v['fieldCode']}_picker" >上传图片</div>
 							</div>
 							<div style="clear:both;"></div>
-							<div >{$v['fieldTips']}</div>
+							<div style="color:red;">{$v['fieldTips']}</div>
 						</div>
                      	<div id="preview_{$v['fieldCode']}">
                      		<img id='{$v["fieldCode"]}_view' src='__ROOT__/{$v['fieldValue']}' width="152" height="152"/>

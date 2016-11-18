@@ -190,6 +190,7 @@ class OrdersAction extends BaseAction {
 			$this->display('default/order_fail');
 			exit();
 		}
+		$distCnt = $mcart->checShopkDistribut();
 		$catgoods = $rdata["cartgoods"];
 		$shopColleges = $rdata["shopColleges"];
 		$distributAll = $rdata["distributAll"]; 
@@ -231,6 +232,7 @@ class OrdersAction extends BaseAction {
 		}
 		$baseScore = WSTOrderScore();
 		$baseMoney = WSTScoreMoney();
+		$this->assign("distCnt",$distCnt);
 		$this->assign("startTime",$cstartTime);
 		$this->assign("endTime",$cendTime);
 		$this->assign("shopColleges",$shopColleges);
@@ -303,9 +305,7 @@ class OrdersAction extends BaseAction {
 	 */
 	public function checkOrderPay(){
 		$morders = D('Home/Orders');
-		$USER = session('WST_USER');
-		$obj["userId"] = (int)$USER['userId'];
-		$rs = $morders->checkOrderPay($obj);
+		$rs = $morders->checkOrderPay();
 		$this->ajaxReturn($rs);
 	}
 	

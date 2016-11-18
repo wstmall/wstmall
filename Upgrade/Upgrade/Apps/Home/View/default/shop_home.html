@@ -18,8 +18,8 @@
 		</style>
    	</head>
    	<body>
-   		<input type="hidden" id="msort" value="{$msort}"/>   		
-   		<input type="hidden" id="sj" value="{$sj}"/>
+   		<input type="hidden" id="msort" value="{$msort}"/>
+   		<input type="hidden" id="mdesc" value="{$mdesc}"/>   		
    		<input type="hidden" id="shopId" value="{$shopId}"/>
    		<input type="hidden" id="ct1" value="{$ct1}"/>
    		<input type="hidden" id="ct2" value="{$ct2}"/>
@@ -105,22 +105,32 @@
 									</td>
 								</tr>
 								</if>
-								<tr>
-									<td ></td>
-									<td></td>
-								</tr>
+								
 								<tr>
 									<td colspan="2" class="wst-shop-eval">
-										<div class="shop-eval-box" style="width:214px;margin:0 auto;">
+										<ul class="shop-eval-box" style="width:214px;margin:0 auto;">
 											<li>商品<br/>{$shopScores["goodsScore"]}</li>
 											<li class="li-center">时效<br/>{$shopScores["timeScore"]}</li>
 											<li>服务<br/>{$shopScores["serviceScore"]}</li>
-											<div class="wst-clear"></div>
-										</div>
+										</ul><div class="wst-clear"></div>
 									</td>
 								</tr>
 								<tr>
-									<td colspan='2' align='center' style='padding-top:20px;'>
+									<td colspan="2">
+										<!-- JiaThis Button BEGIN -->
+										<div class="jiathis_style_24x24" style="text-align: center;padding-left: 30px;margin-top: 15px;">
+											<a class="jiathis_button_qzone"></a>
+											<a class="jiathis_button_tsina"></a>
+											<a class="jiathis_button_tqq"></a>
+											<a class="jiathis_button_weixin"></a>
+											<a class="jiathis_button_cqq"></a>
+											<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+										</div>
+										<!-- JiaThis Button END -->
+									</td>
+								</tr>
+								<tr>
+									<td colspan='2' align='center' style='padding-top:15px;'>
 									<a class='wst-shop-btn' href="javascript:favoriteShops({$shops['shopId']})">
 										<span id='f1_txt' f='{$favoriteShopId}'><if condition="$favoriteShopId gt 0">已关注<else/>关注店铺</if></span>
 									</a>
@@ -153,12 +163,12 @@
 					</div>
 					<div class="wst-goods-list">
 						<div class="wst-goods-header">
-							<li <if condition="$msort eq 1">class="licurr"</if> onclick="searchShopsGoods(1);">综合排序<s <if condition="$msort eq 1">class="bscurr"</if>></s></li>
-							<li <if condition="$msort eq 2">class="licurr"</if> onclick="searchShopsGoods(2);">人气<s <if condition="$msort eq 2">class="bscurr"</if>></s></li>
-							<li <if condition="$msort eq 3">class="licurr"</if> onclick="searchShopsGoods(3);">销量<s <if condition="$msort eq 3">class="bscurr"</if>></s></li>
-							<li <if condition="$msort eq 4 or $msort eq 5">class="licurr"</if> onclick="searchShopsGoods(4);">价格<b <if condition="$msort eq 4">class="bscurr"</if><if condition="$msort eq 5">class="bscurr_up"</if>></b></li>
-							<li <if condition="$msort eq 6">class="licurr"</if> onclick="searchShopsGoods(6);">好评度<s <if condition="$msort eq 6">class="bscurr"</if>></s></li>
-							<li <if condition="$msort eq 7">class="licurr"</if> onclick="searchShopsGoods(7);">上架时间<s <if condition="$msort eq 7">class="bscurr"</if>></s></li>
+							<li <if condition="$msort eq 1">class="licurr"</if> onclick="searchShopsGoods(1);">综合排序<b <if condition="$msort eq 1 AND $mdesc eq 1">class="bscurr"</if><if condition="$msort eq 1 AND $mdesc eq 0">class="bscurr_up"</if>></b></li>
+							<li <if condition="$msort eq 2">class="licurr"</if> onclick="searchShopsGoods(2);">人气<b <if condition="$msort eq 2 AND $mdesc eq 1">class="bscurr"</if><if condition="$msort eq 2 AND  $mdesc eq 0">class="bscurr_up"</if>></b></li>
+							<li <if condition="$msort eq 3">class="licurr"</if> onclick="searchShopsGoods(3);">销量<b <if condition="$msort eq 3 AND $mdesc eq 1">class="bscurr"</if><if condition="$msort eq 3 AND $mdesc eq 0">class="bscurr_up"</if>></b></li>
+							<li <if condition="$msort eq 4">class="licurr"</if> onclick="searchShopsGoods(4);">价格<b <if condition="$msort eq 4 AND $mdesc eq 1">class="bscurr"</if><if condition="$msort eq 4 AND $mdesc eq 0">class="bscurr_up"</if>></b></li>
+							<li <if condition="$msort eq 5">class="licurr"</if> onclick="searchShopsGoods(5);">好评度<b <if condition="$msort eq 5 AND $mdesc eq 1">class="bscurr"</if><if condition="$msort eq 5 AND $mdesc eq 0">class="bscurr_up"</if>></b></li>
+							<li <if condition="$msort eq 6">class="licurr"</if> onclick="searchShopsGoods(6);">上架时间<b <if condition="$msort eq 6 AND $mdesc eq 1">class="bscurr"</if><if condition="$msort eq 6 AND $mdesc eq 0">class="bscurr_up"</if>></b></li>
 							<div style="float:left;position: relative;">
 								&nbsp;&nbsp;&nbsp;&nbsp;
 								<s class="rmb1"></s>
@@ -211,6 +221,22 @@
 				<div class="wst-clear"></div>
 			</div>
 		</div>
+		<!-- JiaThis Button BEGIN -->
+			<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+			<script type="text/javascript">
+			var jiathis_config = {
+					url: "{:U('Home/Shops/toShopHome',array('shopId'=>$shops['shopId'],'shareUserId'=>base64_encode($WST_USER['userId'])),true,true)}",
+					title:"{$shops['shopName']}",
+					summary:"{$GLOBALS['CONFIG']['shopShareTitle']}",
+					slide:{
+						divid:'jiathis_main',
+						pos:'left'
+					}
+				};
+			</script>
+		<!-- JiaThis Button END -->
+		
+		
 		<include file="./Apps/Home/View/default/footer.html" />
 		<include file="./Apps/Home/View/default/right_cart.html" />
    	</body>

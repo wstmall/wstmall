@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>{$CONF['mallTitle']}后台管理中心</title>
+      <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
+      <!--[if lt IE 9]>
+      <script src="__PUBLIC__/js/html5shiv.min.js"></script>
+      <script src="__PUBLIC__/js/respond.min.js"></script>
+      <![endif]-->
+      <script src="__PUBLIC__/js/jquery.min.js"></script>
+      <script src="__PUBLIC__/plugins/bootstrap/js/bootstrap.min.js"></script>
+      <script src="__PUBLIC__/js/common.js"></script>
+      <script src="__PUBLIC__/plugins/plugins/plugins.js"></script>
+   </head>
+   <script>
+   function getAreaList(objId,parentId,t,id){
+	   var params = {};
+	   params.parentId = parentId;
+	   $('#'+objId).empty();
+	   if(t<1){
+		   $('#areaId3').empty();
+		   $('#areaId3').html('<option value="">请选择</option>');
+	   }
+	   var html = [];
+	   $.post("{:U('Admin/Areas/queryByList')}",params,function(data,textStatus){
+		    html.push('<option value="">请选择</option>');
+			var json = WST.toJson(data);
+			if(json.status=='1' && json.list.length>0){
+				var opts = null;
+				for(var i=0;i<json.list.length;i++){
+					opts = json.list[i];
+					html.push('<option value="'+opts.areaId+'" '+((id==opts.areaId)?'selected':'')+'>'+opts.areaName+'</option>');
+				}
+			}
+			$('#'+objId).html(html.join(''));
+	   });
+   }
+   $(document).ready(function(){
+	    <notempty name='areaId1'>
+		   getAreaList("areaId2",'{$areaId1}',0,'{$areaId2}');
+		</notempty>
+   });
+   
+   </script>
+   <body class='wst-page'>
+     <form method='post' action="{:U('Admin/Distributs/queryShops')}">
+       <div class='wst-tbar'> 
+    		地区：<select id='areaId1' name='areaId1' onchange='javascript:getAreaList("areaId2",this.value,0)'>
+               <option value=''>请选择</option>
+               <volist name="areaList" id="vo">
+               <option value='{$vo['areaId']}' <if condition="$areaId1 == $vo['areaId'] ">selected</if>>{$vo['areaName']}</option>
+               </volist>
+             </select>
+             <select id='areaId2' name='areaId2'>
+               <option value=''>请选择</option>
+             </select>    
+			       店铺名称：<input type='text' id='shopName' name='shopName' class='form-control wst-ipt-10' value='{$shopName}'/> 
+			       店铺编号：<input type='text' id='shopSn' name='shopSn' class='form-control wst-ipt-10' value='{$shopSn}'/> 
+			  <button type="submit" class="btn btn-primary glyphicon glyphicon-search">查询</button> 
+       </div>
+       </form>
+       <div class='wst-body'>
+        <table class="table table-hover table-striped table-bordered wst-list">
+           <thead>
+             <tr>
+               <th width='30'>序号</th>
+               <th width='80'>店铺名称</th>
+               <th width='80'>店铺编号</th>
+               <th width='80'>店主</th>
+               <th width='80'>分类</th>
+               <th width='60'>营业状态</th>
+               <th width='60'>分销模式</th>
+               <th width='60'>推广者分成比例</th>
+               <th width='60'>购买者分成比例</th>
+             </tr>
+           </thead>
+           <tbody>
+            <volist name="Page['root']" id="vo" key='i'>
+             <tr>
+               <td>{$i}</td>
+               <td>
+               		<img src='__ROOT__/{$vo['shopImg']}' width='50'/>
+               		<a href="{:U('Home/Shops/toShopHome',array('shopId'=>$vo['shopId']))}" target='_blank'>{$vo['shopName']}</a>
+               </td>
+               <td>{$vo['shopSn']}&nbsp;</td>
+               <td>{$vo['userName']}&nbsp;</td>
+               <td>{$vo['catName']}&nbsp;</td>
+               <td>
+               <if condition="$vo['shopAtive'] == 1 "><span class='label label-success'>营业中</span></if>
+               <if condition="$vo['shopAtive'] == 0 "><span class='label label-warning'>休息中</span></if>&nbsp;
+               </td>
+               <td>
+               	<if condition="$vo['distributType'] eq 1">
+               		按商品设置提取佣金
+               	<else/>
+               		按订单金额 <span style="font-weight:bold;color:red;">{$vo['distributOrderRate']}%</span> 提取佣金
+               	</if>
+               </td>
+               <td>{$vo['promoterRate']}%</td>
+               <td>{$vo['buyerRate']}%</td>
+             </tr>
+             </volist>
+             <tr>
+                <td colspan='11' align='center'>{$Page['pager']}</td>
+             </tr>
+           </tbody>
+        </table>
+       </div>
+   </body>
+</html>

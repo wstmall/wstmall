@@ -67,9 +67,19 @@
                	<li onclick="goBack(this)" data="{:U('Home/AttributeCats/index')}" <if condition='$umark eq "AttributeCats"'> class='liselect'</if>>商品类型</li>
                	<li onclick="goBack(this)" data="{:U('Home/Imports/index')}" <if condition='$umark eq "Imports"'> class='liselect'</if>>数据导入</li>
 				</ul>
+				<if condition="$GLOBALS['CONFIG']['isDistribut'] eq 1">
+				<span class='wst-menu-title'><span></span>分销管理</span>
+				<ul>
+	               	<li onclick="goBack(this)"  data="{:U('Home/Distributs/queryDistributByPage')}" <if condition='$umark eq "queryDistributByPage"'> class='liselect'</if>>分销商品</li>
+	               	<li onclick="goBack(this)" data="{:U('Home/Distributs/queryShopDistributUsers')}" <if condition='$umark eq "queryShopDistributUsers"'> class='liselect'</if>>我的分销商</li>
+	                <li onclick="goBack(this)" data="{:U('Home/Distributs/queryShopDistributMoneys')}" <if condition='$umark eq "queryShopDistributMoneys"'> class='liselect'</if>>分成记录</li>	
+	                <li onclick="goBack(this)" data="{:U('Home/Distributs/toSetDistributs')}" <if condition='$umark eq "setDistributs"'> class='liselect'</if>>分销设置</li>
+               	</ul>
+               	</if>
               	<span class='wst-menu-title'><span></span>网店设置</span>
               	<ul>
             	<li onclick="goBack(this)" data="{:U('Home/Shops/toEdit/')}" <if condition='$umark eq "toEdit"'> class='liselect'</if>>店铺资料</li>
+            	<li onclick="goBack(this)"data="{:U('Home/LogMoneys/toShopMoneys/')}" <if condition='$umark eq "toShopMoneys"'> class='liselect'</if>><p>资金管理</p></li>
               	<li onclick="goBack(this)" data="{:U('Home/Shops/toShopCfg/')}" <if condition='$umark eq "setShop"'> class='liselect'</if>>店铺设置</li>
               	<li onclick="goBack(this)" data="{:U('Home/Messages/queryByPage/')}" id='li_queryMessageByPage' <if condition='$umark eq "queryMessageByPage"'> class='liselect'</if>>商城消息<span style="display:none;" class="wst-msg-tips-box"></span></li>
               	<li onclick="goBack(this)" data="{:U('Home/Shops/toEditPass')}" <if condition='$umark eq "toEditPass"'> class='liselect'</if>>修改密码</li>
@@ -109,4 +119,11 @@
       	<script src="__ROOT__/Apps/Home/View/default/js/audio.js"></script>
       	<script type="text/javascript" src="__PUBLIC__/plugins/webuploader/webuploader.js"></script>
       	<script type="text/javascript" src="__ROOT__/Apps/Home/View/default/js/goodsbatchupload.js"></script>
+      	<script>
+      	$(function() {
+      		loadAudio();
+      		getShopMsgTips();
+      		setInterval("getShopMsgTips()",30000);
+      	});
+      	</script>
 </html>

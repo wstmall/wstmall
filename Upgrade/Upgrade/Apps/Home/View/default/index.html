@@ -22,9 +22,9 @@
 		<div class="wst-slide" id="wst-slide">
 			<ul class="wst-slide-items">
 				<volist name=":WSTAds(-1)" id="vo" key="k">
-				<li style="z-index: 1;"><a target="_blank" onclick="addAccess({$vo['adId']})" href="{$vo['adURL']}">
-						<img src="__ROOT__/{$vo['adFile']}" height="360" width="100%" title="{$vo['adName']}" />
-				</a></li>
+				<a target="_blank" onclick="addAccess({$vo['adId']})" href="{$vo['adURL']}">
+					<li style="z-index: 1;  background: url(__ROOT__/{$vo['adFile']}) 50% 0% / cover no-repeat scroll;"></li>
+				</a>
 				</volist>
 			</ul>
 			<div class="wst-slide-numbox">
@@ -47,20 +47,18 @@
 		<!-------------F1层---------------->
 		<div class="wst-container">
 		<volist name="catList" key="k1" id="vo1">
-		<div class="wst-floor">
+		<div class="wst-floor" data="{$k1}">
 			<div class="wst-fl-left wst-fl{$k1}" style="position: relative;">
 				<div class="wst-fl-catbox">
 					<volist name="catAds[$vo1['catId']]" id="vo" key="kv"> 
 					<a onclick="addAccess({$vo['adId']})" href="{$vo['adURL']}" target="_blank"> 
-						<img class='lazyImg' data-original="__ROOT__/{$vo['adFile']}" height="275" width="210" title="{$vo['adName']}" />
+						<img class='lazyImg' data-original="__ROOT__/{$vo['adFile']}" height="240" width="210" title="{$vo['adName']}" />
 					</a> 
 					</volist>
 				</div>
-				<div class="wst-fl-head"
-					style="background: url(__ROOT__/Apps/Home/View/default/images/{$k1}fhd.png) no-repeat 100% 100%;">
-					<a
-						href="{:U('Home/Goods/getGoodsList/',array('c1Id'=>$vo1['catId']))}">
-						<span style="font-size: 18px;">F{$k1}</span>{$vo1["catName"]}
+				<div class="wst-fl-head">
+					<a href="{:U('Home/Goods/getGoodsList/',array('c1Id'=>$vo1['catId']))}">
+						<span style="font-size: 18px;">F{$k1}</span>&nbsp;{$vo1["catName"]}
 					</a>
 				</div>
 				<div class='wst-cat'>
@@ -75,12 +73,16 @@
 			</div>
 			<div class="wst-fl-right">
 				<div class="wst-fl-nvg{$k1}">
-					<ul>
-						<li id="fl_{$k1}_0" class="wst-fl-tab"
-							onmouseover="gpanelOver(this);">精品推荐</li>
+					<ul class="wst-fl-nvg-ul">
+						<li id="fl_{$k1}_0" class="wst-fl-tab" onmouseover="gpanelOver(this);">
+						<span id="span_fl_{$k1}_0">&nbsp;&nbsp;精品推荐&nbsp;&nbsp;</span>
+						<f class="nvg_triangle">▲</f>
+						</li>
 						<volist name="vo1['catChildren']" key="k2" id="vo2">
-						<li id="fl_{$k1}_{$k2}" class="wst-fl-tab"
-							onmouseover="gpanelOver(this);">{$vo2["catName"]}</li>
+						<li id="fl_{$k1}_{$k2}" class="wst-fl-tab" onmouseover="gpanelOver(this);">
+							<span id="span_fl_{$k1}_{$k2}">&nbsp;&nbsp;{$vo2["catName"]}&nbsp;&nbsp;</span>
+							<f class="nvg_triangle">▲</f>
+						</li>
 						</volist>
 					</ul>
 				</div>
@@ -89,15 +91,13 @@
 						<volist name="vo1['jpgoods']" key="k2" id="vo2">
 						<li class="wst-goodsbox">
 							<div class="wst-goods-thumb">
-								<a
-									href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo2['goodsId']))}">
+								<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo2['goodsId']))}">
 									<img class='lazyImg' data-original="__ROOT__/{$vo2['goodsThums']}" width="180" />
 								</a>
 							</div>
 							<div class="wst-goods-thumb-des">
 								<div class="goodsname">
-								<a class="wst-goods-name"
-									href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo2['goodsId']))}">{$vo2['goodsName']}</a>
+								<a class="wst-goods-name" href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo2['goodsId']))}">{$vo2['goodsName']}</a>
 								</div>
 								<div>
 									<em class="wst-left wst-goods-price" id='shopGoodsPrice_{$vo2["goodsId"]}' dataId='{$vo2["goodsAttrId"]}'>￥{$vo2['shopPrice']|number_format=2}</em>
@@ -109,6 +109,9 @@
 							</div>
 						</li>
 						</volist>
+						<?php for($i=0;$i<10-count($vo1['jpgoods']);$i++){ ?>
+						<li class="wst-emptybox"></li>
+						<?php } ?>
 						<div class='wst-clear'></div>
 					</div>
 
@@ -119,8 +122,7 @@
 						<volist name="vo2['goods']" key="k3" id="vo3">
 						<li class="wst-goodsbox">
 							<div class="wst-goods-thumb">
-								<a
-									href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo3[goodsId]))}">
+								<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo3[goodsId]))}">
 									<img class='lazyImg' data-original="__ROOT__/{$vo3['goodsThums']}" width="180" />
 								</a>
 							</div>
@@ -131,9 +133,8 @@
 								</div>
 								<div>
 									<em class="wst-left wst-goods-price" id='shopGoodsPrice_{$vo3["goodsId"]}' dataId='{$vo3["goodsAttrId"]}'>￥{$vo3['shopPrice']|number_format=2}</em>
-									<a href="javascript:addCart({$vo3['goodsId']},0,'{$vo3['goodsThums']}')" class="wst-right <if condition="session('WST_USER.userId') gt 0 ">btnCart</if>" > <img
-										src="__ROOT__/Apps/Home/View/default/images/btn_addcart.png"
-										width="85" />
+									<a href="javascript:addCart({$vo3['goodsId']},0,'{$vo3['goodsThums']}')" class="wst-right <if condition="session('WST_USER.userId') gt 0 ">btnCart</if>" > 
+									<img src="__ROOT__/Apps/Home/View/default/images/btn_addcart.png" width="85" />
 									</a>
 									<div class='wst-clear'></div>
 								</div>
@@ -141,21 +142,12 @@
 							
 						</li>
 						</volist>
+						<?php for($i=0;$i<10-count($vo2['goods']);$i++){ ?>
+						<li class="wst-emptybox"></li>
+						<?php } ?>
 						<div class='wst-clear'></div>
 					</div>
 					</volist>
-					<div class="wst-fl-recommendshop">
-						<volist name="vo1['recommendShops']" key="k2" id="vo2">
-						<div style="width: 180px; margin-top: 10px;">
-							<div style="width: 180px;">
-								<a
-									href="{:U('Home/Shops/toShopHome/',array('shopId'=>$vo2['shopId']))}">
-									<img class='lazyImg' data-original="__ROOT__/{$vo2['shopImg']}" height="120" width="180" />
-								</a>
-							</div>
-						</div>
-						</volist>
-					</div>
 				</div>
 			</div>
 			<div class='wst-clear'></div>

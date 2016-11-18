@@ -1,0 +1,50 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+<div class="wst-body"> 
+       <div class='wst-page-header'>分销管理> 分销设置</div>
+       <div class='wst-page-content' style="position:relative;">
+        <table class="table table-hover table-striped table-bordered wst-form">
+           <tr>
+             <th align='right' width="140">分销开关<font color='red'>*</font>：</th>
+             <td>
+             <label>
+             <input type='radio' name='isDistribut'  class="wst-ipt" value='1' <if condition="$object['isDistribut'] ==1 ">checked</if> />开&nbsp;&nbsp;
+             </label>
+             <label>
+             <input type='radio' name='isDistribut'  class="wst-ipt" value='0' <if condition="$object['isDistribut'] ==0 ">checked</if> />关
+             </label>
+             </td>
+           </tr>
+           <tr>
+             <th align='right'>分销模式<font color='red'>*</font>：</th>
+             <td>
+             	<select id="distributType" class="wst-ipt" onchange="setDistributType(this)">
+             		<option value="1" <if condition="$object['distributType'] ==1 ">selected</if>>按商品设置提取佣金</option>
+             		<option value="2" <if condition="$object['distributType'] ==2 ">selected</if>>按订单比例提取佣金</option>
+             	</select>&nbsp;<span class="wst-tips">注：如果选择“按订单比例提取佣金”，则店铺内的所有商品将参与分销。</span>
+             </td>
+           </tr>
+            <tr class="wst-order-rate wst-distribut-tr" <if condition="$object['distributType'] neq 2 ">style="display:none;"</if>>
+             <th align='right'>订单佣金比例<font color='red'>*</font>：</th>
+             <td style="padding-left:4px; ">
+             	<button class='rate-btn' id='orate-reduce' style='color:#ccc;' onclick='javascript:WST.changeIptNum(-1,"#distributOrderRate","#orate-reduce,#orate-add")'>-</button><input type='text' class="wst-ipt" style=" " id='distributOrderRate' value="{$object['distributOrderRate']}" data-min='1' data-max='100' autocomplete="off" onkeyup='WST.changeIptNum(0,"#distributOrderRate","#orate-reduce,#orate-add")' onkeypress="return WST.isNumberKey(event);" maxlength="3"/><button class='rate-btn' id='orate-add' onclick='javascript:WST.changeIptNum(1,"#distributOrderRate","#orate-reduce,#orate-add")'>+</button>&nbsp;%
+             </td>
+           </tr>
+           <tr class="wst-distribut-tr">
+             <th align='right'>分成比例<font color='red'>*</font>：</th>
+             <td style="padding-left:4px;">
+            	 推广人占&nbsp;<button class='rate-btn' id='rate-reduce' style='color:#ccc;' onclick='javascript:WST.changeIptNum(-1,"#promoterRate","#rate-reduce,#rate-add","","setRate")'>-</button><input type='text' class="wst-ipt" id='promoterRate' value="{$object['promoterRate']}" data-min='1' data-max='100' autocomplete="off" onkeyup='WST.changeIptNum(0,"#promoterRate","#rate-reduce,#rate-add","","setRate")' onkeypress="return WST.isNumberKey(event);" maxlength="3"/><button class='rate-btn' id='rate-add' onclick='javascript:WST.changeIptNum(1,"#promoterRate","#rate-reduce,#rate-add","","setRate")'>+</button>&nbsp;%&nbsp;&nbsp;&nbsp;&nbsp;
+				购买用户占&nbsp;<span id="buyerRate" style="color:red;font-weight:bold;">{$object.buyerRate}</span>&nbsp;%
+             </td>
+           </tr>
+           <tr>
+             <td colspan='2' style='text-align:center;padding:20px;'>
+                 <button type="submit" class='wst-btn-query' onclick="setDistributs();">保&nbsp;存</button>&nbsp;&nbsp;
+                 <button type="button" class='wst-btn-query' onclick='javascript:location.reload();'>重&nbsp;置</button>
+             </td>
+           </tr>
+        </table>
+       </div>
+   </div>
+   <script src="__ROOT__/Apps/Home/View/default/js/distributs.js"></script>
+</block>  

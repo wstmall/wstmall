@@ -1,0 +1,207 @@
+<extend name="./Apps/Home/View/default/users/layout.html" />
+<block name="content">
+	<script>
+	var statusMark = 0;
+	$(function () {
+		$('#tab').TabPanel({tab:statusMark,callback:function(tab){
+			switch(tab){
+			   case 0:loadMoneys(0);break;
+			   case 1:loadDraws(0);break;
+			   case 2:loadConfs(0);break;
+			}
+		}});
+	});
+	
+	</script>
+	 <div class="wst-body"> 
+	     <div class='wst-page-header'>买家中心 > 资金管理</div>
+	     <div class='wst-page-content'> 
+		   <div style='height:135px'>
+		      <div style='width:140px;float:left;'>
+		         <img src="<empty name="WST_USER['userPhoto']">__ROOT__/Apps/Home/View/default/images/logo.png<else/>__ROOT__/{$WST_USER['userPhoto']}</empty>" height="100" width="100" />
+		      </div>
+		      <div style='width:800px;float:left;padding-top:20px;'>
+		         <div>会员：{$WST_USER["loginName"]}<if condition='$WST_USER["userRank"]["rankName"] neq ""'>({$WST_USER["userRank"]['rankName']})</if></div>
+	   			 <div>我的积分：<a  href="{:U('Home/Users/toScoreList/')}"><span style="color:red;">{$user['userScore']}</span></a> 个</div>
+				 <div>我的钱包：￥<font color='red' id='userMoney'>{$user['userMoney']}</font><a style='margin-left:50px;' href='javascript:drawCash()'>申请提现</a></div>
+				 <div>冻结金额：￥<font color='red' id='lockMoney'>{$user['lockMoney']}</font></div>
+		      </div>
+		   </div>
+		   <div id='tab' class="wst-tab-box">
+			<ul class="wst-tab-nav">
+				<li id="wst-li-0">资金流水</li>
+				<li id="wst-li-1">提现记录</li>
+				<li id="wst-li-2">提现账号</li>
+			</ul>
+			<div class="wst-tab-content" style='width:98%;'>
+			    <!-- 资金流水 -->
+				<div class='wst-tab-item'>
+				    <div class='wst-tbar-query' style='width:99%'>
+						流水类型：
+						<select id='moneyType' autocomplete="off">
+							<option value='-1'>全部</option>
+							<option value='1'>收入</option>
+							<option value='0'>支出</option>
+						</select>
+						流水来源：<select id='dataSrc' autocomplete="off">
+							<option value='-1'>全部</option>
+						</select>
+						时间：<input type='text' id='startDate' class='laydate-icon order-num-btn' name='startDate' style='width:100px' placeholder='开始日期' onclick='laydate({format: "YYYY-MM-DD"})'/>
+                           <input type='text' id='endDate' class='laydate-icon order-num-btn' name='endDate' style='margin-left:5px;' placeholder='结束日期' onclick='laydate({format: "YYYY-MM-DD"})'/>
+						关键字：<input type="text" id="key_0" class='order-num-btn' autocomplete="off"/>
+						<button class='wst-btn-query' onclick="loadMoneys(0)">查询</button>
+					</div>
+					<table class='wst-list'>
+						<thead>
+							<tr>
+								<th width='10'>&nbsp;</th>
+								<th width='45'>类型</th>
+								<th width='70'>来源</th>
+								<th width='60'>金额</th>
+								<th width='*'>备注</th>
+								<th width='150'>时间</th>
+							</tr>
+						</thead>
+						<tbody id="tbody_0"></tbody>
+						<tfoot>
+							<tr>
+								<td colspan='6' align='center'>
+									<div id="wst-page-0" class='wst-page' style="float:right;padding-bottom:10px;"></div>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+					<script id="tblist_0" type="text/html">
+                    {{# for(var i = 0; i < d.length; i++){ }}
+                    <tr>
+                       <td>{{i+1}}</td>
+                       <td>{{(d[i].moneyType==1)?"收入":"支出"}}</td>
+                       <td>{{changeMoneySrc(d[i].dataSrc)}}</td>
+                       <td>{{d[i].money}}</td>
+                       <td>{{d[i].moneyRemark}}</td>
+                       <td>{{d[i].createTime}}</td>
+                    </tr>
+                    {{# } }}
+                    </script>
+					<div style='clear:both;'></div>
+				</div>
+				<!-- 提现记录 -->
+				<div class='wst-tab-item' style="display:none;">
+					<div> 
+					    <div class='wst-tbar-query' style='width:99%'>
+							时间：
+							<input type='text' id='startDate1' class='laydate-icon order-num-btn' name='startDate1' style='width:100px' placeholder='开始日期' onclick='laydate({format: "YYYY-MM-DD"})'/>
+                            <input type='text' id='endDate1' class='laydate-icon order-num-btn' name='endDate1' style='width:100px;margin-left:5px;margin-right:5px;' placeholder='结束日期' onclick='laydate({format: "YYYY-MM-DD"})'/>
+							<button class='wst-btn-query' onclick="loadDraws(0)">查询</button>
+						</div>
+						<table class='wst-list' style="font-size:13px;">
+							<thead>
+								<tr>
+								    <th width='10'>&nbsp;</th>
+									<th width='70'>提现类型</th>
+									<th width='70'>提现金额</th>
+									<th width='*'>提现账号</th>
+									<th width='80'>持有人</th>
+									<th width='*'>备注</th>
+									<th width='140'>时间</th>
+									<th width='60'>状态</th>
+								</tr>
+							</thead>
+							<tbody id="tbody_1">
+							</tbody>
+							<tfoot>
+								<tr>
+									<td colspan='8' align='center'>
+										<div  id="wst-page-1" class="wst-page" style="float:right;padding-bottom:10px;"></div>
+									</td>
+								</tr>
+							 </tfoot>
+						</table>
+						<script id="tblist_1" type="text/html">
+                        {{# for(var i = 0; i < d.length; i++){ }}
+                        <tr>
+                          <td>{{i+1}}</td>
+                          <td>{{#if(d[i].accType==1){}}支付宝{{#}else{}}银行卡{{#}}}</td>
+                          <td>{{d[i].money}}</td>
+                          <td>{{#if(d[i].accType==3){}}【{{d[i].bankName}}】{{#}}}{{d[i].accNo}}</td>
+                          <td>{{d[i].accUser}}</td>
+                          <td>{{d[i].cashRemarks}}</td>
+                          <td>{{d[i].createTime}}</td>
+                          <td>{{#if(d[i].cashSatus==1){}}已处理{{#}else{}}待处理{{#}}}</td>
+                        </tr>
+                        {{# } }}
+                        </script>
+					</div>
+					<div style='clear:both;'></div>
+				</div>
+				<!-- 提现账号-->
+				<div class='wst-tab-item' style="display:none;">
+					<table class='wst-list' style="font-size:13px;">
+						<thead>
+						<tr>
+							<th colspan="6" class="wst-form" style='text-align:right'>
+								<button class='wst-btn-query' onclick="toEditConfig(0)">新增</button>
+							</th>
+						</tr>
+						<tr>
+							<th width='10'>&nbsp;</th>
+							<th width='100'>提现类型</th>
+							<th width='*'>提现账号</th>
+							<th width='140'>收款人</th>
+							<th width='140'>开户地址</th>
+							<th width='100'>操作</th>
+						</tr>
+						</thead>
+						<tbody id="tbody_2"></tbody>
+						<tfoot>
+								<tr>
+									<td colspan='6' align='center'>
+										<div  id="wst-page-2" class="wst-page" style="float:right;padding-bottom:10px;"></div>
+									</td>
+								</tr>
+						</tfoot>
+					</table>
+					<script id="tblist_2" type="text/html">
+                    {{# for(var i = 0; i < d.length; i++){ }}
+                    <tr>
+                       <td>{{i+1}}</td>
+                       <td>{{#if(d[i].accType==1){}}支付宝{{#}else{}}银行卡{{#}}}</td>
+                       <td>{{#if(d[i].accType==3){}}【{{d[i].bankName}}】{{#}}}{{d[i].accNo}}</td>
+                       <td>{{d[i].accUser}}</td>
+						<td>{{d[i].areaName1}}{{d[i].areaName2}}</td>
+                       <td>
+                       <a href='javascript:toEditConfig({{d[i].id}})'>编辑</a>
+                       <a href='javascript:delAccConfig({{d[i].id}})'>删除</a>
+                       </td>
+                    </tr>
+                    {{# } }}
+                    </script>
+					</div>
+					<div style='clear:both;'></div>
+				</div>
+			</div>
+			</div>
+		</div>
+		<div style='clear:both;'></div>
+		<div id='drawDiv' style='display:none;padding-top:10px;'>
+		   <form id='drawForm'>
+		   <table>
+		      <tr>
+		         <td align='right' width='100'>提现账号：</td>
+		         <td>
+		         <select id='configId'></select>
+		         </td>
+		      </tr>
+		      <tr>
+		         <td align='right' >提现金额(元)：</td>
+		         <td style='padding-top:5px;'><input type='text' id='drawMoney' class='order-num-btn' onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='10'/></td>
+		      </tr>
+		      <tr>
+		         <td align='right' >支付密码：</td>
+		         <td style='padding-top:5px;'><input type='password' id='payPwd' class='order-num-btn' onkeypress="return WST.isNumberKey(event);" maxLength='6'/></td>
+		      </tr>
+		   </table>
+		   </form>
+		</div>
+	</div>
+</block>  

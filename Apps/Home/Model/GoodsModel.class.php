@@ -143,13 +143,13 @@ class GoodsModel extends BaseModel {
 				shop.deliveryMoney ,g.goodsSn,shop.serviceStartTime,shop.serviceEndTime FROM __PREFIX__goods g left join __PREFIX__goods_attributes ga on g.goodsId=ga.goodsId and ga.isRecomm=1, __PREFIX__shops shop, __PREFIX__shops_cats sc 
 				LEFT JOIN __PREFIX__shops_cats sc2 ON sc.parentId = sc2.catId
 				WHERE g.goodsId = $goodsId AND shop.shopId=sc.shopId AND sc.catId=g.shopCatId1 AND g.shopId = shop.shopId AND g.goodsFlag = 1 ";		
-		$rs = $this->query($sql);
+		$rs = $this->queryRow($sql);
 		
-		if(!empty($rs) && $rs[0]['goodsAttrId']>0){
-			$rs[0]['shopPrice'] = $rs[0]['attrPrice'];
-			$rs[0]['goodsStock'] = $rs[0]['attrStock'];
+		if(!empty($rs) && $rs['goodsAttrId']>0){
+			$rs['shopPrice'] = $rs['attrPrice'];
+			$rs['goodsStock'] = $rs['attrStock'];
 		}
-		return $rs[0];
+		return $rs;
 	}
 	
 	/**
@@ -248,7 +248,7 @@ class GoodsModel extends BaseModel {
 		$shopCatId1 = (int)I('shopCatId1',0);
 		$shopCatId2 = (int)I('shopCatId2',0);
 		$goodsName = WSTAddslashes(I('goodsName'));
-		$sql = "select g.goodsId,g.goodsSn,g.goodsName,g.goodsImg,g.goodsThums,g.shopPrice,g.goodsStock,g.saleCount,g.isSale,g.isRecomm,g.isHot,g.isBest,g.isNew,ga.isRecomm as attIsRecomm from __PREFIX__goods g
+		$sql = "select g.goodsId,g.goodsSn,g.goodsName,g.goodsImg,g.goodsThums,g.shopPrice,g.goodsStock,g.saleCount,g.isSale,g.isRecomm,g.isHot,g.isBest,g.isNew,g.isDistribut,g.commission,ga.isRecomm as attIsRecomm from __PREFIX__goods g
 				left join __PREFIX__goods_attributes ga on g.goodsId = ga.goodsId and ga.isRecomm = 1
 				where g.goodsFlag=1 
 		     and g.shopId=".$shopId." and g.goodsStatus=1 and g.isSale=1 ";
@@ -333,6 +333,18 @@ class GoodsModel extends BaseModel {
 			$m->isRecomm = ((int)I('isRecomm')==1)?1:0;
 			$m->isNew = ((int)I('isNew')==1)?1:0;
 			$m->isHot = ((int)I('isHot')==1)?1:0;
+			
+			$sql = "select isDistribut from __PREFIX__shop_configs where shopId = $shopId";
+			$shopCfg = $this->queryRow($sql);
+			if($GLOBALS['CONFIG']['isDistribut'] == 1 && $shopCfg["isDistribut"]==1 ){
+				if($shopCfg["distributType"]==2){
+					$m->isDistribut = 1;
+					$m->commission = 0;
+				}else{
+					$m->isDistribut = ((int)I('isDistribut')==1)?1:0;
+					$m->commission = ($m->isDistribut==1)?(float)I('commission'):0;
+				}
+			}
 			//如果商家状态不是已审核则所有商品只能在仓库中
 		    if($shopStatus[0]['shopStatus']==1){
 				$m->isSale = ((int)I('isSale')==1)?1:0;
@@ -465,6 +477,7 @@ class GoodsModel extends BaseModel {
 		}
 	 	//加载商品信息
 	 	$m = D('goods');
+	 	
 	 	$goods = $m->where('goodsId='.$goodsId." and shopId=".$shopId)->find();
 	 	if(empty($goods))return array('status'=>-1,'msg'=>'无效的商品ID！');
 	 	if ($m->create()){
@@ -472,6 +485,14 @@ class GoodsModel extends BaseModel {
 			$m->isRecomm = ((int)I('isRecomm')==1)?1:0;
 			$m->isNew = ((int)I('isNew')==1)?1:0;
 			$m->isHot = ((int)I('isHot')==1)?1:0;
+			
+			$sql = "select isDistribut from __PREFIX__shop_configs where shopId = $shopId";
+			$shopCfg = $this->queryRow($sql);
+			if($GLOBALS['CONFIG']['isDistribut'] == 1 && $shopCfg["isDistribut"]==1 ){
+				$m->isDistribut = ((int)I('isDistribut')==1)?1:0;
+				$m->commission = ($m->isDistribut==1)?(float)I('commission'):0;
+			}
+			
 			//如果商家状态不是已审核则所有商品只能在仓库中
 		    if($shopStatus['shopStatus']==1){
 				$m->isSale = ((int)I('isSale')==1)?1:0;
@@ -479,6 +500,7 @@ class GoodsModel extends BaseModel {
 				$m->isSale = 0;
 			}
 			if($m->isSale==1)$m->saleTime=date('Y-m-d H:i:s');
+			
 			$m->goodsDesc = I('goodsDesc');
 			$m->attrCatId = (int)I("attrCatId");
 			$m->goodsStatus = ($GLOBALS['CONFIG']['isGoodsVerify']==1)?0:1;
@@ -582,62 +604,75 @@ class GoodsModel extends BaseModel {
 				
 				//保存优惠套餐
 				$packageCnt = (int)I("packageCnt");
-				$packageIds = array();
-				for($i=0;$i<$packageCnt;$i++){
-					$packageId = (int)I("packageId_".$i);
-					if($packageId>0){
-						$packageIds[] = $packageId;
-					}
-				}
-				//本次删除的优惠套餐
-				$sql = "select * from __PREFIX__packages where goodsId= $goodsId and packageId not in (".implode(",",$packageIds).")";
-				$nlist = $this->query($sql);
-				$npIds = array();
-				for($i=0, $k=count($nlist); $i<$k; $i++){
-					$npIds[] = $nlist[$i]["packageId"];
-				}
-				$sql = "delete from __PREFIX__packages where packageId in (".implode(",",$npIds).")";
-				$this->execute($sql);
-				
-				//删除已经失效的套餐记录
-				$sql = "delete from __PREFIX__cart where packageId in (".implode(",",$npIds).")";
-				$m->execute($sql);
-				
-				$sql = "select * from __PREFIX__packages where goodsId= $goodsId";
-				$vlist = $this->query($sql);
-				$vpIds = array();
-				for($i=0, $k=count($vlist); $i<$k; $i++){
-					$vpIds[] = $vlist[$i]["packageId"];
-				}
-				
-				$sql = "delete from __PREFIX__goods_packages where packageId in (".implode(",",$vpIds).")";
-				$this->execute($sql);
-				$pm = M("packages");
-				$gm = M("goods_packages");
-				for($i=0;$i<$packageCnt;$i++){
-					$packageId = (int)I("packageId_".$i);
-					$data = array();
-					$data["packageName"] = I("packageName_".$i);
-					if($packageId>0){
-						$pm->where("packageId=".$packageId)->save($data);
-					}else{
-						$data["shopId"] = $shopId;
-						$data["goodsId"] = $goodsId;
-						$data["createTime"] = date('Y-m-d H:i:s');
-						$packageId = $pm->add($data);
-					}
-					$goodsIds = explode(",",I("goodsIds_".$i));
-					$goodsDiffPrices = explode(",",I("goodsDiffPrices_".$i));
-					for($j=0,$k=count($goodsIds);$j<$k;$j++){
-						$pgoodsId = (int)$goodsIds[$j];
-						if($pgoodsId>0){
-							$data = array();
-							$data["packageId"] = $packageId;
-							$data["goodsId"] = $pgoodsId;
-							$data["diffPrice"] = (float)$goodsDiffPrices[$j];
-							$gm->add($data);
+				if($packageCnt>0){
+					$packageIds = array();
+					for($i=0;$i<$packageCnt;$i++){
+						$packageId = (int)I("packageId_".$i);
+						if($packageId>0){
+							$packageIds[] = $packageId;
 						}
 					}
+					//本次删除的优惠套餐
+					$sql = "select * from __PREFIX__packages where goodsId= $goodsId and packageId not in (".implode(",",$packageIds).")";
+					$nlist = $this->query($sql);
+					$npIds = array();
+					for($i=0, $k=count($nlist); $i<$k; $i++){
+						$npIds[] = $nlist[$i]["packageId"];
+					}
+					$sql = "delete from __PREFIX__packages where packageId in (".implode(",",$npIds).")";
+					$this->execute($sql);
+					
+					//删除已经失效的套餐记录
+					$sql = "delete from __PREFIX__cart where packageId in (".implode(",",$npIds).")";
+					$m->execute($sql);
+					
+					$sql = "select * from __PREFIX__packages where goodsId= $goodsId";
+					$vlist = $this->query($sql);
+					$vpIds = array();
+					for($i=0, $k=count($vlist); $i<$k; $i++){
+						$vpIds[] = $vlist[$i]["packageId"];
+					}
+					
+					$sql = "delete from __PREFIX__goods_packages where packageId in (".implode(",",$vpIds).")";
+					$this->execute($sql);
+					$pm = M("packages");
+					$gm = M("goods_packages");
+					for($i=0;$i<$packageCnt;$i++){
+						$packageId = (int)I("packageId_".$i);
+						$data = array();
+						$data["packageName"] = I("packageName_".$i);
+						if($packageId>0){
+							$pm->where("packageId=".$packageId)->save($data);
+						}else{
+							$data["shopId"] = $shopId;
+							$data["goodsId"] = $goodsId;
+							$data["createTime"] = date('Y-m-d H:i:s');
+							$packageId = $pm->add($data);
+						}
+						$goodsIds = explode(",",I("goodsIds_".$i));
+						$goodsDiffPrices = explode(",",I("goodsDiffPrices_".$i));
+						for($j=0,$k=count($goodsIds);$j<$k;$j++){
+							$pgoodsId = (int)$goodsIds[$j];
+							if($pgoodsId>0){
+								$data = array();
+								$data["packageId"] = $packageId;
+								$data["goodsId"] = $pgoodsId;
+								$data["diffPrice"] = (float)$goodsDiffPrices[$j];
+								$gm->add($data);
+							}
+						}
+					}
+				}else{
+					$packageIds = array(0);
+					$sql = " select packageId from __PREFIX__packages where goodsId = $goodsId";
+					$rs = $this->query($sql);
+					for($i=0,$k=count($rs);$i<$k;$i++){
+						$packageIds[] = $rs[$i]["packageId"];
+					}
+					$sql = "delete from __PREFIX__goods_packages where packageId in (".implode(",",$packageIds).")";
+					$this->execute($sql);
+					$sql = "delete from __PREFIX__packages where goodsId = $goodsId";
+					$this->execute($sql);
 				}
 			}
 		}else{
@@ -1349,5 +1384,31 @@ class GoodsModel extends BaseModel {
 		}
 		return $packages;
 		
+	}
+	
+	
+	/**
+	 * 获取分销的商品
+	 */
+	public function queryDistributByPage(){
+		$shopId=(int)session('WST_USER.shopId');
+		$shopCatId1 = (int)I('shopCatId1',0);
+		$shopCatId2 = (int)I('shopCatId2',0);
+		$goodsName = WSTAddslashes(I('goodsName'));
+		
+		$m = D('Home/Distributs');
+		$distributConf = $m->getDistributConf();
+		
+		$sql = "select g.goodsId,g.goodsSn,g.goodsName,g.goodsImg,g.goodsThums,g.shopPrice,g.goodsStock,g.saleCount,g.isSale,g.isRecomm,g.isHot,g.isBest,g.isNew,g.commission,ga.isRecomm as attIsRecomm from __PREFIX__goods g
+				left join __PREFIX__goods_attributes ga on g.goodsId = ga.goodsId and ga.isRecomm = 1
+				where g.goodsFlag=1
+			    and g.shopId=".$shopId." and g.goodsStatus=1 and g.isSale=1 ";
+		if($shopCatId1>0)$sql.=" and g.shopCatId1=".$shopCatId1;
+		if($shopCatId2>0)$sql.=" and g.shopCatId2=".$shopCatId2;
+		if($goodsName!='')$sql.=" and (g.goodsName like '%".$goodsName."%' or g.goodsSn like '%".$goodsName."%') ";
+		if($distributConf["distributType"]==1)$sql.=" and g.isDistribut=1 and commission>0 ";
+		$sql.=" order by g.goodsId desc";
+		
+		return $this->pageQuery($sql);
 	}
 }

@@ -13,7 +13,6 @@
 		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />
 		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/pslocation.css" />
 		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/magnifier.css" />
-     	
    	</head>
    	<body>
 		<include file="./Apps/Home/View/default/header_common.html" />
@@ -33,16 +32,16 @@
 						  <div>
 						    <div id="preview" class="spec-preview"> 
 							    <span class="jqzoom">
-							    	<img jqimg="__ROOT__/{$goodsDetails['goodsImg']}" src="__ROOT__/{$goodsDetails['goodsImg']}" height="350" width="350"/>
+							    	<img jqimg="__ROOT__/{$goodsDetails['goodsImg']}" class='lazyImg' data-original="__ROOT__/{$goodsDetails['goodsImg']}" height="350" width="350"/>
 							    </span> 
 						    </div>
 						    <!--缩图开始-->
 						    <div class="spec-scroll"> <a class="prev">&lt;</a> <a class="next">&gt;</a>
 						      <div class="items">
 						        <ul>
-						        	<li><img alt="" bimg="__ROOT__/{$goodsDetails['goodsImg']}" src="__ROOT__/{$goodsDetails['goodsThums']}" onmousemove="preview(this);"></li>
+						        	<li><img alt="" bimg="__ROOT__/{$goodsDetails['goodsImg']}" class='lazyImg' data-original="__ROOT__/{$goodsDetails['goodsThums']}" onmousemove="preview(this);"></li>
 						        	<volist name="goodsImgs" key="k" id="vo">
-						          		<li><img alt="" bimg="__ROOT__/{$vo['goodsImg']}" src="__ROOT__/{$vo['goodsThumbs']}" onmousemove="preview(this);"></li>
+						          		<li><img alt="" bimg="__ROOT__/{$vo['goodsImg']}" class='lazyImg' data-original="__ROOT__/{$vo['goodsThumbs']}" onmousemove="preview(this);"></li>
 						          	</volist>
 						        </ul>
 						      </div>
@@ -61,6 +60,18 @@
 						         </a>
 						       </div>
 						  </div>
+						  <div class="wst-clear"></div>
+							<!-- JiaThis Button BEGIN -->
+							<div class="jiathis_style_24x24">
+								<a class="jiathis_button_qzone"></a>
+								<a class="jiathis_button_tsina"></a>
+								<a class="jiathis_button_tqq"></a>
+								<a class="jiathis_button_weixin"></a>
+								<a class="jiathis_button_cqq"></a>
+								<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+								
+							</div>
+							<!-- JiaThis Button END -->
 					</div>
 					<div class="goods-des-box">
 						<table class="goods-des-tab">
@@ -70,7 +81,10 @@
 										<div class="des-title" style="word-break:break-all;">
 											{$goodsDetails["goodsName"]}
 										</div>
-										<div class='wst-goods-spec'>{$goodsDetails["goodsSpec"]|htmlspecialchars_decode}</div>
+										<div >{$goodsDetails["goodsSpec"]|htmlspecialchars_decode}</div>
+										<?php if($goodsDetails['isDistributGoods']==1){ ?>
+										<div class='wst-goods-dist'><img src="__ROOT__/Apps/Home/View/default/images/way_square.gif"/>&nbsp;分销商品</div>
+										<?php } ?>
 									</td>
 								</tr>
 								<tr>
@@ -83,6 +97,9 @@
 								<tr>
 									<td width="70"><span class="des-title-span">配送至：</span></td>
 									<td>
+										<if condition="$goodsDetails['isDistributAll'] eq 1">
+										全国各地
+										<else/>
 										<li id="summary-stock">
 											<div class="dd">
 												<div id="store-selector">
@@ -97,6 +114,7 @@
 											</div>
 										</li>
 										<div class="wst-clear"></div>
+										</if>
 									</td>
 								</tr>
 								<tr>
@@ -132,9 +150,9 @@
 								</tr>
 								<tr>
 									<td style="position: relative;">
-									<div id='qrBox' style='position:absolute ;top:-50px;left:450px;padding:2px;'>
-										<div id='qrcode' style='width:132px;height:132px;border:1px solid #ddd;margin-bottom:2px;'></div>
-										<div>下载移动客户端扫一扫</div>
+									<div id='qrBox' class='wst-qrBox'>
+										<div id='qrcode' class='wst-qrcode'></div>
+										<div class="wst-align-center">微信端扫购有惊喜</div>
 									</div>
 									</td>
 									<td></td>
@@ -265,6 +283,179 @@
 				<div class="wst-clear"></div>
 			</div>
 			
+			
+			
+			<!-- ------------------------------------------------------------------------------------------------------------------------ -->
+			<?php if(count($packages)>0){ ?>
+			<div class="wst-goods-packages">
+				<div class="title">
+					<ul class="tab">
+						<li class="curr" style="display: list-item;"><a href="#none">优惠套餐</a></li>
+					</ul>
+				</div>
+				<ul id="move-animate-left" class="subtab">
+					<volist name="packages" id="vo">
+					<li class="{$key==0?'current':''}">{$vo['packageName']}</li>
+					</volist>
+				</ul>
+				<div class="wst-clear"></div>
+				<div id="leftcon" class="wst-relate-goods">
+					<div class="wst-subbox" style="width:<?php echo count($packages)*1210 ?>px;">
+						<volist name="packages" id="vo">
+						<div id="wst-gpackage-{$vo['packageId']}" class="wst-sublist">
+							<div class="main-goods">
+								<div class="add-icon">┼</div>
+								<div class="goods-img">
+									<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goodsDetails['goodsId']))}" target="_blank"><img class='lazyImg' data-original="__ROOT__/{$goodsDetails['goodsThums']}" width="120" height="120"/></a>
+								</div>
+								<div class="goods-name"><a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goodsDetails['goodsId']))}" target="_blank"> {$goodsDetails["goodsName"]}</a></div>
+							</div>
+							<div class="container-goods">
+								<div class="all-goods" style="width:<?php echo count($vo['glist'])*160 ?>px;">
+									<volist name="vo['glist']" id="vo2">
+										<if condition="$key eq 0">
+											<div class="frist-goods">
+												<div class="goods-img">
+													<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo2['goodsId']))}" target="_blank"><img class='lazyImg' data-original="__ROOT__/{$vo2['goodsThums']}" width="120" height="120"/></a>
+												</div>
+												<div class="goods-name"><a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo2['goodsId']))}" target="_blank">{$vo2['goodsName']}</a></div>
+											</div>
+										<else/>
+											<div class="normal-goods">
+												<div class="add-icon">┼</div>
+												<div class="goods-img">
+													<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo2['goodsId']))}" target="_blank"><img class='lazyImg' src="__ROOT__/{$vo2['goodsThums']}" width="120" height="120"/></a>
+												</div>
+												<div style="height: 36px;overflow: hidden;"><a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$vo2['goodsId']))}" target="_blank">{$vo2['goodsName']}</a></div>
+											</div>
+										</if>
+									</volist>
+								</div>
+							</div>
+							<div class="wst-settlement">
+								<div class="wst-eq">〓</div>
+								<div style="color: red;">
+									套餐价：<span style="font-size:18px;">¥</span><span style="font-size:18px;font-weight:bold;"><span class="wst-package-price-{$vo['packageId']}">{$vo['minPrice']+$vo['pminPrice']}-{$vo['maxPrice']+$vo['pmaxPrice']}</span></span>
+								</div>
+								<div>
+									节省：<span style="font-size:14px;background-color: #333;color:#fff;padding:2px 4px;">¥{$vo['savePrice']}</span>
+								</div>
+								<div>
+									价格：<span style="font-size:14px;text-decoration: line-through;">¥<span class="wst-org-price">{$vo['minPrice']+$vo['pminPrice']+$vo['savePrice']}-{$vo['maxPrice']+$vo['pmaxPrice']+$vo['savePrice']}</span></span>
+								</div>
+								<div>
+									<if condition="$comefrom eq 1">
+										<img src="__ROOT__/Apps/Home/View/default/images/hcat.jpg" width="95"/>
+									<else/>
+										<php>if($goodsDetails['shopServiceStatus'] ==1){</php>
+											<a href="javascript:addPackages({$vo['packageId']});"><img src="__ROOT__/Apps/Home/View/default/images/btn_buy_01_hover.png" width="95"></a>
+										<php>}else if($goodsDetails['shopServiceStatus'] ==0){</php>
+											<img src="__ROOT__/Apps/Home/View/default/images/hcat.jpg" width="95"/>
+										<php>}</php>
+									</if>
+								</div>
+							</div>
+							<div class="wst-clear"></div>
+						</div>
+						</volist>
+					</div>
+				</div>
+				<volist name="packages" id="vo">
+					<div id="wst-package-{$vo['packageId']}" style="display:none;overflow-y:auto;">
+						<div style="padding: 20px; ">
+							<div style="float:left;max-width:700px;">
+								<img class='lazyImg' data-original="__ROOT__/{$goodsDetails['goodsThums']}" width="50" height="50"/>
+								<volist name="vo['glist']" id="vo2">		
+									<span >&nbsp;┼</span>
+									<img class='lazyImg' src="__ROOT__/{$vo2['goodsThums']}" width="50" height="50"/>
+								</volist>
+							</div>
+							<div class="wst-pay-tips">
+								套餐价：<span class="wst-pay-price">¥<span id="wst-package-price-{$vo['packageId']}" class="wst-package-price-{$vo['packageId']}" allPrice="{$vo['minPrice']+$vo['pminPrice']}-{$vo['maxPrice']+$vo['pmaxPrice']}">{$vo['minPrice']+$vo['pminPrice']}-{$vo['maxPrice']+$vo['pmaxPrice']}</span></span><br/>
+								节省：<span class="wst-save-tips">¥{$vo['savePrice']}</span><br/>
+								价格：<span class="wst-org-price">¥{$vo['minPrice']+$vo['pminPrice']+$vo['savePrice']}-{$vo['maxPrice']+$vo['pmaxPrice']+$vo['savePrice']}</span><br/>
+							</div>
+							<div class="wst-clear"></div>
+						</div>
+						<div class="wst-package-gtips">请选择套餐内的商品信息</div>
+						<div class="wst-package-goods">
+							<if condition="count($goodsAttrs['priceAttrs']) gt 0">
+								<div id="wst-pattr-box-{$goodsDetails['goodsId']}" class="wst-pattr-box" hasAttr="1" goodsId="{$goodsDetails['goodsId']}">
+									<div class="wst-goods-notice-{$goodsDetails['goodsId']} wst-goods-notice">商品库存不足</div>
+									<div class="wst-goods-img-box"><img class='lazyImg' src="__ROOT__/{$goodsDetails['goodsThums']}" width="80" height="80"/></div>
+									<div class="wst-goods-attr-box">
+										<div>
+										{$goodsAttrs['priceAttrName']}:
+										<volist name="goodsAttrs['priceAttrs']" id="vo3">
+											<span onclick="checkAttrStock(this,{$goodsDetails['goodsId']},1,{$vo['packageId']});" goodsId="{$goodsDetails['goodsId']}" attrId="{$vo3['id']}" attrPrice="{$vo3['attrPrice']}" attrStock="{$vo3['attrStock']}" class="wst-goods-attrs">{$vo3['attrVal']}</span>
+										</volist>
+										</div>
+										<div style="margin-top:20px;">
+											库存：<span class="wst-pstock-{$goodsDetails['goodsId']}" allStock="{$goodsDetails['goodsStock']}">{$goodsDetails['goodsStock']}</span>件
+										</div>
+									</div>
+								</div>
+							<else/>
+								<div id="wst-pattr-box-{$goodsDetails['goodsId']}" class="wst-pattr-box" onclick="checkAttrStock(this,{$goodsDetails['goodsId']},0,{$vo['packageId']});" goodsId="{$goodsDetails['goodsId']}" attrId="0" attrPrice="<?php echo ($goodsDetails['shopPrice']-$goodsDetails['diffPrice'])>0?($goodsDetails['shopPrice']-$goodsDetails['diffPrice']):$goodsDetails['shopPrice']; ?>" attrStock="{$goodsDetails['goodsStock']}" hasAttr="0"  style="cursor:pointer;">
+									<div class="wst-goods-notice-{$goodsDetails['goodsId']} wst-goods-notice">商品库存不足</div>
+									<div class="wst-goods-img-box"><img class='lazyImg' src="__ROOT__/{$goodsDetails['goodsThums']}" width="80" height="80"/></div>
+									<div class="wst-goods-attr-box">
+										<div>
+										
+										</div>
+										<div style="margin-top:20px;">
+											库存：<span class="wst-pstock-{$goodsDetails['goodsId']}" allStock="{$goodsDetails['goodsStock']}">{$goodsDetails['goodsStock']}</span>件
+										</div>
+									</div>
+								</div>
+							</if>
+							<?php $gcnt = 1; ?>
+							<volist name="vo['glist']" id="vo2">
+							
+							<if condition="count($vo2['priceAttrs']) gt 0">
+								<div id="wst-pattr-box-{$vo2['goodsId']}" class="wst-pattr-box" hasAttr="1" goodsId="{$vo2['goodsId']}" style="{$gcnt%2==0?'clear: left;':'margin-left:15px;'}">
+									<div class="wst-goods-notice-{$vo2['goodsId']} wst-goods-notice">商品库存不足</div>
+									<div class="wst-goods-img-box"><img class='lazyImg' src="__ROOT__/{$vo2['goodsThums']}" width="80" height="80"/></div>
+									<div class="wst-goods-attr-box">
+										<div>
+										{$vo2['priceAttrName']}:
+										<volist name="vo2['priceAttrs']" id="vo3">
+											<span onclick="checkAttrStock(this,{$vo2['goodsId']},1,{$vo['packageId']});" goodsId="{$vo2['goodsId']}" attrId="{$vo3['id']}" attrPrice="<?php echo ($vo3['attrPrice']-$vo2['diffPrice'])>0?($vo3['attrPrice']-$vo2['diffPrice']):$vo3['attrPrice']; ?>" attrStock="{$vo3['attrStock']}" class="wst-goods-attrs">{$vo3['attrVal']}</span>
+										</volist>
+										</div>
+										<div style="margin-top:20px;">
+											库存：<span class="wst-pstock-{$vo2['goodsId']}" allStock="{$vo2['goodsStock']}">{$vo2['goodsStock']}</span>件
+										</div>
+									</div>
+								</div>
+							<else/>
+								<div id="wst-pattr-box-{$vo2['goodsId']}" class="wst-pattr-box" onclick="checkAttrStock(this,{$vo2['goodsId']},0,{$vo['packageId']});" goodsId="{$vo2['goodsId']}" attrId="0" attrPrice="<?php echo ($vo2['shopPrice']-$vo2['diffPrice'])>0?($vo2['shopPrice']-$vo2['diffPrice']):$vo2['shopPrice']; ?>" attrStock="{$vo2['goodsStock']}" hasAttr="0"  style="cursor:pointer;{$gcnt%2==0?'clear: left;':'margin-left:15px;'}">
+									<div class="wst-goods-notice-{$vo2['goodsId']} wst-goods-notice">商品库存不足</div>
+									<div class="wst-goods-img-box"><img class='lazyImg' src="__ROOT__/{$vo2['goodsThums']}" width="80" height="80"/></div>
+									<div class="wst-goods-attr-box">
+										<div>
+										
+										</div>
+										<div style="margin-top:20px;">
+											库存：<span class="wst-pstock-{$vo2['goodsId']}" allStock="{$vo2['goodsStock']}">{$vo2['goodsStock']}</span>件
+										</div>
+									</div>
+								</div>
+							</if>
+							<?php $gcnt += 1; ?>
+							</volist>
+						</div>
+						<div class="wst-footer-bar">
+							<div class="wst-bar-box">
+								<div class="wst-package-notice">请重新核对您的商品信息</div>
+								合计：<span class="wst-money-icon">¥<span class="wst-package-price-{$vo['packageId']}">{$vo['minPrice']+$vo['pminPrice']}-{$vo['maxPrice']+$vo['pmaxPrice']}</span></span>
+								<button class="wst-add-cartButt" onclick="addCartPackage(this,{$vo['packageId']},'{$goodsDetails['goodsThums']}');">确定加入购物车</button>
+							</div>
+						</div>
+					</div>
+				</volist>
+			</div>
+			<?php } ?>
 			<div class="wst-goods-pdetails">
 				<div class="wst-goods-pdetails-left">
 					{:W('Goods/getHotGoods',array('shopId'=>$goodsDetails['shopId']))}
@@ -320,12 +511,28 @@
 			</div>
 			<div class="wst-clear"></div>
 		</div>
+		
+		
+
+		<!-- JiaThis Button BEGIN -->
+			<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+			<script type="text/javascript">
+			var jiathis_config = {
+				url: "{:U('Home/Goods/getGoodsDetails',array('goodsId'=>$goodsDetails['goodsId'],'shareUserId'=>base64_encode($WST_USER['userId'])),true,true)}",
+				title:"{$goodsDetails['goodsName']}",
+				summary:"{$GLOBALS['CONFIG']['goodsShareTitle']}",
+				slide:{
+					divid:'jiathis_main',
+					pos:'left'
+				}
+			};
+			</script>
+		<!-- JiaThis Button END -->
+		
 		<include file="./Apps/Home/View/default/footer.html" />
 		<include file="./Apps/Home/View/default/right_cart.html" />
    	</body>
   
-
-
 
 <script src="__ROOT__/Apps/Home/View/default/js/goods.js"></script>
 <script src="__PUBLIC__/js/common.js"></script>
@@ -334,29 +541,36 @@
 <script src="__ROOT__/Apps/Home/View/default/js/pslocation.js" type="text/javascript"></script>
 <script src="__ROOT__/Apps/Home/View/default/js/jquery.jqzoom.js" type="text/javascript"></script>
 <script src="__ROOT__/Apps/Home/View/default/js/magnifier.js" type="text/javascript"></script>
+<script src="__ROOT__/Apps/Home/View/default/js/jquery.tabso.js" type="text/javascript"></script>
+
 <script src="__PUBLIC__/js/qrcode.js"></script>
-<script> 
-$("#store-selector").hover(function() {
-}, function(){
-	$("#store-selector").removeClass("hover");
-});
-
-
+<script>
 $(function(){
 	var qr = qrcode(10, 'M');
-	qr.addData("{$qrcode}");
+	var url = "{:U('WeChat/Goods/goodsDetails',array('goodsId'=>$goodsDetails['goodsId'],'shareUserId'=>base64_encode($WST_USER['userId'])),true,true)}";
+	qr.addData(url);
 	qr.make();
 	$('#qrcode').html(qr.createImgTag());
-	getGoodsappraises({$goodsDetails["goodsId"]},0);
+	getGoodsappraises('{$goodsDetails["goodsId"]}',0);
 	$("#wst_goods_desc img").each(function(){
 		if($(this).width()>940){
 			$(this).width(940);
 		}
 	});
+	
+	$("#store-selector").hover(function() {
+	}, function(){
+		$("#store-selector").removeClass("hover");
+	});
+	
+	//左右滑动选项卡切换
+	$("#move-animate-left").tabso({
+		cntSelect:"#leftcon",
+		tabEvent:"mouseover",
+		tabStyle:"move-animate",
+		direction : "left"
+	});
 });
-
-
-
 </script>
    	
 </html>

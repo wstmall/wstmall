@@ -59,7 +59,8 @@ $(document).ready(function(){
             <volist name="Page['root']" id="vo" key='i'>
              <tr>
                <td><input class='chk' type='checkbox' value='{$vo['goodsId']}'/></td>
-               <td <if condition="$vo['goodsThums'] neq ''">img='{$vo['goodsThums']}' class='imgPreview'</if>>
+               <td style="position:relative;" <if condition="$vo['goodsThums'] neq ''">img='{$vo['goodsThums']}' class='imgPreview'</if>>
+               <?php if($vo['isDistribut']==1 && (($shopConf["distributType"]==1 && $vo['commission']>0) || $shopConf["distributType"]==2)){ ?><span class="wst-distribut-tip">销</span><?php } ?>
                <img class='lazyImg' data-original="__ROOT__/{$vo['goodsThums']}" height="50" width="50"/>
                {$vo['goodsName']}
                </td>

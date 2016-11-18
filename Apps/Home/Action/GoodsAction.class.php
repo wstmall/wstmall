@@ -97,6 +97,15 @@ class GoodsAction extends BaseAction {
 	 */
 	public function getGoodsDetails(){
 
+		$shareUserId = (int)base64_decode(I("shareUserId"));
+		if($shareUserId>0){
+			session("WST_SHAREUSERID",$shareUserId);
+			if(session("WST_USER.userId")>0){
+				$dm = D('Home/Distributs');
+				$dm->checkShare();
+			}
+		}
+		
 		$goods = D('Home/Goods');
 		$kcode = I("kcode");
 		$scrictCode = md5(base64_encode("wstmall".date("Y-m-d")));
@@ -125,7 +134,15 @@ class GoodsAction extends BaseAction {
 			$goodsDetails["serviceStartTime"] = str_replace('.0',':00',$goodsDetails["serviceStartTime"]);
 			$goodsDetails["shopServiceStatus"] = $shopServiceStatus;
 			$goodsDetails['goodsDesc'] = htmlspecialchars_decode($goodsDetails['goodsDesc']);
-			
+			$goodsDetails['isDistributGoods'] = 0;
+			$shopConf = D('Home/Shops')->getShopConf($goodsDetails["shopId"]);
+			if($GLOBALS['CONFIG']['isDistribut']==1 && $shopConf['isDistribut']==1 && $goodsDetails['isDistribut']==1){
+				if($shopConf['distributType']==1 && $goodsDetails['commission']>0){
+					$goodsDetails['isDistributGoods'] = 1;
+				}else if($shopConf['distributType']==2){
+					$goodsDetails['isDistributGoods'] = 1;
+				}
+			}
 			
 			$areas = D('Home/Areas');
 			$shopId = intval($goodsDetails["shopId"]);
@@ -161,8 +178,7 @@ class GoodsAction extends BaseAction {
 			$m = D('Home/Favorites');
 			$this->assign("favoriteShopId",$m->checkFavorite($shopId,1));
 			//客户端二维码
-			$this->assign("qrcode",base64_encode("{type:'goods',content:'".$goodsId."',key:'wstmall'}"));
-			$this->display('default/goods_details');
+			$this->assign("qrcode",base64_encode("{type:'goods',content:'".$goodsId."',key:'wstmall'}"));			$this->display('default/goods_details');
 		}else{
 			$this->display('default/goods_notexist');
 		}
@@ -201,6 +217,8 @@ class GoodsAction extends BaseAction {
 	public function queryOnSaleByPage(){
 		$this->isShopLogin();
 		$USER = session('WST_USER');
+		$shopConf = D('Home/Shops')->getShopConf($USER['shopId']);
+		
 		//获取商家商品分类
 		$m = D('Home/ShopsCats');
 		$this->assign('shopCatsList',$m->queryByList($USER['shopId'],0));
@@ -209,6 +227,7 @@ class GoodsAction extends BaseAction {
     	$pager = new \Think\Page($page['total'],$page['pageSize']);
     	$page['pager'] = $pager->show();
     	$this->assign('Page',$page);
+    	$this->assign("shopConf",$shopConf);
     	$this->assign("umark","queryOnSaleByPage");
     	$this->assign("shopCatId2",I('shopCatId2'));
     	$this->assign("shopCatId1",I('shopCatId1'));
@@ -261,6 +280,8 @@ class GoodsAction extends BaseAction {
     public function toEdit(){
 		$this->isShopLogin();
 		$USER = session('WST_USER');
+		$m = D('Home/Shops');
+		$shopCfg = $m->getShopCfg($USER['shopId']);
 		//获取商品分类信息
 		$m = D('Home/GoodsCats');
 		$this->assign('goodsCatsList',$m->queryByList());
@@ -283,6 +304,7 @@ class GoodsAction extends BaseAction {
     	}else{
     		$object = $m->getModel();
     	}
+    	$this->assign('shopCfg',$shopCfg);
     	$this->assign('object',$object);
     	$this->assign("umark",I('umark'));
         $this->display("default/shops/goods/edit");
@@ -456,4 +478,7 @@ class GoodsAction extends BaseAction {
     	$this->ajaxReturn($rs);
     }
 	
+    
+    
+    
 }

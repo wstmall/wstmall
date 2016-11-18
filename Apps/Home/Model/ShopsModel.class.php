@@ -64,7 +64,7 @@ class ShopsModel extends BaseModel {
 	 * 加载商家信息
 	 */
 	public function loadShopInfo($userId){
-		$shops = $this->queryRow('select s.*,u.userType,u.userPhone from __PREFIX__shops s,__PREFIX__users u where s.userId=u.userId and u.userId='.$userId);
+		$shops = $this->queryRow('select s.*,u.userType,u.userPhone,u.userMoney,u.lockMoney from __PREFIX__shops s,__PREFIX__users u where s.userId=u.userId and u.userId='.$userId);
 	    $shops["serviceEndTime"] = str_replace('.5',':30',$shops["serviceEndTime"]);
 		$shops["serviceEndTime"] = str_replace('.0',':00',$shops["serviceEndTime"]);
 		$shops["serviceStartTime"] = str_replace('.5',':30',$shops["serviceStartTime"]);
@@ -881,6 +881,12 @@ class ShopsModel extends BaseModel {
 		$data['shopName'] = array('like','%'.$keywords.'%');
 		$rs = $this->where($data)->distinct(true)->field('shopName as searchKey')->limit(10)->select();
 		return $rs?$rs:array();
+	}
+	
+	public function getShopConf($shopId){
+		$sql = "select * from __PREFIX__shop_configs where shopId = $shopId";
+		$rs = $this->queryRow($sql);
+		return $rs;
 	}
 	 
 }

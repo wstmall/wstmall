@@ -15,7 +15,7 @@ class PaymentsModel extends BaseModel {
 	*/
 	public function getList(){
 	     $m = M('payments');
-		 $payments = $m->where('enabled=1')->order('payOrder asc')->select();
+		 $payments = $m->where('enabled=1 and find_in_set (1,payFor)')->order('payOrder asc')->select();
 		 $paylist = array();
 		 foreach ($payments as $key => $payment) {
 			 $payConfig = json_decode($payment["payConfig"]) ;

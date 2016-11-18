@@ -80,7 +80,12 @@ class AreasModel extends BaseModel {
 	  	}
 	  	return $rs;
 	  }
-	  
+	  /**
+	   * 获取列表[获取启用的区域信息]
+	   */
+	  public function queryShowByList($parentId){
+	  	return $this->where('areaFlag=1 and isShow = 1 and parentId='.(int)$parentId)->select();
+	  }
 	  /**
 	   * 获取所有城市-根据字母分类
 	   */
@@ -92,7 +97,16 @@ class AreasModel extends BaseModel {
 	  	}
 	  	return $rs;
 	  }
-	  
+	  /**
+	   * 获取所在省份的ID
+	   */
+	  public function getCurrentProvinceId($areaId2){
+	  	$m = M('WeChat/Areas');
+	  	$sql = 'SELECT parentId FROM __PREFIX__areas WHERE areaId='.$areaId2;
+	  	$rs = $m->query($sql);
+	  	$provinceId = $rs[0]['parentId'];
+	  	return $provinceId;
+	  }
 	  /**
 	   * 通过省份获取城市列表
 	   */
@@ -153,4 +167,43 @@ class AreasModel extends BaseModel {
 	  	return $rs;
 	  
 	  }
+	  
+	  public function getAreasByExp($parentId){
+	  	
+	  	$sql = "select areaId from wst_areas where areaType = 0";
+	  	$rs1 = $this->query($sql);
+	  	$m = M('communitys');
+	  	$t = count($rs1);
+	  	for($j=0;$j<$t;$j++){
+	  		$areaId1 = $rs1[$j]['areaId'];
+	  		$sql = "SELECT a3.*,a2.parentId areaId2,a1.parentId areaId1 FROM wst_areas a3,wst_areas a2,wst_areas a1 WHERE a3.areaType = 3 and a3.parentId = a2.areaId and a2.parentId = a1.areaId and a1.parentId=".$areaId1;
+	  		$rs = $this->query($sql);
+	  		
+	  		$k=count($rs);
+	  		$dataAll = array();
+	  		for($i=0;$i<$k;$i++){
+	  			$area = $rs[$i];
+	  			$data = array();
+	  			$data["areaId1"] = $area["areaId1"];
+	  			$data["areaId2"] = $area["areaId2"];
+	  			$data["areaId3"] = $area["parentId"];
+	  			$data["isShow"] =1;
+	  			$data["isService"] = 1;
+	  			$data["communityName"] = $area["areaName"];
+	  			$data["communitySort"] = $area["areaKey"];
+	  			$data["communityKey"] = "";
+	  			$data["communityFlag"] = 1;
+	  			$data["latitude"] = 0;
+	  			$data["longitude"] = 0;
+	  			$data["mapLevel"] = 10;
+	  			$dataAll[] = $data;
+	  		}
+	  		$m->addAll($dataAll);
+	  	}
+	  	
+	  	
+	  	return 1;
+	  	 
+	  }
+	   
 }

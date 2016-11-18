@@ -164,6 +164,23 @@
                    </td>
                 </tr>
                 <tr style='border-top:1px solid #dddddd'>
+                   <td rowspan='3' valign='top' width='100'><label><input type='checkbox' value='zjgl' class='chk' onclick='javascript:checkModel(this)'/>资金管理</label></td>
+                   <td width='90' colspan='2'><label><input type='checkbox' class='chk grant zjgl' id='zjgl_00' value='zjgl_00' onclick='javascript:checkModel(this)'/>查看资金管理栏目</label></td> 
+                </tr>
+                <tr>
+                   <td width='90'><label><input type='checkbox' class='chk zjgl' value='txgl' onclick='javascript:checkModel(this)'/>提现管理</label></td>
+                   <td>
+                   <label><input type='checkbox' class='chk grant zjgl txgl' id='txgl_00' value='txgl_00'/>提现列表</label>
+                   <label><input type='checkbox' class='chk grant zjgl txgl' id='txgl_00' value='txgl_04'/>提现处理</label>
+                   </td>
+                </tr>
+                <tr>
+                   <td width='90'><label><input type='checkbox' class='chk zjgl' value='zjls' onclick='javascript:checkModel(this)'/>资金流水</label></td>
+                   <td>
+                   <label><input type='checkbox' class='chk grant zjgl zjls' id='zjls_00' value='zjls_00'/>资金流水</label>
+                   </td>
+                </tr>
+                <tr style='border-top:1px solid #dddddd'>
                    <td rowspan='3' valign='top' width='100'><label><input type='checkbox' class='chk' value='dpgl' onclick='javascript:checkModel(this)'/>店铺管理</label></td>
                    <td width='90' colspan='2'><label><input type='checkbox' class='chk grant dpgl' id='dpgl_00' value='dpgl_00' onclick='javascript:checkModel(this)'/>查看店铺管理栏目</label></td> 
                 </tr>
@@ -182,6 +199,52 @@
                    <label><input type='checkbox' class='chk grant dpgl dpsh' id='dpsh_00' value='dpsh_00'/>店铺列表</label>
                    </td>
                 </tr>
+             	<tr style='border-top:1px solid #dddddd'>
+                   <td rowspan='4' valign='top' width='100'><label><input type='checkbox' class='chk hygl' value='hygl' onclick='javascript:checkModel(this)'/>会员管理</label></td>
+                   <td width='90' colspan='2'><label><input type='checkbox' class='chk grant hygl' id='hygl_00' value='hygl_00' onclick='javascript:checkModel(this)'/>查看会员管理栏目</label></td>
+                </tr>
+                <tr>
+                   <td width='90'><label><input type='checkbox' class='chk hygl' value='hydj' onclick='javascript:checkModel(this)'/>会员等级</label></td>
+                   <td>
+                   <label><input type='checkbox' class='chk grant hygl hydj' id='hydj_00' value='hydj_00'/>等级列表</label>
+                   <label><input type='checkbox' class='chk grant hygl hydj' id='hydj_01' value='hydj_01'/>新增等级</label>
+                   <label><input type='checkbox' class='chk grant hygl hydj' id='hydj_02' value='hydj_02'/>修改等级</label>
+                   <label><input type='checkbox' class='chk grant hygl hydj' id='hydj_03' value='hydj_03'/>删除等级</label>
+                   </td>
+                </tr>
+                <tr>
+                <td ><label><input type='checkbox' class='chk hygl' value='hylb' onclick='javascript:checkModel(this)'/>会员列表</label></td>
+                   <td>
+                   <label><input type='checkbox' class='chk grant hygl hylb' id='hylb_00' value='hylb_00'/>会员列表</label>
+                   <label><input type='checkbox' class='chk grant hygl hylb' id='hylb_01' value='hylb_01'/>新增会员</label>
+                   <label><input type='checkbox' class='chk grant hygl hylb' id='hylb_02' value='hylb_02'/>修改会员</label>
+                   <label><input type='checkbox' class='chk grant hygl hylb' id='hylb_03' value='hylb_03'/>删除会员</label>
+                   </td>
+                </tr>
+                <tr>
+                   <td ><label><input type='checkbox' class='chk hygl' value='hyzh' onclick='javascript:checkModel(this)'/>账号管理</label></td>
+                   <td>
+                   <label><input type='checkbox' class='chk grant hygl hyzh' id='hyzh_00' value='hyzh_00'/>账号列表</label>
+                   <label><input type='checkbox' class='chk grant hygl hyzh' id='hyzh_04' value='hyzh_04'/>账号操作</label>
+                   </td>
+                </tr>
+                <tr style='border-top:1px solid #dddddd'>
+                   <td rowspan='5' valign='top' width='100'><label><input type='checkbox' value='fxgl' onclick='javascript:checkModel(this)'/>分销管理</label></td>
+                   <td width='90' colspan='2'><label><input type='checkbox' class='chk grant fxgl' id='fxgl_00' value='fxgl_00' onclick='javascript:checkModel(this)'/>查看分销管理栏目</label></td>
+                </tr>
+                <tr>
+                	<td colspan="2"><label><input type='checkbox' class='chk grant fxgl' id='fxgl_01' value='fxgl_01' onclick='javascript:checkModel(this)'/>分销商家列表</label></td>
+                </tr>
+                <tr>
+                	<td colspan="2"><label><input type='checkbox' class='chk grant fxgl' id='fxgl_02' value='fxgl_02' onclick='javascript:checkModel(this)'/>分销商品列表</label></td>
+                </tr>
+                <tr>
+                	<td colspan="2"><label><input type='checkbox' class='chk grant fxgl' id='fxgl_03' value='fxgl_03' onclick='javascript:checkModel(this)'/>佣金分成列表</label></td>
+                </tr>
+                <tr>
+                	<td colspan="2"><label><input type='checkbox' class='chk grant fxgl' id='fxgl_04' value='fxgl_04' onclick='javascript:checkModel(this)'/>推广用户列表</label></td>
+                </tr>
+                
                 <tr style='border-top:1px solid #dddddd'>
                    <td rowspan='3' valign='top' width='100'><label><input type='checkbox' value='dqgl' onclick='javascript:checkModel(this)'/>地区管理</label></td>
                    <td width='90' colspan='2'><label><input type='checkbox' class='chk grant dqgl' id='dqgl_00' value='dqgl_00' onclick='javascript:checkModel(this)'/>查看地区管理栏目</label></td>
@@ -226,35 +289,7 @@
                    <label><input type='checkbox' class='chk grant wzgl wzfl' id='wzfl_03' value='wzfl_03'/>删除分类</label>
                    </td>
                 </tr>
-                <tr style='border-top:1px solid #dddddd'>
-                   <td rowspan='4' valign='top' width='100'><label><input type='checkbox' class='chk hygl' value='hygl' onclick='javascript:checkModel(this)'/>会员管理</label></td>
-                   <td width='90' colspan='2'><label><input type='checkbox' class='chk grant hygl' id='hygl_00' value='hygl_00' onclick='javascript:checkModel(this)'/>查看会员管理栏目</label></td>
-                </tr>
-                <tr>
-                   <td width='90'><label><input type='checkbox' class='chk hygl' value='hydj' onclick='javascript:checkModel(this)'/>会员等级</label></td>
-                   <td>
-                   <label><input type='checkbox' class='chk grant hygl hydj' id='hydj_00' value='hydj_00'/>等级列表</label>
-                   <label><input type='checkbox' class='chk grant hygl hydj' id='hydj_01' value='hydj_01'/>新增等级</label>
-                   <label><input type='checkbox' class='chk grant hygl hydj' id='hydj_02' value='hydj_02'/>修改等级</label>
-                   <label><input type='checkbox' class='chk grant hygl hydj' id='hydj_03' value='hydj_03'/>删除等级</label>
-                   </td>
-                </tr>
-                <tr>
-                <td ><label><input type='checkbox' class='chk hygl' value='hylb' onclick='javascript:checkModel(this)'/>会员列表</label></td>
-                   <td>
-                   <label><input type='checkbox' class='chk grant hygl hylb' id='hylb_00' value='hylb_00'/>会员列表</label>
-                   <label><input type='checkbox' class='chk grant hygl hylb' id='hylb_01' value='hylb_01'/>新增会员</label>
-                   <label><input type='checkbox' class='chk grant hygl hylb' id='hylb_02' value='hylb_02'/>修改会员</label>
-                   <label><input type='checkbox' class='chk grant hygl hylb' id='hylb_03' value='hylb_03'/>删除会员</label>
-                   </td>
-                </tr>
-                <tr>
-                   <td ><label><input type='checkbox' class='chk hygl' value='hyzh' onclick='javascript:checkModel(this)'/>账号管理</label></td>
-                   <td>
-                   <label><input type='checkbox' class='chk grant hygl hyzh' id='hyzh_00' value='hyzh_00'/>账号列表</label>
-                   <label><input type='checkbox' class='chk grant hygl hyzh' id='hyzh_04' value='hyzh_04'/>账号操作</label>
-                   </td>
-                </tr>
+               
                 <tr style='border-top:1px solid #dddddd'>
                    <td rowspan='4' valign='top' width='100'><label><input type='checkbox' class='chk' value='xtgl' onclick='javascript:checkModel(this)'/>系统管理</label></td>
                    <td width='90' colspan='2'><label><input type='checkbox' class='chk grant xtgl' id='xtgl_00' value='xtgl_00' onclick='javascript:checkModel(this)'/>查看系统管理栏目</label></td>

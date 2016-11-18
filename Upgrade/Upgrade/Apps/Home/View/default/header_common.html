@@ -3,9 +3,9 @@
 <div style="height:132px;">
 <div id="mainsearchbox" style="text-align:center;">
 	<div id="wst-search-pbox">
-		<div style="float:left;width:240px;text-align:center;" class="wst-header-car">
+		<div style="" class="wst-header-logo">
 		  <a href='{:WSTDomain()}'>
-			<img id="wst-logo" height='132' src="{:WSTDomain()}/{$CONF['mallLogo']}" style="max-width:240px;"/>
+			<img id="wst-logo" src="{:WSTDomain()}/{$CONF['mallLogo']}"/>
 		  </a>	
 		</div>
 		<div id="wst-search-container">
@@ -18,7 +18,7 @@
 			<div id="wst-searchbox">
 				<input id="keyword" class="wst-search-keyword" data="wst_key_search" onkeyup="getSearchInfo(this,event);" placeholder="<if condition='$searchType eq 2'>搜索 店铺<else/>搜索 商品</if>" autocomplete="off"  value="{$keyWords}">
 				<div id="btnsch" class="wst-search-button">搜&nbsp;索</div>
-				<div id="wst_key_search_list" style="position:absolute;top:38px;left:-1px;border:1px solid #b8b8b8;min-width:567px;display:none;background-color:#ffffff;z-index:1000;"></div>
+				<div id="wst_key_search_list"></div>
 			</div>
 			<div id="wst-hotsearch-keys">
 				<volist name="CONF['hotSearchs']" key="k" id="vo">
@@ -43,19 +43,17 @@
 </div>
 <div class="headNav">
 		  <div class="navCon w1020">
-		  	
 		    <div class="navCon-cate fl navCon_on" >
-		      <div class="navCon-cate-title"> <a href="{:U('Home/goods/getGoodsList')}">全部商品分类</a></div>
-		      
+		      <div class="navCon-cate-title"> <a href="{:U('Home/goods/getGoodsList')}"><img src="__ROOT__/Apps/Home/View/default/images/cate_icon.png" class="wst-cate-img"/>&nbsp;&nbsp;<span class="navCon-allcat">全部商品分类</span></a></div>
 		      	<if condition="$ishome eq 1">
 		     	 	<div class="cateMenu1" >
 		      	<else/>
 		      		<div class="cateMenu2" style="display:none;" >
 		      	</if>
-		        <div id="wst-nvg-cat-box" style="position:relative;">
+		        <div id="wst-nvg-cat-box">
 		        	<div class="wst-nvgbk" style="diplay:none;"></div>
 		        	<volist name=":WSTGoodsCats()" key="k1" id="vo1">
-		        		<if condition="$k1 lt 7">
+		        		<if condition="$k1 lt 11">
 				    	<li class="wst-nvg-cat-nlt6" style="border-top: none;" >
 				    	<else/>
 				    	<li class="wst-nvg-cat-gt6" style="border-top: none;display:none;" >
@@ -104,21 +102,13 @@
 		      <ul class="fl">
 		        <?php foreach(WSTNavigation(0) as $k=>$v):  ?>
 				<li >
-				<a href="<?=$v['navUrl']?>" 
-				<?=(CONTROLLER_NAME.'/'.ACTION_NAME==$v['curUrl'])?'class="curMenu"':'';?>
-				>
-					&nbsp;&nbsp;<?=$v['navTitle'];?>&nbsp;&nbsp;
+				<a href="<?php echo $v['navUrl']?>"  <?php echo (CONTROLLER_NAME.'/'.ACTION_NAME==$v['curUrl'])?'class="curMenu"':'';?>>
+					&nbsp;&nbsp;<?php echo $v['navTitle'];?>&nbsp;&nbsp;
 				</a>
 				</li>
 				<?php endforeach;?>
 		      </ul>
 		    </div>
-		    <li id="wst-nvg-cart">
-		    	<div class='wst-nvg-cart-cost'>
-		       		&nbsp;<span class="wst-nvg-cart-cnt cart_num">0</span>件&nbsp;|&nbsp;<span class="wst-nvg-cart-price">0.00</span>元
-		       	</div>
-			</li>
-			<div class="wst-cart-box"><div class="wst-nvg-cart-goods">购物车中暂无商品</div></div>
 		  </div>
 		</div>
 	

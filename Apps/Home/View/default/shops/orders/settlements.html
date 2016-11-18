@@ -45,7 +45,7 @@
 									<th width='40'>类型</th>
 									<th width='60'>订单金额</th>
 									<th width='60'>结算金额</th>
-									<th width='60'>佣金</th>
+									<th width='80'>平台服务费</th>
 									<th width='130'>创建时间</th>
 									<th width='60'>结算状态</th>
 									<th width='130'>结算时间</th>
@@ -99,8 +99,8 @@
 									<th width='100'>收货人</th>
 									<th width='130'>下单时间</th>
 									<th width='70'>订单金额</th>
-									<th width='70'>佣金比例</th>
-									<th width='70'>佣金</th>
+									<th width='70'>平台服务费</th>
+									<th width='70'>分销佣金</th>
 									
 								</tr>
 							</thead>
@@ -111,9 +111,9 @@
 							    <td>{{d[i].orderNo}}</td>
 								<td>{{d[i].userName}}</td>
                                 <td>{{d[i].createTime}}</td>
-								<td>{{d[i].totalMoney+d[i].deliverMoney }}</td>
-                                <td>{{d[i].poundageRate}}</td>
+								<td>{{ parseFloat(d[i].totalMoney,10)+parseFloat(d[i].deliverMoney,10) }}</td>
                                 <td>{{d[i].poundageMoney}}</td>
+                                <td>{{d[i].totalCommission}}</td>
 							</tr>
 							{{# } }}
                             </script>
@@ -121,7 +121,7 @@
 							</tbody>
 							<tfoot>
 								<tr>
-									<td colspan='6' align='center' id="opage_1">
+									<td colspan='7' align='center' id="opage_1">
 										<div  id="wst-page-1" class="wst-page" style="float:right;padding-bottom:10px;"></div>
 									</td>
 								</tr>
@@ -152,7 +152,8 @@
 									<th width='100'>订单号</th>
 									<th width='100'>收货人</th>
 									<th width='70'>订单金额</th>
-									<th width='70'>佣金比例</th>
+									<th width='80'>平台服务费</th>
+									<th width='70'>分销佣金</th>
 									<th width='70'>结算金额</th>
 									<th width='130'>结算单号</th>
 									<th width='100'>结算时间</th>
@@ -164,8 +165,9 @@
 								<td width='10'>{{i+1}}</td>
 							    <td width='100'>{{d[i].orderNo}}</td>
 								<td width='70'>{{d[i].userName}}</td>
-								<td width='100'>{{d[i].totalMoney+d[i].deliverMoney }}</td>
-                                <td>{{d[i].poundageRate}}</td>
+								<td width='100'>{{ parseFloat(d[i].totalMoney,10)+parseFloat(d[i].deliverMoney,10) }}</td>
+                                <td>{{d[i].poundageMoney}}</td>
+								<td>{{d[i].totalCommission}}</td>
                                 <td width='100'>{{d[i].settlementMoney }}</td>
 								<td width='120'>{{d[i].settlementNo}}</td>
                                 <td width='120'>{{WST.blank(d[i].finishTime,'-')}}</td>

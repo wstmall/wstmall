@@ -218,6 +218,21 @@
                             </ul>
                         </li>
                         <php>}</php>
+                        <php>if(in_array('zjgl_00',$WST_STAFF['grant'])){</php>
+                        <li class="treeview">
+                            <a href="#">
+                                <span>资金管理</span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <php>if(in_array('txgl_00',$WST_STAFF['grant'])){</php>
+                                <li><a href="{:U('Admin/CashDraws/index')}" target='pageContent' >提现管理</a></li>
+                                <php>}</php>
+                                <php>if(in_array('zjls_00',$WST_STAFF['grant'])){</php>
+					            <li><a href="{:U('Admin/LogMoneys/index')}" target='pageContent' >资金流水</a></li>
+					            <php>}</php>
+                            </ul>
+                        </li>
+                        <php>}</php>
                         <php>if(in_array('dpgl_00',$WST_STAFF['grant'])){</php>
                         <li class="treeview">
                             <a href="#">
@@ -233,6 +248,48 @@
 					            <php>}</php>
                                 <php>if(in_array('dpsh_00',$WST_STAFF['grant'])){</php>
 					            <li><a href="{:U('Admin/Shops/queryPeddingByPage')}" target='pageContent' >店铺审核</a></li>
+					            <php>}</php>
+                            </ul>
+                        </li>
+                        <php>}</php>
+                        <php>if(in_array('hygl_00',$WST_STAFF['grant'])){</php>
+                        <li class="treeview">
+                            <a href="#">
+                                <span>会员管理</span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <php>if(in_array('hydj_00',$WST_STAFF['grant'])){</php>
+                                <li><a href="{:U('Admin/UserRanks/index')}" target='pageContent' >会员等级</a></li>
+                                <php>}</php>
+                                <php>if(in_array('hylb_00',$WST_STAFF['grant'])){</php>
+					            <li><a href="{:U('Admin/Users/index')}" target='pageContent' >会员列表</a></li>
+					            <php>}</php>
+                                <php>if(in_array('hylb_01',$WST_STAFF['grant'])){</php>
+					            <li><a href="{:U('Admin/Users/toEdit/')}" target='pageContent'>添加会员</a></li>
+					            <php>}</php>
+                                <php>if(in_array('hyzh_00',$WST_STAFF['grant'])){</php>
+					            <li><a href="{:U('Admin/Users/queryAccountByPage')}" target='pageContent' >账号管理</a></li>
+					            <php>}</php>
+                            </ul>
+                        </li>
+                        <php>}</php>
+                        <php>if(in_array('fxgl_00',$WST_STAFF['grant'])){</php>
+                        <li class="treeview">
+                            <a href="#">
+                                <span>分销管理</span>
+                            </a>
+                            <ul class="treeview-menu">
+                            	<php>if(in_array('fxgl_01',$WST_STAFF['grant'])){</php>
+                            	<li><a href="{:U('Admin/Distributs/queryShops')}" target='pageContent' >分销商家列表</a></li>
+                            	<php>}</php>
+                            	<php>if(in_array('fxgl_02',$WST_STAFF['grant'])){</php>
+                            	<li><a href="{:U('Admin/Distributs/queryGoods')}" target='pageContent' >分销商品列表</a></li>
+                            	<php>}</php>
+                            	<php>if(in_array('fxgl_03',$WST_STAFF['grant'])){</php>
+					            <li><a href="{:U('Admin/Distributs/queryMoneys')}" target='pageContent' >佣金分成列表</a></li>
+					            <php>}</php>
+					            <php>if(in_array('fxgl_04',$WST_STAFF['grant'])){</php>
+					            <li><a href="{:U('Admin/Distributs/queryUsers')}" target='pageContent'>推广用户列表</a></li>
 					            <php>}</php>
                             </ul>
                         </li>
@@ -273,27 +330,7 @@
                             </ul>
                         </li>
                         <php>}</php>
-                        <php>if(in_array('hygl_00',$WST_STAFF['grant'])){</php>
-                        <li class="treeview">
-                            <a href="#">
-                                <span>会员管理</span>
-                            </a>
-                            <ul class="treeview-menu">
-                                <php>if(in_array('hydj_00',$WST_STAFF['grant'])){</php>
-                                <li><a href="{:U('Admin/UserRanks/index')}" target='pageContent' >会员等级</a></li>
-                                <php>}</php>
-                                <php>if(in_array('hylb_00',$WST_STAFF['grant'])){</php>
-					            <li><a href="{:U('Admin/Users/index')}" target='pageContent' >会员列表</a></li>
-					            <php>}</php>
-                                <php>if(in_array('hylb_01',$WST_STAFF['grant'])){</php>
-					            <li><a href="{:U('Admin/Users/toEdit/')}" target='pageContent'>添加会员</a></li>
-					            <php>}</php>
-                                <php>if(in_array('hyzh_00',$WST_STAFF['grant'])){</php>
-					            <li><a href="{:U('Admin/Users/queryAccountByPage')}" target='pageContent' >账号管理</a></li>
-					            <php>}</php>
-                            </ul>
-                        </li>
-                        <php>}</php>
+                        
                         <php>if(in_array('xtgl_00',$WST_STAFF['grant'])){</php>
                         <li class="treeview">
                             <a href="#">

@@ -359,14 +359,11 @@ class CartModel extends BaseModel {
 		$userId = (int)session('WST_USER.userId');
 		$mgoods = D('Home/Goods');
 		$maddress = D('Home/UserAddress');
-		
 		$cartgoods = array();
-		
 		$shopColleges = array();
 		$distributAll = array();
 		$startTime = 0;
 		$endTime = 24;
-		
 		$totalMoney = 0;
 		$totalCnt = 0;
 		
@@ -648,6 +645,15 @@ class CartModel extends BaseModel {
 		}
 		
 		return $rd;
+	}
+	
+	public function checShopkDistribut(){
+		$userId = (int)session('WST_USER.userId');
+		$sql = "select sc.shopId,commission from __PREFIX__cart c,__PREFIX__goods g, __PREFIX__shop_configs sc 
+				where c.userId = $userId and c.isCheck=1 and c.goodsCnt>0 and c.goodsId=g.goodsId and g.shopId=sc.shopId and sc.isDistribut=1
+				and ((sc.distributType=1 and commission>0) or sc.distributType=2) ";
+		$shops = $this->query($sql);
+		return count($shops);
 	}
 	
 }

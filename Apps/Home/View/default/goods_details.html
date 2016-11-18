@@ -13,7 +13,6 @@
 		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />
 		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/pslocation.css" />
 		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/magnifier.css" />
-     	
    	</head>
    	<body>
 		<include file="./Apps/Home/View/default/header_common.html" />
@@ -61,6 +60,18 @@
 						         </a>
 						       </div>
 						  </div>
+						  <div class="wst-clear"></div>
+							<!-- JiaThis Button BEGIN -->
+							<div class="jiathis_style_24x24">
+								<a class="jiathis_button_qzone"></a>
+								<a class="jiathis_button_tsina"></a>
+								<a class="jiathis_button_tqq"></a>
+								<a class="jiathis_button_weixin"></a>
+								<a class="jiathis_button_cqq"></a>
+								<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+								
+							</div>
+							<!-- JiaThis Button END -->
 					</div>
 					<div class="goods-des-box">
 						<table class="goods-des-tab">
@@ -70,7 +81,10 @@
 										<div class="des-title" style="word-break:break-all;">
 											{$goodsDetails["goodsName"]}
 										</div>
-										<div class='wst-goods-spec'>{$goodsDetails["goodsSpec"]|htmlspecialchars_decode}</div>
+										<div >{$goodsDetails["goodsSpec"]|htmlspecialchars_decode}</div>
+										<?php if($goodsDetails['isDistributGoods']==1){ ?>
+										<div class='wst-goods-dist'><img src="__ROOT__/Apps/Home/View/default/images/way_square.gif"/>&nbsp;分销商品</div>
+										<?php } ?>
 									</td>
 								</tr>
 								<tr>
@@ -136,9 +150,9 @@
 								</tr>
 								<tr>
 									<td style="position: relative;">
-									<div id='qrBox' style='position:absolute ;top:-50px;left:450px;padding:2px;'>
-										<div id='qrcode' style='width:132px;height:132px;border:1px solid #ddd;margin-bottom:2px;'></div>
-										<div>下载移动客户端扫一扫</div>
+									<div id='qrBox' class='wst-qrBox'>
+										<div id='qrcode' class='wst-qrcode'></div>
+										<div class="wst-align-center">微信端扫购有惊喜</div>
 									</div>
 									</td>
 									<td></td>
@@ -497,6 +511,24 @@
 			</div>
 			<div class="wst-clear"></div>
 		</div>
+		
+		
+
+		<!-- JiaThis Button BEGIN -->
+			<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+			<script type="text/javascript">
+			var jiathis_config = {
+				url: "{:U('Home/Goods/getGoodsDetails',array('goodsId'=>$goodsDetails['goodsId'],'shareUserId'=>base64_encode($WST_USER['userId'])),true,true)}",
+				title:"{$goodsDetails['goodsName']}",
+				summary:"{$GLOBALS['CONFIG']['goodsShareTitle']}",
+				slide:{
+					divid:'jiathis_main',
+					pos:'left'
+				}
+			};
+			</script>
+		<!-- JiaThis Button END -->
+		
 		<include file="./Apps/Home/View/default/footer.html" />
 		<include file="./Apps/Home/View/default/right_cart.html" />
    	</body>
@@ -512,11 +544,11 @@
 <script src="__ROOT__/Apps/Home/View/default/js/jquery.tabso.js" type="text/javascript"></script>
 
 <script src="__PUBLIC__/js/qrcode.js"></script>
-<script> 
-
+<script>
 $(function(){
 	var qr = qrcode(10, 'M');
-	qr.addData("{$qrcode}");
+	var url = "{:U('WeChat/Goods/goodsDetails',array('goodsId'=>$goodsDetails['goodsId'],'shareUserId'=>base64_encode($WST_USER['userId'])),true,true)}";
+	qr.addData(url);
 	qr.make();
 	$('#qrcode').html(qr.createImgTag());
 	getGoodsappraises('{$goodsDetails["goodsId"]}',0);
@@ -539,9 +571,6 @@ $(function(){
 		direction : "left"
 	});
 });
-
-
-
 </script>
    	
 </html>

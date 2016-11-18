@@ -161,11 +161,33 @@ function editPass(){
 		   layer.close(ll);
 			var json = WST.toJson(data);
 			if(json.status=='1'){
-				WST.msg('密码修改成功!', {icon: 1}, function(){
+				WST.msg('登录密码修改成功!', {icon: 1}, function(){
 					location.reload();
 				});
+			}else if(json.status=='-2'){
+				WST.msg('原密码不正确!', {icon: 5});
 			}else{
-				WST.msg('密码修改失败!', {icon: 5});
+				WST.msg('登录密码修改失败!', {icon: 5});
+			}
+	   });
+}
+function editPwd(){
+	   var params = {};
+	   params.oldPwd = $('#oldPwd').val();
+	   params.newPwd = $('#newPwd').val();
+	   params.reNewPwd = $('#reNewPwd').val();
+	   var ll = layer.load('数据处理中，请稍候...');
+	   $.post(Think.U("Home/Users/editPwd"),params,function(data,textStatus){
+		   layer.close(ll);
+			var json = WST.toJson(data);
+			if(json.status=='1'){
+				WST.msg('支付密码修改成功!', {icon: 1}, function(){
+					location.reload();
+				});
+			}else if(json.status=='-2'){
+				WST.msg('原密码不正确!', {icon: 5});
+			}else{
+				WST.msg('支付密码修改失败!', {icon: 5});
 			}
 	   });
 }
@@ -595,12 +617,6 @@ function getUserMsgTips(){
 	});
 }
 
-$(function() {
-	getUserMsgTips();
-	setInterval("getUserMsgTips()",30000);
-});
-
-
 function queryFavoriteGoods(p){
 	var tips = WST.msg('正在加载记录,请稍候...',{time:600000000});
 	var params = {};
@@ -751,4 +767,206 @@ function cancelShopFavorites(obj,id){
 			}
 		});
 	});
+}
+function loadMoneys(p){
+	var tips = WST.msg('正在加载记录,请稍候...',{time:600000000});
+	var params = {};
+	params.key = $.trim($('#key_0').val());
+	params.moneyType = $('#moneyType').val();
+	params.dataSrc = $('#dataSrc').val();
+	params.startDate = $('#startDate').val();
+	params.endDate = $('#endDate').val();
+	params.p = p;
+	$.post(Think.U('Home/LogMoneys/loadUserMoneys'),params,function(data,textStatus){
+		layer.close(tips);
+	    var json = WST.toJson(data);
+	    if(json.status==1 && json.data){
+	       	var gettpl = document.getElementById('tblist_0').innerHTML;
+	       	laytpl(gettpl).render(json.data.root, function(html){
+	       	    $('#tbody_0').html(html);
+	       	});
+	       	if(json.data.totalPage>1){
+	       		laypage({
+		        	 cont: 'wst-page-0', 
+		        	 pages:json.data.totalPage, 
+		        	 curr: json.data.currPage,
+		        	 skin: '#add073',
+		        	 groups: 3,
+		        	 jump: function(e, first){
+		        		    if(!first){
+		        		    	loadMoneys(e.curr);
+		        		    }
+		        	    } 
+		        });
+	       	}else{
+	       		$('#wst-page-0').empty();
+	       	}
+       	}  
+	});
+}
+function loadDraws(p){
+	var tips = WST.msg('正在加载记录,请稍候...',{time:600000000});
+	var params = {};
+	params.p = p;
+	params.startDate = $('#startDate1').val();
+	params.endDate = $('#endDate1').val();
+	$.post(Think.U('Home/CashDraws/queryByUserPage'),params,function(data,textStatus){
+		layer.close(tips);
+	    var json = WST.toJson(data);
+	    if(json.status==1 && json.data){
+	       	var gettpl = document.getElementById('tblist_1').innerHTML;
+	       	laytpl(gettpl).render(json.data.root, function(html){
+	       	    $('#tbody_1').html(html);
+	       	});
+	       	if(json.data.totalPage>1){
+	       		laypage({
+		        	 cont: 'wst-page-1', 
+		        	 pages:json.data.totalPage, 
+		        	 curr: json.data.currPage,
+		        	 skin: '#add073',
+		        	 groups: 3,
+		        	 jump: function(e, first){
+		        		    if(!first){
+		        		    	loadDraws(e.curr);
+		        		    }
+		        	    } 
+		        });
+	       	}else{
+	       		$('#wst-page-1').empty();
+	       	}
+       	}  
+	});
+}
+function loadConfs(p){
+	var tips = WST.msg('正在加载记录,请稍候...',{time:600000000});
+	var params = {};
+	params.dataSrc = $('#dataSrc').val();
+	params.p = p;
+	$.post(Think.U('Home/CashConfigs/queryByList'),params,function(data,textStatus){
+		layer.close(tips);
+	    var json = WST.toJson(data);
+	    if(json.status==1 && json.data){
+	       	var gettpl = document.getElementById('tblist_2').innerHTML;
+	       	laytpl(gettpl).render(json.data, function(html){
+	       	    $('#tbody_2').html(html);
+	       	});
+       	}  
+	});
+}
+function changeMoneySrc(v){
+	switch(v){
+	   case '1':return '商家结算';break;
+	   case '2':return '订单管理';break;
+	   case '3':return '申请提现';break;
+	   case '4':return '分销佣金';break;
+	}
+}
+function toEditConfig(id){
+	var w = layer.open({
+	    type: 2,
+	    title:((id>0)?"编辑":"新增")+"提现账号",
+	    shade: [0.6, '#000'],
+	    border: [0],
+	    content: [Think.U('Home/CashConfigs/toEdit','id='+id)],
+	    area: ['500px', '250px'],
+	    offset: '100px'
+	});
+}
+function drawCash(){
+	var ll = layer.load('数据处理中，请稍候...');
+    $.post(Think.U('Home/CashConfigs/queryByList'),{},function(data){
+    	layer.close(ll);
+    	var json = WST.toJson(data);
+    	if(json.status==1){
+    		$('#configId').empty();
+    		$('#configId').append('<option value="0">请选择提现账号</option>');
+    		var html = [];
+    		for(var i=0;i<json.data.length;i++){
+    			html.push('<option value="'+json.data[i].id+'">'+((json.data[i].accType==3)?("【"+json.data[i].bankName+"】"):"【支付宝】")+json.data[i].accNo+'</option>');
+    		}
+    		$('#configId').append(html.join(''));
+			var w = layer.open({
+			    type: 1,
+			    title:"申请提现",
+			    shade: [0.6, '#000'],
+			    border: [0],
+			    content: $('#drawDiv'),
+			    area: ['400px', '230px'],
+			    offset: '100px',
+			    btn: ['确定', '取消'],
+		        yes: function(index, layero){
+		        	var ll = layer.load('数据处理中，请稍候...');
+		        	var params = {};
+		        	params.configId = $('#configId').val();
+		        	params.drawMoney = $('#drawMoney').val();
+		        	params.payPwd = $('#payPwd').val();
+				    $.post(Think.U('Home/CashDraws/drawsCashByUser'),params,function(data){
+				    	layer.close(ll);
+				    	var json = WST.toJson(data);
+						if(json.status>0){
+							$('#drawForm')[0].reset();
+							layer.close(w);
+							getUserMoneys();
+							WST.msg('操作成功', {icon: 6},function(){
+								$('#wst-li-1').click();
+							});
+						}else{
+							WST.msg(json.msg, {icon: 5});
+						}
+				   });
+		        }
+			});
+    	}
+    });
+}
+function saveEditConfig(){
+	var params = WST.fillForm('.wst_ipt');
+	var ll = layer.load('数据处理中，请稍候...');
+    $.post(Think.U('Home/CashConfigs/edit'),params,function(data){
+    	layer.close(ll);
+    	var json = WST.toJson(data);
+		if(json.status>0){
+			WST.msg('操作成功', {icon: 6},function(){
+				parent.loadConfs(0);
+				var index = parent.layer.getFrameIndex(window.name); 
+				parent.layer.close(index);
+			});
+		}else{
+			WST.msg(json.msg, {icon: 5});
+		}
+   });
+}
+function changeAccType(v){
+	if(v==3){
+		$('#accTargetId').show();
+	}else{
+		$('#accTargetId').hide();
+	}
+}
+function delAccConfig(id){
+	layer.confirm("您确定要删除该提现账号吗？",function(){
+        var ll = layer.load('正在处理，请稍后...', 3);
+        var params = {};
+        params.id = id;
+        $.post(Think.U('Home/CashConfigs/del'),params,function(data,textStatus){
+        	layer.close(ll);
+            var json = WST.toJson(data);
+            if(json.status=='1'){
+        	    WST.msg('操作成功！', {icon: 1},function(){
+        		   loadConfs(0);
+                });
+            }else{
+        	  WST.msg('操作失败', {icon: 5});
+            }
+       });
+  });
+}
+function getUserMoneys(){
+	$.post(Think.U('Home/LogMoneys/getUserMoneys'),{},function(data,textStatus){
+        var json = WST.toJson(data);
+        if(json.status=='1'){
+    	    $('#userMoney').html(json.userMoney);
+    	    $('#lockMoney').html(json.lockMoney);
+        }
+   });
 }

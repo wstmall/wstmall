@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>{$CONF['mallTitle']}后台管理中心</title>
+      <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
+      <!--[if lt IE 9]>
+      <script src="__PUBLIC__/js/html5shiv.min.js"></script>
+      <script src="__PUBLIC__/js/respond.min.js"></script>
+      <![endif]-->
+      <script src="__PUBLIC__/js/jquery.min.js"></script>
+      <script src="__PUBLIC__/plugins/bootstrap/js/bootstrap.min.js"></script>
+      <script src="__PUBLIC__/js/common.js"></script>
+      <script src="__PUBLIC__/plugins/plugins/plugins.js"></script>
+   </head>
+  
+   <body class='wst-page'>
+		<form method='post' action='{:U("Admin/Distributs/queryUsers")}'>
+       	<div class='wst-tbar'>
+		       会员账号：<input type='text' id='loginName' name='loginName' class='form-control wst-ipt-10' value='{$loginName}'/>
+		       手机号码：<input type='text' id='userPhone' name='userPhone' class='form-control wst-ipt-10' value='{$userPhone}'/>  
+		       电子邮箱：<input type='text' id='userEmail' name='userEmail' class='form-control wst-ipt-10' value='{$userEmail}'/>  
+		  <button type="submit" class="btn btn-primary glyphicon glyphicon-search">查询</button> 
+       </div>
+       </form>
+       <div class="wst-body">
+        <table class="table table-hover table-striped table-bordered wst-list">
+           <thead>
+             <tr>
+               <th width='30'>&nbsp;</th>
+               <th width='80'>用户名</th>
+               <th width='60'>手机号码</th>
+               <th width='80'>电子邮箱</th> 
+               <th width='80'>总佣金</th>
+               <th width='60'>等级</th>
+               <th width='130'>注册时间</th>
+               <th width='40'>状态</th>
+               <th width='60'>推广用户数</th>
+               <th width='60'>操作</th>
+             </tr>
+           </thead>
+           <tbody>
+            <volist name="Page['root']" id="vo" key='i'>
+             <tr>
+               <td>{$i}</td>
+               <td>
+               		<img src='__ROOT__/{$vo['userPhoto']}' width='50'/>
+               		{$vo['userName']!=""?$vo['userName']:$vo['loginName']}&nbsp;
+               </td>
+               <td>{$vo['userPhone']}&nbsp;</td>
+               <td>{$vo['userEmail']}&nbsp;</td>
+               <td>{$vo['distributMoney']}&nbsp;</td>
+               <td>
+               <if condition="$vo['userType']==0 ">
+               {$vo['userRank']}
+               <else/>
+               &nbsp;-&nbsp;
+               </if>
+               &nbsp;</td>
+               <td>{$vo['createTime']}&nbsp;</td>
+               <td>
+               <if condition="$vo['userStatus']==0 ">
+                 <span class='label label-danger wst-label'>
+			               停用
+			     </span>          
+			     <else/>
+			     <span class='label label-success wst-label'>
+			               启用
+			     </span> 
+               </if>
+               </td>
+               <td>
+               {$vo['userCnt']}
+               </td>
+               <td>
+               	<a class="btn btn-primary glyphicon" href='{:U("Admin/Distributs/getDistributUsers",array("userId"=>$vo["userId"]))}'>查看</a>
+               </td>
+             </tr>
+             </volist>
+             <tr>
+                <td colspan='11' align='center'>{$Page['pager']}</td>
+             </tr>
+           </tbody>
+        </table>
+       </div>
+   </body>
+</html>

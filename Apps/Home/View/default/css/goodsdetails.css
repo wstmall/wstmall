@@ -503,7 +503,7 @@
 .wst-goods-attrs{padding:5px 10px;margin-right:5px;border:1px solid #ddd;cursor:pointer;}
 .wst-goods-attrs-on{border:2px solid #fb4f1c;color:#fb4f1c;}
 .wst-goods-stock{position:relative;top:-37px;left:140px;}
-.wst-goods-spec{color:red;}
+.wst-goods-dist{color:red;margin-top:4px;}
 .wst-short-tool{padding-top:5px;clear:both;}	
 .wst-short-tool b {margin-right:3px;cursor: pointer;height: 16px;width: 16px;display:inline-block;background-image: url("../images/icon_top_01.png");background-repeat: no-repeat;transition: transform 0.2s ease-in 0s;}
 .wst-short-tool a:hover b{transform: rotate(720deg);}
@@ -545,7 +545,7 @@
 .wst-goods-packages .wst-goods-notice{background-color: #b5daff;color: #003a75;border: 1px solid #6cb6ff;position: absolute;right: 0;top:0;line-height: 20px;padding:0 6px;display:none;}
 .wst-goods-packages .wst-add-cartButt{background-color: red;padding:4px 8px;border:0;color:#fff;cursor: pointer;}
 .wst-goods-packages .wst-money-icon{font-size:18px;color:red;}
-.wst-goods-packages .wst-footer-bar{position: fixed;background-color:#333;color:#fff;bottom: 0;line-height:50px;width:100%;text-align: right;}
+.wst-goods-packages .wst-footer-bar{position: absolute;background-color:#333;color:#fff;bottom: 0;line-height:50px;width:100%;text-align: right;}
 .wst-goods-packages .wst-footer-bar .wst-bar-box{padding:0 20px;position:relative;}
 .wst-goods-packages .wst-pay-tips{float:left;max-width:200px;padding-left:20px;}
 .wst-goods-packages .wst-goods-img-box{width:80px;float:left;}
@@ -553,3 +553,5 @@
 .wst-goods-packages .wst-save-tips{font-size:14px;background-color: #333;color:#fff;padding:2px 4px;}
 .wst-goods-packages .wst-pay-price{font-size:18px;color:red;}
 
+.wst-qrBox{position:absolute ;top:-50px;left:450px;padding:2px;}
+.wst-qrcode{width:132px;height:132px;border:1px solid #ddd;margin-bottom:2px;}

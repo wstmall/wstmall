@@ -26,17 +26,12 @@ var WST = ThinkPHP = window.Think = {
 <div id="wst-shortcut">
 	<div class="w">
 		<ul class="fl lh" style='float:left;width:700px;'>
-			<li class="fore1 ld"><b></b><a href="javascript:addToFavorite()"
-				rel="nofollow">收藏{$CONF['mallName']}</a></li>
-			<li class="fore3 ld menu" id="app-jd" data-widget="dropdown">
-				<span class="outline"></span> <span class="blank"></span> 
-				<a href="{:U('WebApp/Index/index')}" target="_blank"><img src="__ROOT__/Apps/Home/View/default/images/icon_top_02.png"/>&nbsp;{$CONF['mallName']} 手机版</a>
-			</li>
-			<li class="fore4" id="biz-service" data-widget="dropdown" style='padding:0;'>&nbsp;<span style="color:#ddd;">|</span>&nbsp;&nbsp;&nbsp;
+			
+			<li class="fore4" id="biz-service" data-widget="dropdown" style='padding:0;'>
 				所在城市
 				【<span class='wst-city'>&nbsp;{$currArea["areaName"]}&nbsp;</span>】
 				<img src="__ROOT__/Apps/Home/View/default/images/icon_top_03.png"/>	
-				&nbsp;&nbsp;<a href="javascript:;" onclick="toChangeCity();">切换城市</a><div class="wst-downicon"><i class="triangle"></i></div>
+				&nbsp;&nbsp;<a href="javascript:;" onclick="toChangeCity();">切换城市</a><div class="wst-downicon">&nbsp;▼</div>
 			</li>
 		</ul>
 	

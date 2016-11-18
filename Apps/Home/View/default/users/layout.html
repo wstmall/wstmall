@@ -61,10 +61,23 @@
 				<ul>
                		<li onclick="goBack(this)" data="{:U('Home/Orders/queryRefundByPage/')}" <if condition='$umark eq "queryRefundByPage"'> class='selected'</if>>拒收/退款</li>
 	               	<li onclick="goBack(this)" data="{:U('Home/OrderComplains/queryUserComplainByPage/')}" <if condition='$umark eq "queryUserComplainByPage"'> class='selected'</if>>投诉订单</li>
-	               	<li onclick="goBack(this)" data="{:U('Home/UserAddress/queryByPage/')}" <if condition='$umark eq "addressQueryByPage"'> class='selected'</if>>收货地址</li>
 	               	<li onclick="goBack(this)" data="{:U('Home/GoodsAppraises/getAppraisesList/')}" <if condition='$umark eq "getAppraisesList"'> class='selected'</if>>评价管理</li>
+               	</ul>
+               	
+               	<if condition="$GLOBALS['CONFIG']['isDistribut'] eq 1">
+               	<div><span class='wst-menu-title'><span></span>分销管理</span></div>
+               	<ul>
+               		<li onclick="goBack(this)" data="{:U('Home/Distributs/queryDistributUsers')}" <if condition='$umark eq "queryDistributUsers"'> class='selected'</if>>我的推广用户</li>
+	               	<li onclick="goBack(this)" data="{:U('Home/Distributs/queryUserDistributMoneys')}" <if condition='$umark eq "queryDistributMoneys"'> class='selected'</if>>我的分成</li>
+               	</ul>
+               	</if>
+               	
+               	<div><span class='wst-menu-title'><span></span>我的</span></div>
+               	<ul>
+	               	<li onclick="goBack(this)" data="{:U('Home/UserAddress/queryByPage/')}" <if condition='$umark eq "addressQueryByPage"'> class='selected'</if>>收货地址</li>
 	               	<li onclick="goBack(this)" data="{:U('Home/Users/toScoreList/')}" <if condition='$umark eq "toScoreList"'> class='selected'</if>>积分记录</li>
-	               	<li onclick="goBack(this)" data="{:U('Home/Favorites/queryByPage/')}" <if condition='$umark eq "queryFavoritesByPage"'> class='selected'</if>>我的关注</li>
+	               	<li onclick="goBack(this)" data="{:U('Home/LogMoneys/toUserMoneys/')}" <if condition='$umark eq "toUserMoneys"'>class="selected"</if>>资金管理</li>
+					<li onclick="goBack(this)" data="{:U('Home/Favorites/queryByPage/')}" <if condition='$umark eq "queryFavoritesByPage"'> class='selected'</if>>我的关注</li>
 	               	<li onclick="goBack(this)" data="{:U('Home/Messages/queryByPage/')}" id='li_queryMessageByPage' <if condition='$umark eq "queryMessageByPage"'> class='liselect'</if>>商城消息<span style="display:none;" class="wst-msg-tips-box"></span></li>
 	               	<li onclick="goBack(this)" data="{:U('Home/Users/toEdit/')}" <if condition='$umark eq "toEditUser"'> class='selected'</if>>个人资料</li>
 	               	<li onclick="goBack(this)" data="{:U('Home/Users/toEditPass/')}" <if condition='$umark eq "toEditPass"'> class='selected'</if>>修改密码</li>
@@ -97,6 +110,10 @@
     <script type="text/javascript">
 		var shopId = '{$orderInfo["order"]["shopId"]}';
 		checkLogin();
+		$(function() {
+			getUserMsgTips();
+			setInterval("getUserMsgTips()",30000);
+		});
 	</script>
 </html>
 

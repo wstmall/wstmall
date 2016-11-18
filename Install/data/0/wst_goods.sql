@@ -42,6 +42,8 @@ CREATE TABLE `wst_goods` (
   `goodsFlag` tinyint(4) NOT NULL DEFAULT '1',
   `statusRemarks` varchar(255) DEFAULT NULL,
   `createTime` datetime NOT NULL,
+  `isDistribut` int(11) DEFAULT '0',
+  `commission` int(11) DEFAULT '0',
   PRIMARY KEY (`goodsId`),
   KEY `shopId` (`shopId`) USING BTREE,
   KEY `goodsStatus` (`goodsStatus`,`goodsFlag`,`isSale`) USING BTREE

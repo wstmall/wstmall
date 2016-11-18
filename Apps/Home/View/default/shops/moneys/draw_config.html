@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+         <title></title>
+         <link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
+    	 <link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/shop.css">
+    	 <link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/webuploader/webuploader.css" />
+         <script src="__PUBLIC__/js/jquery.min.js"></script>
+		<script src="__PUBLIC__/plugins/lazyload/jquery.lazyload.min.js?v=1.9.1"></script>
+		<script type="text/javascript">
+		var WST = ThinkPHP = window.Think = {
+		        "ROOT"   : "__ROOT__",
+		        "APP"    : "__APP__",
+		        "PUBLIC" : "__PUBLIC__",
+		        "DEEP"   : "{:C('URL_PATHINFO_DEPR')}",
+		        "MODEL"  : ["{:C('URL_MODEL')}", "{:C('URL_CASE_INSENSITIVE')}", "{:C('URL_HTML_SUFFIX')}"],
+		        "VAR"    : ["{:C('VAR_MODULE')}", "{:C('VAR_CONTROLLER')}", "{:C('VAR_ACTION')}"],
+		        "DOMAIN" : "{:WSTDomain()}",
+		        "CITY_ID" : "{$currArea['areaId']}",
+		        "CITY_NAME" : "{$currArea['areaName']}",
+		        "DEFAULT_IMG": "{:WSTDomain()}/{$CONF['goodsImg']}",
+		        "MALL_NAME" : "{$CONF['mallName']}",
+		        "SMS_VERFY"  : "{$CONF['smsVerfy']}",
+		        "PHONE_VERFY"  : "{$CONF['phoneVerfy']}",
+		        "IS_LOGIN" :"{$WST_IS_LOGIN}"
+		}
+		</script>
+		<script src="__PUBLIC__/js/think.js"></script>
+    </head>
+    <body>
+        <form autocomplete='off'>
+        <input type='hidden' id='id' class='wst-ipt' value='{$object["id"]}'/>
+        <table width='100%' style='margin-top:20px;' class='wst-form'>
+           <tr>
+              <th width='120' align='right'>账户类型：</th>
+              <td>
+              <select id='accTargetId' class='wst-ipt'>
+                  <option value='0'>请选择</option>
+                  <volist name="bank" id="vo">
+                  <option value='{$vo["bankId"]}' <if condition="$object.accTargetId eq $vo['bankId']">selected</if>>{$vo["bankName"]}</option>
+                  </volist>
+              </select>
+              </td>
+           </tr>
+           <tr height='40'> 
+              <th align='right'>账号：</th>
+              <td><input type='text' id='accNo' class='wst-ipt' value='{$object["accNo"]}' style='width:250px'/></td>
+           </tr>
+           <tr> 
+              <th align='right'>持有人：</th>
+              <td><input type='text' id='accUser' class='wst-ipt' value='{$object["accUser"]}' style='width:250px'/></td>
+           </tr>
+           <tr> 
+              <th align='right'>开户地址：</th>
+              <td>
+             <select id='areaId1' name='areaId1' onchange='javascript:getAreaList("areaId2",this.value,0)'>
+               <option value=''>请选择</option>
+               <volist name="areaList" id="ar">
+               <option value='{$ar['areaId']}' <if condition="$object['areaId1'] == $ar['areaId'] ">selected</if>>{$ar['areaName']}</option>
+               </volist>
+             </select>
+             <select id='areaId2' name='areaId2' class="wst-ipt">
+               <option value=''>请选择</option>
+             </select>
+              </td>
+           </tr>
+           <tr> 
+              <td align='center' colspan='2' style='padding-top:10px;padding-left:150px;'>
+                  <button type='button' class='wst-btn-query' onclick="saveEditConfig()">保存</button>
+                  <button type='reset' class='wst-btn-query'>重置</button>
+              </td>
+           </tr>
+        </table>
+        </form>
+        <div style='display:none'>
+		Copyright©2015 Powered By <a target="_blank" href="http://www.wstmall.com">WSTMall</a>
+	    </div>
+    </body>
+    <script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
+    <script src="__PUBLIC__/js/common.js"></script>
+    <script src="__ROOT__/Apps/Home/View/default/js/shopcom.js"></script>
+    <script>
+    $(document).ready(function(){
+	    <notempty name='object["areaId1"]'>
+		   getAreaList("areaId2",'{$object['areaId1']}',0,'{$object["areaId2"]}');
+		</notempty>
+   	});
+    </script>
+</html>

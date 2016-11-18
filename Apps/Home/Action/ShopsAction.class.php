@@ -13,6 +13,14 @@ class ShopsAction extends BaseAction {
      * 跳到商家首页面
      */
 	public function toShopHome(){
+		$shareUserId = (int)base64_decode(I("shareUserId"));
+		if($shareUserId>0){
+			session("WST_SHAREUSERID",$shareUserId);
+			if(session("WST_USER.userId")>0){
+				$dm = D('Home/Distributs');
+				$dm->checkShare();
+			}
+		}
 		$mshops = D('Home/Shops');
 		$shopId = (int)I('shopId');
 		//如果沒有传店铺ID进来则取默认自营店铺
@@ -243,6 +251,10 @@ class ShopsAction extends BaseAction {
     */
 	public function toEditPass(){
 		$this->isShopLogin();
+		$m = D('Home/Users');
+		$obj["userId"] = session('WST_USER.userId');
+		$user = $m->getUserById($obj);
+		$this->assign("pwdType",empty($user['payPwd'])?0:1);
 		$this->assign("umark","toEditPass");
         $this->display("default/shops/edit_pass");
 	}

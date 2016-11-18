@@ -1,0 +1,70 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+<style type="text/css">
+#preview{border:1px solid #cccccc; background:#CCC;color:#fff; padding:5px; display:none; position:absolute;}
+</style>
+
+    <div class="wst-body"> 
+       <div class='wst-page-header'>卖家中心 > 我的分销商</div>
+       <div class='wst-page-content'>
+        
+        <table class='wst-list' style="margin-top: 10px;">
+           <thead>
+           	<tr>
+               <th colspan="2">用户名</th>
+               <th>推广用户数</th>
+             </tr>
+           </thead>
+           <tbody>
+            <volist name="Page['root']" id="vo" key='i'>
+             <tr>
+               <td width="60"><img class='lazyImg' data-original="__ROOT__/{$vo['userPhoto']}" height="50" width="50"/></td>
+               <td>{$vo['userName']!=""?$vo['userName']:$vo['loginName']}</td>
+               <td width="200">{$vo['userSex']==1?"男":"女"}</td>
+               <td width="200">{$vo['userCnt']}</td>
+             </tr>
+             </volist>
+             <tfoot>
+             <tr>
+                <td colspan='3'>
+                <div class="wst-page" style="float:right;padding-bottom:10px;">
+					<div id="wst-page-items"></div>
+				</div>
+                <script>
+			    <if condition="$Page['totalPage'] gt 1">
+			    $(document).ready(function(){
+					laypage({
+					    cont: 'wst-page-items',
+					    pages: {$Page['totalPage']}, //总页数
+					    skip: true, //是否开启跳页
+					    skin: '#e23e3d',
+					    groups: 3, //连续显示分页数
+					    curr: function(){ //通过url获取当前页，也可以同上（pages）方式获取
+					        var page = location.search.match(/p=(\d+)/);
+					        return page ? page[1] : 1;
+					    }(), 
+					    jump: function(e, first){ //触发分页后的回调
+					        if(!first){ //一定要加此判断，否则初始时会无限刷新
+					        	var nuewurl = WST.splitURL("p");
+					        	var ulist = nuewurl.split("?");
+					        	if(ulist.length>1){
+					        		location.href = nuewurl+'&p='+e.curr;
+					        	}else{
+					        		location.href = '?p='+e.curr;
+					        	}
+					            
+					        }
+					    }
+					});
+			    });
+				</if>
+				</script>
+                </td>
+             </tr>
+             </tfoot>
+           </tbody>
+        </table>
+        </div>
+    </div>
+    <script src="__ROOT__/Apps/Home/View/default/js/distributs.js"></script>
+</block> 

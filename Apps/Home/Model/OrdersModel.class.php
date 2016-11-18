@@ -294,11 +294,13 @@ class OrdersModel extends BaseModel {
 			//创建订单信息
 			$data = array();
 			$packages = $shopgoods["packages"];
-			$shopId = (int)$packages[0]["shopId"];
 			$deliverType = intval($packages[0]["deliveryType"]);
 			
 			$pshopgoods = $shopgoods["shopgoods"];
-			$shopId = ($shopId>0)?$shopId:($pshopgoods[0]["shopId"]);
+			$shopId = $pshopgoods[0]["shopId"];
+			
+			$sql = "select isDistribut,distributType,distributOrderRate,promoterRate,buyerRate from __PREFIX__shop_configs where shopId= $shopId";
+			$shops = $this->queryRow($sql);
 			
 			$data["orderNo"] = $orderNo;
 			$data["shopId"] = $shopId;	
@@ -332,6 +334,33 @@ class OrdersModel extends BaseModel {
 			$data["isAppraises"] = 0;
 			$data["isSelf"] = $isself;
 			
+			//分销
+			if($GLOBALS['CONFIG']['isDistribut']==1 && $shops['isDistribut']==1){
+				$data["distributType"] = $shops['distributType'];
+				$data["distributOrderRate"] = $shops['distributOrderRate'];
+				$data["promoterRate"] = $shops['promoterRate'];
+				$data["buyerRate"] = $shops['buyerRate'];
+				//总佣金
+				if($shops['distributType']==1){
+					$totalCommission = 0;
+					foreach ($packages as $key=> $package){
+						foreach ($package['goods'] as $key2=> $sgoods){
+							$totalCommission = $totalCommission + round($sgoods["cnt"]*$sgoods["commission"],2);
+						}
+					}
+					foreach ($pshopgoods as $key=> $sgoods){
+						$totalCommission = $totalCommission + round($sgoods["cnt"]*$sgoods["commission"],2);
+					}
+					$data["totalCommission"] = $totalCommission;
+				}else if($shops['distributType']==2){
+					$data["totalCommission"] = round($shopgoods["totalMoney"]*$shops["distributOrderRate"]/100,2);
+				}
+			}else{
+				$data["distributType"] = 0;
+				$data["totalCommission"] = 0;
+			}
+			
+			//积分
 			$isScorePay = (int)I("isScorePay",0);
 			$scoreMoney = 0;
 			$useScore = 0;
@@ -410,6 +439,7 @@ class OrdersModel extends BaseModel {
 						$data["goodsPrice"] = $sgoods["shopPrice"];
 						$data["goodsName"] = $sgoods["goodsName"];
 						$data["goodsThums"] = $sgoods["goodsThums"];
+						$data["commission"] = ($sgoods["commission"]<$sgoods["shopPrice"])?$sgoods["commission"]:0;
 						$mog->add($data);
 					}
 				}
@@ -424,6 +454,7 @@ class OrdersModel extends BaseModel {
 					$data["goodsPrice"] = $sgoods["shopPrice"];
 					$data["goodsName"] = $sgoods["goodsName"];
 					$data["goodsThums"] = $sgoods["goodsThums"];
+					$data["commission"] = ($sgoods["commission"]<$sgoods["shopPrice"])?$sgoods["commission"]:0;
 					$mog->add($data);
 				}
 			
@@ -987,12 +1018,13 @@ class OrdersModel extends BaseModel {
 		$orderId = (int)$obj["orderId"];
 		$type = (int)$obj["type"];
 		$rsdata = array();
-		$sql = "SELECT orderId,orderNo,orderScore,orderStatus,poundageRate,poundageMoney,shopId,useScore,scoreMoney FROM __PREFIX__orders WHERE orderFlag=1 and orderId = $orderId and userId=".$userId;		
+		$sql = "SELECT orderId,shopId,userId,orderNo,orderScore,orderStatus,poundageRate,poundageMoney,shopId,useScore,scoreMoney,distributType,distributOrderRate,promoterRate,buyerRate,totalMoney,needPay FROM __PREFIX__orders WHERE orderFlag=1 and orderId = $orderId and userId=".$userId;		
 		$rsv = $this->queryRow($sql);
 		if($rsv["orderStatus"]!=3){
 			$rsdata["status"] = -1;
 			return $rsdata;
-		}		
+		}
+		$shopId = $rsv["shopId"];
         //收货则给用户增加积分
         if($type==1){
         	$sql = "UPDATE __PREFIX__orders set orderStatus = 4,receiveTime='".date("Y-m-d H:i:s")."'  WHERE orderFlag=1 and orderId = $orderId and userId=".$userId;			
@@ -1053,6 +1085,157 @@ class OrdersModel extends BaseModel {
         		$m->add($data);
         	}
         	
+        	//是否第一次购买
+        	$sql = "select isBuyer from __PREFIX__users where userId = ".$userId;
+			$userbuy = $this->queryRow($sql);
+        	if($userbuy['isBuyer']==0){
+        		$u = M('users');
+        		$data = array();
+        		$data["isBuyer"] = 1;
+        		$u->where('userId='.$userId)->save($data);
+        	}
+        	//分销
+        	if($rsv['distributType']>0){
+        		$sql = "select * from __PREFIX__distribut_users where buyerId=".$userId;
+        		$dis= $this->queryRow($sql);
+        		$promoterUser = D('users')->getSimpInfo($dis['userId'],',userMoney,distributMoney');//推广者信息
+        		$buyerUser = D('users')->getSimpInfo($userId,',userMoney,distributMoney');//购买者信息
+        		if($rsv['distributType']==1){//按商品设置
+        			$ogoods = M('order_goods')->where('orderId='.$rsv['orderId'])->field("goodsId,goodsName,goodsNums,goodsPrice,commission")->select();
+        			foreach($ogoods as $k=>$v){
+        				if($v['commission']>0){
+	        				$promoterMoney = $buyerMoney = 0;
+	        				$promoterMoney = round(($v['goodsNums']*$v['commission']*$rsv['promoterRate']/100),2);
+	        				$buyerMoney = round(($v['goodsNums']*$v['commission']*$rsv['buyerRate']/100),2);
+	        				//分销分成记录表
+	        				$obj = array();
+	        				$obj["shopId"] = $shopId;
+	        				$obj["orderId"] = $rsv["orderId"];
+	        				
+	        				$obj["promoterId"] = $dis['userId'];
+	        				$obj["buyerId"] = $rsv["userId"];
+	        				$obj["moneyRemark"] = "商品【".$v["goodsName"]."】";
+	        				$obj["distributType"] = 1;
+	        				$obj["dataId"] = $v["goodsId"];
+	        				$obj["money"] = $v["goodsPrice"];
+	        				$obj["distributMoney"] = $promoterMoney;
+	        				if($rsv['promoterRate']>0){
+	        					$obj["userId"] = $dis['userId'];
+	        					D('distribut_moneys')->addDistributMoneys($obj);//推广者
+	        					//分成佣金
+	        					$data = array();
+	        					$data['distributMoney'] = $promoterMoney + $promoterUser['distributMoney'];
+	        					$data['userMoney'] = $promoterMoney + $promoterUser['userMoney'];
+	        					$allotMoney = M('users')->where("userId=".$dis['userId'])->save($data);
+	        					if(false !== $allotMoney){
+	        						//资金流水表
+	        						$lm = M('log_moneys');
+	        						$data = array();//推广者
+	        						$data["targetType"] = 0;
+	        						$data["targetId"] = $dis['userId'];
+	        						$data["moneyRemark"] = "推广获得商品【".$v["goodsName"]."】".$rsv["promoterRate"]."%的佣金 ¥".$promoterMoney;
+	        						$data["dataSrc"] = 4;
+	        						$data["dataId"] = $v["goodsId"];
+	        						$data["money"] = $promoterMoney;
+	        						$data["transactionId"] = 0;
+	        						$data["payType"] = 0;
+	        						$data["createTime"] = date('Y-m-d H:i:s');
+	        						$lm->add($data);
+	        					}
+	        				}
+	        				$obj["distributMoney"] = $buyerMoney;
+	        				if($rsv['buyerRate']>0){
+	        					$obj["userId"] = $rsv["userId"];
+	        					D('distribut_moneys')->addDistributMoneys($obj);//购买者
+	        					//分成佣金
+	        					$data = array();
+	        					$data['distributMoney']= $buyerMoney + $buyerUser['distributMoney'];
+	        					$data['userMoney']= $buyerMoney + $buyerUser['userMoney'];
+	        					$allotMoney = M('users')->where("userId=".$rsv['userId'])->save($data);
+	        					if(false !== $allotMoney){
+	        						//资金流水表
+	        						$lm = M('log_moneys');
+	        						$data = array();//购买者
+	        						$data["targetType"] = 0;
+	        						$data["targetId"] = $rsv["userId"];
+	        						$data["moneyRemark"] = "购买获得商品【".$v["goodsName"]."】".$rsv["buyerRate"]."%的佣金 ¥".$buyerMoney;
+	        						$data["dataSrc"] = 4;
+	        						$data["dataId"] = $v["goodsId"];
+	        						$data["money"] = $buyerMoney;
+	        						$data["transactionId"] = 0;
+	        						$data["payType"] = 0;
+	        						$data["createTime"] = date('Y-m-d H:i:s');
+	        						$lm->add($data);
+	        					}
+	        				}
+	        			}
+	        		}
+        		}else if($rsv['distributType']==2){//按订单比例
+        			$promoterMoney = $buyerMoney = 0;
+        			$promoterMoney = round(($rsv['totalMoney']*$rsv['distributOrderRate']*$rsv['promoterRate']/10000),2);
+        			$buyerMoney = round(($rsv['totalMoney']*$rsv['distributOrderRate']*$rsv['buyerRate']/10000),2);
+        			//分销分成记录表
+        			$obj = array();
+        			$obj["shopId"] = $shopId;
+        			$obj["orderId"] = $rsv["orderId"];
+        			$obj["promoterId"] = $dis['userId'];
+        			$obj["buyerId"] = $rsv["userId"];
+        			$obj["moneyRemark"] = "订单【".$rsv["orderNo"]."】";
+        			$obj["distributType"] = 2;
+        			$obj["dataId"] = $rsv["orderId"];
+        			$obj["money"] = $rsv['totalMoney'];
+        			$obj["distributMoney"] = $promoterMoney;
+        			if($rsv['promoterRate']>0){
+        				$obj["userId"] = $dis['userId'];
+        				D('distribut_moneys')->addDistributMoneys($obj);//推广者
+        				//分成佣金
+        				$data = array();
+        				$data['distributMoney'] = $promoterMoney + $promoterUser['distributMoney'];
+        				$data['userMoney'] = $promoterMoney + $promoterUser['userMoney'];
+        				$allotMoney = M('users')->where("userId=".$dis['userId'])->save($data);
+        				if(false !== $allotMoney){
+        					//资金流水表
+        					$lm = M('log_moneys');
+        					$data = array();//推广者
+        					$data["targetType"] = 0;
+        					$data["targetId"] = $dis['userId'];
+        					$data["moneyRemark"] = "推广获得订单【".$rsv["orderNo"]."】".$rsv["promoterRate"]."%的佣金 ¥".$promoterMoney;
+        					$data["dataSrc"] = 4;
+        					$data["dataId"] = $rsv["orderId"];
+        					$data["money"] = $promoterMoney;
+        					$data["transactionId"] = 0;
+        					$data["payType"] = 0;
+        					$data["createTime"] = date('Y-m-d H:i:s');
+        					$lm->add($data);
+        				}
+        			}
+        			$obj["distributMoney"] = $buyerMoney;
+        			if($rsv['buyerRate']>0){
+        				$obj["userId"] = $rsv['userId'];
+        				D('distribut_moneys')->addDistributMoneys($obj);//购买者
+        				//分成佣金
+        				$data = array();
+        				$data['distributMoney']= $buyerMoney + $buyerUser['distributMoney'];
+        				$data['userMoney']= $buyerMoney + $buyerUser['userMoney'];
+        				$allotMoney = M('users')->where("userId=".$rsv['userId'])->save($data);
+        				if(false !== $allotMoney){
+        					//资金流水表
+        					$lm = M('log_moneys');
+        					$data = array();//购买者
+        					$data["targetType"] = 0;
+        					$data["targetId"] = $rsv["userId"];
+        					$data["moneyRemark"] = "购买获得订单【".$rsv["orderNo"]."】".$rsv["buyerRate"]."%的佣金 ¥".$buyerMoney;
+        					$data["dataSrc"] = 4;
+        					$data["dataId"] = $rsv["orderId"];
+        					$data["money"] = $buyerMoney;
+        					$data["transactionId"] = 0;
+        					$data["payType"] = 0;
+        					$data["createTime"] = date('Y-m-d H:i:s');
+        					$lm->add($data);
+        				}
+        			}
+        		}
+        	}
         }else{
         	if(I('rejectionRemarks')=='')return $rsdata;//如果是拒收的话需要填写原因
         	$sql = "UPDATE __PREFIX__orders set orderStatus = -3 WHERE orderFlag=1 and orderId = $orderId and userId=".$userId;			
@@ -1506,14 +1689,16 @@ class OrdersModel extends BaseModel {
 	 * 检查订单是否已支付
 	 */
 	public function checkOrderPay ($obj){
-		$userId = (int)$obj["userId"];
+		$userId = (int)session('WST_USER.userId');;
 		$orderId = (int)I("orderId");
+		$condition = "";
 		if($orderId>0){
-			$sql = "SELECT orderId,orderNo FROM __PREFIX__orders WHERE userId = $userId AND orderId = $orderId AND orderFlag = 1 AND orderStatus = -2 AND isPay = 0 AND payType = 1";
+			$condition = " AND orderId = $orderId  ";
 		}else{
 			$orderunique = session("WST_ORDER_UNIQUE");
-			$sql = "SELECT orderId,orderNo FROM __PREFIX__orders WHERE userId = $userId AND orderunique = '$orderunique' AND orderFlag = 1 AND orderStatus = -2 AND isPay = 0 AND payType = 1";
+			$condition = " AND orderunique = '$orderunique' ";
 		}
+		$sql = "SELECT orderId,orderNo FROM __PREFIX__orders WHERE userId = $userId ".$condition." AND orderFlag = 1 AND orderStatus = -2 AND isPay = 0 AND payType = 1";
 		$rsv = $this->query($sql);
 		$oIds = array();
 		for($i=0;$i<count($rsv);$i++){

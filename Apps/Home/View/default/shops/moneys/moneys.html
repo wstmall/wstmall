@@ -1,0 +1,221 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+	<script>
+	var statusMark = 0;
+	$(function () {
+		$('#tab').TabPanel({tab:statusMark,callback:function(tab){
+			switch(tab){
+			   case 0:loadMoneys(0);break;
+			   case 1:loadDraws(0);break;
+			   case 2:loadConfs(0);break;
+			}
+		}});
+	});
+	</script>
+	<div class='wst-page-header'>卖家中心 > 商城消息</div>
+	<div class='wst-page-content'>  
+		   <div style='height:135px'>
+		      <div style='width:140px;float:left;'>
+		       <a target="_blank" href="{:U('Home/Shops/toShopHome/',array('shopId'=>$shopInfo['shopId']))}">
+				  <img src="__ROOT__/{$shopInfo['shopImg']}" height="120" width="120" />
+			   </a>
+		      </div>
+		      <div style='width:800px;float:left;padding-top:20px;'>
+		         <div style="">店铺名称：<a target="_blank" href="{:U('Home/Shops/toShopHome/',array('shopId'=>$shopInfo['shopId']))}"><span style="color:#55AAFF">{$shopInfo['shopName']}</a></span></div>
+				 <div style="">店铺状态：
+					 <if condition="$shopInfo['shopStatus'] eq 1">
+						 <if condition="($shopInfo['shopAtive'] eq 1) and  ($shopInfo['shopStatus'] eq 1)">
+							 营业中，
+						 <else/>
+							 休息中，
+						 </if>
+					 </if>
+					 <if condition="$shopInfo['shopStatus'] eq 1">
+						   已审核
+					 <elseif condition="$shopInfo['shopStatus'] eq -2"/>
+						  已停止
+					 <elseif condition="$shopInfo['shopStatus'] eq -1"/>
+						  已拒绝
+					 <elseif condition="$shopInfo['shopStatus'] eq 0"/>
+						  待审核
+					 </if>
+				 </div>
+				 <div>商家钱包：￥<font color='red' id='shopMoney'>{$shopInfo['userMoney']}</font><a style='margin-left:50px;' href='javascript:drawCash()'>申请提现</a></div>
+				 <div>冻结金额：￥<font color='red' id='lockMoney'>{$shopInfo['lockMoney']}</font></div>
+		      </div>
+		   </div>
+		   <div id='tab' class="wst-tab-box">
+			<ul class="wst-tab-nav">
+				<li id="wst-li-0">资金流水</li>
+				<li id="wst-li-1">提现记录</li>
+				<li id="wst-li-2">提现账号</li>
+			</ul>
+			<div class="wst-tab-content" style='width:98%;'>
+			    <!-- 资金流水 -->
+				<div class='wst-tab-item'>
+					<div class='wst-tbar-query' style='width:99%'>
+					           流水类型：<select id='moneyType' autocomplete="off">
+								<option value='-1'>全部</option>
+								<option value='1'>收入</option>
+								<option value='0'>支出</option>
+							 </select> 
+					          流水来源：<select id='dataSrc' autocomplete="off">
+								<option value='-1'>全部</option>
+								<option value='1'>订单结算</option>
+							  </select>
+					          时间：<input type='text' id='startDate' class='laydate-icon' name='startDate' style='width:100px' placeholder='开始日期' onclick='laydate({format: "YYYY-MM-DD"})'/>
+	                       <input type='text' id='endDate' class='laydate-icon' name='endDate' style='width:100px' placeholder='结束日期' onclick='laydate({format: "YYYY-MM-DD"})'/>
+					          关键字：<inut type="text" id="key_0" style='width:120px;' autocomplete="off"/>
+					     <button class='wst-btn-query' onclick="loadMoneys(0)">查询</button>
+					</div>
+					<table class='wst-list'>
+					   <thead>
+							<tr>
+								<th width='10'>&nbsp;</th>
+								<th width='45'>类型</th>
+								<th width='70'>来源</th>
+								<th width='60'>金额</th>
+								<th width='*'>备注</th>
+								<th width='150'>时间</th>
+							</tr>
+						</thead>
+						<tbody id="tbody_0"></tbody>
+						<tfoot>
+							<tr>
+								<td colspan='6' align='center'>
+									<div id="wst-page-0" class='wst-page' style="float:right;padding-bottom:10px;"></div>
+								</td>
+							</tr>
+						</tfoot>
+					</table>
+					<script id="tblist_0" type="text/html">
+                    {{# for(var i = 0; i < d.length; i++){ }}
+                    <tr>
+                       <td>{{i+1}}</td>
+                       <td>{{(d[i].moneyType==1)?"收入":"支出"}}</td>
+                       <td>{{changeMoneySrc(d[i].dataSrc)}}</td>
+                       <td>{{d[i].money}}</td>
+                       <td>{{d[i].moneyRemark}}</td>
+                       <td>{{d[i].createTime}}</td>
+                    </tr>
+                    {{# } }}
+                    </script>
+					<div style='clear:both;'></div>
+				</div>
+				<!-- 提现记录 -->
+				<div class='wst-tab-item' style="display:none;">
+						<table class='wst-list' style="font-size:13px;">
+							<thead>
+								<tr>
+									<th colspan="8" class="wst-form">
+									<input type='text' id='startDate1' class='laydate-icon' name='startDate1' style='width:100px' placeholder='开始日期' onclick='laydate({format: "YYYY-MM-DD"})'/>
+                                    <input type='text' id='endDate1' class='laydate-icon' name='endDate1' style='width:100px' placeholder='结束日期' onclick='laydate({format: "YYYY-MM-DD"})'/>
+									<button class='wst-btn-query' onclick="loadDraws(0)">查询</button>
+									</th>
+								</tr>
+								<tr>
+								    <th width='10'>&nbsp;</th>
+									<th width='60'>提现类型</th>
+									<th width='60'>提现金额</th>
+									<th width='*'>提现账号</th>
+									<th width='60'>持有人</th>
+									<th width='*'>备注</th>
+									<th width='130'>时间</th>
+									<th width='60'>状态</th>
+								</tr>
+							</thead>
+							<tbody id="tbody_1">
+							</tbody>
+							<tfoot>
+								<tr>
+									<td colspan='8' align='center'>
+										<div  id="wst-page-1" class="wst-page" style="float:right;padding-bottom:10px;"></div>
+									</td>
+								</tr>
+							 </tfoot>
+						</table>
+						<script id="tblist_1" type="text/html">
+                        {{# for(var i = 0; i < d.length; i++){ }}
+                        <tr>
+                          <td>{{i+1}}</td>
+                          <td>{{#if(d[i].accType==1){}}支付宝{{#}else{}}银行卡{{#}}}</td>
+                          <td>{{d[i].money}}</td>
+                          <td>{{#if(d[i].accType==3){}}【{{d[i].bankName}}】{{#}}}{{d[i].accNo}}</td>
+                          <td>{{d[i].accUser}}</td>
+                          <td>{{d[i].cashRemarks}}</td>
+                          <td>{{d[i].createTime}}</td>
+                          <td>{{#if(d[i].cashSatus==1){}}已处理{{#}else{}}待处理{{#}}}</td>
+                        </tr>
+                        {{# } }}
+                        </script>
+					    <div style='clear:both;'></div>
+				</div>
+				<!-- 提现账号-->
+				<div class='wst-tab-item' style="display:none;">
+					<table class='wst-list' style="font-size:13px;">
+						<thead>
+						<tr>
+							<th colspan="6" class="wst-form" style='text-align:right'>
+								<button class='wst-btn-query' onclick="toEditConfig(0)">新增</button>
+							</th>
+						</tr>
+						<tr>
+							<th width='10'>&nbsp;</th>
+							<th width='100'>提现类型</th>
+							<th width='*'>提现账号</th>
+							<th width='140'>收款人</th>
+							<th width='140'>开户地址</th>
+							<th width='140'>操作</th>
+						</tr>
+						</thead>
+						<tbody id="tbody_2"></tbody>
+						<tfoot>
+								<tr>
+									<td colspan='6' align='center'>
+										<div  id="wst-page-2" class="wst-page" style="float:right;padding-bottom:10px;"></div>
+									</td>
+								</tr>
+						</tfoot>
+					</table>
+					<script id="tblist_2" type="text/html">
+                    {{# for(var i = 0; i < d.length; i++){ }}
+                    <tr>
+                       <td>{{i+1}}</td>
+                       <td>{{#if(d[i].accType==1){}}支付宝{{#}else{}}银行卡{{#}}}</td>
+                       <td>{{#if(d[i].accType==3){}}【{{d[i].bankName}}】{{#}}}{{d[i].accNo}}</td>
+                       <td>{{d[i].accUser}}</td>
+					   <td>{{d[i].areaName1}}{{d[i].areaName2}}</td>
+                       <td>
+                       <a href='javascript:toEditConfig({{d[i].id}})' class='manage-oparet'>【编辑】</a>
+                       <a href='javascript:delAccConfig({{d[i].id}})' class='manage-oparet'>【删除】</a>
+                       </td>
+                    </tr>
+                    {{# } }}
+                    </script>
+					<div style='clear:both;'></div>
+				</div>
+			</div>
+		</div>
+	</div>
+		<div id='drawDiv' style='display:none;padding-top:10px;'>
+		   <form id='drawForm'>
+		   <table class='wst-form' style='width:99%'>
+		      <tr>
+		         <th align='right' width='100'>提现账号：</th>
+		         <td>
+		         <select id='configId'></select>
+		         </td>
+		      </tr>
+		      <tr>
+		         <th align='right' >提现金额(元)：</th>
+		         <td style='padding-top:5px;'><input type='text' id='drawMoney' class='wst-ipt wstipt' onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='10'/></td>
+		      </tr>
+		      <tr>
+		         <th align='right' >支付密码：</th>
+		         <td style='padding-top:5px;'><input type='password' id='payPwd' class='order-num-btn' onkeypress="return WST.isNumberKey(event);" maxLength='6'/></td>
+		      </tr>
+		   </table>
+		   </form>
+		</div>
+	</div>
+</block>  

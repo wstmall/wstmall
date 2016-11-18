@@ -29,7 +29,7 @@ class OrderSettlementsModel extends BaseModel {
 		$shopId = (int)session('WST_USER.shopId');
 		$orderNo = WSTAddslashes(I('orderNo'));
 		$userName = WSTAddslashes(I('userName'));
-		$sql = "SELECT orderNo,orderId,userName,totalMoney,deliverMoney,realTotalMoney,poundageRate,poundageMoney,createTime FROM __PREFIX__orders o 
+		$sql = "SELECT orderNo,orderId,userName,totalMoney,deliverMoney,realTotalMoney,poundageRate,poundageMoney,totalCommission,createTime FROM __PREFIX__orders o 
 		    WHERE o.settlementId=0 and o.orderStatus=4 and o.payType=1 and o.shopId = $shopId ";
 		if($orderNo!='')$sql.=" and o.orderNo like '%".$orderNo."%'";
 		if($userName!='')$sql.=" and o.userName like '%".$userName."%'";
@@ -44,7 +44,7 @@ class OrderSettlementsModel extends BaseModel {
 		$orderNo = WSTAddslashes(I('orderNo'));
 		$settlementNo = WSTAddslashes(I('settlementNo',-1));
 		$isFinish = (int)I('isFinish');
-		$sql = "SELECT o.orderNo,o.orderId,o.userName,o.totalMoney,o.deliverMoney,o.realTotalMoney,os.settlementMoney,o.poundageRate,o.poundageMoney,o.createTime,os.settlementNo ,os.finishTime
+		$sql = "SELECT o.orderNo,o.orderId,o.userName,o.totalMoney,o.deliverMoney,o.realTotalMoney,os.settlementMoney,o.poundageRate,o.poundageMoney,o.totalCommission,o.createTime,os.settlementNo ,os.finishTime
 		    FROM __PREFIX__orders o ,__PREFIX__order_settlements os
 		    WHERE os.settlementId=o.settlementId and  o.settlementId>0 and o.orderStatus=4 and o.payType=1 and o.shopId = $shopId ";
 		if($orderNo!='')$sql.=" and o.orderNo like '%".$orderNo."%'";
@@ -63,16 +63,18 @@ class OrderSettlementsModel extends BaseModel {
 		        left join __PREFIX__banks b on b.bankId=s.bankId where s.shopId=".$shopId;
 		$accRs = $this->queryRow($sql);
 		if(empty($accRs))return array('status'=>-1,'msg'=>'无效的结算账户!');
-		$sql = "select orderId,orderNo,totalMoney,deliverMoney,realTotalMoney,poundageMoney from __PREFIX__orders where shopId=".$shopId." and orderId in(".$ids.") and settlementId=0 and orderStatus=4 and payType=1";
+		$sql = "select orderId,orderNo,totalMoney,deliverMoney,realTotalMoney,poundageMoney,totalCommission from __PREFIX__orders where shopId=".$shopId." and orderId in(".$ids.") and settlementId=0 and orderStatus=4 and payType=1";
 		$rs = $this->query($sql);
 		if(empty($rs))return array('status'=>-1,'msg'=>'申请结算失败，请核对订单状态是否已申请结算了!');
 		$orderMoney = 0;
 		$settlementMoney = 0;
 		$poundageMoney = 0;
+		$totalCommission = 0;
 		foreach ($rs as $key =>$v){
 			$orderMoney += $v['totalMoney']+$v['deliverMoney'];
-			$settlementMoney +=($v['totalMoney']+$v['deliverMoney']-$v['poundageMoney']);
+			$settlementMoney +=(WSTBCMoney($v['totalMoney'], $v['deliverMoney'])-WSTBCMoney($v['poundageMoney'], $v['totalCommission']));
 			$poundageMoney+=$v['poundageMoney'];
+			$totalCommission+=$v['totalCommission'];
 		}
 		$settlementStartMoney = floatval($GLOBALS['CONFIG']['settlementStartMoney']);
 		if($settlementStartMoney>$orderMoney)return array('status'=>-1,'msg'=>'结算总金额必须大于'.$settlementStartMoney."才能申请结算!");
@@ -87,6 +89,7 @@ class OrderSettlementsModel extends BaseModel {
 		$data['orderMoney'] = $orderMoney;
 		$data['settlementMoney'] = $settlementMoney;
 		$data['poundageMoney'] = $poundageMoney;
+		$data['totalCommission'] = $totalCommission;
 		$data['isFinish'] = 0;
 		$settlementId = M('order_settlements')->add($data);
 		if(false !== $settlementId){

@@ -74,6 +74,13 @@ $(function () {
 		    	  uploading = WST.msg('正在上传图片，请稍后...');
 		      }
 	   });
+	   $('input[name="isDistribut"]').click(function(){
+		   if($(this).val()==1){
+			   $(".commission_tr").show();
+		   }else{
+			   $(".commission_tr").hide();
+		   }
+	   });
 });
 
 function imglimouseover(obj){
@@ -128,7 +135,7 @@ function delImg(obj){
 	        <table class="wst-form" >
 	           <tr>
 	             <th width='120'>商品编号<font color='red'>*</font>：</th>
-	             <td width='300'>
+	             <td width='400'>
 	             <input type='text' id='goodsSn' name='goodsSn' class="wst-ipt wstipt" value='{$object.goodsSn}' maxLength='25'/>
 	             </td>
 	             <td rowspan='6' valign='top'>
@@ -162,6 +169,26 @@ function delImg(obj){
 	             	
 	             </td>
 	           </tr>
+	           <?php if($GLOBALS['CONFIG']['isDistribut'] == 1 && $shopCfg["isDistribut"]==1 && $shopCfg["distributType"]==1){ ?>
+	           <tr>
+	             <th width='120'>是否分销商品<font color='red'>*</font>：</th>
+	             <td colspan='3'>
+	             <label>
+	             <input type='radio' name='isDistribut' class='wstipt' <if condition="$object['isDistribut'] ==1 ">checked</if> value='1'/>是
+	             </label>
+	             <label>
+	             <input type='radio' name='isDistribut' class='wstipt' <if condition="$object['isDistribut'] ==0 ">checked</if> value='0'/>否
+	             </label>
+	             </td>
+	           </tr>
+	           
+	           <tr class='commission_tr' <if condition="$object['isDistribut'] ==0 ">style="display:none;"</if>>
+	             <th width='120'>佣金：</th>
+	             <td>
+	             	<input type='text' id='commission' name='commission' class="wstipt wst-ipt" value='{$object.commission}' onkeypress="return WST.isNumberdoteKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='10'/>用于分销的分成金额
+	             </td>
+	           </tr>
+	           <?php } ?>
 	            <tr>
 	             <th width='120'>商品库存<font color='red'>*</font>：</th>
 	             <td><input type='text' id='goodsStock' name='goodsStock' class="wstipt wst-ipt" value='{$object.goodsStock}' onkeypress="return WST.isNumberKey(event)" onkeyup="javascript:WST.isChinese(this,1)" maxLength='25' <if condition="count($object['priceAttrs']) gt 0 ">disabled</if> /></td>

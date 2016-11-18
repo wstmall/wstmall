@@ -1,7 +1,7 @@
 <?php
  return array(
-	    'WST_VERSION' => '1.7.6_161020',
-	    'WST_MD5' => '39660b509128505cd6ca1c3991d1f018',
+	    'WST_VERSION' => '1.7.8_161116',
+	    'WST_MD5' => '1743bf0fa815851d1cb8647b5744b937',
         'WST_M_IMG_SUFFIX'   => '',
 	    'WST_RUNTIME_PATH'=>dirname(dirname(dirname(__File__)))."/Runtime",
         'DEFAULT_FILTER'=>'trim,htmlspecialchars',

@@ -1,5 +1,9 @@
+
 SET FOREIGN_KEY_CHECKS=0;
 
+-- ----------------------------
+-- Table structure for `wst_sys_configs`
+-- ----------------------------
 DROP TABLE IF EXISTS `wst_sys_configs`;
 CREATE TABLE `wst_sys_configs` (
   `configId` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增ID',
@@ -14,8 +18,11 @@ CREATE TABLE `wst_sys_configs` (
   `fieldSort` int(11) DEFAULT '0' COMMENT '字段排序',
   PRIMARY KEY (`configId`),
   KEY `parentId` (`parentId`)
-) ENGINE=MyISAM AUTO_INCREMENT=46 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=62 DEFAULT CHARSET=utf8;
 
+-- ----------------------------
+-- Records of wst_sys_configs
+-- ----------------------------
 INSERT INTO `wst_sys_configs` VALUES ('1', '0', '商城名称', 'mallName', 'text', null, '', 'WSTMall开源商城', null, '1'),
 ('2', '0', '商城标题', 'mallTitle', 'text', null, null, 'WSTMall开源商城', null, '2'),
 ('3', '0', '商城描述', 'mallDesc', 'text', null, null, 'WSTMall开源商城,本地O2O商城,多商户,PHP多用户开源商城,O2O开源商城', null, '3'),
@@ -61,9 +68,14 @@ INSERT INTO `wst_sys_configs` VALUES ('1', '0', '商城名称', 'mallName', 'tex
 ('48', '4', 'QQ APP KEY', 'qqAppKey', 'text', '', '', '', '', '3'),
 ('49', '4', '开启微信登录', 'isOpenWxLogin', 'radio', '是||否', '1,0', '0', null, '4'),
 ('50', '4', '微信 APP ID', 'wxAppId', 'text', '', '', '', '', '5'),
-('51', '4', '微信 APP KEY', 'wxAppKey', 'text', '', '', '', '', '6'), 
-('52', '5', '开启微信版', 'isOpenWeiXin', 'radio','是||否','1,0',0,'',1), 
-('53', '5', '微信 APP ID', 'WeiXinAppId', 'text','','','','',2), 
-('54', '5', '微信 APP KEY', 'WeiXinAppKey', 'text','','','','',3), 
-('55', '5', '微信验证代码', 'WeiXinAppCode', 'text','','','','',4);
-
+('51', '4', '微信 APP KEY', 'wxAppKey', 'text', '', '', '', '', '6'),
+('52', '5', '开启微信版', 'isOpenWeiXin', 'radio', '是||否', '1,0', '0', '', '1'),
+('53', '5', '微信 APP ID', 'WeiXinAppId', 'text', '', '', '', '', '2'),
+('54', '5', '微信 APP KEY', 'WeiXinAppKey', 'text', '', '', '', '', '3'),
+('55', '5', '微信验证代码', 'WeiXinAppCode', 'text', '', '', '', '', '4'),
+('56', '6', '是否开启分销', 'isDistribut', 'radio', '开||关', '1,0', '0', '注：请确保已开启在线支付', '0'),
+('57', '6', '成为分销商条件', 'distributDeal', 'radio', '直接成为分销商||购买商品后成为分销商', '1,0', '1', null, '0'),
+('58', '6', '商品分享标题', 'goodsShareTitle', 'text', '', '', 'WSTMall 商城', null, '0'),
+('59', '6', '店铺分享标题', 'shopShareTitle', 'text', '', '', 'WSTMall 商城', null, '0'),
+('60', '6', '商城分享标题', 'mallShareTitle', 'text', '', '', 'WSTMall 商城', null, '0'),
+('61', '3', '最少提现金额', 'cashStartMoney', 'text', '', '', '1000', '（提现金额少于该金额将不能提现）', '0');

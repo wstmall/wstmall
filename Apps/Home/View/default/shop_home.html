@@ -105,22 +105,32 @@
 									</td>
 								</tr>
 								</if>
-								<tr>
-									<td ></td>
-									<td></td>
-								</tr>
+								
 								<tr>
 									<td colspan="2" class="wst-shop-eval">
-										<div class="shop-eval-box" style="width:214px;margin:0 auto;">
+										<ul class="shop-eval-box" style="width:214px;margin:0 auto;">
 											<li>商品<br/>{$shopScores["goodsScore"]}</li>
 											<li class="li-center">时效<br/>{$shopScores["timeScore"]}</li>
 											<li>服务<br/>{$shopScores["serviceScore"]}</li>
-											<div class="wst-clear"></div>
-										</div>
+										</ul><div class="wst-clear"></div>
 									</td>
 								</tr>
 								<tr>
-									<td colspan='2' align='center' style='padding-top:20px;'>
+									<td colspan="2">
+										<!-- JiaThis Button BEGIN -->
+										<div class="jiathis_style_24x24" style="text-align: center;padding-left: 30px;margin-top: 15px;">
+											<a class="jiathis_button_qzone"></a>
+											<a class="jiathis_button_tsina"></a>
+											<a class="jiathis_button_tqq"></a>
+											<a class="jiathis_button_weixin"></a>
+											<a class="jiathis_button_cqq"></a>
+											<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+										</div>
+										<!-- JiaThis Button END -->
+									</td>
+								</tr>
+								<tr>
+									<td colspan='2' align='center' style='padding-top:15px;'>
 									<a class='wst-shop-btn' href="javascript:favoriteShops({$shops['shopId']})">
 										<span id='f1_txt' f='{$favoriteShopId}'><if condition="$favoriteShopId gt 0">已关注<else/>关注店铺</if></span>
 									</a>
@@ -211,6 +221,22 @@
 				<div class="wst-clear"></div>
 			</div>
 		</div>
+		<!-- JiaThis Button BEGIN -->
+			<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+			<script type="text/javascript">
+			var jiathis_config = {
+					url: "{:U('Home/Shops/toShopHome',array('shopId'=>$shops['shopId'],'shareUserId'=>base64_encode($WST_USER['userId'])),true,true)}",
+					title:"{$shops['shopName']}",
+					summary:"{$GLOBALS['CONFIG']['shopShareTitle']}",
+					slide:{
+						divid:'jiathis_main',
+						pos:'left'
+					}
+				};
+			</script>
+		<!-- JiaThis Button END -->
+		
+		
 		<include file="./Apps/Home/View/default/footer.html" />
 		<include file="./Apps/Home/View/default/right_cart.html" />
    	</body>

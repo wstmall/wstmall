@@ -262,7 +262,7 @@ function submitOrder(){
 			if(goods.isSale<1){
 				WST.msg('商品'+goods.goodsName+'已下架，请返回重新选购!', {icon: 5});
 				return;
-			}else if(goods.goodsStock<goods.cnt){
+			}else if(parseInt(goods.goodsStock,10)<parseInt(goods.cnt,10)){
 				WST.msg('商品'+goods.goodsName+'库存不足，请返回重新选购!', {icon: 5});
 				return;
 			}else if(goods.shopAtive==0){
@@ -301,6 +301,10 @@ function submitOrder(){
 			if($("#isScorePay").prop('checked')){
 				params.isScorePay = 1;
 			}
+		}
+		if($('input:radio[name="payway"]:checked').length==0){
+			WST.msg("请选择支付方式", {icon: 5});
+			return ;
 		}
 		if(params.needreceipt==1 && params.invoiceClient==""){
 			WST.msg("请输入抬头", {icon: 5});

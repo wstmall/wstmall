@@ -1,8 +1,4 @@
 SET FOREIGN_KEY_CHECKS=0;
-
--- ----------------------------
--- Table structure for `wst_shop_configs`
--- ----------------------------
 DROP TABLE IF EXISTS `wst_shop_configs`;
 CREATE TABLE `wst_shop_configs` (
   `configId` int(11) NOT NULL AUTO_INCREMENT,
@@ -13,10 +9,11 @@ CREATE TABLE `wst_shop_configs` (
   `shopBanner` varchar(150) DEFAULT NULL,
   `shopAds` text,
   `shopAdsUrl` text,
+  `isDistribut` tinyint(4) DEFAULT '0',
+  `distributType` tinyint(4) DEFAULT '1',
+  `distributOrderRate` int(11) DEFAULT '0',
+  `promoterRate` int(11) DEFAULT '0',
+  `buyerRate` int(11) DEFAULT '0',
   PRIMARY KEY (`configId`),
   KEY `shopId` (`shopId`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
--- ----------------------------
--- Records of wst_shop_configs
--- ----------------------------

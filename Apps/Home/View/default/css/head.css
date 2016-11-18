@@ -27,17 +27,17 @@ body {
 
 .headNav {
 	width:100%;
-	height: 36px;
-	background-color: #333333;
+	background-color: #E23C3E;
 }
 
 .headNav .navCon {
 	height: 36px;
 	position: relative;
 	z-index: 11;
-	background-color: #000;
+	background-color: #E23C3E;
 }
 
+.wst-fl-head a{color:#fff;}
 .headNav .navCon .navCon-cate {
 	width: 210px;
 	height: 36px;
@@ -49,14 +49,13 @@ body {
 	color: #FFF;
 	position: relative;
 }
-
+.navCon-allcat{font-size:16px;}
 .headNav .navCon .navCon-menu li {
 	float: left;
 	height: 36px;
 	line-height: 36px;
 	overflow: hidden;
 	text-align: center;
-	width: 106px;
 	position: relative;
 }
 
@@ -66,7 +65,7 @@ body {
 	font-size: 14px;
 	font-weight: bold;
 	height: 36px;
-	line-height: 36sspx;
+	line-height: 36px;
 	text-decoration: none;
 	width: 104px;
 }
@@ -77,7 +76,7 @@ body {
 }
 
 .headNav .navCon .navCon-menu li a:hover,.headNav .navCon .navCon-menu .curMenu {
-	background: #e23c3d;
+	background: #aa1a1a;
 	color: #FFFFFF;
 }
 
@@ -109,7 +108,7 @@ body {
 
 .headNav .navCon .navCon-cate .cateMenu1 li .cate-tag {
 	width: 190px;
-	padding: 0px 5px 10px 15px;
+	padding: 0px 5px 10px 10px;
 	overflow: hidden;
 	line-height: 25px;
 }
@@ -614,104 +613,83 @@ body {
     background-size:100% 100%;
 }
 
-
-.cateMenu1 li s1, .cateMenu2 li s1{
-	background-image: url("../../../View/default/images/icon_dire_01.png");
+.cateMenu1 li s1, .cateMenu2 li s1, .cateMenu1 li:hover s1, .cateMenu2 li:hover s1,
+.cateMenu1 li s2, .cateMenu2 li s2, .cateMenu1 li:hover s2, .cateMenu2 li:hover s2, 
+.cateMenu1 li s3, .cateMenu2 li s3, .cateMenu1 li:hover s3, .cateMenu2 li:hover s3,
+.cateMenu1 li s4, .cateMenu2 li s4, .cateMenu1 li:hover s4, .cateMenu2 li:hover s4,
+.cateMenu1 li s5, .cateMenu2 li s5, .cateMenu1 li:hover s5, .cateMenu2 li:hover s5,
+.cateMenu1 li s6, .cateMenu2 li s6, .cateMenu1 li:hover s6, .cateMenu2 li:hover s6,
+.cateMenu1 li s7, .cateMenu2 li s7, .cateMenu1 li:hover s7, .cateMenu2 li:hover s7,
+.cateMenu1 li s8, .cateMenu2 li s8, .cateMenu1 li:hover s8, .cateMenu2 li:hover s8,
+.cateMenu1 li s9, .cateMenu2 li s9, .cateMenu1 li:hover s9, .cateMenu2 li:hover s9,
+.cateMenu1 li s10, .cateMenu2 li s10, .cateMenu1 li s10, .cateMenu2 li s10{
+	background: url("../../../View/default/images/nav_icon.png") no-repeat;
     display: inline-block;
-    height: 10px;
-    background-size:100% 100%;
-    margin-top:4px;
-    width: 12px;
+    height: 20px;
+    position: relative;
+    top:4px;
+    width: 20px;
+}
+.cateMenu1 li s1, .cateMenu2 li s1{
+	background-position: -31px -25px;
 }
 .cateMenu1 li s2, .cateMenu2 li s2{
-	background-image: url("../../../View/default/images/icon_dire_02.png");
-    display: inline-block;
-    height: 12px;
-    background-size:100% 100%;
-    margin-top:4px;
-    width: 10px;
+	background-position: -31px -64px;
 }
 .cateMenu1 li s3, .cateMenu2 li s3{
-	background-image: url("../../../View/default/images/icon_dire_03.png");
-    display: inline-block;
-    height: 14px;
-    background-size:100% 100%;
-    margin-top:4px;
-    width: 12px;
+	background-position: -31px -105px;
 }
 .cateMenu1 li s4, .cateMenu2 li s4{
-	background-image: url("../../../View/default/images/icon_dire_04.png");
-    display: inline-block;
-    height: 12px;
-    background-size:100% 100%;
-    margin-top:4px;
-    width: 12px;
+	background-position: -31px -145px;
 }
 .cateMenu1 li s5, .cateMenu2 li s5{
-	background-image: url("../../../View/default/images/icon_dire_05.png");
-    display: inline-block;
-    height: 12px;
-    background-size:100% 100%;
-    margin-top:4px;
-    width: 12px;
+	background-position: -31px -183px;
 }
 .cateMenu1 li s6, .cateMenu2 li s6{
-	background-image: url("../../../View/default/images/icon_dire_06.png");
-    display: inline-block;
-    height: 14px;
-    background-size:100% 100%;
-    margin-top:4px;
-    width: 12px;
+	background-position: -31px -223px;
 }
-
-
+.cateMenu1 li s7, .cateMenu2 li s7{
+	background-position: -31px -262px;
+}
+.cateMenu1 li s8, .cateMenu2 li s8{
+	    background-position: -31px -298px;
+}
+.cateMenu1 li s9, .cateMenu2 li s9{
+	background-position: -31px -333px;
+}
+.cateMenu1 li s10, .cateMenu2 li s10{
+	background-position: -31px -366px;
+}
 
 
 .cateMenu1 li:hover s1, .cateMenu2 li:hover s1{
-	background-image: url("../../../View/default/images/icon_dire_01_hover.png");
-    display: inline-block;
-    height: 10px;
-    background-size:100% 100%;
-    margin-top:4px;
-    width: 12px;
+	background-position: -82px -25px;
 }
 .cateMenu1 li:hover s2, .cateMenu2 li:hover s2{
-	background-image: url("../../../View/default/images/icon_dire_02_hover.png");
-    display: inline-block;
-    height: 12px;
-    background-size:100% 100%;
-    margin-top:4px;
-    width: 10px;
+	background-position: -82px -64px;
 }
 .cateMenu1 li:hover s3, .cateMenu2 li:hover s3{
-	background-image: url("../../../View/default/images/icon_dire_03_hover.png");
-    display: inline-block;
-    height: 14px;
-    background-size:100% 100%;
-    margin-top:4px;
-    width: 12px;
+	background-position: -82px -105px;
 }
 .cateMenu1 li:hover s4, .cateMenu2 li:hover s4{
-	background-image: url("../../../View/default/images/icon_dire_04_hover.png");
-    display: inline-block;
-    height: 12px;
-    background-size:100% 100%;
-    margin-top:4px;
-    width: 12px;
+	background-position: -82px -145px;
 }
 .cateMenu1 li:hover s5, .cateMenu2 li:hover s5{
-	background-image: url("../../../View/default/images/icon_dire_05_hover.png");
-    display: inline-block;
-    height: 12px;
-    background-size:100% 100%;
-    margin-top:4px;
-    width: 12px;
+	background-position: -82px -183px;
 }
 .cateMenu1 li:hover s6, .cateMenu2 li:hover s6{
-	background-image: url("../../../View/default/images/icon_dire_06_hover.png");
-    display: inline-block;
-    height: 14px;
-    background-size:100% 100%;
-    margin-top:4px;
-    width: 12px;
+	background-position: -82px -223px;
 }
+.cateMenu1 li:hover s7, .cateMenu2 li:hover s7{
+	background-position: -82px -262px;
+}
+.cateMenu1 li:hover s8, .cateMenu2 li:hover s8{
+	    background-position: -82px -298px;
+}
+.cateMenu1 li:hover s9, .cateMenu2 li:hover s9{
+	background-position: -82px -333px;
+}
+.cateMenu1 li:hover s10, .cateMenu2 li:hover s10{
+	background-position: -82px -366px;
+}
+

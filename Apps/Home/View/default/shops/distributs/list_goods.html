@@ -1,0 +1,109 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+<style type="text/css">
+#preview{border:1px solid #cccccc; background:#CCC;color:#fff; padding:5px; display:none; position:absolute;}
+</style>
+<script>
+$(document).ready(function(){
+    $('.imgPreview').imagePreview();
+    <notempty name='shopCatId1'>
+    getShopCatListForGoods('{$shopCatId1}','{$shopCatId2}');
+    </notempty>
+});
+</script>
+    <div class="wst-body"> 
+       <div class='wst-page-header'>卖家中心 > 参与分销的商品</div>
+       <div class='wst-page-content'>
+        <div class='wst-tbar-query'>
+        店铺分类：<select id='shopCatId1' autocomplete="off" onchange='javascript:getShopCatListForGoods(this.value,"{$object['shopCatId2']}")'>
+	         <option value='0'>请选择</option>
+	         <volist name="shopCatsList" id="vo">
+	         <option value='{$vo['catId']}' <if condition="$shopCatId1 == $vo['catId'] ">selected</if>>{$vo['catName']}</option>
+	         </volist>
+	     </select>
+	     <select id='shopCatId2' autocomplete="off">
+	         <option value='0'>请选择</option>
+	     </select>
+        商品：<input type='text' id='goodsName' value='{$goodsName}'/>
+      <button class='wst-btn-query' onclick='javascript:queryDistributByPage()'>查询</button>
+        </div>
+        <table class='wst-list'>
+           <thead>
+           	<tr>
+             
+               <th>商品名称</th>
+               <th width="100">商品编号</th>
+               <th width="80">价格</th>
+               <th>佣金</th>
+               <th>销量</th>
+               <th width='120'>库存</th>
+             </tr>
+           </thead>
+           <tbody>
+            <volist name="Page['root']" id="vo" key='i'>
+             <tr >
+               <td <if condition="$vo['goodsThums'] neq ''">img='{$vo['goodsThums']}' class='imgPreview'</if>>
+               <img class='lazyImg' data-original="__ROOT__/{$vo['goodsThums']}" height="50" width="50"/>
+               {$vo['goodsName']}
+               </td>
+               
+               <td>
+	               	<span id="span_1_{$vo['goodsId']}" style="display: inline;">{$vo['goodsSn']}</span>
+               </td>
+               <td>
+	               	<span id="span_2_{$vo['goodsId']}" style="display: inline;">{$vo['shopPrice']}</span>
+               </td>
+               <td>
+              		{$distributConf['distributType']==1?$vo['commission']:"按订单提佣金"}
+               </td>
+              
+               <td>{$vo['saleCount']}</td>
+               <td>
+	             	<span id="span_3_{$vo['goodsId']}" style="display: inline;">{$vo['goodsStock']}</span>
+               </td>
+             </tr>
+             </volist>
+             <tfoot>
+             <tr>
+                <td colspan='6'>
+                <div class="wst-page" style="float:right;padding-bottom:10px;">
+					<div id="wst-page-items"></div>
+				</div>
+                <script>
+			    <if condition="$Page['totalPage'] gt 1">
+			    $(document).ready(function(){
+					laypage({
+					    cont: 'wst-page-items',
+					    pages: {$Page['totalPage']}, //总页数
+					    skip: true, //是否开启跳页
+					    skin: '#e23e3d',
+					    groups: 3, //连续显示分页数
+					    curr: function(){ //通过url获取当前页，也可以同上（pages）方式获取
+					        var page = location.search.match(/p=(\d+)/);
+					        return page ? page[1] : 1;
+					    }(), 
+					    jump: function(e, first){ //触发分页后的回调
+					        if(!first){ //一定要加此判断，否则初始时会无限刷新
+					        	var nuewurl = WST.splitURL("p");
+					        	var ulist = nuewurl.split("?");
+					        	if(ulist.length>1){
+					        		location.href = nuewurl+'&p='+e.curr;
+					        	}else{
+					        		location.href = '?p='+e.curr;
+					        	}
+					            
+					        }
+					    }
+					});
+			    });
+				</if>
+				</script>
+                </td>
+             </tr>
+             </tfoot>
+           </tbody>
+        </table>
+        </div>
+    </div>
+    <script src="__ROOT__/Apps/Home/View/default/js/distributs.js"></script>
+</block> 

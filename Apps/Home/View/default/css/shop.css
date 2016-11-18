@@ -53,7 +53,7 @@ select{
 
 .wst-content {
 	background: #FFFFFF;
-	min-height: 645px;
+	min-height: 900px;
 	height: auto;
 	width: 990px;
 	float: right;
@@ -82,7 +82,7 @@ select{
 	width: 198px;
 	margin: 0px;
 	padding: 0px;
-	min-height: 645px;
+	min-height: 900px;
 }
 
 .wst-menu li {
@@ -120,7 +120,6 @@ select{
 }
 
 .wst-tbar-query {
-	width: 775px;
 	height: 36px;
 	margin-bottom: 4px;
 	font-weight:bold;
@@ -129,6 +128,7 @@ select{
 .wst-tbar-group {
 	height: 76px;
 	height: 36px;
+	line-height: 36px;
 	background: #F5F5F5
 }
 
@@ -247,8 +247,7 @@ text-decoration
 }
 .wst-form {
 	border-collapse: collapse;
-	width: 970px;
-}
+	width: 970px;}
 
 .wst-form tr {
 	height: 30px;
@@ -281,11 +280,12 @@ text-decoration
 	font-size: 100%;
 	padding: 2px;
 	vertical-align: middle;
+	margin-left: 4px;
 }
 .wst-tab-box {
 	width: 100%;
 	height: auto;
-	margin: 0px auto;
+	margin: 10px auto;
 }
 
 .wst-tab-nav {
@@ -536,3 +536,6 @@ text-decoration
 .wst-packages-tbox select.sel{height: 350px;width: 100%}
 .wst-packages-tbox .sbnt{width: 120px;font-size: 20px;height:30px;}
 
+.wst-distribut-tr .wst-ipt{border-radius:0;margin:0;vertical-align: baseline;width:80px;text-align: center;}
+.wst-distribut-tip{ color: #fff;position: absolute;top: 0;left: 6px;line-height: 18px;background-color: red;display: inline-block;width: 18px;text-align: center;}
+#startDate, #endDate{width:100px;line-height:16px;height:auto;}

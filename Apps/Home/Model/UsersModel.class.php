@@ -245,16 +245,17 @@ class UsersModel extends BaseModel {
 		$data['userEmail'] = I("userEmail");
 	    $data['createTime'] = date('Y-m-d H:i:s');
 	    $data['userFlag'] = 1;
-	    
-	   
-		$rs = $this->add($data);
-		if(false !== $rs){
+
+		$userId = $this->add($data);
+		if(false !== $userId){
 			$rd['status']= 1;
-			$rd['userId']= $rs;
+			$rd['userId']= $userId;
 	    	$data = array();
 	    	$data['lastTime'] = date('Y-m-d H:i:s');
 	    	$data['lastIP'] = get_client_ip();
-	    	$this->where(" userId=".$rd['userId'])->data($data)->save();	 		
+	    	$this->where(" userId=".$rd['userId'])->data($data)->save();	 	
+			D("distribut_users")->addDistributUusers($userId);
+	    	
 	    	//记录登录日志
 		 	$data = array();
 			$data["userId"] = $rd['userId'];
@@ -266,6 +267,8 @@ class UsersModel extends BaseModel {
 	    } 
 		return $rd;
 	}
+	
+	
 	
 	/**
 	 * 随机生成一个账号
@@ -319,6 +322,37 @@ class UsersModel extends BaseModel {
 				}
 			}else{
 				$rd['status']= -2;
+			}
+		}
+		return $rd;
+	}
+	
+	/**
+	 * 修改用户支付密码
+	 */
+	public function editPwd($id){
+		$rd = array('status'=>-1);
+		$data = array();
+		$data["payPwd"] = I("newPwd");
+		if($this->checkEmpty($data,true)){
+			$rs = $this->where('userId='.$id)->find();
+			if(!empty($rs['payPwd'])){
+				//核对密码
+				if($rs['payPwd']==md5(I("oldPwd").$rs['loginSecret'])){
+					$data["payPwd"] = md5(I("newPwd").$rs['loginSecret']);
+					$rs = $this->where("userId=".$id)->save($data);
+					if(false !== $rs){
+						$rd['status']= 1;
+					}
+				}else{
+					$rd['status']= -2;
+				}
+			}else{
+				$data["payPwd"] = md5(I("newPwd").$rs['loginSecret']);
+				$rs = $this->where("userId=".$id)->save($data);
+				if(false !== $rs){
+					$rd['status']= 1;
+				}
 			}
 		}
 		return $rd;
@@ -399,6 +433,38 @@ class UsersModel extends BaseModel {
 	}
 	
 	/**
+	 * 重置用户支付密码
+	 */
+	public function resetPwd(){
+		$rs = array('status'=>-1);
+		$reset_userId = (int)session('REST_userId');
+		if($reset_userId==0){
+			$rs['msg'] = '无效的用户！';
+			return $rs;
+		}
+		$user = $this->where("userId=".$reset_userId." and userFlag=1 and userStatus=1")->find();
+		if(empty($user)){
+			$rs['msg'] = '无效的用户！';
+			return $rs;
+		}
+		$payPwd = I('payPwd');
+		if(trim($payPwd)==''){
+			$rs['msg'] = '无效的密码！';
+			return $rs;
+		}
+		$data['payPwd'] = md5($payPwd.$user["loginSecret"]);
+		$rc = $this->where("userId=".$reset_userId)->save($data);
+		if(false !== $rc){
+			$rs['status'] =1;
+		}
+		session('REST_userId',null);
+		session('REST_Time',null);
+		session('REST_success',null);
+		session('findPwd',null);
+		return $rs;
+	}
+	
+	/**
 	 * 检测第三方帐号是否已注册
 	 */
 	public function checkThirdIsReg($userFrom,$openId){
@@ -431,14 +497,18 @@ class UsersModel extends BaseModel {
 	    $data['userFrom'] = $obj["userFrom"];
 	    $data['openId'] = WSTAddslashes($obj["openId"]);
 	   
-		$rs = $this->add($data);
-		if(false !== $rs){
+		$userId = $this->add($data);
+		if(false !== $userId){
 			$rd['status']= 1;
-			$rd['userId']= $rs;
+			$rd['userId']= $userId;
 	    	$data = array();
 	    	$data['lastTime'] = date('Y-m-d H:i:s');
 	    	$data['lastIP'] = get_client_ip();
 	    	$this->where(" userId=".$rd['userId'])->data($data)->save();	 		
+	    	
+	    	//添加分销用户记录
+	    	D("distribut_users")->addDistributUusers($userId);
+	    	
 	    	//记录登录日志
 		 	$data = array();
 			$data["userId"] = $rd['userId'];
@@ -481,6 +551,15 @@ class UsersModel extends BaseModel {
 			M('log_user_logins')->add($data);
 		}
 		return $rd;
+	}
+	
+	
+	/**
+	 * 获取指定对象的资料
+	 */
+	public function getSimpInfo($userId,$field =''){
+		$rs = $this->where("userId=".$userId)->field("userId,loginName,userName,userSex,userType,userPhoto,userScore".$field)->find();
+		return $rs;
 	}
 	
 }

@@ -795,3 +795,35 @@ WST.getAreas = function(obj,id,val,fval,callback){
 		}
 	});
 }
+
+WST.changeIptNum = function(diffNum,iptId,btnId,id,func){
+	var suffix = (id)?"_"+id:"";
+	var iptElem = $(iptId+suffix);
+	var minVal = parseInt(iptElem.attr('data-min'),10);
+	var maxVal = parseInt(iptElem.attr('data-max'),10);
+	var tmp = 0;
+	if(maxVal<minVal){
+		tmp = maxVal;
+		maxVal = minVal;
+		minVal = tmp;
+	}
+	var num = parseInt(iptElem.val(),10);
+	num = num?num:1;
+	num = num + diffNum;
+	btnId = btnId.split(',');
+	$(btnId[0]+suffix).css('color','#666');
+	$(btnId[1]+suffix).css('color','#666');
+	if(minVal>=num){
+		num=minVal;
+		$(btnId[0]+suffix).css('color','#ccc');
+	}
+	if(maxVal<=num){
+		num=maxVal;
+		$(btnId[1]+suffix).css('color','#ccc');
+	}
+	iptElem.val(num);
+	if(func){
+		var fn = window[func];
+		fn();
+	}
+}
