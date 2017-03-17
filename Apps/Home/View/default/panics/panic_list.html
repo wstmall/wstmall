@@ -1,0 +1,57 @@
+<!DOCTYPE>
+<html lang="zh-cn">
+	<head>
+  		<meta charset="utf-8">
+      	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+      	<link rel="shortcut icon" href="favicon.ico"/>
+      	<title>团购 - {$CONF['mallTitle']}</title>
+      	<meta name="keywords" content="{$shops['shopKeywords']},首页" />
+      	<meta name="description" content="{$CONF['mallDesc']},{$shops['shopDesc']}" />
+      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/common.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/panic.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/base.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/head.css" />
+		<link href="__PUBLIC__/plugins/slide/css/slide.css" type="text/css" media="all" rel="stylesheet" />
+   	</head>
+   	<body>
+		<include file="./Apps/Home/View/default/header_common.html" />
+		<div id="wst-te-cat" class="wst-te-cat">
+			<div class="catl"><span>抢购分类</span></div>
+			<div class="catr">
+				<volist name="goodsCats" key="k1" id="vo">
+				<span data="{$vo['catId']}">{$vo['catName']}</span>
+				</volist>
+			</div>
+			<div class="wst-clear"></div>
+		</div>
+		<volist name="goodsCats" key="k1" id="vo">
+		<div id="wst-te-cat2_{$vo['catId']}" class="wst-te-cat2" style="display:none;">
+			<div class="cats">
+				<span>全部</span>
+				<volist name="vo['childs']" key="k2" id="vo2">
+				<span data="{$vo2['catId']}">{$vo2['catName']}</span>
+				</volist>
+				<div class="wst-clear"></div>
+			</div>
+		</div>
+		</volist>
+		<input type="hidden" id="panicType" value="{$panicType}"/>
+		<div class="wst-te-goods" id="wst-goods-list">
+			<div class="wst-clear"></div>
+		</div>
+		<div id="wst-page" class="wst-goods-page"></div>
+		
+		<include file="./Apps/Home/View/default/footer.html" />
+	    <include file="./Apps/Home/View/default/right_cart.html" />
+   	</body>
+   	
+   	<script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
+	<script src="__PUBLIC__/js/common.js"></script>
+	<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/panic.js" type="text/javascript"></script>
+	<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/head.js" type="text/javascript"></script>
+	<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/common.js" type="text/javascript"></script>
+	<script src="__PUBLIC__/plugins/slide/js/slide.js"></script>
+	<script>setTimeout("list_time()",1000);</script>
+</html> 
+
+

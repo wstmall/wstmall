@@ -23,7 +23,7 @@ class AttributeCatsAction extends BaseAction{
     	}
     	$this->assign('object',$object);
     	$this->assign('umark',"AttributeCats");
-		$this->view->display('default/shops/attributecats/edit');
+		$this->display('shops/attributecats/edit');
 	}
 	/**
 	 * 新增/修改操作
@@ -57,7 +57,7 @@ class AttributeCatsAction extends BaseAction{
 		$list = $m->queryByList();
     	$this->assign('List',$list);
     	$this->assign('umark',"AttributeCats");
-        $this->display("default/shops/attributecats/list");
+        $this->display("shops/attributecats/list");
 	}
 	
 	/**

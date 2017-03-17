@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>{$CONF['mallTitle']}后台管理中心</title>
+      <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
+      <!--[if lt IE 9]>
+      <script src="__PUBLIC__/js/html5shiv.min.js"></script>
+      <script src="__PUBLIC__/js/respond.min.js"></script>
+      <![endif]-->
+      <script src="__PUBLIC__/js/jquery.min.js"></script>
+      <script src="__PUBLIC__/plugins/bootstrap/js/bootstrap.min.js"></script>
+      <script src="__PUBLIC__/js/common.js"></script>
+      <script src="__PUBLIC__/plugins/plugins/plugins.js"></script>
+   </head>
+   <script>
+   function wxSynchro(id){
+	   Plugins.confirm({title:'信息提示',content:'您确定与微信菜单同步吗?',okText:'确定',cancelText:'取消',okFun:function(){
+		   Plugins.closeWindow();
+		   Plugins.waitTips({title:'信息提示',content:'正在操作，请稍后...'});
+		   $.post("{:U('Admin/WxMenus/synchroWx')}",{id:id},function(data,textStatus){
+					var json = WST.toJson(data);
+					if(json.status=='1'){
+						Plugins.setWaitTipsMsg({content:json.msg,timeout:1000,callback:function(){
+						   location.reload();
+						}});
+					}else{
+						Plugins.closeWindow();
+						Plugins.Tips({title:'信息提示',icon:'error',content:json.msg,timeout:1000});
+					}
+				});
+	       }});
+   }
+   function adSynchro(id){
+	   Plugins.confirm({title:'信息提示',content:'您确定同步到微信菜单吗?',okText:'确定',cancelText:'取消',okFun:function(){
+		   Plugins.closeWindow();
+		   Plugins.waitTips({title:'信息提示',content:'正在操作，请稍后...'});
+		   $.post("{:U('Admin/WxMenus/synchroAd')}",{id:id},function(data,textStatus){
+					var json = WST.toJson(data);
+					if(json.status=='1'){
+						Plugins.setWaitTipsMsg({content:json.msg,timeout:1000,callback:function(){
+						   location.reload();
+						}});
+					}else{
+						Plugins.closeWindow();
+						Plugins.Tips({title:'信息提示',icon:'error',content:json.msg,timeout:1000});
+					}
+				});
+	       }});
+   }
+   function editName(obj){
+	   Plugins.waitTips({title:'信息提示',content:'正在操作，请稍后...'});
+	   $.post("{:U('Admin/WxMenus/editName')}",{id:$(obj).attr('dataId'),menuName:obj.value},function(data,textStatus){
+			var json = WST.toJson(data);
+			if(json.status=='1'){
+				Plugins.setWaitTipsMsg({content:'操作成功',timeout:1000,callback:function(){
+					inView();
+				}});
+			}else{
+				Plugins.closeWindow();
+				Plugins.Tips({title:'信息提示',icon:'error',content:'操作失败!',timeout:1000});
+			}
+		});
+   }
+   function toEdit(id,pid){
+	   var url = "{:U('Admin/WxMenus/toEdit',array('id'=>'__0','parentId'=>'__1'))}";
+	   url = WST.replaceURL(url,[id,pid]);
+       location.href=url;     
+   }
+   function del(id){
+	   Plugins.confirm({title:'信息提示',content:'您确定要删除该菜单吗?',okText:'确定',cancelText:'取消',okFun:function(){
+		   Plugins.closeWindow();
+		   Plugins.waitTips({title:'信息提示',content:'正在操作，请稍后...'});
+		   $.post("{:U('Admin/WxMenus/del')}",{id:id},function(data,textStatus){
+					var json = WST.toJson(data);
+					if(json.status=='1'){
+						Plugins.setWaitTipsMsg({content:'操作成功',timeout:1000,callback:function(){
+						   location.reload();
+						}});
+					}else{
+						Plugins.closeWindow();
+						Plugins.Tips({title:'信息提示',icon:'error',content:'操作失败!',timeout:1000});
+					}
+				});
+	       }});
+   }
+   function loadChildTree(obj,pid,objId){
+	   
+		var str = objId.split("_");
+		level = (str.length-2);
+		if($(obj).hasClass('glyphicon-minus')){
+			$(obj).removeClass('glyphicon-minus').addClass('glyphicon-plus');
+			$('tr[class^="'+objId+'"]').hide();
+		}else{
+			if($(obj).attr('isLoad')){
+				$(obj).removeClass('glyphicon-plus').addClass('glyphicon-minus');
+				$('tr[class^="'+objId+'"]').show();
+			}else{
+				$.post("{:U('Admin/WxMenus/queryByList')}",{id:pid},function(data,textStatus){
+					$(obj).attr("isLoad",1);
+					var json = WST.toJson(data);
+					if(json.list && json.list.length>0){
+						json = json.list;
+						var html = [];
+						var line = "";
+						for(var i=0;i<level;i++){
+							line+="&nbsp;&nbsp;&nbsp;&nbsp;";
+						}
+						for(var i=0;i<json.length;i++){
+							html.push("<tr id='"+objId+"_"+json[i].catId+"' class="+objId+">");
+							html.push("<td>"+line+(i+1)+"</td>");
+							html.push("<td align='left'>"+line+"<input type='text' onchange='javascript:editName(this)' dataId='"+json[i].menuId+"' value='"+json[i].menuName+"' class='form-control' style='width: 260px;'/></td>");
+							html.push("<td>"+WST.cutStr(json[i].menuUrl,46)+"</td>");
+							var menuTypet = '';
+							if(json[i].menuType==1)menuTypet = '点击推送';
+							if(json[i].menuType==2)menuTypet = '跳转地址';
+							if(json[i].menuType==3)menuTypet = '扫码推送';
+							if(json[i].menuType==4)menuTypet = '扫码推送且弹出“消息接收中”提示框';
+							if(json[i].menuType==5)menuTypet = '系统拍照发图';
+							if(json[i].menuType==6)menuTypet = '拍照或者相册发图';
+							if(json[i].menuType==7)menuTypet = '微信相册发图';
+							if(json[i].menuType==8)menuTypet = '地理位置选择';
+							if(json[i].menuType==9)menuTypet = '下发消息（除文本消息）';
+							if(json[i].menuType==10)menuTypet = '图文消息地址';
+							html.push("<td>"+menuTypet+"</td>");
+							html.push("<td>"+json[i].menuSort+"</td>");
+							html.push("<td>");
+							<php>if(in_array('zdycd_02',$WST_STAFF['grant'])){</php>
+							html.push("<button type='button' class='btn btn-default glyphicon glyphicon-pencil' onclick='javascript:toEdit("+json[i].menuId+",0)'>修改</button>&nbsp;&nbsp;");
+							<php>}</php>
+							<php>if(in_array('zdycd_03',$WST_STAFF['grant'])){</php>
+							html.push("<button type='button' class='btn btn-default glyphicon glyphicon-trash' onclick='javascript:del("+json[i].menuId+",\""+objId+"_"+json[i].menuId+"\")'>删除</button>");
+							<php>}</php>
+							html.push("</td>");
+							html.push("</tr>");
+						}
+						$("#"+objId).after(html.join(''));
+					}
+					$(obj).removeClass('glyphicon-plus').addClass('glyphicon-minus');
+				});
+			}
+		}
+	}
+   function inView(){
+	    $.post("{:U('Admin/WxMenus/listQuery')}","",function(data,textStatus){
+			  var json = WST.toJson(data);
+			  $("#list").html('');
+			  if(json && json.length>0){
+				var html = [];
+			    for(var i=0;i<json.length;i++){
+			       	 var me = json[i];
+			       	 html.push('<div class="li" onclick="javascript:liSelected(this);">'+WST.cutStr(me.menuName,8));
+			       	 html.push('<div class="lis" style="display:none;">');
+			       	 if(me.listSon.length>0){
+			       		for(var s=0;s<me.listSon.length;s++){
+					         html.push('<span class="list">'+WST.cutStr(me.listSon[s].menuName,8)+'</span>');
+			       		}
+			       	 }
+			         html.push("</div>");
+			         html.push("</div>");
+			    }
+			    $("#list").html(html.join(""));
+			  }
+		});
+	}
+   function liSelected(obj){
+		$(obj).addClass('selected').children('.lis').show();
+		$(obj).siblings().removeClass('selected').children('.lis').hide();
+	}
+   $(document).ready(function(){
+	   inView();
+   });
+   </script>
+   <body class='wst-page'>
+       <div class='wst-tbar' style='text-align:right;height:25px;'>
+       <php>if(in_array('zdycd_01',$WST_STAFF['grant'])){</php>
+       <a class="btn btn-success glyphicon glyphicon-plus" href="{:U('Admin/WxMenus/toEdit')}" style='float:right'>新增</a>
+       <php>}</php>
+       <php>if(in_array('zdycd_05',$WST_STAFF['grant'])){</php>
+       <a class="btn btn-success glyphicon glyphicon-plus" href="javascript:void(0);" style='float:right;margin-right:10px;' onclick="javascript:adSynchro()">同步到微信菜单</a>
+       <php>}</php>
+       <php>if(in_array('zdycd_04',$WST_STAFF['grant'])){</php>
+       <a class="btn btn-success glyphicon glyphicon-plus" href="javascript:void(0);" style='float:right;margin-right:10px;' onclick="javascript:wxSynchro()">与微信菜单同步</a>
+       <php>}</php>
+       </div>
+       <div class="wst-views">
+			<div class="reveal">
+				<div class="revealt"></div>
+				<div class="revealb"><i></i><div class="ui" id="list"></div></div>
+			</div>
+	   </div>
+       <div class="wst-body" style='float:right;width: 80%;'> 
+        <table class="table table-hover table-striped table-bordered wst-list">
+           <thead>
+             <tr>
+               <th width='40'>序号</th>
+               <th>分类名称</th>
+               <th width='380'>页面地址</th>
+               <th width='200'>类型</th>
+               <th width='80'>排序号</th>
+               <th width='260'>操作</th>
+             </tr>
+           </thead>
+           <tbody>
+            <volist name="List" id="vo" key='i'>
+             <tr id='tr_0_{$i}' class="tr_0">
+               <td>{$i}</td>
+               <td>
+               <span class='glyphicon glyphicon-plus' onclick='javascript:loadChildTree(this,{$vo.menuId},"tr_0_{$i}")' style='margin-right:3px;cursor:pointer'></span>
+               <input type='text' value='{$vo['menuName']}' onchange='javascript:editName(this)' dataId="{$vo.menuId}" class='form-control' style='width: 260px;'/>
+               </td>
+               <td>{$vo['menuUrl']}</td>
+               <td>
+               <php>if($vo['menuType']==0){</php>
+               <php>}else if($vo['menuType']==1){</php>点击推送
+               <php>}else if($vo['menuType']==2){</php>跳转地址
+               <php>}else if($vo['menuType']==3){</php>扫码推送
+               <php>}else if($vo['menuType']==4){</php>扫码推送且弹出“消息接收中”提示框
+               <php>}else if($vo['menuType']==5){</php>系统拍照发图
+               <php>}else if($vo['menuType']==6){</php>拍照或者相册发图
+               <php>}else if($vo['menuType']==7){</php>微信相册发图
+               <php>}else if($vo['menuType']==8){</php>地理位置选择
+               <php>}else if($vo['menuType']==9){</php>下发消息（除文本消息）
+               <php>}else if($vo['menuType']==10){</php>图文消息地址
+               <php>}</php>
+               </td>
+               <td>{$vo['menuSort']}</td>
+               <td>
+               <php>if(in_array('zdycd_01',$WST_STAFF['grant'])){</php>
+               <a class="btn btn-default glyphicon glyphicon-plus" href="{:U('Admin/WxMenus/toEdit',array('parentId'=>$vo['menuId']))}">新增子分类</a>
+               <php>}</php>
+               <php>if(in_array('zdycd_02',$WST_STAFF['grant'])){</php>
+               <a class="btn btn-default glyphicon glyphicon-pencil" href="{:U('Admin/WxMenus/toEdit',array('id'=>$vo['menuId']))}">修改</a>
+               <php>}</php>
+               <php>if(in_array('zdycd_03',$WST_STAFF['grant'])){</php>
+               <button type="button" class="btn btn-default glyphicon glyphicon-trash" onclick="javascript:del({$vo['menuId']},0)">刪除</button>
+               <php>}</php>
+               </td>
+             </tr>
+             </volist>
+           </tbody>
+        </table>
+        </div>
+   </body>
+</html>

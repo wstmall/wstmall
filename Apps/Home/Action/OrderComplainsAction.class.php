@@ -19,7 +19,7 @@ class OrderComplainsAction extends BaseAction{
 		$Page = D('Home/OrderComplains')->queryUserComplainByPage($obj);
 		$this->assign("umark","queryUserComplainByPage");
 		$this->assign("Page",$Page);
-		$this->display("default/users/orders/list_complain");
+		$this->display("users/orders/list_complain");
 	}
 	
 	/**
@@ -29,7 +29,7 @@ class OrderComplainsAction extends BaseAction{
 		$this->isUserLogin();
 		$data = D('Home/OrderComplains')->getOrderInfo();
 		$this->assign("data",$data);
-		$this->display("default/users/orders/complain");
+		$this->display("users/orders/complain");
 	}
 	
 	/**
@@ -49,7 +49,7 @@ class OrderComplainsAction extends BaseAction{
 		$data = D('Home/OrderComplains')->getComplainDetail(0);
 		$this->assign("data",$data);
 		$this->assign("umark","queryUserComplainByPage");
-		$this->display("default/users/orders/complain_detail");
+		$this->display("users/orders/complain_detail");
 	}
 	
 	/**
@@ -58,10 +58,10 @@ class OrderComplainsAction extends BaseAction{
     public function queryShopComplainByPage(){
     	$this->isUserLogin();  	
     	self::WSTAssigns();
-		$Page = D('Home/OrderComplains')->queryShopComplainByPage($obj);
+		$Page = D('Home/OrderComplains')->queryShopComplainByPage();
 		$this->assign("umark","queryShopComplainByPage");
 		$this->assign("Page",$Page);
-		$this->display("default/shops/orders/list_complain");
+		$this->display("shops/orders/list_complain");
 	}
     /**
 	 * 订单投诉
@@ -70,7 +70,7 @@ class OrderComplainsAction extends BaseAction{
 		$this->isUserLogin();
 		$data = D('Home/OrderComplains')->getComplainDetail(1);
 		$this->assign("data",$data);
-		$this->display("default/shops/orders/respond");
+		$this->display("shops/orders/respond");
 	}
 	/**
 	 * 订单投诉
@@ -88,7 +88,7 @@ class OrderComplainsAction extends BaseAction{
 		$this->isUserLogin();
 		$data = D('Home/OrderComplains')->getComplainDetail(1);
 		$this->assign("data",$data);
-		$this->display("default/shops/orders/complain_detail");
+		$this->display("shops/orders/complain_detail");
 	}
 };
 ?>

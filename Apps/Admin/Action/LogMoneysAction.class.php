@@ -15,6 +15,10 @@ class LogMoneysAction extends BaseAction{
 	public function index(){
 		$this->isLogin();
 		$page = D('Admin/LogMoneys')->queryByPage();
+		
+		$pager = new \Think\Page($page['total'],$page['pageSize'],I());
+		$page['pager'] = $pager->show();
+		
 		$this->assign('Page',$page);
 		$this->assign('targetType',(int)I('targetType',-1));
 		$this->assign('key',I('key'));

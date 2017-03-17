@@ -9,6 +9,7 @@ CREATE TABLE `wst_distribut_users` (
   `distributId` int(11) NOT NULL AUTO_INCREMENT,
   `userId` int(11) DEFAULT '0',
   `buyerId` int(11) DEFAULT '0',
+  `ip` varchar(50) DEFAULT NULL,
   `createTime` datetime DEFAULT NULL,
   PRIMARY KEY (`distributId`)
 ) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

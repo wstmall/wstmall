@@ -1,0 +1,103 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+
+<script src="__PUBLIC__/plugins/kindeditor/kindeditor.js"></script>
+<script src="__PUBLIC__/plugins/kindeditor/lang/zh-CN.js"></script>
+
+<style>
+
+
+</style>   
+<script>
+
+$(function () {
+	$.formValidator.initConfig({
+		theme:'Default',mode:'AutoTip',formID:"myform",debug:true,submitOnce:true,onSuccess:function(){
+			eidtGroup('{$umark}');
+			return false;
+		},onError:function(msg){
+	}});
+	$("#groupName").formValidator({onShow:"",onFocus:"",onCorrect:"输入正确"}).inputValidator({min:1,max:200,onError:"请输入团购标题"});
+	$("#startTime").formValidator({onShow:"",onFocus:"",onCorrect:"输入正确"}).inputValidator({onError: "请输入发放开始时间"});
+	$("#endTime").formValidator({onShow:"",onFocus:"",onCorrect:"输入正确"}).inputValidator({onError: "请输入发放结束时间"});
+	
+	
+});
+
+</script>
+       <div class="wst-body"> 
+       <div class='wst-page-header'>卖家中心 > <if condition="$object['groupId'] ==0 ">新增<else/>编辑</if>团购资料</div>
+       <div class='wst-page-content'>
+       <div id='tab' class="wst-tab-box">
+		
+    	<div class="wst-tab-content" style='width:99%;margin-bottom: 10px;'>
+    	<div class='wst-tab-item' style="position: relative;style='display:none'">
+	       <form name="myform" method="post" id="myform" autocomplete="off">
+	        <input type='hidden' id='groupId' class='wstipt' value='{$object.groupId}'/>
+	        <table class="wst-form" >
+	           <tr>
+	             <th width='120'>团购标题<font color='red'>*</font>：</th>
+	             <td><input type='text' id='groupName' name='groupName' class="wst-ipt wstipt" value='{$object.groupName}' style="width: 600px;" maxLength='100'/></td>
+	           </tr>
+	            <tr>
+	             <th width='120'>开始时间<font color='red'>*</font>：</th>
+	             <td>
+	             <input type='text' id='startTime' class='wstipt laydate-icon' name='startTime'value='{$object.startTime}' <if condition="$object['editStatus'] == -1">disabled</if> style='width:168px;line-height:16px;height:auto;' placeholder='开始日期'/>
+	             </td>
+	           </tr>
+	           <tr>
+	             <th width='120'>结束时间<font color='red'>*</font>：</th>
+	             <td>
+	             <input type='text' id='endTime' class='wstipt laydate-icon' name='endTime'value='{$object.endTime}' <if condition="$object['editStatus'] == -1">disabled</if> style='width:168px;line-height:16px;height:auto;' placeholder='结束日期'/>
+	             </td>
+	           </tr>
+	           <tr>
+	             <th width='120'>团购介绍：</th>
+	             <td>
+	             <textarea rows="4" style="width:600px;" id='groupDes' class='wstipt' name='groupDes'>{$object.groupDes}</textarea>
+	             </td>
+	           </tr>
+	           <tr>
+	             <td colspan='2' style='padding-left:320px;'>
+	                 <button class='wst-btn-query' type="submit">保&nbsp;存</button>
+	                 <button class='wst-btn-query' type="button" onclick='history.go(-1)'>返&nbsp;回</button>
+	             </td>
+	           </tr>
+	        </table>
+	        </form>
+	      </div>
+	    </div>
+	    </div>
+       </div>
+       <div style='clear:both;'></div>
+       </div>
+</block>
+<block name="js">
+<script >
+	var startTime = {
+		elem: '#startTime',
+	  	format: 'YYYY-MM-DD hh:mm:ss',
+		min: laydate.now(),
+	  	istime: true,
+	  	istoday: false,
+	  	choose: function(datas){
+	  		endTime.min = datas; //开始日选好后，重置结束日的最小日期
+	  		endTime.start = datas //将结束日的初始值设定为开始日
+	  	}
+	};
+	var endTime = {
+	  	elem: '#endTime',
+	  	format: 'YYYY-MM-DD hh:mm:ss',
+	  	min: laydate.now(),
+	  	istime: true,
+	  	istoday: false,
+	  	choose: function(datas){
+	  		startTime.max = datas; //结束日选好后，重置开始日的最大日期
+	  	}
+	};
+	
+	laydate(startTime);
+	laydate(endTime);
+</script>
+<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/shops/groups.js"></script>
+</block>

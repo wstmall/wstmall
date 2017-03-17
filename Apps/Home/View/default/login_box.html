@@ -20,7 +20,7 @@
 		                <span class='label'>验证码：</span>
 		                <input id="verify" style="ime-mode:disabled;width:100px" name="verify" class="text" tabindex="6" autocomplete="off" maxlength="6" type="text"/>
 			            <label class="img">
-			                <img style='vertical-align:middle;cursor:pointer;height:39px;' class='verifyImg' src='__ROOT__/Apps/Home/View/default/images/clickForVerify.png' title='刷新验证码' onclick='javascript:getVerify()'/> 
+			                <img style='vertical-align:middle;cursor:pointer;height:39px;' class='verifyImg' src='{$WST_STYLE}/images/clickForVerify.png' title='刷新验证码' onclick='javascript:getVerify()'/> 
 						</label>
 						<span id="verify-tips" class="tips"></span>      	
 		           </div>
@@ -33,12 +33,12 @@
 		                <label><a target='_blank' href="{:U('Home/Users/regist')}" >免费注册</a></label>&nbsp;&nbsp;
 		                <if condition="$CONF['isOpenQQLogin'] eq 1">
 		                 	<a id="qqAuthorizationUrl" href="https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id={$CONF['qqAppId']}&redirect_uri={$qqBackUrl}" class="qq">
-		                 		<img src="__ROOT__/Apps/Home/View/default/images/qq_logo.png" alt="QQ登录" border="0" height="30">
+		                 		<img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/qq_logo.png" alt="QQ登录" border="0" height="30">
 		                 	</a>
 		               	</if>
 		              	<if condition="$CONF['isOpenWxLogin'] eq 1">
 		              		<a id="qqAuthorizationUrl" href="https://open.weixin.qq.com/connect/qrconnect?appid={$CONF['wxAppId']}&redirect_uri={$wxBackUrl}&response_type=code&scope=snsapi_login&state=<?php echo time();?>#wechat_redirect" class="qq">
-		                   		<img src="__ROOT__/Apps/Home/View/default/images/wx_logo.png" alt="微信登录" border="0" height="30">
+		                   		<img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/wx_logo.png" alt="微信登录" border="0" height="30">
 		          			</a>
 		              	</if>
 		                <div class="clr"></div>

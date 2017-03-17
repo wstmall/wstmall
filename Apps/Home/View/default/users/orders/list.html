@@ -1,12 +1,12 @@
 <extend name="./Apps/Home/View/default/users/layout.html" />
 <block name="content">
-<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/userorder.css" />
+<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/userorder.css" />
 
     <div class="wst-body"> 
        
 	   <div class="wst-order-userinfo-box" style="">
 	   		<div class="wst-userimg-box">
-	   			<img class='lazyImg' data-original="<empty name="WST_USER['userPhoto']">__ROOT__/Apps/Home/View/default/images/logo.png<else/>{:WSTImgPath($WST_USER['userPhoto'])}</empty>" height="100" width="100" />
+	   			<img class='lazyImg' data-original="<empty name="WST_USER['userPhoto']">__ROOT__/Apps/Home/View/{$WST_STYLE}/images/logo.png<else/>{:WSTImgPath($WST_USER['userPhoto'])}</empty>" height="100" width="100" />
 	   		</div>
 	   		<div class="wst-userlogin-box">
 	   			<div><span style="font-size:16px;">欢迎您：</span><span style="font-weight:bolder;color:#fff100;">{$WST_USER["loginName"]}</span><if condition='$WST_USER["userRank"]["rankName"] neq ""'>({$WST_USER["userRank"]['rankName']})</if></div>
@@ -34,76 +34,134 @@
        		</div>
        </div>
        <div class="wst-mywl">
-       		<img src="__ROOT__/Apps/Home/View/default/images/icon_top_03.png"  /><span style="color:#ffffff;">&nbsp;&nbsp;&nbsp;&nbsp;我的物流</span>
+       		<img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/icon_top_03.png"  /><span style="color:#ffffff;">&nbsp;&nbsp;&nbsp;&nbsp;我的订单</span>
        </div>
-       <div style="margin-top:10px;text-align:center;padding:5px;">
-       		<table class="wst-order-tab" cellspacing ="0" cellpadding="0">
-       			<tbody>
-       				<volist name="orderList['root']" id="order" key='key1'>
-       				<tr >
-       					<td width="150">
-       						<volist name="order['goodslist']" id="goods" key='key2'>
-								<a href="{:U('Home/Goods/getGoodsDetails',array('goodsId'=>$goods['goodsId']))}">
-									<img class='lazyImg' data-original="__ROOT__/{$goods['goodsThums']}" height="50" width="50"/>
-								</a>
-							</volist>
-       					</td>
-       					<td style="text-align:left;">
-       						{$order["userName"]} | {$order["userAddress"]}{$order["userTel"]} | {$order["userPhone"]}<br/>
-       						{$order["createTime"]}&nbsp;&nbsp;&nbsp;&nbsp;<!--a href="">查看物流明细</a-->
-       					</td>
-       					<td width="80">
-	       					<if condition='$order["payType"] eq 0'>
-	       						货到付款
-	       					<else/>
-	       						在线支付
-			               	</if>
-       					</td>
-       					<td width="60">
-	       					<if condition='($order["orderStatus"] eq -3) OR ($order["orderStatus"] eq -4)'>拒收
-	       					<elseif condition='$order["orderStatus"] eq -5'/>店铺不同意拒收
+       <div style="margin-top:10px;padding:5px;">
+       		<table class="wst-order-list">
+	       <thead>
+		      <tr class="head">
+		         <th>订单详情</th>
+		         <th>支付方式/配送</th>
+		         <th>金额</th>
+		         <th>操作</th>
+		      </tr>
+		   </thead>
+		   <volist name="orderList['root']" id="order" key='key1'>
+		 	<tbody class="j-order-row">          
+			 	<tr class="empty-row">             
+				 	<td colspan="4">&nbsp;</td>          
+				 </tr>          
+				 <tr class="order-head">             
+				 	<td colspan="4" align="right">               
+				 	<div class="time">{$order["createTime"]}</div>               
+				 	<div class="orderno">订单号：{$order["orderNo"]}
+				 		<if condition='$order["orderFrom"] eq 2'>
+				 		<img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/tuan.png" height="30" />
+				 		<elseif condition='$order["orderFrom"] eq 3'/>
+				 		<img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/qian.png" height="30" />
+				 		</if>
+				 	</div>               
+				 	<div class="shop"><a href="{:U('Home/Shops/toShopHome/',array('shopId'=>$order['shopId']))}" target="_blank">{$order["shopName"]}</a></div>               
+				 	<div class="link">
+				 		<if condition="$order['qqNo'] neq ''">
+							<a href="tencent://message/?uin={$order['qqNo']}&Site=QQ交谈&Menu=yes">
+								<img border="0" src="http://wpa.qq.com/pa?p=1:{$order['qqNo']}:7" alt="QQ交谈" width="71" height="24" />
+							</a>
+						</if>
+				 	</div>               
+				 	<div>
+				 		<?php if($order['isAppraises']==1){ ?>
+								已评价
+						<?php }else{ ?>
+							<if condition='($order["orderStatus"] lt 0) and ($order["orderStatus"] neq -2)'>
+								<?php if($order["payType"] >= 1 && $order["isPay"]==1){ ?>
+									<?php if($order["orderStatus"]==-4){ ?>
+									已退款
+									<?php }else{ ?>
+									退款中
+									<?php } ?>
+								<?php }else{ ?>
+									已取消
+								<?php } ?>
+	       					<elseif condition='$order["orderStatus"] eq -5'/>商家不同意退款
 			               	<elseif condition='$order["orderStatus"] eq -2'/>未付款
-			               	<elseif condition='($order["orderStatus"] eq -6) OR ($order["orderStatus"] eq -7) OR ($order["orderStatus"] eq -1)'/>已取消
+			               	<elseif condition='$order["orderStatus"] eq -11'/>已关闭
 			               	<elseif condition='$order["orderStatus"] eq 0'/>未受理
 			               	<elseif condition='$order["orderStatus"] eq 1'/>已受理
 			               	<elseif condition='$order["orderStatus"] eq 2'/>打包中
 			               	<elseif condition='$order["orderStatus"] eq 3'/>配送中
 			               	<elseif condition='$order["orderStatus"] eq 4'/>已到货
 			               	</if>
-       					</td>
-       					<td width="120">
-       						<if condition='$order["orderStatus"] gt 3'>
-								<if condition="$order['isAppraises'] eq 1">
-								已评价
-								<else/>
-								<a  href="javascript:;" onclick="appraiseOrder({$order['orderId']})">评价</a>
-								</if>
+			            <?php } ?>
+					</div>             
+				 	</td>          
+				 </tr>
+				 <volist name="order['goodslist']" id="goods" key='key2'>                
+				 <tr class="goods-box">             
+				 	<td>                
+				 		<div class="goods-img">
+				 			<?php if($order['orderFrom']==2){ ?>
+                         		<a href="{:U('Home/Groups/getGoodsDetails/',array('id'=>$order['orderFromId']))}" target="_blank">
+                         	<?php }else if($order['orderFrom']==3){ ?>
+                         		<a href="{:U('Home/Panics/getGoodsDetails/',array('id'=>$order['orderFromId']))}" target="_blank">
+                       		<?php }else{ ?>
+                           		<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}">
+                         	<?php } ?>
+								<img data-original="__ROOT__/{$goods['goodsThums']}" class='lazyImg' title="{$goods['goodsName']}"/>
+							</a>
+				 		</div>
+				 		<div class="goods-name">
+					 		<div>{$goods['goodsName']}</div>
+					 		<div>{$goods['goodsAttrName']}</div>
+				 		</div>                
+				 		<div class="goods-extra">{$goods['goodsPrice']} x {$goods['goodsNums']}</div>             
+				 	</td>
+				 	<if condition="$key2==1">
+				 	<td rowspan="<?php echo count($order['goodslist']) ?>">                 
+					 	<div>{$order["payType"]==0?"货到付款":($order["payType"]==2?"钱包支付":"在线支付")}</div>                 
+					 	<div>{$order["isSelf"]==1?"自提":"送货上门"}</div>
+				 	</td>             
+				 	<td rowspan="<?php echo count($order['goodslist']) ?>">                 
+					 	<div>商品金额：¥{$order["totalMoney"]}</div>                 
+					 	<div class="line">运费：¥{$order["deliverMoney"]}</div>                 
+					 	<div>实付金额：¥{$order["realTotalMoney"]}</div>             
+				 	</td>        
+				 	<td rowspan="<?php echo count($order['goodslist']) ?>">                 
+					 	<div><a href="javascript:;" onclick="showOrder({$order['orderId']})">【订单详情】</a></div>
+						<if condition='$order["orderStatus"] gt 3'>
+							<if condition="$order['isAppraises'] eq 0">
+								<div><a  href="javascript:;" onclick="appraiseOrder({$order['orderId']})">【评价】</a></div>
 							</if>
-       						<if condition='$order["payType"] eq 1'>
-       							<if condition='$order["orderStatus"] eq -2'>
-       								<a href="javascript:;" onclick="toPay({$order['orderId']})">[ 支付 ]</a><br/>
-       							</if>
+						</if>
+       					<if condition='$order["payType"] eq 1'>
+       						<if condition='$order["orderStatus"] eq -2'>
+       							<div><a href="javascript:;" onclick="toPay({$order['orderId']})">【去支付】</a></div>
        						</if>
-							<a href="javascript:;" onclick="showOrder({$order['orderId']})">[ 查看 ]</a>
-							<if condition='($order["orderStatus"] eq 0) or ($order["orderStatus"] eq -2) or ($order["orderStatus"] eq 1) or ($order["orderStatus"] eq 2)'> 
-							<a href="javascript:;" onclick="orderCancel({$order['orderId']},{$order['orderStatus']})">[ 取消订单 ]</a>
-       						</if>
-       						
-       					</td>
-       				</tr>
-       				</volist>
-       				<if condition="$orderList['totalPage'] gt 1">
-       				<tr >
-						<td colspan="5" style="height:30px;border-bottom: 0px;">
-							<div class="wst-page" style="float:right;padding-bottom:10px;">
-								<div id="wst-page-items">	
-								</div>
-							</div>
-						</td>
-       				</tr>
-       				</if>
-       			</tbody>
-       		</table>
+       					</if>
+						<?php if(($order["orderStatus"] == 0) || ($order["orderStatus"] == -2) || ($order["orderStatus"] == 1) || ($order["orderStatus"] == 2) || ($order["orderStatus"] == 3)){ ?> 
+							<?php if($order["payType"] >= 1 && $order["isPay"]==1){ ?> 
+							<div><a href="javascript:;" onclick="refund({$order['orderId']})">【退款】</a></div>
+							<?php }else{ ?>
+							<div><a href="javascript:;" onclick="orderCancel({$order['orderId']},{$order['orderStatus']})">【取消订单】</a></div>
+							<?php } ?>
+       					<?php } ?>
+						<div><a href='{:U("Home/OrderComplains/complain",array("orderId"=>$order["orderId"]))}'>【投诉】</a></div>   
+				 	</td>
+				 	</if>                    
+			 	</tr>
+			 	</volist>                
+		 	</tbody>                
+		 	</volist>
+	       <tbody><tr class="empty-row">
+	            <td colspan="4" id="pager" align="center" style="padding:5px 0px 5px 0px">
+	            	<div class="wst-page" style="float:right;padding-bottom:10px;">
+						<div id="wst-page-items"></div>
+					</div>
+	            </td>
+	       </tr>
+	    </tbody>
+    </table>
+       
        </div>
     </div>
 	<script>

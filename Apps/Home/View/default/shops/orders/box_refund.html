@@ -1,0 +1,27 @@
+<table class='wst-form' style='margin-top:10px;width:90%'>
+   <tr>
+     <th width='120'>订单号：</th>
+     <td>{$object['orderNo']}</td>
+   </tr>
+   <tr>
+     <th width='120'>实付金额：</th>
+     <td>¥{$object['realTotalMoney']}<if condition="$object['useScore'] gt 0">&nbsp;+&nbsp;{$object['useScore']}积分</if></td>
+   </tr>
+   <tr>
+     <th width='120'>退款金额：</th>
+     <td ><span style='color:red'>¥{$object['backMoney']}</span><if condition="$object['useScore'] gt 0">&nbsp;+&nbsp;{$object['useScore']}积分</if></td>
+   </tr>
+   <tr>
+     <th width='120'>商家意见：</th>
+     <td>
+       <label><input type='radio' onclick='WST.showHide(0,"#tr")' name='refundStatus' id='refundStatus1' value='1' checked/>同意</label>
+       <label style='margin-left:15px;'><input type='radio' onclick='WST.showHide(1,"#tr")' name='refundStatus' id='refundStatus0' value='-1'/>不同意</label>
+     </td>
+   </tr>
+   <tr id='tr' style='display:none'>
+     <th width='120'>原因<font color='red'>*</font>：</th>
+     <td>
+       <textarea id='shopRejectReason' style='width:90%;height:50px;'></textarea>
+     </td>
+   </tr>
+</table>

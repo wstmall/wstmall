@@ -24,8 +24,14 @@
         <table class="table table-hover table-striped table-bordered wst-form">
            <tr>
              <th width='120' align='right'>提现账号：</th>
-             <td><if condition="$object['accType'] eq 1">【支付宝】<else/>【银行卡】【{$object['accTarget']}】</if>{$object['accNo']}</td>
+             <td><if condition="$object['accType'] eq 1">【支付宝】<else/>【银行卡】</if>{$object['accNo']}</td>
            </tr>
+           <if condition="$object['accType'] eq 3">
+           <tr>
+             <th align='right'>开户地址：</th>
+             <td>{$object['areaName']}</td>
+           </tr>
+          	</if>
            <tr>
              <th align='right'>提现人：</th>
              <td>{$object['accUser']}</td>

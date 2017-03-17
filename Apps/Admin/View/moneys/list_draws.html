@@ -52,7 +52,7 @@
                <th width='10'>&nbsp;</th>
 			   <th width='100'>提现人</th>
 			   <th width='60'>提现金额</th>
-			   <th width='170'>提现账号</th>
+			   <th width='260'>提现账号</th>
 			   <th width='120'>持有人</th>
 			   <th width='*'>备注</th>
 			   <th width='140'>时间</th>
@@ -66,7 +66,7 @@
                <td>{$i}</td>
                <td nowrap>{$vo['targetName']}</td>
                <td>{$vo['money']}</td>
-               <td>【<if condition="$vo['accType'] eq 1">支付宝<else/>银行卡</if>】<if condition="$vo['accType'] eq 3">{$vo['accTarget']}</if><if condition="$vo['accType'] eq 3"><br/>&nbsp;&nbsp;</if>{$vo['accNo']}</td>
+               <td>【<if condition="$vo['accType'] eq 1">支付宝<else/>银行卡</if>】<if condition="$vo['accType'] eq 3">{$vo['accTarget']}</if><if condition="$vo['accType'] eq 3"></if>{$vo['accNo']}</td>
                <td>{$vo['accUser']}</td>
                <td>{$vo['cashRemarks']}</td>
                <td>{$vo['createTime']}</td>

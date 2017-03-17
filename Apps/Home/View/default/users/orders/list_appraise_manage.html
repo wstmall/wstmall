@@ -21,7 +21,13 @@
                 <td width='*'>
                     <div style='width:300px;'>
                     <div style='width:70px;float:left'>
-					<a target='_blank' href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$appraise['goodsId']))}">
+                    <?php if($appraise['orderFrom']==2){ ?>
+                    	<a href="{:U('Home/Groups/getGoodsDetails/',array('id'=>$appraise['orderFromId']))}" target="_blank">
+                     <?php }else if($appraise['orderFrom']==3){ ?>
+                    	<a href="{:U('Home/Panics/getGoodsDetails/',array('id'=>$appraise['orderFromId']))}" target="_blank">
+                    <?php }else{ ?>
+                    	<a target='_blank' href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$appraise['goodsId']))}">
+                    <?php } ?>
 						<img class='lazyImg' data-original="__ROOT__/{$appraise['goodsThums']}" height="60" width="60"/>
 					</a>
 					</div>
@@ -32,17 +38,17 @@
 				</td>
                	<td >
                	<for start="0" end="$appraise['goodsScore']">
-					<img src="__ROOT__/Apps/Home/View/default/images/icon_score_yes.png"/>
+					<img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/icon_score_yes.png"/>
 				</for>&nbsp;{$appraise["goodsScore"]} 分
 				</td>
 				<td >
 				<for start="0" end="$appraise['timeScore']">
-					<img src="__ROOT__/Apps/Home/View/default/images/icon_score_yes.png"/>
+					<img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/icon_score_yes.png"/>
 				</for>&nbsp;{$appraise["timeScore"]} 分
 				</td>
 				<td>
 				<for start="0" end="$appraise['serviceScore']">
-					<img src="__ROOT__/Apps/Home/View/default/images/icon_score_yes.png"/>
+					<img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/icon_score_yes.png"/>
 				</for>&nbsp;{$appraise["serviceScore"]} 分
                	</td>
              </tr>
@@ -51,7 +57,9 @@
                 <td colspan='5'>评价：{$appraise["content"]}
             	<div id="layer-photos-appraise{$c}"  style="margin-bottom:10px"> 
            		  <?php foreach($appraise['appraisesAnnex'] as $q=>$v):?>
+           		  <?php if($v!=""){ ?>
 				  <img  layer-src="__ROOT__/<?php echo $v?>" width="50" src="__ROOT__/<?php echo str_replace('.','_thumb.',$v)?>" alt="{$appraise['content']}">
+				  <?php } ?>
 				  <?php endforeach;?>
 				</div>
 

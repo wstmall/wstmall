@@ -83,7 +83,7 @@ class CronJobsModel extends BaseModel {
 		        		$data["dataId"] = $v['orderId'];
 		        		$data["moneyRemark"] = "订单【".$v["orderNo"]."】支付 ".$v["useScore"]." 个积分，支出 ￥".$v["scoreMoney"];
 		        		$data["moneyType"] = 2;
-		        		$data["money"] = $rsv["scoreMoney"];
+		        		$data["money"] = $v["scoreMoney"];
 		        		$data["createTime"] = date('Y-m-d H:i:s');
 		        		$data["dataFlag"] = 1;
 		        		$msm->add($data);

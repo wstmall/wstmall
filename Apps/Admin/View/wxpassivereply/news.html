@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>{$CONF['mallTitle']}后台管理中心</title>
+      <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
+      <!--[if lt IE 9]>
+      <script src="__PUBLIC__/js/html5shiv.min.js"></script>
+      <script src="__PUBLIC__/js/respond.min.js"></script>
+      <![endif]-->
+      <script src="__PUBLIC__/js/jquery.min.js"></script>
+      <script src="__PUBLIC__/plugins/bootstrap/js/bootstrap.min.js"></script>
+      <script src="__PUBLIC__/js/common.js"></script>
+      <script src="__PUBLIC__/plugins/plugins/plugins.js"></script>
+   </head>
+   <script>
+   function del(id){
+	   Plugins.confirm({title:'信息提示',content:'您确定要删除该回复吗?',okText:'确定',cancelText:'取消',okFun:function(){
+		   Plugins.closeWindow();
+		   Plugins.waitTips({title:'信息提示',content:'正在操作，请稍后...'});
+		   $.post("{:U('Admin/WxPassiveReply/del')}",{id:id},function(data,textStatus){
+					var json = WST.toJson(data);
+					if(json.status=='1'){
+						Plugins.setWaitTipsMsg({content:'操作成功',timeout:1000,callback:function(){
+						   location.reload();
+						}});
+					}else{
+						Plugins.closeWindow();
+						Plugins.Tips({title:'信息提示',icon:'error',content:'操作失败!',timeout:1000});
+					}
+				});
+		        return false;
+		}});
+   }
+   </script>
+   <body class="wst-page">
+       <div class='wst-tbar' style='text-align:right;height:25px;'>
+       <php>if(in_array('yhgl_01',$WST_STAFF['grant'])){</php>
+       <a class="btn btn-success glyphicon glyphicon-plus" href="{:U('Admin/WxPassiveReply/toNewsEdit')}" style='float:right;'>新增</a>
+       <php>}</php>
+       </div>
+
+       <div class='wst-body'> 
+         <div class="tab-content wst-tab-content">
+            <div class="tab-pane active in fade wst-tab-pane">
+              
+              <volist name="Page['root']" id="vo">
+               <div class="style-box">
+                  <div class="style-img">
+                     <img src="{$vo.picUrl}" width="200">
+                  </div>
+                     <div class="style-author">关键字：{$vo.keyword}</div>
+                    <div class="style-txt">标题：{$vo.title}</div>
+                     <div class="style-author">描述：{$vo.description}</div>
+                     <div class="style-op">
+                      <input class="btn btn-Home-disabled "  value="修改" onclick="location.href='{:U('Admin/WxPassiveReply/toNewsEdit',array('id'=>$vo['id']))}'"  type="button">
+                      <input class="btn btn-Home-disabled "  value="删除" onclick="del({$vo['id']})"  type="button">
+                     </div>
+                </div>   
+              </volist>
+
+                <div style="clear:both"></div>
+            </div>      
+          </div>
+        </div>
+          
+
+
+        <div style="width:100%;height:30px;margin-left:40%;margin-top:30px;">{$Page['pager']}</div>
+   </body>
+</html>

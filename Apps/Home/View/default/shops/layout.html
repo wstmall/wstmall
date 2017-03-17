@@ -12,8 +12,8 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
       	<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta http-equiv="Cache" content="no-cache">
-  		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
-    	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/shop.css">
+  		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/common.css" />
+    	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/shop.css">
     	<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/webuploader/webuploader.css" />
 		{:WSTLoginTarget(1)}
     </head>
@@ -51,22 +51,28 @@
             <div class='wst-menu'>
             	<span class='wst-menu-title'><span></span>交易管理</span>
             	<ul>
-              	<li onclick="goBack(this)" data='{:U("Home/Orders/toShopOrdersList")}' <if condition='$umark eq "toShopOrdersList"'> class='liselect'</if>>订单管理<span id="wst_orders_cnt" style="display:none;" class="wst-msg-tips-box"></span></li>
-            	<li onclick="goBack(this)" data="{:U('Home/OrderComplains/queryShopComplainByPage')}" <if condition='$umark eq "queryShopComplainByPage"'> class='liselect'</if>>投诉订单</li>
-            	<li onclick="goBack(this)" data="{:U('Home/OrderSettlements/toSettlementIndex')}" <if condition='$umark eq "toSettlementIndex"'> class='liselect'</if>>订单结算</li>
+	              	<li onclick="goBack(this)" data='{:U("Home/Orders/toShopOrdersList")}' <if condition='$umark eq "toShopOrdersList"'> class='liselect'</if>>订单管理<span id="wst_orders_cnt" style="display:none;" class="wst-msg-tips-box"></span></li>
+	            	<li onclick="goBack(this)" data="{:U('Home/OrderComplains/queryShopComplainByPage')}" <if condition='$umark eq "queryShopComplainByPage"'> class='liselect'</if>>投诉订单</li>
+	            	<li onclick="goBack(this)" data="{:U('Home/OrderSettlements/toSettlementIndex')}" <if condition='$umark eq "toSettlementIndex"'> class='liselect'</if>>订单结算</li>
             	</ul>
             	<span class='wst-menu-title'><span></span>商品管理</span>
             	<ul>
-               	<li onclick="goBack(this)" data="{:U('Home/ShopsCats/index')}" <if condition='$umark eq "index"'> class='liselect'</if>>商品分类</li>
-              	<li onclick="goBack(this)" data="{:U('Home/Goods/queryOnSaleByPage')}" <if condition='$umark eq "queryOnSaleByPage"'> class='liselect'</if>>出售中的商品</li>
-               	<li onclick="goBack(this)" data="{:U('Home/Goods/queryPenddingByPage')}" <if condition='$umark eq "queryPenddingByPage"'> class='liselect'</if>>待审核商品</li>
-               	<li onclick="goBack(this)" data="{:U('Home/Goods/queryUnSaleByPage')}" <if condition='$umark eq "queryUnSaleByPage"'> class='liselect'</if>>仓库中的商品</li>
-               	<li onclick="goBack(this)" data="{:U('Home/Goods/toEdit/',array('umark'=>'toEditGoods'))}" <if condition='$umark eq "toEditGoods"'> class='liselect'</if>>新增商品</li>
-               	<li onclick="goBack(this)" data="{:U('Home/GoodsAppraises/index')}" <if condition='$umark eq "GoodsAppraises"'> class='liselect'</if>>评价管理</li>
-
-               	<li onclick="goBack(this)" data="{:U('Home/AttributeCats/index')}" <if condition='$umark eq "AttributeCats"'> class='liselect'</if>>商品类型</li>
-               	<li onclick="goBack(this)" data="{:U('Home/Imports/index')}" <if condition='$umark eq "Imports"'> class='liselect'</if>>数据导入</li>
+	               	<li onclick="goBack(this)" data="{:U('Home/ShopsCats/index')}" <if condition='$umark eq "index"'> class='liselect'</if>>商品分类</li>
+	              	<li onclick="goBack(this)" data="{:U('Home/Goods/queryOnSaleByPage')}" <if condition='$umark eq "queryOnSaleByPage"'> class='liselect'</if>>出售中的商品</li>
+	               	<li onclick="goBack(this)" data="{:U('Home/Goods/queryPenddingByPage')}" <if condition='$umark eq "queryPenddingByPage"'> class='liselect'</if>>待审核商品</li>
+	               	<li onclick="goBack(this)" data="{:U('Home/Goods/queryUnSaleByPage')}" <if condition='$umark eq "queryUnSaleByPage"'> class='liselect'</if>>仓库中的商品</li>
+	               	<li onclick="goBack(this)" data="{:U('Home/Goods/toEdit/',array('umark'=>'toEditGoods'))}" <if condition='$umark eq "toEditGoods"'> class='liselect'</if>>新增商品</li>
+	               	<li onclick="goBack(this)" data="{:U('Home/GoodsAppraises/index')}" <if condition='$umark eq "GoodsAppraises"'> class='liselect'</if>>评价管理</li>
+	               	<li onclick="goBack(this)" data="{:U('Home/AttributeCats/index')}" <if condition='$umark eq "AttributeCats"'> class='liselect'</if>>商品类型</li>
+	               	<li onclick="goBack(this)" data="{:U('Home/Imports/index')}" <if condition='$umark eq "Imports"'> class='liselect'</if>>数据导入</li>
 				</ul>
+				<span class='wst-menu-title'><span></span>统计报表</span>
+				<ul>
+	               	<li onclick="goBack(this)" data="{:U('Home/Reports/topSaleGoods')}" <if condition='$umark eq "topSaleGoods"'> class='liselect'</if>>商品销售排行</li>
+	              	<li onclick="goBack(this)" data="{:U('Home/Reports/statSales')}" <if condition='$umark eq "statSales"'> class='liselect'</if>>销售额统计</li>
+	              	<li onclick="goBack(this)" data="{:U('Home/Reports/statOrders')}" <if condition='$umark eq "statOrders"'> class='liselect'</if>>销售订单统计</li>
+				</ul>
+				
 				<if condition="$GLOBALS['CONFIG']['isDistribut'] eq 1">
 				<span class='wst-menu-title'><span></span>分销管理</span>
 				<ul>
@@ -76,13 +82,19 @@
 	                <li onclick="goBack(this)" data="{:U('Home/Distributs/toSetDistributs')}" <if condition='$umark eq "setDistributs"'> class='liselect'</if>>分销设置</li>
                	</ul>
                	</if>
+               	<span class='wst-menu-title'><span></span>优惠活动</span>
+               	<ul>
+	               	<li onclick="goBack(this)"  data="{:U('Home/Coupons/queryCouponByPage')}" <if condition='$umark eq "queryCouponByPage"'> class='liselect'</if>>优惠券满减</li>
+	               	<li onclick="goBack(this)"  data="{:U('Home/Groups/queryGroupByPage')}" <if condition='$umark eq "queryGroupByPage"'> class='liselect'</if>>商品团购</li>
+	               	<li onclick="goBack(this)"  data="{:U('Home/Panics/queryPanicByPage')}" <if condition='$umark eq "queryPanicByPage"'> class='liselect'</if>>商品抢购</li>
+               	</ul>
               	<span class='wst-menu-title'><span></span>网店设置</span>
               	<ul>
-            	<li onclick="goBack(this)" data="{:U('Home/Shops/toEdit/')}" <if condition='$umark eq "toEdit"'> class='liselect'</if>>店铺资料</li>
-            	<li onclick="goBack(this)"data="{:U('Home/LogMoneys/toShopMoneys/')}" <if condition='$umark eq "toShopMoneys"'> class='liselect'</if>><p>资金管理</p></li>
-              	<li onclick="goBack(this)" data="{:U('Home/Shops/toShopCfg/')}" <if condition='$umark eq "setShop"'> class='liselect'</if>>店铺设置</li>
-              	<li onclick="goBack(this)" data="{:U('Home/Messages/queryByPage/')}" id='li_queryMessageByPage' <if condition='$umark eq "queryMessageByPage"'> class='liselect'</if>>商城消息<span style="display:none;" class="wst-msg-tips-box"></span></li>
-              	<li onclick="goBack(this)" data="{:U('Home/Shops/toEditPass')}" <if condition='$umark eq "toEditPass"'> class='liselect'</if>>修改密码</li>
+	            	<li onclick="goBack(this)" data="{:U('Home/Shops/toEdit/')}" <if condition='$umark eq "toEdit"'> class='liselect'</if>>店铺资料</li>
+	            	<li onclick="goBack(this)"data="{:U('Home/LogMoneys/toShopMoneys/')}" <if condition='$umark eq "toShopMoneys"'> class='liselect'</if>><p>资金管理</p></li>
+	              	<li onclick="goBack(this)" data="{:U('Home/Shops/toShopCfg/')}" <if condition='$umark eq "setShop"'> class='liselect'</if>>店铺设置</li>
+	              	<li onclick="goBack(this)" data="{:U('Home/Messages/queryByPage/')}" id='li_queryMessageByPage' <if condition='$umark eq "queryMessageByPage"'> class='liselect'</if>>商城消息<span style="display:none;" class="wst-msg-tips-box"></span></li>
+	              	<li onclick="goBack(this)" data="{:U('Home/Shops/toEditPass')}" <if condition='$umark eq "toEditPass"'> class='liselect'</if>>修改密码</li>
            		</ul>
             </div>
             <div class='wst-content'>
@@ -112,13 +124,14 @@
     </body>
       	<script src="__PUBLIC__/plugins/formValidator/formValidator-4.1.3.js"></script>
      	<script src="__PUBLIC__/js/common.js"></script>
-      	<script src="__ROOT__/Apps/Home/View/default/js/shopcom.js"></script>
-      	<script src="__ROOT__/Apps/Home/View/default/js/head.js"></script>
-      	<script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
+      	<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/shopcom.js"></script>
+      	<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/head.js"></script>
+      	<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/common.js"></script>
       	<script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
-      	<script src="__ROOT__/Apps/Home/View/default/js/audio.js"></script>
+      	<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/audio.js"></script>
       	<script type="text/javascript" src="__PUBLIC__/plugins/webuploader/webuploader.js"></script>
-      	<script type="text/javascript" src="__ROOT__/Apps/Home/View/default/js/goodsbatchupload.js"></script>
+      	<script type="text/javascript" src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/goodsbatchupload.js"></script>
+      	<block name="js"></block>
       	<script>
       	$(function() {
       		loadAudio();

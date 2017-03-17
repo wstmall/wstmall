@@ -233,12 +233,18 @@ class GoodsAppraisesModel extends BaseModel {
 		$pcurr = (int)I("pcurr",0);
 		$data = array();
 		
-		$sql = "SELECT ga.*,o.orderNo,g.goodsName,g.goodsThums
+		$sql = "SELECT ga.*,o.orderNo,g.goodsName,g.goodsThums,orderFrom,orderFromId
 				FROM __PREFIX__goods_appraises ga, __PREFIX__goods g, __PREFIX__orders o 
 				WHERE ga.userId=$userId AND ga.goodsId = g.goodsId AND ga.orderId = o.orderId
 				ORDER BY ga.createTime DESC";
 		$pages = $this->pageQuery($sql,$pcurr);	
 		return $pages;
+	}
+	
+	public function getGoodsAppraisesCnt($goodsId){
+		$sql = "SELECT count(*) cnt FROM __PREFIX__goods_appraises ga WHERE ga.goodsId = $goodsId AND ga.isShow =1";
+		$row = $this->queryRow($sql);
+		return $row["cnt"];
 	}
 };
 ?>

@@ -27,7 +27,7 @@ class IndexAction extends BaseAction {
    		if(I("changeCity")){
    			echo $_SERVER['HTTP_REFERER'];
    		}else{
-   			$this->display("default/index");
+   			$this->display("index");
    		}
     }
     /**
@@ -50,13 +50,13 @@ class IndexAction extends BaseAction {
     	$this->assign('cityList',$cityList);
     	$this->assign('area',$area);
     	$this->assign('areaId2',$areaId2);
-    	$this->display("default/change_city");
+    	$this->display("change_city");
     }
     /**
      * 跳到用户注册协议
      */
     public function toUserProtocol(){
-    	$this->display("default/user_protocol");
+    	$this->display("user_protocol");
     }
     
     /**
@@ -72,4 +72,5 @@ class IndexAction extends BaseAction {
     	$cityList = $m->getAreasByExp();
     	echo "done";
     }
+    
 }

@@ -8,11 +8,11 @@
       	<title>填写核对订单信息 - {$CONF['mallTitle']}</title>
       	<meta name="keywords" content="{$CONF['mallKeywords']},填写核对订单信息" />
       	<meta name="description" content="{$CONF['mallDesc']},填写核对订单信息" />
-      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
-     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/checkorderinfo.css" />
-     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
-		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />
-		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/magnifier.css" />
+      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/common.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/checkorderinfo.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/base.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/head.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/magnifier.css" />
       	<style>
       	.adsipt{height:28px;}
 		textarea{height:60px;}
@@ -27,7 +27,7 @@
                     <div class="success2" style="">
                         <div class="wst-chkod-blank"></div>
                         <div class="wst-chkod-step">
-                            <img src="__ROOT__/Apps/Home/View/default/images/step2.png"/><br />
+                            <img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/step2.png"/><br />
                             <span class="wst-chkod-step1">1.我的购物车</span>
                             <span class="wst-chkod-step2">2.填写核对订单信息</span>
                             <span class="wst-chkod-step3">3.成功提交订单</span>
@@ -42,10 +42,13 @@
                     <div class="wst-chkod-title">
                         	填写并核对订单信息
                     </div>
-                    <div>                        
+                    <div>
+                    	<input type="hidden" id="dataId" value="{$dataId}"/>
+						<input type="hidden" id="orderFrom" value="{$orderFrom}"/>
 						<div id="consignee1" <if condition="count($addressList) eq 0">style='display:none'</if>>
 							<div>
 								<span class="wst-chkod-s1-title">收货人信息 </span>
+								
 								<input type="hidden" id="paddressId" value="{$addressList[0]['addressId']}"/>
 								<span class="wst-chkod-s1-upd"><a href="javascript:toEditAddress();">[修改]</a></span>
 							</div>
@@ -180,21 +183,26 @@
                             <span class="wst-chkod-pay-tt">支付方式 </span>
                         </div>
                         <div id="newaddress">
-                        	<?php if($distCnt==0){ ?>
+                        	
                         	<if condition="count($payments['unlines']) gt 0">
-                            <div>
-                                <div style="width:200px;float:left;">
-                                	<label>
-                                    	<input id="pay_hd" name="payway" checked="checked" type="radio" value="0" />货到付款
-                                    </label>
-                                </div>
-                                <div style="width:800px;float:left;">
-                                	<span class="wst-chkod-sh-tips">送货上门后再收款，支持现金</span>
-                                </div>
-                                <div style="clear:both;"></div>
-                            </div>
+                        	<volist name="payments['unlines']" key="key" id="payment">
+                        	<?php if($payment["payCode"]=='cod'){ ?>
+	                        	<?php if($distCnt==0){ ?>
+		                            <div>
+		                                <div style="width:200px;float:left;">
+		                                	<label>
+		                                    	<input id="pay_hd" name="payway" checked="checked" type="radio" value="0" />货到付款
+		                                    </label>
+		                                </div>
+		                                <div style="width:800px;float:left;">
+		                                	<span class="wst-chkod-sh-tips">送货上门后再收款，支持现金</span>
+		                                </div>
+		                                <div style="clear:both;"></div>
+		                            </div>
+	                       		<?php } ?>
+                       		<?php } ?>
+                            </volist>
                             </if>
-                            <?php } ?>
                             <if condition="count($payments['onlines']) gt 0">
                             <div>
                                 <div style="width:200px;float:left;">
@@ -207,7 +215,7 @@
                                 	<div><span class="wst-chkod-sh-tips">可在提交订单后选择，支持：</span></div>
                                 	<volist name="payments['onlines']" key="key" id="payment">
                                 		<if condition="$payment['isOnline'] eq 1">
-                                		<div style="float:left;width:165px;"><img src="__ROOT__/{$payment['payIcon']}" width="120" height="45"/></div>
+                                		<div style="float:left;width:165px;"><img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/payment/{$payment['payCode']}.jpg" width="120" height="45"/>&nbsp;</div>
                                 		</if>
                                 	</volist>
                                 	<div style="clear:both;"></div>
@@ -360,11 +368,19 @@
                                     <div class="wst-chkod-dp-pb4">
                                         <div>
                                             <div class="wst-cart-goods-img">
-                                                <a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}" target="_blank">
-                                                    <img src="__ROOT__/{$goods['goodsThums']}" width="60" height="60" /></a>
+                                            	<?php if($orderFrom==2){ ?>
+                                                <a href="{:U('Home/Groups/getGoodsDetails/',array('id'=>$dataId))}" target="_blank">
+                                            	<?php }else{ ?>
+                                            	<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}" target="_blank">
+                                            	<?php } ?>
+                                            	<img src="__ROOT__/{$goods['goodsThums']}" width="60" height="60" /></a>
                                             </div>
                                             <div class="wst-cart-goods-name">
-                                                <a target="_blank" href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}" target="_blank">
+                                            	<?php if($orderFrom==2){ ?>
+                                                <a href="{:U('Home/Groups/getGoodsDetails/',array('id'=>$dataId))}" target="_blank">
+                                            	<?php }else{ ?>
+                                            	<a target="_blank" href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}" target="_blank">
+                                            	<?php } ?>
                                                 {$goods["goodsName"]}<if condition="$goods['attrVal'] neq ''">【{$goods['attrName']}:{$goods['attrVal']}】</if>
                                                 </a>
                                             </div>
@@ -388,20 +404,50 @@
                         </div>
                         <div class="wst-chkod-dp-pb5">
                             <div style="width: 310px; float: right;">
+                            	
                                 <div>
                                     <div class="wst-chkod-my1"><span style="color: red;">{$shopgoods["totalCnt"]}</span> 件商品，总商品金额：</div>
                                     <div class="wst-chkod-my2">¥{$shopgoods["totalMoney"]}&nbsp;&nbsp;</div>
                                     <div class="wst-clear"></div>
                                 </div>
+                                <?php if(count($shopgoods["coupons"])>0){ ?>
+                            	<div>
+                                    <div class="wst-chkod-my1">
+                                    	店铺优惠：
+                                    	<select class="coupons" id="coupons_{$shopgoods['shopgoods'][0]['shopId']}" onchange="changeCoupon()">
+                                    		<option data="0" value="0">不使用优惠券</option>
+                                    		<volist name="shopgoods['coupons']" key="key2" id="coupon">
+                                    			<option data="{$coupon['couponMoney']}" value="{$coupon['id']}" {$key2==1?"selected":""}>满{$coupon['spendMoney']}元减{$coupon['couponMoney']}元</option>
+                                    		</volist>
+                                    	</select>
+                                    </div>
+                                    <div class="wst-chkod-my2">-&nbsp;¥<span id="couponMoney_{$shopgoods['shopgoods'][0]['shopId']}">~</span>&nbsp;&nbsp;</div>
+                                    <div class="wst-clear"></div>
+                                </div>
+                                <?php }?>
                                 <div>
                                     <div class="wst-chkod-yy1">运费：</div>
                                     <div class="wst-chkod-yy2">
                                     	<input type="hidden" id="deliveryMoney_{$key}" value='<if condition='$shopgoods["totalMoney"] lt $shopgoods["deliveryFreeMoney"]'>¥{$shopgoods["deliveryMoney"]}<else/>免运费</if>'/>
-
                                     	<span id="deliveryMoney_span_{$key}">
                                     	<if condition='$shopgoods["totalMoney"] lt $shopgoods["deliveryFreeMoney"]'>¥{$shopgoods["deliveryMoney"]}<else/>免运费</if>
                                    	 	</span>
                                    	&nbsp;&nbsp;</div>
+                                    <div class="wst-clear"></div>
+                                </div>
+                                <div>
+                                    <div class="wst-chkod-my1">店铺合计(含运费):</div>
+                                    <div class="wst-chkod-my2">
+                                    	<div>
+                                    		<?php 
+												$deliveryMoney= ($shopgoods["totalMoney"] < $shopgoods["deliveryFreeMoney"])?$shopgoods["deliveryMoney"]:0;
+											 	$tshopMoney = WSTBCMoney($shopgoods["totalMoney"],$deliveryMoney); 
+											 ?>
+                                    		¥<span id="tshopMoney_{$shopgoods['shopgoods'][0]['shopId']}" data="{$tshopMoney}">
+                                    		{$tshopMoney}
+											 </span>&nbsp;&nbsp;
+										</div>
+                                    </div>
                                     <div class="wst-clear"></div>
                                 </div>
                             </div>
@@ -413,7 +459,7 @@
                     <div id="wst-scorebox">
                     	<div class="leftbox">
 				   		<if condition="$canUserScore eq 0">本次不符合积分使用规则，无可用积分<br/></if>
-						共{$userScore}个积分，本次可用 <span id="canUserScore" data="{$canUserScore}" style="color:red;">{$canUserScore}</span> 个积分，<span id="scoreRule" onmouseover="showScoreRule()" onmouseout="closeScoreRule()" style="cursor: pointer;"><img src="__ROOT__/Apps/Home/View/default/images/a5.jpg"/> 积分规则</span>
+						共{$userScore}个积分，本次可用 <span id="canUserScore" data="{$canUserScore}" style="color:red;">{$canUserScore}</span> 个积分，<span id="scoreRule" onmouseover="showScoreRule()" onmouseout="closeScoreRule()" style="cursor: pointer;"><img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/a5.jpg"/> 积分规则</span>
 						</div>
 						<div class="rightbox">
 							<if condition="$canUserScore gt 0">
@@ -441,7 +487,13 @@
                         <div class="sticky-wrap">
                             <div class="wst-inner">
                             <button onclick="javascript:backCart();" class="wst-prev-btn">返回上一步</button>
+                            <?php if(session('WST_group_id')>0){ ?>
+                            <button class="wst-next-btn" onclick="javascript:submitGroupOrder();" id="order-submit" class="checkout-submit" type="submit" >提交订单</button>
+                            <?php }elseif(session('WST_panic_id')>0){ ?>
+                            <button class="wst-next-btn" onclick="javascript:submitPanicOrder();" id="order-submit" class="checkout-submit" type="submit" >提交订单</button>
+                            <?php }else{ ?>
                           	<button class="wst-next-btn" onclick="javascript:submitOrder();" id="order-submit" class="checkout-submit" type="submit" >提交订单</button>
+                          	<?php } ?>
                             </div>
                         </div>
                     </div>
@@ -615,8 +667,8 @@ $(document).ready(function(){
 });
 </script>
 <script src="__PUBLIC__/js/common.js"></script>
-<script src="__ROOT__/Apps/Home/View/default/js/index.js"></script>
-<script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
+<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/index.js"></script>
+<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/common.js"></script>
 <script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
-<script src="__ROOT__/Apps/Home/View/default/js/orders.js"></script>
+<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/orders.js"></script>
 </html>

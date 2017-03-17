@@ -39,11 +39,12 @@ function tohide(obj,id){
 
 function queryGoods(obj,mark){
 	var params = [];
-	var communityId,brandId,prices,areaId3,c1Id,c2Id,c3Id,msort;
+	var communityId,brandId,prices,areaId3,c1Id,c2Id,c3Id,msort,isDistribut;
 	keyWords = $.trim($("#keyword").val());
 	c1Id = $("#c1Id").val();
 	c2Id = $("#c2Id").val();
 	c3Id = $("#c3Id").val();
+	isDistribut = $("#isDistribut").val();
 	msort = 1;
 	if(mark==1){
 		areaId3 = $(obj).attr("data")?$(obj).attr("data"):'';
@@ -83,6 +84,7 @@ function queryGoods(obj,mark){
 	if(c2Id && c2Id!='0')params.push("c2Id="+$("#c2Id").val());
 	if(c3Id && c3Id!='0')params.push("c3Id="+$("#c3Id").val());
 	if(areaId3 && areaId3!='0')params.push("areaId3="+areaId3);
+	if(isDistribut && isDistribut!='0')params.push("isDistribut="+isDistribut);
 	if(communityId && communityId!='0')params.push("communityId="+communityId);
 	if(brandId && brandId!='0')params.push("brandId="+brandId);
 	if(prices)params.push("prices="+prices);
@@ -192,17 +194,17 @@ function getGoodsappraises(goodsId,p){
 				    html.push('<td width="180">');
 				    html.push('<div>商品评分：');
 					for(var i=0;i<appraises.goodsScore;i++){
-						html.push('<img src="'+WST.DOMAIN +'/Apps/Home/View/default/images/icon_score_yes.png"/>');
+						html.push('<img src="'+WST.DOMAIN +'/Apps/Home/View/'+WST.WST_STYLE+'/images/icon_score_yes.png"/>');
 					}
 					html.push('</div>');
 					html.push('<div>时效评分：');
 					for(var i=0;i<appraises.timeScore;i++){
-						html.push('<img src="'+WST.DOMAIN +'/Apps/Home/View/default/images/icon_score_yes.png"/>');
+						html.push('<img src="'+WST.DOMAIN +'/Apps/Home/View/'+WST.WST_STYLE+'/images/icon_score_yes.png"/>');
 					}
 					html.push('</div>');
 					html.push('<div>服务评分：');
 					for(var i=0;i<appraises.serviceScore;i++){
-						html.push('<img src="'+WST.DOMAIN +'/Apps/Home/View/default/images/icon_score_yes.png"/>');
+						html.push('<img src="'+WST.DOMAIN +'/Apps/Home/View/'+WST.WST_STYLE+'/images/icon_score_yes.png"/>');
 					}
 					html.push('</div>');
 					html.push('</td>');
@@ -238,7 +240,7 @@ function getGoodsappraises(goodsId,p){
 				});
 			}
 		}else{
-			$("#appraiseTab").html("<tr><td><div style='font-size:15px;text-align:center;'>没有评价信息</div></td></tr>");
+			$("#appraiseTab").html("<tr><td><div style='font-size:15px;text-align:center;line-height:45px;'>没有评价信息</div></td></tr>");
 		}	
 	});
 }
@@ -415,3 +417,14 @@ function addCartPackage(obj,packageId,goodsThums){
 		}
 	});
 }
+
+function receiveCoupon(couponId){
+	location.href = Think.U('Home/Coupons/toReceiveCoupon',{"couponId":couponId});
+}
+
+//倒计时
+function goods_time(){  
+    var dataId = $("#times").attr("dataId");
+	var time = $("#times").val();// 设定结束时间
+	WST.countDown(time, dataId,1,0);
+};

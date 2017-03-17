@@ -7,17 +7,18 @@
       	<title>商品列表 - {$CONF['mallTitle']}</title>
       	<meta name="keywords" content="{$CONF['mallKeywords']}" />
       	<meta name="description" content="{$CONF['mallDesc']},商品分类展示,搜索" />
-      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
-     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/goodslist.css" />
-     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
-		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />	
+      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/common.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/goodslist.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/base.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/head.css" />	
    	</head>
    	<body>
 		<include file="./Apps/Home/View/default/header_common.html" />
 		<input id="c1Id" type="hidden" value="{$c1Id}"/>
 		<input id="c2Id" type="hidden" value="{$c2Id}"/>
 		<input id="c3Id" type="hidden" value="{$c3Id}"/>
-		<input type="hidden" id="msort" value="{$msort}"/>		
+		<input type="hidden" id="msort" value="{$msort}"/>
+		<input type="hidden" id="isDistribut" value="{$isDistribut}"/>
 		<!----加载商品楼层start----->
 		<div class="wst-container">
 			<div class="wst-nvg-title">
@@ -132,7 +133,7 @@
 								<div class="goods-right">
 								    <if condition="$goods['goodsStock'] gt 0">
 								    	<a href="javascript:addCart({$goods['goodsId']},0,'{$goods['goodsThums']}')" class="btnCart">
-										<img src="__ROOT__/Apps/Home/View/default/images/btn_addcart.png" width="85"/>
+										<img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/btn_addcart.png" width="85"/>
 										</a>
 									<else/>
 									    &nbsp;&nbsp;&nbsp;&nbsp;<font color='red'>(暂无商品)</font>
@@ -153,9 +154,9 @@
 		</div>
 	<script src="__PUBLIC__/js/common.js"></script>
 	<script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
-	<script src="__ROOT__/Apps/Home/View/default/js/head.js" type="text/javascript"></script>
-	<script src="__ROOT__/Apps/Home/View/default/js/common.js" type="text/javascript"></script>
-	<script src="__ROOT__/Apps/Home/View/default/js/goods.js"></script>
+	<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/head.js" type="text/javascript"></script>
+	<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/common.js" type="text/javascript"></script>
+	<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/goods.js"></script>
 	<script>
 	<if condition="$bs eq 1">
 		$("#wst-brand-tp").click();

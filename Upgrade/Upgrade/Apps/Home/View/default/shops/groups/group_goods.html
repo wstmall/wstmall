@@ -1,0 +1,116 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+	
+	<div class="wst-body" style="margin-bottom: 8px;"> 
+		<div class='wst-page-header'>商品团购 > 添加团购商品</div>
+		<div class='wst-page-content' style="padding-top:10px;position: relative;">
+			<div>团购名：{$object["groupName"]}【{$object["startTime"]} 至 {$object["endTime"]}】</div>
+			<div class="wst-group-tips">&nbsp;&nbsp;注：参与团购的商品必须是没有价格属性的商品</div>
+		   <div id='tab' class="wst-tab-box">
+			<ul class="wst-tab-nav">
+				<li id="wst-msg-li-0">团购商品</li>
+				<li id="wst-msg-li-1">添加团购商品<span style="display:none;"></span></li>
+				
+			</ul>
+			<div class="wst-tab-content" style='width:98%;'>
+        		<input id="groupId" type="hidden" value="{$object['groupId']}"/>
+			    <!-- 团购商品 -->
+				<div id="wst-tab" class='wst-tab-item'>
+					<div>
+						<table id="wst-tab" class='wst-order-list' style="font-size:13px;">
+							<thead>
+								<tr>
+									<th colspan="8" class="wst-form" style="text-align: left;">
+									商品名称：<input type="text" id="orderNo_0" style='width:120px;' autocomplete="off"/>
+									<button class='wst-btn-query' onclick="queryGroupGoods(0)">查询</button>
+									</th>
+								</tr>
+								<tr class="head">
+								    <th width='20'></th>
+								    <th></th>
+									<th>商品名称</th>
+							        <th>店铺价格</th>
+							        <th>团购价</th>
+							        <th>库存/已售</th>
+							        <th>虚拟购买数</th>
+							        <th>状态</th>
+							        <th width="80">操作</th>
+								</tr>
+							</thead>
+							<tbody id="otbody">
+							</tbody>
+							<tfoot>
+								<tr>
+									<td colspan='9' align='center' id="opage_0">
+										<div id="wst-page" class='wst-page' style="float:right;padding-bottom:10px;"></div>
+									</td>
+								</tr>
+							 </tfoot>
+						</table>
+					</div>
+					<div style='clear:both;'></div>
+				</div>
+				<!-- 添加团购商品 -->
+				<div class='wst-tab-item' style="display:none;">
+			     	<table class="wst-packages-tbox">
+			     		<tbody>
+			     			<tr>
+			     				<td colspan="3">
+			     					<select class="wst-pk-catsel" onchange="getGroupGoodsByCat({$object['groupId']},this.value)">
+						                <option value='-1'>请选择</option>
+						                <option value='0'>所有商品分类</option>
+						                <volist name="shopCats" id="vo">
+							                <option value="{$vo['catId']}">&nbsp;&nbsp;&nbsp;┆┄ {$vo['catName']}</option>
+							                <volist name="vo['child']" id="vo2">
+							                	<option value="{$vo2['catId']}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;┆┄ {$vo2['catName']}</option>
+							                </volist>
+						                </volist>
+						             </select>
+			     				</td>
+			     			</tr>
+			     			
+			     			<tr>
+			     				<td class="wst-col-fst">
+			     					<select id="pk_l_goods" size="15" class="sel" onclick="selGoods('pk_l_goods')" ondblclick="groupOptTo('pk_l_goods','pk_r_goods');">
+			     						
+			     					</select>
+			     				</td>
+			     				<td class="wst-col-snd">
+			     					<div>
+			     						<button class="bnt" onclick="groupOptTo('pk_l_goods','pk_r_goods');">==></button>
+			     					</div>
+			     					<div>
+			     						<button class="bnt" onclick="groupOptTo('pk_r_goods','pk_l_goods');"><==</button>
+			     					</div>
+			     				</td>
+			     				<td class="wst-col-thd">
+			     					<select id="pk_r_goods" size="15" class="sel" onclick="selGoods('pk_r_goods')" ondblclick="groupOptTo('pk_r_goods','pk_l_goods');">
+			     						
+			     					</select>
+			     				</td>
+			     			</tr>
+			     			<tr class='wst-align-c'>
+			     				<td colspan="3">
+			     					<div style="height: 50px;"><button class="sbnt wst-btn-query" onclick="addGroupGoods();">添&nbsp;&nbsp;加</button></div>
+			     				</td>
+			     			</tr>
+			     		</tbody>
+			     	</table>
+					<div style='clear:both;'></div>
+				</div>
+			</div>
+			</div>
+		</div>
+		<div style='clear:both;'></div>
+	</div>
+</block>  
+<block name="js">
+	<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/shops/groups.js"></script>
+	<script>
+	$(function () {
+		$('#tab').TabPanel({tab:0,callback:function(tab){
+			queryGroupGoods(0);
+		}});
+	});
+	</script>
+</block>

@@ -130,7 +130,7 @@ function delImg(obj){
     	<div class='wst-tab-item' style="position: relative;style='display:none'">
 	       <form name="myform" method="post" id="myform" autocomplete="off">
 	        <input type='hidden' id='id' class='wstipt' value='{$object.goodsId}'/>
-	      
+	      	<input type='hidden' id='pageNo' value='{$pageNo}'/>
 	        <input type='hidden' id='goodsThumbs' value='{$object.goodsThums}'/>
 	        <table class="wst-form" >
 	           <tr>
@@ -286,7 +286,7 @@ function delImg(obj){
 	             <td colspan='3' style='padding-left:320px;'>
 	                 <button class='wst-btn-query' type="submit">保&nbsp;存</button>
 	                 <if condition="$umark !='toEdit' ">
-	                 <button class='wst-btn-query' type="button" onclick='javascript:location.href="{:U('Home/Goods/'.$umark)}"'>返&nbsp;回</button>
+	                 <button class='wst-btn-query' type="button" onclick='history.go(-1)'>返&nbsp;回</button>
 	                 </if>
 	             </td>
 	           </tr>
@@ -359,7 +359,7 @@ function delImg(obj){
 			<div style='width:100%;text-align:center;'>
 			<button class='wst-btn-query' type="button" onclick='javascript:$("#myform").submit()'>保&nbsp;存</button>
 	        <if condition="$umark !='toEdit' ">
-	             <button class='wst-btn-query' type="button" onclick='javascript:location.href="__ROOT__/index.php/Home/Goods/{$umark}"'>返&nbsp;回</button>
+	             <button class='wst-btn-query' type="button" onclick='history.go(-1)'>返&nbsp;回</button>
 	        </if>
 			</div>
 	      </div>

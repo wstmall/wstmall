@@ -1,0 +1,61 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+<style type="text/css">
+#preview{border:1px solid #cccccc; background:#CCC;color:#fff; padding:5px; display:none; position:absolute;}
+</style>
+
+    <div class="wst-body"> 
+       <div class='wst-page-header'>卖家中心 > 商品销量排行</div>
+       <div class='wst-page-content'>
+        <div class='wst-tbar-query'>
+	       	 统计时间：<input type='text' id='startDate' class='laydate-icon' name='startDate' value='{$startDate}' style='width:100px;line-height:16px;height:auto;' placeholder='开始日期'/>
+             <input type='text' id='endDate' class='laydate-icon' name='endDate' value='{$endDate}' style='' placeholder='结束日期'/>
+	      	<button class='wst-btn-query' onclick='javascript:getTopSaleGoods()'>查询</button>
+        </div>
+        <table class='wst-list'>
+           <thead>
+             <tr>
+               <th width='40'>&nbsp;</th>
+               <th>商品名称</th>
+               <th width="100">商品编号</th>
+               <th>销量</th>
+               <th width='120'>操作</th>
+             </tr>
+           </thead>
+           <tbody id="wst-tbody">
+            
+           </tbody>
+        </table>
+        </div>
+    </div>
+    <script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/shops/reports.js"></script>
+    <script>
+    var startDate = {
+    		elem: '#startDate',
+    	  	format: 'YYYY-MM-DD',
+    	  	istime: true,
+    	  	istoday: false,
+    	  	choose: function(datas){
+    	  		endDate.min = datas; //开始日选好后，重置结束日的最小日期
+    	  		endDate.start = datas //将结束日的初始值设定为开始日
+    	  	}
+ 		};
+	var endDate = {
+    	  	elem: '#endDate',
+    	  	format: 'YYYY-MM-DD',
+    	  	min: '{$startDate}',
+    	  	istime: true,
+    	  	istoday: false,
+    	  	choose: function(datas){
+    	  		startDate.max = datas; //结束日选好后，重置开始日的最大日期
+    	  	}
+    	};
+    	
+    	laydate(startDate);
+    	laydate(endDate);
+
+	$(document).ready(function(){
+	    getTopSaleGoods();
+	});
+	</script>
+</block> 

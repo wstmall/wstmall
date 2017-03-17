@@ -28,7 +28,7 @@ class ArticlesAction extends BaseAction{
     	$this->assign('articleList',$articleList);
     	$article['articleContent'] = htmlspecialchars_decode($article['articleContent']);
     	$this->assign('carticle',$article);
-        $this->display("default/help_center");
+        $this->display("help_center");
         
 	}
 	

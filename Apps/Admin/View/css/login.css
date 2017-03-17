@@ -3,9 +3,9 @@ html, body {width: 100%;height: 100%;overflow:hidden;}
 body {background:url("../img/bg.jpg") repeat;;padding: 0;margin: 0;}
 .logo{width: 279px;height:47px;background:url("../img/1_03.png") no-repeat;margin-left:190px;margin-bottom:20px;}
 #loginbox {  width: 700px;height: 530px;margin: 0 auto;position: relative;margin-top: 50px;}
-#loginbox .form-vertical{height:550px;padding-top:180px;padding-left:150px;background: url("../img/2_07.png") no-repeat;}
+#loginbox .form-vertical{height:550px;padding-top:170px;padding-left:150px;background: url("../img/2_07.png") no-repeat;}
 #loginbox .control-group{margin-top:0px;}
 #loginbox .add-on{color:#ffffff;font-weight:bold;width:60px;display:inline-block;text-align:right;}
-#loginbox input{border: 1px solid #CCCCCC; border-radius: 3px; color: #555555; display: inline-block; font-size: 13px; height: 25px; line-height: 25px; margin-bottom: 9px; padding: 2px; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset; transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;width:220px;}
-#loginbox .form-actions{background:url("../img/5_03.png") no-repeat;width:180px;height:180px;position: relative;top:-143px;left:295px;cursor:pointer;}
+#loginbox input{border: 1px solid #CCCCCC; border-radius: 3px; color: #555555; display: inline-block; font-size: 13px; height: 32px; line-height: 32px; margin-bottom: 9px; padding: 2px; box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset; transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;width:220px;}
+#loginbox .form-actions{background:url("../img/5_03.png") no-repeat;width:180px;height:180px;position: relative;top:-150px;left:287px;cursor:pointer;}
 #loginbox .form-actions:hover{background-position:-186px 1px;;}

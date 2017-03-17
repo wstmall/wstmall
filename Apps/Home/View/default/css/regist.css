@@ -102,7 +102,7 @@
 
 #regist .item {
 	padding-top: 9px;
-	height: 40px;
+	height: 48px;
 	line-height: 34px;
 	position: relative;
 	z-index: 1;
@@ -472,7 +472,7 @@
 }
 
 #regist #authcodeDiv  .item-ifo {
-	width: 380px;
+	width: 470px;
 }
 
 #regist .item-ifo i {

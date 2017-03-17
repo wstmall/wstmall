@@ -208,7 +208,6 @@ class WxpayClient extends CommonUtil {
 		$this->parameters ["mch_id"] = WxPayConf::$MCHID; // 商户号
 		$this->parameters ["nonce_str"] = $this->createNoncestr (); // 随机字符串
 		$this->parameters ["sign"] = $this->getSign ( $this->parameters ); // 签名
-		print_r ( $this->parameters );
 		return $this->arrayToXml ( $this->parameters );
 	}
 	
@@ -281,6 +280,22 @@ class UnifiedOrder extends WxpayClient {
 		}
 	}
 	
+
+	/**
+	 * 设置jsapi的参数
+	 */
+	public function getParameters($obj) {
+		$appObj ["appid"] = WxPayConf::$APPID;
+		$appObj ["partnerid"] = WxPayConf::$MCHID; // 商户号
+		$appObj ["prepayid"] = $obj["prepayid"];
+		$appObj ["package"] = "Sign=WXPay";
+		$appObj ["noncestr"] = $this->createNoncestr ();
+		$timeStamp = time ();
+		$appObj ["timestamp"] =  (string)$timeStamp;
+		$appObj ["sign"] = $this->getSign ( $appObj );
+		return $appObj;
+	}
+	
 	/**
 	 * 获取prepay_id
 	 */
@@ -339,11 +354,14 @@ class WxpayServer extends CommonUtil {
 	 */
 	function saveData($xml) {
 		$this->data = $this->xmlToArray ( $xml );
+		print_r($this->data); 
 	}
 	function checkSign() {
 		$tmpData = $this->data;
 		unset ( $tmpData ['sign'] );
+		print_r($tmpData);
 		$sign = $this->getSign ( $tmpData ); // 本地签名
+		echo $sign;
 		if ($this->data ['sign'] == $sign) {
 			return TRUE;
 		}

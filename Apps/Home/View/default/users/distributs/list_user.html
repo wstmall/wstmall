@@ -5,7 +5,7 @@
 </style>
 
     <div class="wst-body"> 
-       <div class='wst-page-header'>卖家中心 > 我的分销商</div>
+       <div class='wst-page-header'>卖家中心 > 我的推广用户</div>
        <div class='wst-page-content'>
         
         <table class='wst-list' style="margin-top: 10px;">
@@ -18,7 +18,7 @@
            <tbody>
             <volist name="Page['root']" id="vo" key='i'>
              <tr>
-               <td width="60"><img class='lazyImg' data-original="__ROOT__/{$vo['userPhoto']}" height="50" width="50"/></td>
+               <td width="60"><img class='lazyImg' data-original='<if condition="$vo['userPhoto'] =='' ">__ROOT__/{$CONF['mallLogo']}<else/>{:WSTImgPath($vo['userPhoto'])}</if>' height="50" width="50"/></td>
                <td>{$vo['userName']!=""?$vo['userName']:$vo['loginName']}</td>
                <td>{$vo['userSex']==1?"男":"女"}</td>
              </tr>
@@ -65,5 +65,5 @@
         </table>
         </div>
     </div>
-    <script src="__ROOT__/Apps/Home/View/default/js/distributs.js"></script>
+    <script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/distributs.js"></script>
 </block> 

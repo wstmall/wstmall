@@ -26,7 +26,7 @@ class BrandsAction extends BaseAction{
    			cookie("bstreesAreaId3",$obj["areaId3"]);
    		}
    		$this->assign('areaId3',$obj["areaId3"]);
-		$this->display("default/brands_list");
+		$this->display("brands_list");
 	}
 	
 	/**

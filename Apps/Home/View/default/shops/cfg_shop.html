@@ -2,7 +2,7 @@
 <block name="content">
 <link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/webuploader/style.css" />
 <link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/webuploader/webuploader.css" />
-<script type="text/javascript" src="__ROOT__/Apps/Home/View/default/js/shopsbatchupload.js"></script>
+<script type="text/javascript" src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/shopsbatchupload.js"></script>
 <style>
 
 
@@ -86,7 +86,7 @@ function imglidel(obj){
                 <div id="shopBannerPicker" style='margin-left:0px;margin-top:5px;height:30px;overflow:hidden'>上传顶部广告图片</div>
              	<div>图片大小:1400 x 120 (px)(格式为 gif, jpg, jpeg, png)</div>
              	<div style="margin-top:5px;">
-             		<img height="60" id='shopBannerPreview' class='lazyImg' <if condition="$object.shopBanner neq ''">data-original="__ROOT__/{$object.shopBanner}"<else />data-original="__ROOT__/Apps/Home/View/default/images/s.gif"</if>/>
+             		<img height="60" id='shopBannerPreview' class='lazyImg' <if condition="$object.shopBanner neq ''">data-original="__ROOT__/{$object.shopBanner}"<else />data-original="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/s.gif"</if>/>
              	</div>
              </td>
            </tr>

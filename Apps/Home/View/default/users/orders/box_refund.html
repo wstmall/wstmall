@@ -1,0 +1,19 @@
+<table class='wst-form' style='margin-top:10px;width:90%'>
+   <tr>
+     <td colspan='2' style='padding-left:70px;'>请输入订单申请退款的原因，以便我们能更好的为您服务。</td>
+   </tr>
+   <tr>
+     <th width='120'>原因<font color='red'>*</font>：</th>
+     <td>
+       <textarea id='refundRemark' style='width:99%;height:50px;' maxLength='200'></textarea>
+     </td>
+   </tr>
+   <tr>
+     <th width='120'>退款金额<font color='red'>*</font>：</th>
+     <td>
+     	<input type="hidden" value="{$object['realTotalMoney']}" id="realPay"/>
+       <input type='text' id='money' maxLength='10' onkeyup="javascript:WST.isChinese(this,1)" onkeypress="return WST.isNumberdoteKey(event,true)" onblur='javascript:WST.limitDecimal(this,2)' data="{$object['realTotalMoney']}">
+       (金额不能超过<font color='red'>¥{$object['realTotalMoney']}</font><if condition="$object['useScore'] gt 0">+{$object['useScore']}积分</if>)
+     </td>
+   </tr>
+</table>

@@ -42,6 +42,24 @@ class PaymentsAction extends BaseAction{
 		$this->ajaxReturn($data);
 	}
 	
+	public function getBalanceURL(){
+		$this->isUserLogin();
+		$morders = D('Home/Orders');
+		$data = $morders->checkOrderPay();
+		if($data["status"]==1){
+			$m = D('Home/Payments');
+			$orderId = (int)I("orderId");
+			if($orderId>0){
+				$pkey = $obj["userId"]."@".$orderId."@1";
+			}else{
+				$pkey = $obj["userId"]."@".session("WST_ORDER_UNIQUE")."@2";
+			}
+			$data["url"] = U('Home/Balance/payment',array("pkey"=>base64_encode($pkey)));
+		}
+		$this->ajaxReturn($data);
+	}
+	
+	
 	/**
 	 * 支付
 	 */
@@ -62,7 +80,7 @@ class PaymentsAction extends BaseAction{
 		$this->assign("orders",$orders);
 		$this->assign("needPay",$needPay);
 		$this->assign("orderCnt",count($orders));
-		$this->display('default/payment/order_pay');
+		$this->display('payment/order_pay');
 	}
 	
 	/**
@@ -103,6 +121,13 @@ class PaymentsAction extends BaseAction{
 		}else{
 			echo 'fail';
 		}
+	}
+	
+	/**
+	 * 检查支付结果
+	 */
+	public function paySuccess() {
+		$this->display ( "payment/pay_success" );
 	}
 };
 ?>

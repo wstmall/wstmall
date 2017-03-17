@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>{$CONF['shopTitle']}后台管理中心</title>
+      <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
+      <link rel="stylesheet" href="__ROOT__/Apps/Admin/View/css/daterangepicker/daterangepicker-bs3.css">
+      <!--[if lt IE 9]>
+      <script src="__PUBLIC__/js/html5shiv.min.js"></script>
+      <script src="__PUBLIC__/js/respond.min.js"></script>
+      <![endif]-->
+      <script src="__PUBLIC__/js/jquery.min.js"></script>
+      <script src="__PUBLIC__/plugins/bootstrap/js/bootstrap.min.js"></script>
+      <script src="__ROOT__/Apps/Admin/View/js/daterangepicker.js"></script>
+      <script src="__PUBLIC__/js/common.js"></script>
+      <script type="text/javascript" src="__PUBLIC__/plugins/echarts/echarts.common.min.js"></script>
+   </head>
+   <script>
+   
+   function statUserLogin(){
+	   var style,option;
+	   var params = {};
+	   var date = $('#queryDate').val().split(' -> ');
+	   params.statType = $('#statType').val();
+	   params.startDate = date[0];
+	   params.endDate = date[1];
+	   var myChart = echarts.init(document.getElementById('container')); 
+	   
+	   $('#container').show();
+	   $.post("{:U('Admin/Reports/statUserLogin')}",params,function(data,textStatus){
+			var json = WST.toJson(data);
+			var option = {
+				title : {
+			  		text: '会员登录统计'
+				},
+		    	tooltip: {
+					trigger: 'axis'
+				},
+			   	legend: {
+			    	data:['会员','店铺']
+			    },
+			   	toolbox: {
+			    	show : true,
+			    	feature : {
+			    		mark : {show: true},
+			    		dataView : {show: false, readOnly: false},
+			    		magicType : {show: true, type: ['line', 'bar']},
+			    		restore : {show: true},
+			    		saveAsImage : {show: true}
+			    	}
+			 	},
+				xAxis: {
+			   		type: 'category',
+			    	boundaryGap: false,
+			    	data: json.days
+			   	},
+				yAxis: {
+				   	type: 'value'
+			    },
+				series: [
+			   		{
+			    		name:'会员',
+			    		type:'line',
+			    		data:json.u0
+			    	},
+			    	{
+			    		name:'店铺',
+			    		type:'line',
+			    		data:json.u1
+			    	}
+				]
+			};              
+			myChart.setOption(option);	 
+		});
+	    
+   }
+   $(function(){
+	   $('#queryDate').daterangepicker({format:'YYYY-MM-DD',separator:' -> '});
+	   statUserLogin();
+   });
+   </script>
+   <body class='wst-page'>
+      <form method="post">
+       <div class='wst-tbar'>
+                    统计时间：<input type='text' id='queryDate' class="form-control" readonly='true' style='width:200px' value='{$startDate} -> {$endDate}'/>
+          <input type="button" class="btn btn-primary glyphicon glyphicon-search" onclick='javascript:statUserLogin()' value='查询'/>
+       </div>
+       </form>
+       <div class="wst-body"> 
+	       <div id="container" style="min-width:700px;height:800px"></div>
+       </div>
+   </body>
+</html>

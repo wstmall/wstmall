@@ -33,8 +33,9 @@ class DistributsModel extends BaseModel {
 		
 		$distributType = (int)I("distributType");
 		$data = array();
+		$distributType = (int)I("distributType");
 		$data["isDistribut"] = (int)I("isDistribut");
-		$data["distributType"] = (int)I("distributType");
+		$data["distributType"] = $distributType;
 		$data["distributOrderRate"] = ($distributType==2)?(int)I("distributOrderRate"):0;
 		$data["promoterRate"] = (int)I("promoterRate");
 		$data["buyerRate"] = 100-$data["promoterRate"];
@@ -44,10 +45,22 @@ class DistributsModel extends BaseModel {
 			$data["shopId"] = $shopId;
 			$rs = $m->add($data);
 		}
-		if($data["isDistribut"]==1){
-			$data = array();
-			$data["isDistribut"] = 1;
-			$rs = M('goods')->where("shopId=".$shopId." and goodsFlag=1")->save($data);
+		if($rs!==false){
+			if($data["isDistribut"]==1){
+				$data = array();
+				if($distributType==2){
+					$data["isDistribut"] = 1;
+				}else{
+					$data["isDistribut"] = 0;
+				}
+				$data["commission"] = 0;
+				$rs = M('goods')->where("shopId=".$shopId." and goodsFlag=1")->save($data);
+			}else{
+				$data = array();
+				$data["isDistribut"] = 0;
+				$data["commission"] = 0;
+				M('goods')->where("shopId=".$shopId." and goodsFlag=1")->save($data);
+			}
 		}
 		$rd["status"] = 1;
 		return $rd;

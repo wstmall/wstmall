@@ -1,0 +1,43 @@
+<meta charset="utf-8">
+   <script>
+   $(function () {
+	
+	   $.formValidator.initConfig({
+		   theme:'Default',mode:'AutoTip',formID:"myform",debug:true,submitOnce:true,onSuccess:function(){
+				   edit();
+			       return false;
+			}});
+	   $("#refuseRemarks").formValidator({onFocus:"请输入拒绝原因",onCorrect:"输入正确"}).inputValidator({min:1,max:200,onError:"您输入的长度不正确,请确认"});
+   });
+   
+   function edit(){
+	   var params = {};
+	   params.refuseRemarks = $.trim($('#refuseRemarks').val());
+	   params.id = $('#id').val();
+	   Plugins.waitTips({title:'信息提示',content:'正在提交数据，请稍后...'});
+	   $.post("{:U('Admin/Groups/refuseGroupGoods')}",params,function(data,textStatus){
+			var json = WST.toJson(data);
+			Plugins.setWaitTipsMsg({ content:json.msg,timeout:1000,callback:function(){
+				location.href='{:U("Admin/Groups/queryGroupGoods")}';
+			}});
+		});
+   }
+   
+   </script>
+       <form name="myform" method="post" id="myform" autocomplete="off">
+        <input type='hidden' id='id' value='{$id}'/>
+        <table class="table table-hover table-striped table-bordered wst-form">
+           <tr>
+             <th width='100' align='right'>拒绝原因：</th>
+             <td>
+             	<textarea rows="4" cols="50" id="refuseRemarks"></textarea>
+             </td>
+           </tr>
+           <tr>
+             <td colspan='2' style='padding-left:250px;'>
+                 <button type="submit" class="btn btn-success">提&nbsp;交</button>
+                 <button type="button" class="btn btn-primary" data-dismiss="modal">返&nbsp;回</button>
+             </td>
+           </tr>
+        </table>
+       </form>

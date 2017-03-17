@@ -200,7 +200,6 @@ class CartModel extends BaseModel {
 		
 		$sql = "select * from __PREFIX__cart where userId = $userId and packageId>0 group by batchNo";
 		$shopcart = $this->query($sql);
-		print_r($pkgList);
 		for($i=0;$i<count($shopcart);$i++){
 			$cgoods = $shopcart[$i];
 			$package = array();
@@ -340,8 +339,17 @@ class CartModel extends BaseModel {
 
 		$cartInfo = array();
 		$cartInfo["gtotalMoney"] = $totalMoney;
-		
+		$now = date("Y-m-d H:i:s");
 		foreach($cartgoods as $key=> $cshop){
+			$shopId = $cshop["shopId"];
+			
+			$where = array();
+			$where["shopId"] = $shopId;
+			$where["dataFlag"] = 1;
+			$where["sendStartTime"] = array("elt",$now);
+			$where["sendEndTime"] = array("egt",$now);
+			$cnt = M("coupons")->where($where)->count();
+			$cartgoods[$shopId]["hasConpon"] = ($cnt>0)?1:0;
 			if($cshop["totalMoney"]<$cshop["deliveryFreeMoney"] && $cshop["ischk"]==1){
 				$totalMoney = $totalMoney + $cshop["deliveryMoney"];
 			}
@@ -349,7 +357,6 @@ class CartModel extends BaseModel {
 		
 		$cartInfo["totalMoney"] = $totalMoney;
 		$cartInfo["cartgoods"] = $cartgoods;
-		//print_r($cartInfo);
 		return $cartInfo;
 		
 	}
@@ -411,6 +418,7 @@ class CartModel extends BaseModel {
 				$cartgoods[$goods["shopId"]]["ischk"] = 1;
 				$package["goods"][] = $goods;
 		
+				$cartgoods[$goods["shopId"]]["hasPackage"] = 1;
 				$distributAll[$package["shopId"]] = $goods["isDistributAll"];
 				
 				$cartgoods[$goods["shopId"]]["shopId"] = $goods["shopId"];//店铺ID
@@ -459,7 +467,7 @@ class CartModel extends BaseModel {
 			if($endTime>$goods["endTime"]){
 				$endTime = $goods["endTime"];
 			}
-		
+			
 			$cartgoods[$goods["shopId"]]["shopgoods"][] = $goods;
 			
 			$cartgoods[$goods["shopId"]]["shopId"] = $goods["shopId"];//店铺ID
@@ -475,7 +483,26 @@ class CartModel extends BaseModel {
 			
 		}
 		$rdata["gtotalMoney"] = $totalMoney;//商品总价（去除配送费）
+		$now = date("Y-m-d");
 		foreach($cartgoods as $key=> $cshop){
+			if($cshop["hasPackage"]!=1){
+				$goodMoney = $cshop["totalMoney"];
+				$where = array();
+				$where["cu.userId"] = $userId;
+			 	$where["c.shopId"] = $cshop["shopId"];
+			 	$where["validStartTime"] = array("elt",$now);
+			 	$where["validEndTime"] = array("egt",$now);
+			 	$where["spendMoney"] = array("elt",$goodMoney);
+			 	$where["c.dataFlag"] = 1;
+			 	$where["cu.couponStatus"] = 1;
+			 	$where["cu.dataFlag"] = 1;
+			 	$coupons = M("coupons c")->join("__COUPONS_USERS__ cu on cu.couponId=c.couponId")->where($where)
+			 		->field("cu.id,couponName,couponMoney,spendMoney")
+			 		->order("couponMoney desc")
+			 		->select();
+			 	
+				$cartgoods[$cshop["shopId"]]["coupons"] = $coupons;
+			}
 			if($cshop["totalMoney"]<$cshop["deliveryFreeMoney"]){
 				$totalMoney = $totalMoney + $cshop["deliveryMoney"];
 			}

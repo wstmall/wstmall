@@ -16,7 +16,7 @@ class FavoritesAction extends BaseAction{
 		$this->isLogin();
 		$m = D('Home/Favorites');
     	$this->assign("umark","queryFavoritesByPage");
-    	$this->display("default/users/favorites");
+    	$this->display("users/favorites");
 	}
 	/**
 	 * 获取商品关注

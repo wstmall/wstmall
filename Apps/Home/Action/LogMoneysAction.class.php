@@ -18,7 +18,7 @@ class LogMoneysAction extends BaseAction{
 		$shopInfo = $spm->loadShopInfo(session('WST_USER.userId'));
 		$this->assign('shopInfo',$shopInfo);
 		$this->assign("umark","toShopMoneys");
-		$this->display("default/shops/moneys/moneys");
+		$this->display("shops/moneys/moneys");
 	}
 	
   /**
@@ -30,7 +30,7 @@ class LogMoneysAction extends BaseAction{
 		$user = $um->getUserById(array("userId"=>session('WST_USER.userId')));
 		$this->assign("user",$user);
 		$this->assign("umark","toUserMoneys");
-		$this->display("default/users/moneys/moneys");
+		$this->display("users/moneys/moneys");
 	}
 	
 	/**

@@ -108,5 +108,19 @@ class GoodsCatsModel extends BaseModel {
 		$recommendShops = $this->query($sql);
 		return $recommendShops;
 	}
+	
+ 	/**
+	* 获取列表
+	*/
+	public function queryCats($pid = 0){
+	    $m = M('goods_cats');
+	    $rs = $m->where('catFlag=1 and parentId='.$pid)->select(); 
+	    for($i=0,$k=count($rs);$i<$k;$i++){
+	    	$catId = $rs[$i]["catId"];
+	    	$childs = $m->where('catFlag=1 and parentId='.$catId)->select();
+	    	$rs[$i]["childs"] = $childs;
+	    }
+		return $rs;
+	}
 };
 ?>

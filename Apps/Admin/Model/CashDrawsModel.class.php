@@ -45,10 +45,15 @@ class CashDrawsModel extends BaseModel {
 	 */
 	public function get(){
 		$id = (int)I('id');
-		$sql = "select* from __PREFIX__cash_draws c left join  u on c.targetType=0 and targetId=u.userId 
-		        left join __PREFIX__shops s on c.targetType=1 and targetId=s.shopId where 1=1 ";
-		$rs = $this->where('cashId='.$id)->find();
+		$rs = M("cash_draws c")->join("__CASH_CONFIGS__ cfg")->where('cashId='.$id)->field("c.*, cfg.areaId2")->find();
 		if(!empty($rs)){
+			$areaId2 = $rs['areaId2'];
+			if($areaId2>0){
+				$area = M("areas a1")->join("__AREAS__ a2 on a1.areaId=a2.parentId")
+				->where(array("a2.areaId"=>$areaId2))
+				->field("a1.areaName areaName1,a2.areaName areaName2")->find();
+				$rs["areaName"] = $area["areaName1"]. $area["areaName2"];
+			}
 			if($rs['targetType']==0){
 				$sql = "select loginName,userName from __PREFIX__users where userId=".$rs['targetId'];
 				$urs = $this->queryRow($sql);
@@ -110,7 +115,7 @@ class CashDrawsModel extends BaseModel {
 				$data['dataId'] = $id;
 				$data['dataSrc'] = 3;
 				$data['moneyRemark'] = "申请提现￥".$rs['money'];
-				$data['moneyType'] = 1;
+				$data['moneyType'] = 0;
 				$data['money'] = $rs['money'];
 				$data['createTime'] = date('Y-m-d H:i:s');
 				$data['payType'] = 0;

@@ -571,7 +571,7 @@ a:hover {
 .wst-star p{position:absolute;top:20px;width:159px;height:60px;display:none;background:url(../../../View/default/images/icon.gif) no-repeat;padding:7px 10px 0;}
 .wst-star p em{color:#f60;display:block;font-style:normal;}
 
-.wst-btn-query{border: 1px solid #ff0080;height:30px;width:60px;background-color:#e23e3d;color:#ffffff;border-radius: 2px;cursor: pointer;margin:4px;}
+.wst-btn-query{border: 1px solid #ff0080;height:30px;padding:0 10px;background-color:#e23e3d;color:#ffffff;border-radius: 2px;cursor: pointer;margin:4px;}
 .wst-state_yes{display:block;width:13px;height:13px;background-image: url("../../../View/default/images/icon_state_yes.png");}
 .wst-state_no{display:block;width:13px;height:13px;background-image: url("../../../View/default/images/icon_state_no.png");}
 
@@ -1150,6 +1150,7 @@ b, strong {
 	    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f7f7f7", endColorstr="#f2f2f2");
 	    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr="#f7f7f7", endColorstr="#f2f2f2")";
 }
+.wst-fred { color: #ff6666; }
 .wst-list-tbar{border-bottom:1px solid #ddd;padding:5px;}
 .wst-text{border: 1px solid #cccccc;color: #999;float: none;font-family: Arial,"微软雅黑";font-size: 14px;height: 16px;padding: 10px 25px 10px 5px;margin-right:5px;}
 .wst-smsverfy{margin:7px 2px }
@@ -1181,7 +1182,14 @@ input[type=checkbox],input[type=radio] {margin-right:5px;}
 #wst-nvg-cat-box{  position: relative;min-height: 600px;}
 #wst_key_search_list{position:absolute;top:38px;left:-1px;border:1px solid #b8b8b8;min-width:567px;display:none;background-color:#ffffff;z-index:1000;}
 .wst-header-logo{float:left;width:240px;text-align:center;vertical-align:middle;display:block;position:relative; display:table-cell;}
-.wst-header-logo a{display:table-cell;vertical-align:middle;width:240px;} 
+.wst-header-logo a{display:table-cell;vertical-align:middle;width:240px;height:132px;} 
 .wst-header-logo a img{max-width:240px;max-height:132px;} 
 .wst-phone{font-size:18px;position: relative;top:4px;font-weight:bold; }
 .wst-cate-img{position:relative;top:-3px;width:22px;}
+
+.wst-hide{display:none;}
+.wst-print-btn{position: absolute;right:0;top: 20px;width:80px;height:30px;}
+.wst-print-page{page-break-before :always}   
+@media print { 
+	.wst-print-btn{ display: none;}
+}

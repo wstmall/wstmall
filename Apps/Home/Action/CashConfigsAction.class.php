@@ -27,7 +27,7 @@ class CashConfigsAction extends BaseAction{
 		$list = $m->queryByList();
 		$this->assign('bank',$list);
 		$this->assign('object',$object);
-		$this->display("default/shops/moneys/draw_config");
+		$this->display("shops/moneys/draw_config");
 	}
 	/**
 	 * 获取配置列表

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>{$CONF['mallTitle']}后台管理中心</title>
+      <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
+      <!--[if lt IE 9]>
+      <script src="__PUBLIC__/js/html5shiv.min.js"></script>
+      <script src="__PUBLIC__/js/respond.min.js"></script>
+      <![endif]-->
+      <script src="__PUBLIC__/js/jquery.min.js"></script>
+      <script src="__PUBLIC__/plugins/bootstrap/js/bootstrap.min.js"></script>
+      <script src="__PUBLIC__/js/common.js"></script>
+      <script src="__PUBLIC__/plugins/plugins/plugins.js"></script>
+   </head>
+   <script>
+   $('#myTab a').click(function (e) {
+          e.preventDefault();
+          $(this).tab('show');
+        });
+   function changeStyle(obj,id,style){
+     obj = $(obj);
+     if(obj.hasClass('btn-disabled'))return;
+	   Plugins.confirm({title:'信息提示',content:'您确定要启用该风格吗?',okText:'确定',cancelText:'取消',okFun:function(){
+		   Plugins.closeWindow();
+		   Plugins.waitTips({title:'信息提示',content:'正在操作，请稍后...'});
+		   $.post("{:U('Admin/Styles/changeStyle')}",{id:id},function(data,textStatus){
+					var json = WST.toJson(data);
+					if(json.status=='1'){
+						Plugins.setWaitTipsMsg({content:'操作成功',timeout:1000,callback:function(){
+						    $('.btn-'+style+'-disabled').attr('disabled',false).val('启用').removeClass('btn-'+style+'-disabled').addClass('btn-success');
+                $('.style_'+id).removeClass('btn-success').addClass('btn-'+style+'-disabled').attr('disabled',true).val('应用中');
+						}});
+					}else{
+						Plugins.closeWindow();
+						Plugins.Tips({title:'信息提示',icon:'error',content:'操作失败!',timeout:1000});
+					}
+				});
+	   }});
+   }
+   </script>
+   <body class='wst-page'>
+      <ul id="myTab" class="nav nav-tabs wst-tab" role="tablist">
+        <volist name="Style" id="vo">
+        <li <if condition="$key eq 'Home'">class="active" </if>><a href="#tab-{$key}" role="tab" data-toggle="tab">{$key}</a></li>
+        </volist>
+    </ul>
+      <div class='tab-content wst-tab-content'>
+          <volist name="Style" id="vo1">
+          <?php $styleHome = $key; ?>
+          <div class='tab-pane <if condition="$key eq 'Home'">active in</if> fade wst-tab-pane' id='tab-{$key}'>
+             <volist name="vo1" id="vo2" key='ik'>
+             <div class="style-box">
+                <div class="style-img">
+                   <img width='200' src="./Apps/{$styleHome}/view/{$vo2['stylePath']}/images/screenshot.png">
+                </div>
+                <div class="style-txt">标题：{$vo2['styleName']}</div>
+                   <div class="style-author">作者：{$vo2['styleAuthor']}</div>
+                   <div class="style-author">介绍：<if condition="$vo2['styleShopSite'] !=''"><a href='{$vo2['styleShopSite']}' target='_blank'>访问网址</a><else/>无</if></div>
+                   <div class="style-op">
+                     <if condition="$vo2['isUse'] ==1">
+                     <input class="btn btn-{$styleHome}-disabled style_{$vo2['id']}" dataid="1" value="应用中" onclick='javascript:changeStyle(this,{$vo2['id']},"{$styleHome}")' disabled type="button">
+                     <else/>
+                     <input class="btn btn-success style_{$vo2['id']}" dataid="{$vo2['id']}" value="应用" onclick='javascript:changeStyle(this,{$vo2['id']},"{$styleHome}")' type="button">
+                     </if>
+                   </div>
+              </div>
+              </volist>
+              <div style='clear:both'></div>
+          </div>
+          </volist>
+      </div>
+   </body>
+</html>

@@ -12,7 +12,7 @@
 		}});
 	});
 	</script>
-	<div class='wst-page-header'>卖家中心 > 商城消息</div>
+	<div class='wst-page-header'>卖家中心 > 资金管理</div>
 	<div class='wst-page-content'>  
 		   <div style='height:135px'>
 		      <div style='width:140px;float:left;'>
@@ -40,7 +40,7 @@
 						  待审核
 					 </if>
 				 </div>
-				 <div>商家钱包：￥<font color='red' id='shopMoney'>{$shopInfo['userMoney']}</font><a style='margin-left:50px;' href='javascript:drawCash()'>申请提现</a></div>
+				 <div>商家钱包：￥<font color='red' id='shopMoney'>{$shopInfo['userMoney']}</font><button class='wst-btn-query' onclick='drawCash()'>申请提现</button></div>
 				 <div>冻结金额：￥<font color='red' id='lockMoney'>{$shopInfo['lockMoney']}</font></div>
 		      </div>
 		   </div>
@@ -217,5 +217,5 @@
 		   </table>
 		   </form>
 		</div>
-	</div>
+	
 </block>  

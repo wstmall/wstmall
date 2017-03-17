@@ -1,0 +1,38 @@
+/*团购商品详情*/
+.wst-ter-chux i{ float: left; margin-top:5px; width: 33px;  height: 33px;  background: url(../images/icon_daozhong.png) 0px 4px no-repeat;}
+.wst-ter-chux .time{ font-size: 20px; }
+.wst-ter-price{  height: 55px;  margin-bottom: 10px;  border-top:1px dotted #dcdcdc;  border-bottom:1px dotted #dcdcdc;}
+.wst-ter-price .num{ float: left; width: 33%; height: 39px; line-height: 39px; text-align: center; margin:8px 0px; border-right:1px solid #dcdcdc;}
+.wst-ter-price .num span{ color:#00986c; font-weight: bolder;}
+.wst-ter-price .num2{ float: left; width: 33%; height: 39px; text-align: center; margin:8px 0px; border-right:1px solid #dcdcdc;}
+.wst-ter-price .num2 b{ margin-right: 3px; height: 16px; width: 16px;  display: inline-block; background: url("../images/icon_top_01.png")  no-repeat;}
+.wst-ter-price .num2 span{ color:#056fb9;}
+.wst-ter-price .num3{ float: right; width: 33%; height: 39px; line-height: 39px; margin:8px 0px; text-align: center;}
+.wst-ter-price .num3 b, .wst-favorite .num3 b{ position: absolute; left:0px; top:-5px;  height: 20px;  width: 20px;  display: inline-block;  background: url("../images/iconfont_guanzhu_nor.png") 0px 4px no-repeat;}
+.wst-ter-price .num3 b:hover, .wst-favorite .num3 b:hover{ background: url("../images/iconfont_guanzhu_nor.png") 0px -19px no-repeat;}
+.wst-ter-price .num3 a, .wst-favorite .num3 a{ width: 100px; position: relative;}
+.wst-short-tool .wst-favorite{ position: absolute; left: 285px; display: block; width: 90px; height: 32px; top: 30px;}
+		
+.wst-short-tool .code{ position: absolute; left: 185px; display: block; width: 90px; height: 32px;}
+.wst-short-tool .code i{ float: left; margin: 3px 3px 0px 0px; width: 30px; height: 30px; cursor: pointer; background: url("../images/code.png") 0px 0px no-repeat;}
+.wst-short-tool .code i:hover .wst-qrcode{ display: block;}
+.wst-short-tool .wst-qrcode{ position: absolute; z-index: 100; cursor: pointer; top:-130px; left:0px;}
+.wst-te-buy{ height: 50px; padding:15px 0px; background: url("../images/img_jiage_bg_red.png") 0px 0px; }
+.wst-te-buy .price{ float: left; color:#ffffff; width: 200px; height: 50px; line-height: 50px; text-align: center; font-size: 40px; font-weight: bolder; border-right:1px solid #e88097;}
+.wst-te-buy .price span{ font-size: 25px;}
+.wst-te-buy .shprice{ float: left; color:#ffffff; width: 200px; height: 50px; line-height: 50px; text-align: left; padding-left:20px; font-size: 15px;}
+.wst-te-buy .shprice span{ text-decoration: line-through; }
+.wst-te-buy .buy{ float: right; color:#ffffff; width: 168px; height: 50px; line-height: 50px; text-align: center; font-size: 15px;}
+.wst-te-buy .buy a{ display: block; margin-top:4px;  width: 150px;  height: 45px;  background: url("../images/btn_tggm.png") 0px 0px no-repeat;}
+
+.wst-te-buy .buyover{ float: right; color:#ffffff; width: 168px; height: 50px; line-height: 50px;text-align: center;font-size: 15px;}
+.wst-te-buy .buyover a{ display: block;margin-top:4px; width: 150px;height: 45px;background: url("../images/buyover.png") 0px 0px no-repeat; }
+
+.wst-goods-details .details-left{ float: left;width: 1210px;min-height: 478px; }
+.details-left .goods-des-box { float: right;width: 820px; }
+.goods-des-box .goods-des-tab { width: 820px;font-size: 13px; }
+.spec-preview { width: 400px; height: 400px; border: 1px solid #DFDFDF; }
+.spec-scroll { clear: both; margin-top: 5px; width: 400px; }
+.details-left .goods-des-box { float: right; width: 770px; }
+.goods-des-box .goods-des-tab { width: 770px; font-size: 13px; }
+.wst-short-tool{padding-top:20px;clear:both;position: relative;}

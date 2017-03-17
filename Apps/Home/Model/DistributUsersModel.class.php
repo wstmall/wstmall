@@ -13,7 +13,7 @@ class DistributUsersModel extends BaseModel {
 	/**
 	 * 注册添加分销用户
 	 */
-	public function addDistributUusers($userId){
+	public function addDistributUsers($userId){
 		//添加分销用户记录
 		$shareUserId = (int)session("WST_SHAREUSERID");
 		if($shareUserId>0){
@@ -28,7 +28,7 @@ class DistributUsersModel extends BaseModel {
 					$data["userId"] = $shareUserId;
 					$data["buyerId"] = $userId;
 					$data["createTime"] = date("Y-m-d H:i:s");
-					$datas['ip'] = get_client_ip();
+					$data['ip'] = get_client_ip();
 					$m->add($data);
 					session('WST_SHAREUSERID', null);
 				}

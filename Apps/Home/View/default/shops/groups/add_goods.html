@@ -1,0 +1,108 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+
+<style>
+
+
+</style>   
+<script>
+
+
+</script>
+       <div class="wst-body"> 
+       <div class='wst-page-header'>卖家中心 > <if condition="$object['goodsId'] ==0 ">新增<else/>编辑</if>团购资料</div>
+       <div class='wst-page-content'>
+       <div id='tab' class="wst-tab-box">
+		
+    	<div class="wst-tab-content" style='width:99%;margin-bottom: 10px;'>
+    	<!-- 优惠套餐 -->
+	    
+	     	<table class="wst-packages-tbox">
+	     		<tbody>
+	     			<tr>
+	     				<td colspan="3">
+	     					<select class="wst-pk-catsel" onchange="getGoodsByCat(this.value)">
+				                <option value='-1'>请选择</option>
+				                <option value='0'>所有商品分类</option>
+				                <volist name="pkShopCats" id="vo">
+					                <option value="{$vo['catId']}">&nbsp;&nbsp;&nbsp;┆┄ {$vo['catName']}</option>
+					                <volist name="vo['child']" id="vo2">
+					                	<option value="{$vo2['catId']}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;┆┄ {$vo2['catName']}</option>
+					                </volist>
+				                </volist>
+				             </select>
+	     				</td>
+	     			</tr>
+	     			
+	     			<tr>
+	     				<td class="wst-col-fst">
+	     					<select id="pk_l_goods" size="15" class="sel" onclick="selGoods('pk_l_goods')" ondblclick="optTo('pk_l_goods','pk_r_goods');">
+	     						
+	     					</select>
+	     				</td>
+	     				<td class="wst-col-snd">
+	     					
+	     					<div>
+	     						<button class="bnt" onclick="optTo('pk_l_goods','pk_r_goods');">==></button>
+	     					</div>
+	     					<div>
+	     						<button class="bnt" onclick="optTo('pk_r_goods','pk_l_goods');"><==</button>
+	     					</div>
+	     				</td>
+	     				<td class="wst-col-thd">
+	     					<table>
+	     						<thead>
+	     							<tr>
+	     								<th>商品名称</th>
+	     								<th>商品金额</th>
+	     								<th>团购价</th>
+	     								<th>团购数</th>
+	     								<th>虚拟数</th>
+	     							</tr>
+	     						</thead>
+	     					</table>
+	     				</td>
+	     			</tr>
+	     			<tr class='wst-align-c'>
+	     				<td colspan="3">
+	     					<div style="height: 50px;"><button class="sbnt wst-btn-query" onclick="addGroupGoods();">添&nbsp;&nbsp;加</button></div>
+	     				</td>
+	     			</tr>
+	     		</tbody>
+	     	</table>
+	      </div>
+	    </div>
+	    </div>
+       </div>
+       <div style='clear:both;'></div>
+       </div>
+</block>
+<block name="js">
+<script >
+	var startTime = {
+		elem: '#startTime',
+	  	format: 'YYYY/MM/DD hh:mm:ss',
+		min: laydate.now(),
+	  	istime: true,
+	  	istoday: false,
+	  	choose: function(datas){
+	  		endTime.min = datas; //开始日选好后，重置结束日的最小日期
+	  		endTime.start = datas //将结束日的初始值设定为开始日
+	  	}
+	};
+	var endTime = {
+	  	elem: '#endTime',
+	  	format: 'YYYY/MM/DD hh:mm:ss',
+	  	min: laydate.now(),
+	  	istime: true,
+	  	istoday: false,
+	  	choose: function(datas){
+	  		startTime.max = datas; //结束日选好后，重置开始日的最大日期
+	  	}
+	};
+	
+	laydate(startTime);
+	laydate(endTime);
+</script>
+<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/shops/groups.js"></script>
+</block>

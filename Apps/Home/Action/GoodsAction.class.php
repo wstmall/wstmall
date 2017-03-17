@@ -63,6 +63,7 @@ class GoodsAction extends BaseAction {
 			$prices["300_400"] = "300-400";
 			$prices["400_500"] = "400-500";
 		}
+		$this->assign('isDistribut',(int)I("isDistribut"));
    		$this->assign('c1Id',(int)I("c1Id"));
    		$this->assign('c2Id',(int)I("c2Id"));
    		$this->assign('c3Id',(int)I("c3Id"));
@@ -87,7 +88,7 @@ class GoodsAction extends BaseAction {
 		$priceId = $prices[I("prices")];
 		$this->assign('priceId',(strlen($priceId)>1)?I("prices"):'');
    		$this->assign('districts',$districts);
-   		$this->display('default/goods_list');
+   		$this->display('goods_list');
     }
     
   
@@ -123,7 +124,6 @@ class GoodsAction extends BaseAction {
 			if($kcode==$scrictCode){//来自后台管理员
 				$this->assign('comefrom',1);
 			}
-			
 			$shopServiceStatus = 1;
 			if($goodsDetails["shopAtive"]==0){
 				$shopServiceStatus = 0;
@@ -144,6 +144,8 @@ class GoodsAction extends BaseAction {
 				}
 			}
 			
+			
+			
 			$areas = D('Home/Areas');
 			$shopId = intval($goodsDetails["shopId"]);
 			$obj["shopId"] = $shopId;
@@ -153,6 +155,10 @@ class GoodsAction extends BaseAction {
 			$shopScores = $shops->getShopScores($obj);
 			$this->assign("shopScores",$shopScores);
 			
+			$mc = D('Home/Coupons');
+			$coupons = $mc->getCouponsByShopId($shopId);
+			$this->assign('coupons',$coupons);
+			
 			$shopCity = $areas->getDistrictsByShop($obj);
 			$this->assign("shopCity",$shopCity[0]);
 			
@@ -161,7 +167,7 @@ class GoodsAction extends BaseAction {
 			
 			$this->assign("goodsImgs",$goods->getGoodsImgs());
 			$this->assign("relatedGoods",$goods->getRelatedGoods($goodsId));
-			$this->assign("goodsNav",$goods->getGoodsNav());
+			$this->assign("goodsNav",$goods->getGoodsNav($goodsId));
 			$this->assign("goodsAttrs",$goods->getAttrs($obj));
 			$this->assign("goodsDetails",$goodsDetails);
 			
@@ -178,9 +184,10 @@ class GoodsAction extends BaseAction {
 			$m = D('Home/Favorites');
 			$this->assign("favoriteShopId",$m->checkFavorite($shopId,1));
 			//客户端二维码
-			$this->assign("qrcode",base64_encode("{type:'goods',content:'".$goodsId."',key:'wstmall'}"));			$this->display('default/goods_details');
+			$this->assign("qrcode",base64_encode("{type:'goods',content:'".$goodsId."',key:'wstmall'}"));			
+			$this->display('goods_details');
 		}else{
-			$this->display('default/goods_notexist');
+			$this->display('goods_notexist');
 		}
 
 	}
@@ -232,7 +239,8 @@ class GoodsAction extends BaseAction {
     	$this->assign("shopCatId2",I('shopCatId2'));
     	$this->assign("shopCatId1",I('shopCatId1'));
     	$this->assign("goodsName",I('goodsName'));
-        $this->display("default/shops/goods/list_onsale");
+    	$this->assign("pageNo",(int)I('p',1));
+        $this->display("shops/goods/list_onsale");
 	}
    /**
 	* 分页查询-仓库中的商品
@@ -252,7 +260,8 @@ class GoodsAction extends BaseAction {
     	$this->assign("shopCatId2",I('shopCatId2'));
     	$this->assign("shopCatId1",I('shopCatId1'));
     	$this->assign("goodsName",I('goodsName'));
-        $this->display("default/shops/goods/list_unsale");
+    	$this->assign("pageNo",(int)I('p',1));
+        $this->display("shops/goods/list_unsale");
 	}
    /**
 	* 分页查询-在审核中的商品
@@ -272,7 +281,8 @@ class GoodsAction extends BaseAction {
     	$this->assign("shopCatId2",I('shopCatId2'));
     	$this->assign("shopCatId1",I('shopCatId1'));
     	$this->assign("goodsName",I('goodsName'));
-        $this->display("default/shops/goods/list_pendding");
+    	$this->assign("pageNo",(int)I('p',1));
+        $this->display("shops/goods/list_pendding");
 	}
 	/**
 	 * 跳到新增/编辑商品
@@ -307,7 +317,8 @@ class GoodsAction extends BaseAction {
     	$this->assign('shopCfg',$shopCfg);
     	$this->assign('object',$object);
     	$this->assign("umark",I('umark'));
-        $this->display("default/shops/goods/edit");
+    	$this->assign("pageNo",(int)I('p',1));
+        $this->display("shops/goods/edit");
 	}
 	/**
 	 * 新增商品

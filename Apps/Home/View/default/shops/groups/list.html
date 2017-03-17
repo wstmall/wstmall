@@ -1,0 +1,90 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+<style type="text/css">
+#preview{border:1px solid #cccccc; background:#CCC;color:#fff; padding:5px; display:none; position:absolute;}
+</style>
+
+    <div class="wst-body"> 
+       <div class='wst-page-header'>卖家中心 > 商品团购</div>
+       <div class='wst-page-content'>
+        <div class='wst-tbar-query' style="text-align: right;position:relative; line-height: 40px;">
+        	<div style="position:absolute;left:0;">
+     		活动时间：<input type='text' id='startDate' class='laydate-icon' name='startDate' value='{$startDate}' style='width:100px;line-height:16px;height:auto;' placeholder='开始日期' onclick='laydate({format: "YYYY-MM-DD"})'/>
+             <input type='text' id='endDate' class='laydate-icon' name='endDate' value='{$endDate}' style='' placeholder='结束日期' onclick='laydate({format: "YYYY-MM-DD"})'/>
+        	团购标题：<input type='text' id='groupName' value='{$groupName}'/>
+      		<button class='wst-btn-query' onclick='javascript:queryGroups()'>查询</button>
+      		</div>
+      		&nbsp;<a href='javascript:toEdit(0);' style='margin-right:15px;'><span class='add btn'></span>新增</a>
+      		
+        </div>
+       
+        <table class='wst-list'>
+           <thead>
+             <tr>
+               <th>团购标题</th>
+               <th width="150">开始时间</th>
+               <th width="150">结束时间</th>
+               <th width='80'>状态</th>
+               <th width='150'>操作</th>
+             </tr>
+           </thead>
+           <tbody>
+            <volist name="Page['root']" id="vo" key='i'>
+         	<tr>
+               	<td>{$vo['groupName']}</td>
+              	<td>{$vo['startTime']}</td>
+              	<td>{$vo['endTime']}</td>
+              	<td>{$vo['statusTxt']}</td>
+              	<td>
+					<a href="javascript:toEdit({$vo['groupId']})" class='btn edit' title='编辑'></a>
+               		<a href="javascript:delGroup({$vo['groupId']})" class='btn del' title='删除'></a>
+               		<a href="{:U('Home/Groups/toAddGoods',array('groupId'=>$vo['groupId']))}" style='margin-right:15px;' title='添加商品'><span class='add btn'></span></a>
+				</td>
+             </tr>
+             </volist>
+             <tfoot>
+             <tr>
+                <td colspan='5'>
+                <div class="wst-page" style="float:right;padding-bottom:10px;">
+						<div id="wst-page-items"></div>
+				</div>
+                <script>
+			    <if condition="$Page['totalPage'] gt 1">
+			    $(document).ready(function(){
+					laypage({
+					    cont: 'wst-page-items',
+					    pages: {$Page['totalPage']}, //总页数
+					    skip: true, //是否开启跳页
+					    skin: '#e23e3d',
+					    groups: 3, //连续显示分页数
+					    curr: function(){ //通过url获取当前页，也可以同上（pages）方式获取
+					        var page = location.search.match(/p=(\d+)/);
+					        return page ? page[1] : 1;
+					    }(), 
+					    jump: function(e, first){ //触发分页后的回调
+					        if(!first){ //一定要加此判断，否则初始时会无限刷新
+					        	var nuewurl = WST.splitURL("p");
+					        	var ulist = nuewurl.split("?");
+					        	if(ulist.length>1){
+					        		location.href = nuewurl+'&p='+e.curr;
+					        	}else{
+					        		location.href = '?p='+e.curr;
+					        	}
+					            
+					        }
+					    }
+					});
+			    });
+				</if>
+				</script>
+                </td>
+             </tr>
+             </tfoot>
+           </tbody>
+        </table>
+        </div>
+    </div>
+</block>
+<block name="js">
+<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/shops/groups.js"></script>
+</block>

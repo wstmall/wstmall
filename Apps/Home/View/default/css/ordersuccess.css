@@ -42,7 +42,7 @@
 .wst-pay-curr-step{color: #7ABD54;}
 
 .wst-ods-success-tb{margin: 0 auto; margin-top:10px;margin-bottom :10px;}
-.wst-ods-success-tc{border: 1px solid #E9E9E9;border-top:2px solid  #7ABD54;background-color:#F3FDED;padding:15px;}
+.wst-ods-success-tc{border: 1px solid #E9E9E9;border-top:2px solid  #7ABD54;background-color:#fdfdfd;padding:15px;}
 .wst-ods-success-td{width: 30px;float: left;text-align: right;padding-top: 5px;}
 .wst-ods-success-tf{width: 1100px;float: left;padding-left: 10px;}
 .wst-ods-success-l25{line-height: 25px;}
@@ -53,8 +53,20 @@
 .wst-ods-success-tk{margin-top:15px;}
 
 
-.wst-payCode{float:left;width:160px;cursor:pointer;}
-.wst-payCode-curr{float:left;width:160px;cursor:pointer;border:2px solid red;}
+.wst-payCode{float:left;cursor:pointer;margin-right: 10px;border:2px solid #d2d2d2;}
+.wst-payCode-curr{float:left;cursor:pointer;border:2px solid red;margin-right: 10px;}
 
-
-
+.pay-sbox .balance-box .pbox input {border: 1px solid #ccc;height: 30px;line-height: 30px;padding: 2px; }
+.pay-sbox{padding:5px 0px;position:relative;}
+.pay-sbox .tips-box{line-height:35px;text-align: left;font-weight: bold;padding:5px 10px;}
+.pay-sbox .balance-box .pbox {text-align: center;padding-top: 40px;font-weight: bold;}
+.pay-sbox .balance-box{min-height: 300px;height: auto;}
+.pay-sbox .balance-box .pbox{text-align: center;padding-top: 40px;font-weight: bold;}
+.pay-sbox .balance-box .pbox2{text-align: center;padding-top: 10px;font-weight: bold;}
+.pay-sbox .balance-box .pbox3{position: absolute;right: 417px;bottom: 82px;}
+.pbox-tip{color:#0ae;margin-left:10px;}
+.pay-btn{background: #E23C3E none repeat scroll 0 0;border: 1px solid #E23C3E;border-radius: 3px;color: #ffffff;cursor: pointer;outline: medium none;}
+.pay-sbox .wst-pay-bnt {height:40px;width:132px;text-align: center;margin:10px auto;background: url(../img/btn_pay.png) no-repeat 0px 0px;cursor:pointer;}
+.pay-sbox .wst-pay-bnt:hover {height:40px;width:132px;text-align: center;margin:10px auto;background: url(../img/btn_pay.png) no-repeat 0px -57px;cursor:pointer;}
+.wst-wallet-box{border:1px solid #ddd;margin:10px;padding:5px;line-height: 35px;height:40px;}
+.wst-wallet-box .wst-wallte-item{background:url("../img/icon_qianbaoyue.png") no-repeat;padding-left:30px;height:30px;margin-top:5px;float:left;}

@@ -1,6 +1,3 @@
-.wst-goods-details {
-	
-}
 .layer-photos-appraise img{
 	margin-right:5px;
 	width:50px;
@@ -34,7 +31,6 @@
 	height: 52px;
 	line-height: 52px;
 	padding-left: 20px;
-	margin-top: 10px;
 	margin-bottom: 10px;
 }
 
@@ -68,7 +64,9 @@
 .goods-des-box .goods-des-tab tr {
 	height: 35px;
 }
-
+.goods-des-box .goods-des-tab tr.goods-attr{
+	height: auto;
+}
 .goods-des-box .goods-des-tab tr td {
 	vertical-align: top;
 }
@@ -284,22 +282,20 @@
 }
 
 .wst-goods-pdetails-right .goods-nvg {
-	height: 36px;
+	height: 40px;
 	background-color: #f7f7f7;
 	padding: 0px;
 }
 
 .wst-goods-pdetails-right .goods-nvg ul li {
 	float: left;
-	padding-left: 8px;
-	padding-right: 8px;
+	padding-left: 35px;
+	padding-right: 35px;
 	text-align: center;
 }
 
 .goods-nvg .tab .curr {
 	font-weight: bolder;
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;
 	color: #ffffff;
 	cursor: pointer;
 	background-color: #e23e3d;
@@ -339,11 +335,10 @@
 
 .wst-goods-pdetails-right .tab li {
 	position: relative;
-	height: 24px;
-	padding: 3px 12px 0;
+	height: 40px;
 	overflow: hidden;
 	margin-right: 3px;
-	line-height: 24px;
+	line-height: 40px;
 }
 
 .wst-goods-pdetails-right .tab span {
@@ -500,12 +495,12 @@
 .wst-attrs-list{width:100%;}
 .wst-attrs-list th{text-align:right;width:100px;background:#f5f5f5;border:1px solid #ddd;padding:5px;}
 .wst-attrs-list td{text-align:left;border:1px solid #ddd;padding:5px;}
-.wst-goods-attrs{padding:5px 10px;margin-right:5px;border:1px solid #ddd;cursor:pointer;}
-.wst-goods-attrs-on{border:2px solid #fb4f1c;color:#fb4f1c;}
+.wst-goods-attrs{padding:5px 10px;margin-right:5px;border:1px solid #ddd;cursor:pointer;display: inline-block;margin-bottom: 4px;}
+.wst-goods-attrs-on{border:2px solid #fb4f1c;color:#fb4f1c;display: inline-block;margin-bottom: 4px;}
 .wst-goods-stock{position:relative;top:-37px;left:140px;}
 .wst-goods-dist{color:red;margin-top:4px;}
-.wst-short-tool{padding-top:5px;clear:both;}	
-.wst-short-tool b {margin-right:3px;cursor: pointer;height: 16px;width: 16px;display:inline-block;background-image: url("../images/icon_top_01.png");background-repeat: no-repeat;transition: transform 0.2s ease-in 0s;}
+.wst-short-tool{padding-top:5px;clear:both;position: relative;}	
+.wst-short-tool b {margin-right:3px;cursor: pointer;height: 16px;width: 16px;display:inline-block;background-image: url("../images/icon_top_01.png");background-repeat: no-repeat;}
 .wst-short-tool a:hover b{transform: rotate(720deg);}
 
 
@@ -553,5 +548,18 @@
 .wst-goods-packages .wst-save-tips{font-size:14px;background-color: #333;color:#fff;padding:2px 4px;}
 .wst-goods-packages .wst-pay-price{font-size:18px;color:red;}
 
-.wst-qrBox{position:absolute ;top:-50px;left:450px;padding:2px;}
-.wst-qrcode{width:132px;height:132px;border:1px solid #ddd;margin-bottom:2px;}
+.wst-qrBox{position:absolute ;top:-22px;left:450px;padding:2px;}
+.wst-qrcode{width:130px;height:130px;border:1px solid #ddd;margin-bottom:2px;background-color: #FFF;}
+
+.wst-coupon-box{float:left;width:180px;color:#FF0000;position:relative;padding: 0 15px;font-weight: bold;background:#000; }
+.wst-coupon-box .split{border-left:1px solid #ddd;position:absolute;height:45px;top:20px;left:0px;}
+.wst-coupon-box .money{float:left;width:100px;font-size: 50px;line-height:80px;}
+.wst-coupon-box .link{position:absolute;top:12px;right:10px;}
+.wst-coupon-box .des{position:absolute;right:10px;bottom:10px;font-size:15px;}
+.wst-coupon-box a{color:red;}
+.wst-coupon-box .tip{  background: #FF0000;color: #fff;border-radius: 100px; width: 25px;height: 25px;display: inline-block;position: absolute;top: 0; right: -25px;font-size: 16px;line-height: 25px; text-align: center;}
+
+
+/*立即抢购商品详情*/
+
+.tabcon{padding-top: 20px;}

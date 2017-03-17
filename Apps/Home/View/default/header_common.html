@@ -29,11 +29,11 @@
 		<div id="wst-search-des-container">
 			<div class="des-box">
 				<div class='wst-reach'>
-					<img src="__ROOT__/Apps/Home/View/default/images/sadn.jpg"  height="38" width="40"/>
+					<img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/sadn.jpg"  height="38" width="40"/>
 					<div style="float:left;position:absolute;top:0px;left:38px;"><span style="font-weight:bolder;">闪电配送</span><br/><span style="color:#e23c3d;">最快1小时送达</span></div>
 				</div>
 				<div class='wst-since'>
-					<img src="__ROOT__/Apps/Home/View/default/images/sqzt.jpg"  height="38" width="40"/>
+					<img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/sqzt.jpg"  height="38" width="40"/>
 					<div style="float:left;position:absolute;top:0px;left:38px;"><span style="font-weight:bolder;">社区自提</span><br/><span style="color:#e23c3d;">330家自提点</span></div>
 				</div>
 			</div>
@@ -44,11 +44,11 @@
 <div class="headNav">
 		  <div class="navCon w1020">
 		    <div class="navCon-cate fl navCon_on" >
-		      <div class="navCon-cate-title"> <a href="{:U('Home/goods/getGoodsList')}"><img src="__ROOT__/Apps/Home/View/default/images/cate_icon.png" class="wst-cate-img"/>&nbsp;&nbsp;<span class="navCon-allcat">全部商品分类</span></a></div>
+		      <div class="navCon-cate-title"> <a href="{:U('Home/goods/getGoodsList')}"><img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/cate_icon.png" class="wst-cate-img"/>&nbsp;&nbsp;<span class="navCon-allcat">全部商品分类</span></a></div>
 		      	<if condition="$ishome eq 1">
-		     	 	<div class="cateMenu1" >
+		     	 	<div class="wst-cate-menu1" >
 		      	<else/>
-		      		<div class="cateMenu2" style="display:none;" >
+		      		<div class="wst-cate-menu2" style="display:none;" >
 		      	</if>
 		        <div id="wst-nvg-cat-box">
 		        	<div class="wst-nvgbk" style="diplay:none;"></div>
@@ -62,7 +62,7 @@
 				            <div class="cate-tag"> 
 				            <div class="listModel">
 				             <p > 
-				            	<strong><s{$k1}></s{$k1}>&nbsp;<a style="font-weight:bold;" href="{:U('Home/goods/getGoodsList',array('c1Id'=>$vo1['catId']))}">{$vo1["catName"]}</a></strong>
+				            	<strong><s class='s{$k1}'></s>&nbsp;<a style="font-weight:bold;" href="{:U('Home/goods/getGoodsList',array('c1Id'=>$vo1['catId']))}">{$vo1["catName"]}</a></strong>
 				             </p> 
 				             </div>
 				              <div class="listModel">

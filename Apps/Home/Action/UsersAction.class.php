@@ -25,7 +25,26 @@ class UsersAction extends BaseAction {
 		}
 		$this->assign('qqBackUrl',urlencode(WSTDomain()."/Wstapi/thridLogin/qqlogin.php"));
 		$this->assign('wxBackUrl',urlencode(WSTDomain()."/Wstapi/thridLogin/wxlogin.php"));
-		$this->display('default/login');
+		$this->display('login');
+	}
+	
+	/**
+	 * 跳去绑定界面
+	 */
+	public function wxLogin(){
+		//如果已经登录了则直接跳去后台
+		$USER = session('WST_USER');
+		if(!empty($USER) && $USER['userId']!=''){
+			$this->redirect("Users/index");
+		}
+		if(isset($_COOKIE["loginName"])){
+			$this->assign('loginName',$_COOKIE["loginName"]);
+		}else{
+			$this->assign('loginName','');
+		}
+		$info = session('Binding_wx');
+		$this->assign('info',$info);
+		$this->display('login_wx');
 	}
 	
 	
@@ -48,7 +67,7 @@ class UsersAction extends BaseAction {
 		}else{
 			$this->assign('loginName','');
 		}
-		$this->display('default/regist');
+		$this->display('regist');
 	}
 
 	/**
@@ -151,7 +170,7 @@ class UsersAction extends BaseAction {
 		$payPwd = $user['payPwd'];
 		$this->assign("pwdType",empty($payPwd)?0:1);
 		$this->assign("umark","toEditPass");
-		$this->display("default/users/pass/edit_pass");
+		$this->display("users/pass/edit_pass");
 	}
 	/**
 	 * 修改用户密码
@@ -190,7 +209,7 @@ class UsersAction extends BaseAction {
 		
 		$this->assign("user",$user);
 		$this->assign("umark","toEditUser");
-		$this->display("default/users/edit_user");
+		$this->display("users/edit_user");
 	}
 	
 	/**
@@ -227,7 +246,7 @@ class UsersAction extends BaseAction {
 	 */
     public function forgetPass(){
     	session('step',1);
-    	$this->display('default/forget_pass');
+    	$this->display('forget_pass');
     }
     
     /**
@@ -251,7 +270,7 @@ class UsersAction extends BaseAction {
     				if($info['userPhone']!='')$info['userPhone'] = WSTStrReplace($info['userPhone'],'*',3);
     				if($info['userEmail']!='')$info['userEmail'] = WSTStrReplace($info['userEmail'],'*',2,'@');
     				$this->assign('forgetInfo',$info);
-    				$this->display('default/forget_pass2');
+    				$this->display('forget_pass2');
     			}else $this->error('该用户不存在！');
     			break;
     		case 2:#第三步,设置新密码
@@ -272,7 +291,7 @@ class UsersAction extends BaseAction {
                 if ($loginPwd == $repassword) {
 	                $rs = D('Home/Users')->resetPass();
 			    	if($rs['status']==1){
-			    	    $this->display('default/forget_pass4');
+			    	    $this->display('forget_pass4');
 			    	}else{
 			    		$this->error($rs['msg']);
 			    	}
@@ -299,7 +318,7 @@ class UsersAction extends BaseAction {
         session('findPass',$USER);
 		$msg = "您正在重置登录密码，验证码为:".$phoneVerify."，请在30分钟内输入。【".$GLOBALS['CONFIG']['mallName']."】";
 		$rv = D('Home/LogSms')->sendSMS(0,session('findPass.userPhone'),$msg,'getPhoneVerify',$phoneVerify);
-		$rv['time']=30*60;
+		$rv['time']=120;
 		$this->ajaxReturn($rv);
 	}
 
@@ -360,7 +379,7 @@ class UsersAction extends BaseAction {
 		session('REST_userId',$key[1]);
 		session('REST_Time',$key[2]);
 		session('REST_success','1');
-		$this->display('default/forget_pass3');
+		$this->display('forget_pass3');
     }
     
     /**
@@ -374,7 +393,7 @@ class UsersAction extends BaseAction {
 		}
 		$this->assign('qqBackUrl',urlencode(WSTDomain()."/Wstapi/thridLogin/qqlogin.php"));
 		$this->assign('wxBackUrl',urlencode(WSTDomain()."/Wstapi/thridLogin/wxlogin.php"));
-    	$this->display('default/login_box');
+    	$this->display('login_box');
     }
     
     /**
@@ -390,7 +409,7 @@ class UsersAction extends BaseAction {
     	if($info['userEmail']!='')$info['userEmail'] = WSTStrReplace($info['userEmail'],'*',2,'@');
     	$this->assign('forgetInfo',$info);
     	session('steps',1);
-    	$this->display('default/users/pass/forget_pwd');
+    	$this->display('users/pass/forget_pwd');
     }
     
     /**
@@ -419,7 +438,7 @@ class UsersAction extends BaseAction {
     			if ($payPwd == $repassword) {
     				$rs = D('Home/Users')->resetPwd();
     				if($rs['status']==1){
-    					$this->display('default/users/pass/forget_pwd3');
+    					$this->display('users/pass/forget_pwd3');
     				}else{
     					$this->error($rs['msg']);
     				}
@@ -446,7 +465,7 @@ class UsersAction extends BaseAction {
     	session('findPwd',$USER);
     	$msg = "您正在重置支付密码，验证码为:".$phoneVerify."，请在30分钟内输入。【".$GLOBALS['CONFIG']['mallName']."】";
     	$rv = D('Home/LogSms')->sendSMS(0,session('findPwd.userPhone'),$msg,'getPhoneVerify',$phoneVerify);
-    	$rv['time']=30*60;
+    	$rv['time']=120;
     	$this->ajaxReturn($rv);
     }
     
@@ -507,7 +526,7 @@ class UsersAction extends BaseAction {
     	session('REST_userId',$key[1]);
     	session('REST_Time',$key[2]);
     	session('REST_success','1');
-    	$this->display('default/users/pass/forget_pwd2');
+    	$this->display('users/pass/forget_pwd2');
     }
        
     /**
@@ -519,7 +538,7 @@ class UsersAction extends BaseAction {
     	$user = $um->getUserById(array("userId"=>session('WST_USER.userId')));
     	$this->assign("userScore",$user['userScore']);
     	$this->assign("umark","toScoreList");
-    	$this->display("default/users/score_list");
+    	$this->display("users/score_list");
     }
     
     /**
@@ -610,7 +629,7 @@ class UsersAction extends BaseAction {
     			if($rd["status"]==1){
     				$this->redirect("Home/Index/index");
     			}else{
-    				$this->redirect("Home/Users/login");
+    				$this->redirect("Home/Users/wxLogin");
     			}
     		}else{
     			//未注册，则先注册
@@ -618,9 +637,10 @@ class UsersAction extends BaseAction {
     			$obj["userName"] = $arr["nickname"];
     			$obj["openId"] = $openId;
     			$obj["userFrom"] = 2;
+    			$obj["userSex"] = $arr["sex"];
     			$obj["userPhoto"] = $arr["headimgurl"];
-    			$um->thirdRegist($obj);
-    			$this->redirect("Home/Index/index");
+    			session('Binding_wx',$obj);
+    			$this->redirect("Home/Users/wxLogin");
     		}
     	}else{
     		$this->redirect("Home/Users/login");

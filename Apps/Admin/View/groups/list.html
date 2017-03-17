@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>{$CONF['mallTitle']}后台管理中心</title>
+      <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
+      <!--[if lt IE 9]>
+      <script src="__PUBLIC__/js/html5shiv.min.js"></script>
+      <script src="__PUBLIC__/js/respond.min.js"></script>
+      <![endif]-->
+      <script src="__PUBLIC__/js/jquery.min.js"></script>
+      <script src="__PUBLIC__/plugins/bootstrap/js/bootstrap.min.js"></script>
+      <script src="__PUBLIC__/js/common.js"></script>
+      <script src="__PUBLIC__/plugins/formValidator/formValidator-4.1.3.js"></script>
+      <script src="__PUBLIC__/plugins/plugins/plugins.js"></script>
+      <style type="text/css">
+		#preview{border:1px solid #cccccc; background:#CCC;color:#fff; padding:5px; display:none; position:absolute;}
+	  </style>
+   </head>
+   <script>
+   $.fn.imagePreview = function(options){
+		var defaults = {}; 
+		var opts = $.extend(defaults, options);
+		var t = this;
+		xOffset = 5;
+		yOffset = 20;
+		if(!$('#preview')[0])$("body").append("<div id='preview'><img width='200' src=''/></div>");
+		$(this).hover(function(e){
+			   $('#preview img').attr('src',"__ROOT__/"+$(this).attr('img'));      
+			   $("#preview").css("top",(e.pageY - xOffset) + "px").css("left",(e.pageX + yOffset) + "px").show();      
+		  },
+		  function(){
+			$("#preview").hide();
+		}); 
+		$(this).mousemove(function(e){
+			   $("#preview").css("top",(e.pageY - xOffset) + "px").css("left",(e.pageX + yOffset) + "px");
+		});
+	}
+   function getAreaList(objId,parentId,t,id){
+	   var params = {};
+	   params.parentId = parentId;
+	   $('#'+objId).empty();
+	   if(t<1){
+		   $('#areaId2').html('<option value="">请选择</option>');
+		   if(parentId==0)return;
+	   }
+	   var html = [];
+	   $.post("{:U('Admin/Areas/queryByList')}",params,function(data,textStatus){
+		    html.push('<option value="">请选择</option>');
+			var json = WST.toJson(data);
+			if(json.status=='1' && json.list.length>0){
+				var opts = null;
+				for(var i=0;i<json.list.length;i++){
+					opts = json.list[i];
+					html.push('<option value="'+opts.areaId+'" '+((id==opts.areaId)?'selected':'')+'>'+opts.areaName+'</option>');
+				}
+			}
+			$('#'+objId).html(html.join(''));
+	   });
+   }
+   function getCatList(objId,parentId,t,id){
+	   var params = {};
+	   params.id = parentId;
+	   $('#'+objId).empty();
+	   if(t<1){
+		   $('#goodsCatId3').empty();
+		   $('#goodsCatId3').html('<option value="0">请选择</option>');
+		   if(parentId==0){
+			   $('#goodsCatId2').html('<option value="0">请选择</option>');
+			   return;
+		   }
+	   }
+	   var html = [];
+	   $.post("{:U('Home/GoodsCats/queryByList')}",params,function(data,textStatus){
+		    html.push('<option value="0">请选择</option>');
+			var json = WST.toJson(data);
+			if(json.status=='1' && json.list){
+				var opts = null;
+				for(var i=0;i<json.list.length;i++){
+					opts = json.list[i];
+					html.push('<option value="'+opts.catId+'" '+((id==opts.catId)?'selected':'')+'>'+opts.catName+'</option>');
+				}
+			}
+			$('#'+objId).html(html.join(''));
+	   });
+   }
+   $(document).ready(function(){
+	    $('.imgPreview').imagePreview();
+	    <notempty name='areaId1'>
+		   getAreaList("areaId2",'{$areaId1}',0,'{$areaId2}');
+		</notempty>
+		<if condition="$goodsCatId1  neq 0 ">
+		getCatList("goodsCatId2",{$goodsCatId1},0,{$goodsCatId2});
+		</if>
+		<if condition="$goodsCatId2 neq 0 ">
+		getCatList("goodsCatId3",{$goodsCatId2},1,{$goodsCatId3});
+		</if>
+   });
+   </script>
+   <body class='wst-page'>
+    <form method='post' action='{:U("Admin/Groups/queryGroupGoods")}' autocomplete="off">
+       <div class='wst-tbar'> 
+      	地区：<select id='areaId1' name='areaId1' onchange='javascript:getAreaList("areaId2",this.value,0)'>
+               <option value='0'>请选择</option>
+               <volist name="areaList" id="vo">
+               <option value='{$vo['areaId']}' <if condition="$areaId1 == $vo['areaId'] ">selected</if>>{$vo['areaName']}</option>
+               </volist>
+             </select>
+             <select id='areaId2' name='areaId2'>
+               <option value='0'>请选择</option>
+             </select>
+  			商城分类：<select id='goodsCatId1' name='goodsCatId1' onchange='javascript:getCatList("goodsCatId2",this.value,0)'>
+	                <option value='0'>请选择</option>
+	                <volist name="goodsCatsList" id="vo">
+	                <option value='{$vo['catId']}' <if condition="$goodsCatId1 == $vo['catId'] ">selected</if>>{$vo['catName']}</option>
+	                </volist>
+	             </select>
+	             <select id='goodsCatId2' name='goodsCatId2' onchange='javascript:getCatList("goodsCatId3",this.value,1);'>
+	                <option value='0'>请选择</option>
+	             </select>
+	             <select id='goodsCatId3' name='goodsCatId3'>
+	                <option value='0'>请选择</option>
+	             </select>
+   			</div>
+		   	<div class='wst-tbar'>            
+			 所属店铺：<input type='text' id='shopName' name='shopName' value='{$shopName}'/>            
+			商品：<input type='text' id='goodsName' name='goodsName' value='{$goodsName}'/> 
+		
+		  		<button type="submit" class="btn btn-primary glyphicon glyphicon-search">查询</button> 
+			</div>
+       </form>
+       <div class='wst-body'>
+        <table class="table table-hover table-striped table-bordered wst-list">
+           <thead>
+             <tr>
+               <th width='40'>序号</th>
+               <th width='360'>商品名称</th>
+               <th >团购名称</th>
+               <th width='180'>店铺名称</th>
+               <th width='100'>店铺价格</th>
+               <th width='100'>团购价格</th>
+               <th width='100'>库存/已售</th>
+               <th width='160'>团购时间</th>
+               <th width='60'>折扣</th>
+               <th width='80'>状态</th>
+               <th width='40'>排序</th>
+               <th width='170'>操作</th>
+             </tr>
+           </thead>
+           <tbody>
+			<volist name="Page['root']" id="vo" key='i'>
+				<tr >
+	               <td>{$i}</td>
+	               <td img='{$vo['goodsThums']}' class='imgPreview'>
+	               	<div style="float:left;width:52px;"><img src='__ROOT__/{$vo['goodsThums']}' width='50'/></div>
+	              	<div style="float:left;width:290px;">{$vo['goodsName']}</div>
+	              	<div style"clear:both;"></div>
+	               </td>
+	               <td>{$vo['groupName']}&nbsp;</td>
+	               <td>{$vo['shopName']}&nbsp;</td>
+	               <td>{$vo['shopPrice']}&nbsp;</td>
+	               <td>{$vo['groupMoney']}&nbsp;</td>
+	               <td>{$vo['goodsStock']}/{$vo['saleCnt']}&nbsp;</td>
+	               <td>{$vo['startTime']}至{$vo['endTime']}</td>
+	               <td>{$vo['goodsRate']}&nbsp;</td>
+	               <td>
+		               <?php if($vo['goodsStatus']==1){ ?>
+		           		<span class="label label-warning">待审核</span>
+		               <?php }else if($vo['goodsStatus']==2){ ?>
+		               	<span class="label label-success">审核通过</span>
+		               <?php }else if($vo['goodsStatus']==-1){ ?>
+		               	<span class="label label-danger">审核不通过</span>
+		               <?php } ?>
+	               </td>
+	               <td>
+	               	<input type="text" value="{$vo['sortNo']}" onchange="javascript:editSort(this,{$vo['id']})" class="form-control wst-ipt" style="width:40px;">
+	               </td>
+	               <td>
+	               		<?php if($vo['goodsStatus']==1){ ?>
+	               			<button type="button" class="btn btn-success" onclick="auditGoods({$vo['id']});">通过</button>
+		           			<button type="button" class="btn btn-warning" onclick="toRefuse({$vo['id']});">拒绝</button>
+		               <?php }else if($vo['goodsStatus']==2){ ?>
+		               		<button type="button" class="btn btn-warning" onclick="toRefuse({$vo['id']});">拒绝</button>	
+		               <?php } ?>
+		               <button type="button" class="btn btn-danger" onclick="del({$vo['id']});">删除</button>
+	               </td>
+             	</tr>
+			</volist>
+			<tr>
+                <td colspan='12' align='center'>{$Page['pager']}</td>
+			</tr>
+           </tbody>
+        </table>
+       </div>
+   </body>
+   <script type="text/javascript">
+   	function auditGoods(id){
+	   $.post("{:U('Admin/Groups/auditGroupGoods')}",{id:id},function(data,textStatus){
+			var json = WST.toJson(data);
+			if(json.status==1){
+				location.reload();
+			}else{
+				Plugins.closeWindow();
+			}
+		});
+   	}
+   	function toRefuse(id){
+	 	var url = "{:U('Admin/Groups/toRefuse',array('id'=>'__0'))}".replace('__0',id);
+		Plugins.Modal({url:url,title:'拒绝信息',width:500});
+	 
+   	}
+   	function editSort(obj,id){
+	   	var sortNo = $(obj).val();
+	   	if(sortNo==""){
+		   	return;
+	   	}
+	   	$.post("{:U('Admin/Groups/editSort')}",{id:id,sortNo:sortNo},function(data,textStatus){
+			var json = WST.toJson(data);
+		});
+	}
+   	function del(id){
+		Plugins.confirm({title:'信息提示',content:'您确定要删除该团购商品吗?',okText:'确定',cancelText:'取消',okFun:function(){
+		Plugins.waitTips({title:'信息提示',content:'正在操作，请稍后...'});
+		$.post("{:U('Admin/Groups/delGroupGoods')}",{id:id},function(data,textStatus){
+				var json = WST.toJson(data);
+					if(json.status==1){
+						Plugins.setWaitTipsMsg({content:'操作成功',timeout:1000,callback:function(){
+							location.reload();
+						}});
+					}else{
+						Plugins.closeWindow();
+					}
+				});
+	      }
+	   });
+   	}
+   </script>
+</html>

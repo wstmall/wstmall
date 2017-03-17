@@ -31,7 +31,7 @@ class OrdersAction extends BaseAction {
 		$this->assign("umark","queryByPage");
 		$this->assign("orderList",$orderList);
 		$this->assign("statusList",$statusList);
-		$this->display("default/users/orders/list");
+		$this->display("users/orders/list");
 	}
 	/**
 	 * 获取待付款的订单列表
@@ -45,7 +45,7 @@ class OrdersAction extends BaseAction {
 		$payOrders = $morders->queryPayByPage($obj);
 		$this->assign("umark","queryPayByPage");
 		$this->assign("payOrders",$payOrders);
-		$this->display("default/users/orders/list_pay");
+		$this->display("users/orders/list_pay");
 	}
     /**
 	 * 获取待发货的订单列表
@@ -59,7 +59,7 @@ class OrdersAction extends BaseAction {
 		$deliveryOrders = $morders->queryDeliveryByPage($obj);
 		$this->assign("umark","queryDeliveryByPage");
 		$this->assign("receiveOrders",$deliveryOrders);
-		$this->display("default/users/orders/list_delivery");
+		$this->display("users/orders/list_delivery");
 	}
     /**
 	 * 获取退款订单列表
@@ -73,7 +73,7 @@ class OrdersAction extends BaseAction {
 		$refundOrders = $morders->queryRefundByPage($obj);
 		$this->assign("umark","queryRefundByPage");
 		$this->assign("receiveOrders",$refundOrders);
-		$this->display("default/users/orders/list_refund");
+		$this->display("users/orders/list_refund");
 	}
     /**
 	 * 获取收货的订单列表
@@ -87,7 +87,7 @@ class OrdersAction extends BaseAction {
 		$receiveOrders = $morders->queryReceiveByPage($obj);
 		$this->assign("umark","queryReceiveByPage");
 		$this->assign("receiveOrders",$receiveOrders);
-		$this->display("default/users/orders/list_receive");
+		$this->display("users/orders/list_receive");
 	}
 	
 	/**
@@ -102,7 +102,7 @@ class OrdersAction extends BaseAction {
 		$receiveOrders = $morders->queryCancelOrders($obj);
 		$this->assign("umark","queryCancelOrders");
 		$this->assign("receiveOrders",$receiveOrders);
-		$this->display("default/users/orders/list_cancel");
+		$this->display("users/orders/list_cancel");
 	}
     
 	/**
@@ -117,7 +117,7 @@ class OrdersAction extends BaseAction {
 		$appraiseOrders = $morders->queryAppraiseByPage($obj);
 		$this->assign("umark","queryAppraiseByPage");
 		$this->assign("appraiseOrders",$appraiseOrders);
-		$this->display("default/users/orders/list_appraise");
+		$this->display("users/orders/list_appraise");
 	} 
 	
 	/**
@@ -132,7 +132,7 @@ class OrdersAction extends BaseAction {
 		$appraiseOrders = $morders->queryCompleteOrders($obj);
 		$this->assign("umark","queryCompleteOrders");
 		$this->assign("appraiseOrders",$appraiseOrders);
-		$this->display("default/users/orders/list_complete");
+		$this->display("users/orders/list_complete");
 	}
 	
 	/**
@@ -141,13 +141,13 @@ class OrdersAction extends BaseAction {
 	public function getOrderInfo(){
 		$this->isUserLogin();
 		$USER = session('WST_USER');
-		$morders = D('Home/Orders');
+		$m = D('Home/Orders');
 		$obj["userId"] = (int)$USER['userId'];
 		$obj["orderId"] = (int)I("orderId");
-		$rs = $morders->getOrderDetails($obj);
+		$rs = $m->getOrderDetails($obj);
 		$data["orderInfo"] = $rs;
 		$this->assign("orderInfo",$rs);
-		$this->display("default/order_details");
+		$this->display("order_details");
 	}
 	
 	/**
@@ -155,11 +155,11 @@ class OrdersAction extends BaseAction {
 	 */
     public function orderCancel(){
     	$this->isUserLogin();
-    	$USER = session('WST_USER');
-    	$morders = D('Home/Orders');
-    	$obj["userId"] = (int)$USER['userId'];
+    	$m = D('Common/Orders');
+    	$obj["userId"] = (int)session('WST_USER.userId');
     	$obj["orderId"] = (int)I("orderId");
-		$rs = $morders->orderCancel($obj);
+    	$obj["rejectionRemarks"] = I("rejectionRemarks");
+		$rs = $m->orderCancel($obj);
 		$this->ajaxReturn($rs);
 	} 
 	
@@ -168,14 +168,17 @@ class OrdersAction extends BaseAction {
 	 */
     public function orderConfirm(){
     	$this->isUserLogin();
-    	$USER = session('WST_USER');
-    	$morders = D('Home/Orders');
-    	$obj["userId"] = (int)$USER['userId'];
+    	$m = D('Common/Orders');
+    	$obj["userId"] = (int)session('WST_USER.userId');
     	$obj["orderId"] = (int)I("orderId");
-    	$obj["type"] = (int)I("type");
-		$rs = $morders->orderConfirm($obj);
+    	$obj["optType"] = 0;
+		$rs = $m->orderConfirm($obj);
 		$this->ajaxReturn($rs);
 	} 
+	
+	
+	
+	
 	
 	/**
 	 * 核对订单信息
@@ -187,7 +190,7 @@ class OrdersAction extends BaseAction {
 		$rdata = $mcart->getPayCart();	
 	    if($rdata["cartnull"]==1){
 			$this->assign("fail_msg",'不能提交空商品的订单!');
-			$this->display('default/order_fail');
+			$this->display('order_fail');
 			exit();
 		}
 		$distCnt = $mcart->checShopkDistribut();
@@ -243,6 +246,7 @@ class OrdersAction extends BaseAction {
 		$um = D('Home/Users');
 		$user = $um->getUserById(array("userId"=>session('WST_USER.userId')));
 		$this->assign("userScore",$user['userScore']);
+		$this->assign("userMoney",$user["userMoney"]);
 		$useScore = $baseScore*floor($user["userScore"]/$baseScore);
 		$scoreMoney = $baseMoney*floor($user["userScore"]/$baseScore);
 		if($totalMoney<$scoreMoney){//订单金额小于积分金额
@@ -251,7 +255,7 @@ class OrdersAction extends BaseAction {
 		}
 		$this->assign("canUserScore",$useScore);
 		$this->assign("scoreMoney",$scoreMoney);
-		$this->display('default/check_order');
+		$this->display('check_order');
 	}
 	
 	
@@ -297,7 +301,7 @@ class OrdersAction extends BaseAction {
 		$this->isUserLogin();
 		$morders = D('Home/Orders');
 		$this->assign("orderInfos",$morders->getOrderListByIds());
-		$this->display('default/order_success');
+		$this->display('order_success');
 	}
 	
 	/**
@@ -324,7 +328,18 @@ class OrdersAction extends BaseAction {
 		$data["orderInfo"] = $rs;
 		$this->assign("orderInfo",$rs);
 	
-		$this->display("default/users/orders/details");
+		$this->display("users/orders/details");
+	}
+	
+	/**
+	 * 打印订单
+	 */
+	public function printOrders(){
+		$this->isUserLogin();
+		$morders = D('Home/Orders');
+		$rs = $morders->getPrintOrders($obj);
+		$this->assign("orders",$rs);
+		$this->display("order_print");
 	}
 	
 	/*************************************************************************/
@@ -337,7 +352,7 @@ class OrdersAction extends BaseAction {
 		$this->isShopLogin();
 		$morders = D('Home/Orders');
 		$this->assign("umark","toShopOrdersList");		
-		$this->display("default/shops/orders/list");
+		$this->display("shops/orders/list");
 	}
 	/**
 	 * 获取商家订单列表
@@ -431,17 +446,64 @@ class OrdersAction extends BaseAction {
 		$this->ajaxReturn($rs);
 	} 
 	
+	
 	/**
-	 * 商家同意拒收/不同意拒收
+	 * 用户-申请退款
+	 */
+	public function toRefund(){
+		$this->isUserLogin();
+		$m = D('Home/Orders');
+		$rs = $m->getMoneyByOrder();
+		$this->assign('object',$rs);
+		$this->display('users/orders/box_refund');
+	}
+	
+	/**
+	 * 用户-申请退款
+	 */
+	public function refund(){
+		$this->isUserLogin();
+		$m = D('Common/Orders');
+		$obj = array();
+		$obj["orderId"] = (int)I('orderId');
+		$obj["refundRemark"] = I('refundRemark');
+		$obj["backMoney"] = (float)I('backMoney');
+		$obj["userId"] = (int)session('WST_USER.userId');
+		$rs = $m->refund($obj);
+		$this->ajaxReturn($rs);
+	}
+	
+	/**
+	 * 商家-操作退款
+	 */
+	public function toShopRefund(){
+		$m = D('Home/Orders');
+		$rs = $m->getMoneyByOrder();
+		$this->assign('object',$rs);
+		$this->display('shops/orders/box_refund');
+	}
+	
+	/**
+	 * 商家-操作退款
 	 */
 	public function shopOrderRefund(){
 		$this->isShopLogin();
 		$USER = session('WST_USER');
-    	$morders = D('Home/Orders');
-    	$obj["userId"] = (int)$USER['userId'];
-    	$obj["shopId"] = (int)$USER['shopId'];
-    	$obj["orderId"] = (int)I("orderId");
-		$rs = $morders->shopOrderRefund($obj);
+		$m = D('Home/Orders');
+		$obj["userId"] = (int)session('WST_USER.userId');
+		$obj["shopId"] = (int)session('WST_USER.shopId');
+		$obj["orderId"] = (int)I("orderId");
+		$rs = $m->shopOrderRefund($obj);
+		$this->ajaxReturn($rs);
+	}
+	
+	/**
+	 * 商家标识取消订单为已读
+	 */
+	public function orderRead(){
+		$this->isShopLogin();
+		$m = D('Home/Orders');
+		$rs = $m->orderRead();
 		$this->ajaxReturn($rs);
 	}
 	

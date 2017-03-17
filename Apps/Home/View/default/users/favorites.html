@@ -1,6 +1,6 @@
 <extend name="./Apps/Home/View/default/users/layout.html" />
 <block name="content">
-<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/favorites.css">
+<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/favorites.css">
 	<script>
 	var statusMark = 0;
 	$(function () {
@@ -48,7 +48,7 @@
 											</div>
 											<div class="goods-right">
 											   <a href="javascript:addCart({{d[i].goodsId}},1,'__ROOT__/{{d[i].goodsThums}}')" class="btnCart">
-												<img src="__ROOT__/Apps/Home/View/default/images/btn_addcart.png" width="85"/>
+												<img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/btn_addcart.png" width="85"/>
 											   </a>
 											</div>
                                             {{#}else{}}

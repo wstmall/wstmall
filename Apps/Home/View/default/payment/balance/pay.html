@@ -1,0 +1,67 @@
+<!DOCTYPE>
+<html lang="zh-cn">
+<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>{$CONF['mallTitle']} - 支付成功</title>
+      	<meta name="keywords" content="{$CONF['mallKeywords']},支付" />
+      	<meta name="description" content="{$CONF['mallDesc']},支付" />
+	    <link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/common.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/ordersuccess.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/base.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/head.css" />
+</head>
+
+<body class="root61">
+	<include file="./Apps/Home/View/default/header_common.html" />
+	<div class="w">
+		<div>
+			<div>
+                <div id="succeed" class="wst-ods-success">
+                    <div class="success2" style="margin: 0 auto;">
+                        <div class="wst-ods-success-blank"></div>
+                        <div class="wst-ods-success-step">
+                            <img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/step2.png" alt="" /><br />
+                            <span class="wst-pay-success-step1">1.在线支付</span>
+                            <span class="wst-pay-success-step2  wst-pay-curr-step">2.收银台</span>
+                            <span class="wst-pay-success-step3">3.支付成功</span>
+                        </div>
+                        <div class="wst-clear"></div>
+                    </div>
+                </div>
+            </div>
+			<br/>
+			<div class="pay-sbox wst-ods-success-tc">
+		    	<div class="balance-box">
+		    	    <div class="tips-box">待支付订单总额：<span class="wst-fred">￥{$needPay}</span></div>
+				    <div class="wst-wallet-box">
+			        	<div class="wst-wallte-item">
+			        	钱包余额：<span class="wst-fred">￥{$userMoney}</span>
+			        	</div>
+		                <div style="float:right;">支付：<span class="wst-fred">￥{$needPay}</span></div>
+			        </div>
+			       	<div class="pbox">
+			            <input type="hidden" id="pkey" value="{$pkey}" autocomplete="off">
+			        	支付密码：<input type="password" class="payPwd" id="payPwd">
+			        	<a class="pbox-tip" target="_blank" href="{:U('Home/Users/forgetPwd')}">忘记密码?</a>
+			        </div>
+			        <div class="pbox2">
+			        	<button class="pay-btn" type="button" style="width:100px;height: 30px;" onclick="javascript:balancePay()">确认支付</button>
+			        </div>
+			        <div class="pbox3">
+			        	<a class="pbox-tip" target="_blank" href="javascript:history.go(-1);">使用其他方式支付</a>
+			        </div>
+			 	</div>
+		    </div>		
+		</div>
+	</div>
+	<div class="wst-clear"></div>
+    <div style="height: 20px;"></div>
+    
+	<include file="./Apps/Home/View/default/footer.html" />
+	
+	<script src="__PUBLIC__/js/common.js"></script>
+  	<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/index.js"></script>      	
+ 	<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/common.js"></script>
+ 	<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/orders.js"></script>
+</body>
+</html>

@@ -88,9 +88,9 @@ class WxPayAction extends BaseAction {
 			}
 		}
 		if($pflag){
-			$this->display ( "default/payment/wxpay/qrcode" );
+			$this->display ( "payment/wxpay/qrcode" );
 		}else{
-			$this->display ( "default/payment/pay_success" );
+			$this->display ( "payment/pay_success" );
 		}
 		
 	}
@@ -162,6 +162,6 @@ class WxPayAction extends BaseAction {
 	 * 检查支付结果
 	 */
 	public function paySuccess() {
-		$this->display ( "default/payment/pay_success" );
+		$this->display ( "payment/pay_success" );
 	}
 }

@@ -53,7 +53,7 @@ if($act=='list'){
 	    }
 	    $counter_file = INSTALL_PATH.'/install.ok';
 		$fopen = fopen($counter_file,'wb');
-		fputs($fopen,   date('Y-m-d H:i:s'));
+		fputs($fopen,   @date('Y-m-d H:i:s'));
 		fclose($fopen);
 		if(file_exists(INSTALL_PATH.'/install.ok')){
 	        echo json_encode(array('status'=>1));exit();

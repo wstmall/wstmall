@@ -46,7 +46,7 @@ class OrdersModel extends BaseModel {
 	  * 获取订单信息
 	  */
 	 public function get(){
-	 	return $this->where('isRefund=0 and payType=1 and isPay=1 and orderFlag=1 and orderStatus in (-1,-4,-6,-7) and orderId='.(int)I('id'))->find();
+	 	return $this->where('isRefund=0 and payType=1 and isPay=1 and orderFlag=1 and orderStatus in (-1,-3,-5,-6,-9) and orderId='.(int)I('id'))->find();
 	 }
 	 /**
 	  * 订单分页列表
@@ -101,7 +101,7 @@ class OrdersModel extends BaseModel {
      	$areaId2 = (int)I('areaId2',0);
      	$areaId3 = (int)I('areaId3',0);
 	 	$sql = "select o.orderId,o.orderNo,o.totalMoney,o.orderStatus,o.isRefund,o.deliverMoney,o.payType,o.createTime,s.shopName,o.userName from __PREFIX__orders o
-	 	         left join __PREFIX__shops s on o.shopId=s.shopId  where o.orderFlag=1 and o.orderStatus in (-1,-4,-6,-7) and payType=1 and isPay=1 ";
+	 	         left join __PREFIX__shops s on o.shopId=s.shopId  where o.orderFlag=1 and o.orderStatus in (-1,-3,-4,-5,-6,-9) and payType=1 and isPay=1 ";
 	 	if($areaId1>0)$sql.=" and s.areaId1=".$areaId1;
 	 	if($areaId2>0)$sql.=" and s.areaId2=".$areaId2;
 	 	if($areaId3>0)$sql.=" and s.areaId3=".$areaId3;
@@ -135,19 +135,109 @@ class OrdersModel extends BaseModel {
 	  */
 	 public function refund(){
 	 	$rd = array('status'=>-1);
-
-	 	$rs = $this->where('isRefund=0 and orderFlag=1 and orderStatus in (-1,-4,-6,-7) and payType=1 and isPay=1 and orderId='.(int)I('id'))->find();
-	 	if($rs['orderId']!=''){
-	 		$data = array();
-	 		$data['isRefund'] = 1;
-	 		$data['refundRemark'] = I('content');
-	 	    $rss = $this->where("orderId=".(int)I('id',0))->save($data);
-			if(false !== $rss){
-				$rd['status']= 1;
-			}else{
-				$rd['status']= -2;
-			}
+	 	$refundStatus = (int)I("refundStatus");
+	 	$order = $this->where('isRefund=0 and orderFlag=1 and orderStatus in (-1,-3,-5,-6,-9) and payType=1 and isPay=1 and orderId='.(int)I('id'))->find();
+	 	if(!empty($order)){
+	 		$orderId = $order["orderId"];
+	 		if($refundStatus==1){//退款给用户，订单结束
+	 			if($order["backMoney"]==0 && $order["realTotalMoney"]>0){
+	 				$rd["msg"] = "操作失败，退款金额不能为0";
+	 				return $rd;
+	 			}
+	 			if($order["backMoney"]>$order["realTotalMoney"]){
+	 				$rd["msg"] = "操作失败，退款金额不能大于实支付金额";
+	 				return $rd;
+	 			}
+	 			 
+	 			$sql = "UPDATE __PREFIX__orders set orderStatus = -4,isRefund=1 WHERE orderFlag=1 and orderId = $orderId ";
+	 			$rs = $this->execute($sql);
+	 			//加回库存
+	 			if($rs>0){
+	 				$oglist = M("order_goods")->where(array("orderId"=>$orderId))->field("goodsId,goodsNums,goodsAttrId")->select();
+	 				foreach ($oglist as $key => $ogoods) {
+	 					$goodsId = $ogoods["goodsId"];
+	 					$goodsNums = $ogoods["goodsNums"];
+	 					$goodsAttrId = $ogoods["goodsAttrId"];
+	 					M("goods")->where(array("goodsId"=>$goodsId))->setInc("goodsStock",$goodsNums);
+	 					if($goodsAttrId>0){
+	 						M("goods_attributes")->where(array("id"=>$goodsAttrId))->setInc("attrStock",$goodsNums);
+	 					}
+	 				}
+	 			
+	 				//退款给用户
+					if($order["backMoney"]>0){
+		 				$data = array();
+		 				$data["userMoney"] = array("exp", "userMoney+".$order["backMoney"]);
+		 				$data["userScore"] = array("exp", "userScore+".$order["useScore"]);
+		 				M("users")->where(array("userId"=>$order["userId"]))->save($data);
+		 				$moneyRemark = "订单【".$order["orderNo"]."】退款";
+		 				WSTMoneyLog(0,$order["userId"],$moneyRemark,6,$orderId,$order["backMoney"],0,0,1);
+					}
+					
+	 				//余款退回给商家
+	 				$balanceMoney = $order["realTotalMoney"] - $order["backMoney"];
+	 				if($balanceMoney>0){
+	 					$data = array();
+	 					$spUserId = M("shops")->where(array("shopId"=>$order['shopId']))->getField("userId");
+	 					$data["userMoney"] = array("exp", "userMoney+".$balanceMoney);
+	 					M("users")->where(array("userId"=>$spUserId))->save($data);
+	 					$moneyRemark = "订单【".$order["orderNo"]."】退款";
+	 					WSTMoneyLog(0,$spUserId,$moneyRemark,6,$orderId,$balanceMoney,0,0,1);
+	 				}
+	 			
+	 				if($order["useScore"]>0){//退回积分
+	 					$data = array();
+	 					$m = M('user_score');
+	 					$data["userId"] = $order["userId"];
+	 					$data["score"] = $order["useScore"];
+	 					$data["dataSrc"] = 4;
+	 					$data["dataId"] = $orderId;
+	 					$data["dataRemarks"] = "取消订单返还";
+	 					$data["scoreType"] = 1;
+	 					$data["createTime"] = date('Y-m-d H:i:s');
+	 					$m->add($data);
+	 				}
+	 				WSTSendMsg($order["userId"], "您的订单【".$order["orderNo"]."】已退款，请注意查收！");
+	 				$content = "订单已退款【管理员裁定】";
+	 				WSTOrderLog($orderId, $content, session('WST_STAFF.staffId'),1);
+	 			
+		 			$data = array();
+		 			$data['isRefund'] = 1;
+		 			$data['refundRemark'] = I('content');
+		 			$this->where("orderId=".(int)I('id',0))->save($data);
+		 			
+		 			$rd['status']= 1;
+		 			$rd['msg']= "操作成功";
+		 			return $rd;
+	 			}
+	 		}else if($refundStatus==2){//用户确认收货，结算给商家
+	 			$data = array();
+	 			$m = D('Common/Orders');
+	 			$data["userId"] = $order["userId"];
+	 			$data["orderId"] = $orderId;
+	 			$data["optType"] = 1;
+	 			$m->orderConfirm($data);
+	 			
+	 			$rd['status']= 1;
+	 			$rd['msg']= "操作成功";
+	 			return $rd;
+	 		}else if($refundStatus==3){//维持退款前订单状态，流程继续
+	 			$data = array();
+	 			$data["orderStatus"] = $order["refundSrcStatus"];
+	 			$this->where(array("orderId"=>$orderId))->save($data);
+	 			
+	 			$content = "维持退款前订单状态，流程继续";
+	 		    WSTOrderLog($orderId, $content, session('WST_STAFF.staffId'),1);
+	 		    WSTSendMsg($order["userId"], "您的订单【".$order["orderNo"]."】管理员裁定，维持退款前订单状态，流程继续！");
+	 		    
+	 		    $spUserId = M("shops")->where(array("shopId"=>$order['shopId']))->getField("userId");
+	 		    WSTSendMsg($spUserId, "店铺订单【".$order["orderNo"]."】管理员裁定，维持退款前订单状态，流程继续！");
+	 		  	$rd['status']= 1;
+		 		$rd['msg']= "操作成功";
+	 		    return $rd;
+	 		}
 	 	}
+	 	$rd['msg']= "操作失败，请检查订单状态是否已发生改变";
 	 	return $rd;
 	 }
 };

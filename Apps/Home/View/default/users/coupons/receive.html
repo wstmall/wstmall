@@ -1,0 +1,64 @@
+<!DOCTYPE>
+<html lang="zh-cn">
+	<head>
+  		<meta charset="utf-8">
+      	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+      	<link rel="shortcut icon" href="favicon.ico"/>
+      	<title>优惠券 - {$CONF['mallTitle']}</title>
+      	<meta name="keywords" content="{$CONF['mallKeywords']}" />
+      	<meta name="description" content="{$CONF['mallDesc']},商城品牌展示" />
+      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/common.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/base.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/head.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/receive.css" />
+   	</head>
+   	<body>
+
+		<include file="./Apps/Home/View/default/header_common.html" />
+		
+		<div class="wst-coupon-bg">
+			<div class="wst-container" style="margin-top:0;">
+				<div style="padding-top: 100px;">
+				<div class="wst-coupon-left">
+					<img src="__ROOT__/{$coupon['shopImg']}" class="wst-shop-logo"/>
+					<div class="wst-coupon-split"></div>
+				</div>
+				<div class="wst-coupon-right">
+					<div>发行商家：<a href="{:U('Home/Shops/toShopHome',array('shopId'=>$coupon['shopId']))}">{$coupon['shopName']}</a></div>
+					<div>优惠券类型：店铺优惠券</div>
+					<div>面额：<span class="money">{$coupon['couponMoney']}</span> 元</div>
+					<div>使用门槛：订单满 <span class="money">{$coupon['spendMoney']}</span> 元 </div>
+					<div>使用时间：{$coupon['validStartTime']} 至 {$coupon['validEndTime']}</div>
+					<button class="receive-bnt" onclick="receiveCoupon()">确认领取</button>
+				</div>
+				<div class="wst-clear"></div>
+				</div>
+			</div>
+		</div>
+		<include file="./Apps/Home/View/default/footer.html" />
+   	</body>
+   	
+   	
+	<script src="__PUBLIC__/js/common.js"></script>
+	<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/head.js" type="text/javascript"></script>
+	<script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
+	<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/common.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	function receiveCoupon(){
+		var couponId = "{$coupon['couponId']}";
+		$.post(Think.U('Home/Coupons/receiveCoupon'),{"id":couponId},function(data,textStatus){
+		    var json = WST.toJson(data);
+		    var result = 0;
+		    if(json.status=='1'){
+		    	result = 1;
+		    }
+		    location.href = Think.U('Home/Coupons/showReceiveResult',{"couponId":couponId,"result":result});
+		});
+	}
+	</script>
+</html> 
+
+
+
+
+

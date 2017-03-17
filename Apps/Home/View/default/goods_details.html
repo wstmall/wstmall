@@ -7,12 +7,12 @@
       	<title>{$goodsDetails["goodsName"]} - {$CONF['mallTitle']}</title>
       	<meta name="keywords" content="{$goodsDetails['goodsKeywords']}" />
       	<meta name="description" content="{$goodsDetails['goodsName']},{$CONF['mallDesc']}" />
-      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
-     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/goodsdetails.css" />
-     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
-		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />
-		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/pslocation.css" />
-		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/magnifier.css" />
+      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/common.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/goodsdetails.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/base.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/head.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/pslocation.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/magnifier.css" />
    	</head>
    	<body>
 		<include file="./Apps/Home/View/default/header_common.html" />
@@ -25,6 +25,29 @@
 				<a href="{:U('Home/Goods/getGoodsList/',array('c1Id'=>$goodsNav[0]['catId'],'c2Id'=>$goodsNav[1]['catId']))}">{$goodsNav[1]["catName"]}</a>&nbsp;>&nbsp;
 				<a href="{:U('Home/Goods/getGoodsList/',array('c1Id'=>$goodsNav[0]['catId'],'c2Id'=>$goodsNav[1]['catId'],'c3Id'=>$goodsNav[2]['catId']))}">{$goodsNav[2]["catName"]}</a>
 			</div>
+			<?php if(count($coupons)>0){ ?>
+			<div class="wst-container" style="margin-top:0;background-color:#4ef1fa;">
+				<div style="width: 300px;float:left;"><img class='lazyImg' src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/coupon.png" height="120"/></div>
+				<div style="width: 900px;float:right;margin-top:20px;">
+					<volist name="coupons" id="vo">
+					<div class="wst-coupon-box">
+						<if condition="$key gt 0">
+						<div class="split"></div>
+						</if>
+						<div class="money">
+							<span style="position:relative;">{$vo['couponMoney']}
+								<span class="tip">￥</span>
+							</span>
+						</div>
+						<div class="link"><a href="javascript:receiveCoupon({$vo['couponId']});">领取&gt;</a></div>
+						<div class="des"><span>满{$vo['spendMoney']}元使用</span></div>
+					</div>
+					</volist>
+					<div class="wst-clear"></div>
+				</div>
+				<div class="wst-clear"></div>
+			</div>
+			<?php } ?>
 			<div class="wst-goods-details">
 				<div class="details-left">
 					<div class="goods-img-box">
@@ -83,7 +106,7 @@
 										</div>
 										<div >{$goodsDetails["goodsSpec"]|htmlspecialchars_decode}</div>
 										<?php if($goodsDetails['isDistributGoods']==1){ ?>
-										<div class='wst-goods-dist'><img src="__ROOT__/Apps/Home/View/default/images/way_square.gif"/>&nbsp;分销商品</div>
+										<div class='wst-goods-dist'><img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/way_square.gif"/>&nbsp;分销商品</div>
 										<?php } ?>
 									</td>
 								</tr>
@@ -135,7 +158,7 @@
 								<tr style='height:15px;border-top:1px dashed #ddd;'>
 								   <td colspan='2'></td>
 								</tr>
-								<tr>
+								<tr class="goods-attr">
 									<td width="70"><span class="des-title-span">{$goodsAttrs["priceAttrName"]}：</span></td>
 									<td>
 									 <volist name="goodsAttrs['priceAttrs']" id="avo">
@@ -170,13 +193,13 @@
 											<div class='wst-goods-stock'>库存：<span id='goodsStock'>{$goodsDetails['goodsStock']}</span>{$goodsDetails['goodsUnit']}</div>
 										</div>
 										<div id="noGoodsToBuy" <if condition="$goodsDetails['goodsStock'] gt 0">style="display:none;"</if>>
-											<div style="font-weight: bold;">非常抱歉，所商品暂时无货！</div>
+											<div style="font-weight: bold;">非常抱歉，该商品暂时无货！</div>
 											<div style="clear: both;"></div>
 											<br />
 											<div>
 												<a id="InitCartUrl" class="btn-append " href="javascript:void(0);" title="">
 													<span>
-														<img src="__ROOT__/Apps/Home/View/default/images/hcat.jpg" />
+														<img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/hcat.jpg" />
 													</span>
 												</a>
 											</div>
@@ -194,17 +217,17 @@
 									<td width="70"></td>
 									<td>
 										<if condition="$comefrom eq 1">
-											<img src="__ROOT__/Apps/Home/View/default/images/hcat.jpg" />
+											<img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/hcat.jpg" />
 										<else/>
 											<php>if($goodsDetails['shopServiceStatus'] ==1){</php>
-												<a href="javascript:addCart({$goodsDetails['goodsId']},0,'{$goodsDetails['goodsThums']}')" <php>if(session('WST_USER.userId')>0){</php>class="btnCart"<php>}</php>><img src="__ROOT__/Apps/Home/View/default/images/btn_buy_01_hover.png" width="112" height="38"/></a>
+												<a href="javascript:addCart({$goodsDetails['goodsId']},0,'{$goodsDetails['goodsThums']}')" <php>if(session('WST_USER.userId')>0){</php>class="btnCart"<php>}</php>><img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/btn_buy_01_hover.png" width="112" height="38"/></a>
 												&nbsp;&nbsp;
 												<a href="javascript:addCart({$goodsDetails['goodsId']},1)" class="btn2Cart">
-													<img src="__ROOT__/Apps/Home/View/default/images/btn_buy_02.png" width="112" height="38"/>
+													<img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/btn_buy_02.png" width="112" height="38"/>
 												</a>
 											<php>}else if($goodsDetails['shopServiceStatus'] ==0){</php>
 											
-												<img src="__ROOT__/Apps/Home/View/default/images/hcat.jpg" />
+												<img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/hcat.jpg" />
 											<php>}</php>
 										</if>
 									</td>
@@ -345,12 +368,12 @@
 								</div>
 								<div>
 									<if condition="$comefrom eq 1">
-										<img src="__ROOT__/Apps/Home/View/default/images/hcat.jpg" width="95"/>
+										<img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/hcat.jpg" width="95"/>
 									<else/>
 										<php>if($goodsDetails['shopServiceStatus'] ==1){</php>
-											<a href="javascript:addPackages({$vo['packageId']});"><img src="__ROOT__/Apps/Home/View/default/images/btn_buy_01_hover.png" width="95"></a>
+											<a href="javascript:addPackages({$vo['packageId']});"><img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/btn_buy_01_hover.png" width="95"></a>
 										<php>}else if($goodsDetails['shopServiceStatus'] ==0){</php>
-											<img src="__ROOT__/Apps/Home/View/default/images/hcat.jpg" width="95"/>
+											<img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/hcat.jpg" width="95"/>
 										<php>}</php>
 									</if>
 								</div>
@@ -534,14 +557,14 @@
    	</body>
   
 
-<script src="__ROOT__/Apps/Home/View/default/js/goods.js"></script>
+<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/goods.js"></script>
 <script src="__PUBLIC__/js/common.js"></script>
-<script src="__ROOT__/Apps/Home/View/default/js/head.js" type="text/javascript"></script>
-<script src="__ROOT__/Apps/Home/View/default/js/common.js" type="text/javascript"></script>
-<script src="__ROOT__/Apps/Home/View/default/js/pslocation.js" type="text/javascript"></script>
-<script src="__ROOT__/Apps/Home/View/default/js/jquery.jqzoom.js" type="text/javascript"></script>
-<script src="__ROOT__/Apps/Home/View/default/js/magnifier.js" type="text/javascript"></script>
-<script src="__ROOT__/Apps/Home/View/default/js/jquery.tabso.js" type="text/javascript"></script>
+<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/head.js" type="text/javascript"></script>
+<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/common.js" type="text/javascript"></script>
+<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/pslocation.js" type="text/javascript"></script>
+<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/jquery.jqzoom.js" type="text/javascript"></script>
+<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/magnifier.js" type="text/javascript"></script>
+<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/jquery.tabso.js" type="text/javascript"></script>
 
 <script src="__PUBLIC__/js/qrcode.js"></script>
 <script>

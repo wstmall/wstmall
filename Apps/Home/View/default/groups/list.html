@@ -1,0 +1,76 @@
+<!DOCTYPE>
+<html lang="zh-cn">
+	<head>
+  		<meta charset="utf-8">
+      	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+      	<link rel="shortcut icon" href="favicon.ico"/>
+      	<title>团购 - {$CONF['mallTitle']}</title>
+      	<meta name="keywords" content="{$shops['shopKeywords']},首页" />
+      	<meta name="description" content="{$CONF['mallDesc']},{$shops['shopDesc']}" />
+      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/common.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/group.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/base.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/head.css" />
+		<link href="__PUBLIC__/plugins/slide/css/slide.css" type="text/css" media="all" rel="stylesheet" />
+   	</head>
+   	<body>
+		<include file="./Apps/Home/View/default/header_common.html" />
+		<div class="wst-slide" id="wst-slide">
+			<div id="wst-group-slide-items" class="slideBox">
+	
+			  <ul class="items">
+				<volist name=":WSTAds(-8)" id="vo" key="k">
+					<li style="z-index: 1;  background: url(__ROOT__/{$vo['adFile']}) 50% 0% / cover no-repeat scroll;" onclick="addAccess({$vo['adId']});goBack(this)" data='{$vo['adURL']}'>
+					<a target="_blank" onclick="addAccess({$vo['adId']})" href="{$vo['adURL']}"></a>
+					</li>
+				</volist>
+			  </ul>
+			</div>
+		</div>
+		<div id="wst-te-cat" class="wst-te-cat">
+			<div class="catl"><span>团购分类</span></div>
+			<div class="catr">
+				<volist name="goodsCats" key="k1" id="vo">
+				<span data="{$vo['catId']}">{$vo['catName']}</span>
+				</volist>
+			</div>
+			<div class="wst-clear"></div>
+		</div>
+		<volist name="goodsCats" key="k1" id="vo">
+		<div id="wst-te-cat2_{$vo['catId']}" class="wst-te-cat2" style="display:none;">
+			<div class="cats">
+				<span>全部</span>
+				<volist name="vo['childs']" key="k2" id="vo2">
+				<span data="{$vo2['catId']}">{$vo2['catName']}</span>
+				</volist>
+				<div class="wst-clear"></div>
+			</div>
+		</div>
+		</volist>
+		<div class="wst-te-goods" id="wst-goods-list">
+			<div class="wst-clear"></div>
+		</div>
+		<div id="wst-page" class="wst-goods-page"></div>
+		<include file="./Apps/Home/View/default/footer.html" />
+   	</body>
+   	
+   	<script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
+	<script src="__PUBLIC__/js/common.js"></script>
+	<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/group.js" type="text/javascript"></script>
+	<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/head.js" type="text/javascript"></script>
+	<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/common.js" type="text/javascript"></script>
+	<script src="__PUBLIC__/plugins/slide/js/slide.js"></script>
+	<script>
+		setTimeout("list_time()",1000);
+	
+		$('#wst-group-slide-items').slideBox({
+			duration : 0.3,//滚动持续时间，单位：秒
+			easing : 'linear',//swing,linear//滚动特效
+			delay : 5,//滚动延迟时间，单位：秒
+			hideClickBar : false,//不自动隐藏点选按键
+			clickBarRadius : 10
+		});
+	</script>
+</html> 
+
+

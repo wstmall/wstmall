@@ -55,7 +55,7 @@ jQuery(function($){
 			if(fn && fn.msgtype==1){
 				$(".quick_links_wrap").animate({"width":"280px"},100);
 				$(".quick_links_panel").animate({"right":"280px"},100);
-				fn.content = "<div class='ibar_plugin_loading' style=''><img src='"+WST.DOMAIN +"/Apps/Home/View/default/images/loading.gif' width='20'/>数据加载中...</div>";
+				fn.content = "<div class='ibar_plugin_loading' style=''><img src='"+WST.DOMAIN +"/Apps/Home/View/"+WST.WST_STYLE +"/images/loading.gif' width='20'/>数据加载中...</div>";
 				quickPop.html(ds.tmpl(popTmpl, fn));
 				jQuery.post(Think.U('Home/Cart/getCartInfo') ,{"axm":1},function(data) {
 					var cart = WST.toJson(data);
@@ -80,8 +80,9 @@ jQuery(function($){
 													"<span id='numl_"+pkg.packageId+"_"+pkg.batchNo+"' class='cart-minus' onclick='changePkgCatGoodsnum(1,"+pkg.shopId+","+pkg.packageId+","+pkg.batchNo+")'>-</span>" +
 													"<span id='buy-span_"+pkg.packageId+"_"+pkg.batchNo+"' style='font-size:14px;padding-left:6px;padding-right:6px;'>x "+pkg.goodsCnt+"</span><input type='hidden' id='buy-num_"+pkg.packageId+"_"+pkg.batchNo+"' value='"+pkg.goodsCnt+"' style='width:40px;'/>" +
 													"<span id='numl_"+pkg.packageId+"_"+pkg.batchNo+"' class='cart-plus' onclick='changePkgCatGoodsnum(2,"+pkg.shopId+","+pkg.packageId+","+pkg.batchNo+")'>+</span>	" +
-													"<div class='cart-close-box' ><span style='right:-22px;' class='cart-colse' price="+pkg.shopPrice+" cnt="+pkg.goodsCnt+" spId="+pkg.shopId+" onclick=removeCartGoods(this,'"+pkg.packageId+"','"+pkg.batchNo+",1');></span></div>	" +
+													
 													"</div>" +
+													"<div class='cart-close-box' ><span style='right:-22px;' class='cart-colse' price="+pkg.shopPrice+" cnt="+pkg.goodsCnt+" spId="+pkg.shopId+" onclick=removeCartGoods(this,'"+pkg.packageId+"','"+pkg.batchNo+"',1);></span></div>	" +
 												"</div>" +
 											"<div class='wst-clear'></div>");
 							for(var goodsId in pkg.goods){

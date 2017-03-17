@@ -19,39 +19,37 @@
 				<li id="wst-msg-li-2">打包中订单<span style="display:none;"></span></li>
 				<li id="wst-msg-li-3">配送中订单<span style="display:none;"></span></li>
 				<li id="wst-msg-li-4">已到货订单<span style="display:none;" class="wst-order-tips-box"></span></li>
-				<li id="wst-msg-li-5">取消 / 拒收订单<span style="display:none;" class="wst-order-tips-box"></span></li>
+				<li id="wst-msg-li-5">取消 / 退款订单<span style="display:none;" class="wst-order-tips-box"></span></li>
 			</ul>
 			<div class="wst-tab-content" style='width:98%;'>
 			    <!-- 待受理 -->
 				<div class='wst-tab-item'>
 					<div>
-						<table class='wst-list' style="font-size:13px;">
+						<table id="wst-tab0" class='wst-order-list' style="font-size:13px;">
 							<thead>
 								<tr>
-									<th colspan="8" class="wst-form">
+									<th colspan="5" class="wst-form" style="text-align: left;">
 									订单号：<input type="text" id="orderNo_0" style='width:120px;' autocomplete="off"/>
 									收货人：<input type="text" id="userName_0" style='width:120px;' autocomplete="off"/>
 									收货地址：<input type="text" id="userAddress_0" style='width:120px;' autocomplete="off"/>
 									<button class='wst-btn-query' onclick="queryOrderPager(0,0)">查询</button>
 									<button class='wst-btn-query' style='width:80px;' onclick="batchShopOrderAccept()">批量受理</button>
+									<button class='wst-btn-query' style='width:80px;' onclick="batchPrint(0)">批量打印</button>
 									</th>
 								</tr>
-								<tr>
+								<tr class="head">
 								    <th width='20'><input type='checkbox' onclick='WST.checkChks(this,".chk_0")'/></th>
-									<th width='100'>订单号</th>
-									<th width='100'>收货人</th>
-									<th width='*'>收货地址</th>
-									<th width='70'>订单金额</th>
-									<th width='70'>实付金额</th>
-									<th width='130'>下单时间</th>
-									<th width='100'>操作</th>
+									<th>订单详情</th>
+							        <th>支付方式/配送信息</th>
+							        <th>金额</th>
+							        <th>操作</th>
 								</tr>
 							</thead>
 							<tbody id="otbody0">
 							</tbody>
 							<tfoot>
 								<tr>
-									<td colspan='8' align='center' id="opage_0">
+									<td colspan='5' align='center' id="opage_0">
 										<div id="wst-page-0" class='wst-page' style="float:right;padding-bottom:10px;"></div>
 									</td>
 								</tr>
@@ -63,33 +61,31 @@
 				<!-- 已受理 -->
 				<div class='wst-tab-item' style="display:none;">
 					<div>
-						<table class='wst-list' style="font-size:13px;">
+						<table id="wst-tab1" class='wst-order-list' style="font-size:13px;">
 							<thead>
 								<tr>
-									<th colspan="8" class="wst-form">
+									<th colspan="5" class="wst-form" style="text-align: left;">
 									订单号：<input type="text" id="orderNo_1" style='width:120px;' autocomplete="off"/>
 									收货人：<input type="text" id="userName_1" style='width:120px;' autocomplete="off"/>
 									收货地址：<input type="text" id="userAddress_1" style='width:120px;' autocomplete="off"/>
 									<button class='wst-btn-query' onclick="queryOrderPager(1,0)">查询</button>
 									<button class='wst-btn-query' style='width:80px;' onclick="batchShopOrderProduce()">批量打包</button>
+									<button class='wst-btn-query' style='width:80px;' onclick="batchPrint(1)">批量打印</button>
 									</th>
 								</tr>
-								<tr>
+								<tr class="head">
 								    <th width='20'><input type='checkbox' onclick='WST.checkChks(this,".chk_1")'/></th>
-									<th width='100'>订单号</th>
-									<th width='100'>收货人</th>
-									<th width='*'>收货地址</th>
-									<th width='70'>订单金额</th>
-									<th width='70'>实付金额</th>
-									<th width='130'>下单时间</th>
-									<th width='100'>操作</th>
+									<th>订单详情</th>
+							        <th>支付方式/配送信息</th>
+							        <th>金额</th>
+							        <th>操作</th>
 								</tr>
 							</thead>
 							<tbody id="otbody1">
 							</tbody>
 							<tfoot>
 								<tr>
-									<td colspan='8' align='center' id="opage_1">
+									<td colspan='5' align='center' id="opage_1">
 										<div  id="wst-page-1" class="wst-page" style="float:right;padding-bottom:10px;"></div>
 									</td>
 								</tr>
@@ -101,33 +97,31 @@
 				<!-- 打包中 -->
 				<div class='wst-tab-item' style="display:none;">
 					<div>
-						<table class='wst-list' style="font-size:13px;">
+						<table id="wst-tab2" class='wst-order-list' style="font-size:13px;">
 							<thead>
 								<tr>
-									<th colspan="8" class="wst-form">
+									<th colspan="5" class="wst-form" style="text-align: left;">
 									订单号：<input type="text" id="orderNo_2" style='width:120px;' autocomplete="off"/>
 									收货人：<input type="text" id="userName_2" style='width:120px;' autocomplete="off"/>
 									收货地址：<input type="text" id="userAddress_2" style='width:120px;' autocomplete="off"/>
 									<button class='wst-btn-query' onclick="queryOrderPager(2,0)">查询</button>
 									<button class='wst-btn-query' style='width:80px;' onclick="batchShopOrderDelivery()">批量配送</button>
+									<button class='wst-btn-query' style='width:80px;' onclick="batchPrint(2)">批量打印</button>
 									</th>
 								</tr>
-								<tr>
+								<tr class="head">
 								    <th width='20'><input type='checkbox' onclick='WST.checkChks(this,".chk_2")'/></th>
-									<th width='100'>订单号</th>
-									<th width='100'>收货人</th>
-									<th width='*'>收货地址</th>
-									<th width='70'>订单金额</th>
-									<th width='70'>实付金额</th>
-									<th width='130'>下单时间</th>
-									<th width='100'>操作</th>
+									<th>订单详情</th>
+							        <th>支付方式/配送信息</th>
+							        <th>金额</th>
+							        <th>操作</th>
 								</tr>
 							</thead>
 							<tbody id="otbody2">
 							</tbody>
 							<tfoot>
 								<tr>
-									<td colspan='8' align='center' id="opage_2">
+									<td colspan='5' align='center' id="opage_2">
 										<div  id="wst-page-2" class="wst-page" style="float:right;padding-bottom:10px;"></div>
 									</td>
 								</tr>
@@ -139,31 +133,30 @@
 				<!-- 配送中 -->
 				<div class='wst-tab-item' style="display:none;">
 					<div>
-						<table class='wst-list' style="font-size:13px;">
+						<table id="wst-tab3" class='wst-order-list' style="font-size:13px;">
 							<thead>
 								<tr>
-									<th colspan="7" class="wst-form">
+									<th colspan="8" class="wst-form" style="text-align: left;">
 									订单号：<input type="text" id="orderNo_3" style='width:120px;' autocomplete="off"/>
 									收货人：<input type="text" id="userName_3" style='width:120px;' autocomplete="off"/>
 									收货地址：<input type="text" id="userAddress_3" style='width:120px;' autocomplete="off"/>
 									<button class='wst-btn-query' onclick="queryOrderPager(3,0)">查询</button>
+									<button class='wst-btn-query' style='width:80px;' onclick="batchPrint(3)">批量打印</button>
 									</th>
 								</tr>
-								<tr>
-									<th width='100'>订单号</th>
-									<th width='100'>收货人</th>
-									<th width='*'>收货地址</th>
-									<th width='70'>订单金额</th>
-									<th width='70'>实付金额</th>
-									<th width='130'>下单时间</th>
-									<th width='100'>操作</th>
+								<tr class="head">
+									<th width='20'><input type='checkbox' onclick='WST.checkChks(this,".chk_3")'/></th>
+									<th>订单详情</th>
+							        <th>支付方式/配送信息</th>
+							        <th>金额</th>
+							        <th>操作</th>
 								</tr>
 							</thead>
 							<tbody id="otbody3">
 							</tbody>
 							<tfoot>
 								<tr>
-									<td colspan='7' align='center' id="opage_3">
+									<td colspan='5' align='center' id="opage_3">
 										<div  id="wst-page-3" class="wst-page" style="float:right;padding-bottom:10px;"></div>
 									</td>
 								</tr>
@@ -175,24 +168,23 @@
 				<!-- 已到货 -->
 				<div class='wst-tab-item' style="display:none;">
 					<div>
-						<table class='wst-list' style="font-size:13px;">
+						<table id="wst-tab4" class='wst-order-list' style="font-size:13px;">
 							<thead>
 								<tr>
-									<th colspan="7" class="wst-form">
+									<th colspan="5" class="wst-form" style="text-align: left;">
 									订单号：<input type="text" id="orderNo_4" style='width:120px;' autocomplete="off"/>
 									收货人：<input type="text" id="userName_4" style='width:120px;' autocomplete="off"/>
 									收货地址：<input type="text" id="userAddress_4" style='width:120px;' autocomplete="off"/>
 									<button class='wst-btn-query' onclick="queryOrderPager(4,0)">查询</button>
+									<button class='wst-btn-query' style='width:80px;' onclick="batchPrint(4)">批量打印</button>
 									</th>
 								</tr>
-								<tr>
-									<th width='100'>订单号</th>
-									<th width='100'>收货人</th>
-									<th width='*'>收货地址</th>
-									<th width='70'>订单金额</th>
-									<th width='70'>实付金额</th>
-									<th width='130'>下单时间</th>
-									<th width='100'>操作</th>
+								<tr class="head">
+									<th width='20'><input type='checkbox' onclick='WST.checkChks(this,".chk_4")'/></th>
+									<th>订单详情</th>
+							        <th>支付方式/配送信息</th>
+							        <th>金额</th>
+							        <th>操作</th>
 								</tr>
 							</thead>
 							<tbody id="otbody4">
@@ -200,7 +192,7 @@
 							</tbody>
 							<tfoot>
 								<tr>
-									<td colspan='7' align='center' id="opage_4">
+									<td colspan='5' align='center' id="opage_4">
 										<div  id="wst-page-4" class="wst-page" style="float:right;padding-bottom:10px;"></div>
 									</td>
 								</tr>
@@ -209,27 +201,26 @@
 					</div>
 					<div style='clear:both;'></div>
 				</div>
-				<!-- 取消/拒收 -->
+				<!-- 取消/退款 -->
 				<div class='wst-tab-item' style="display:none;">
 					<div>
-						<table class='wst-list' style="font-size:13px;">
+						<table id="wst-tab5" class='wst-order-list' style="font-size:13px;">
 							<thead>
 								<tr>
-									<th colspan="7" class="wst-form">
+									<th colspan="5" class="wst-form" style="text-align: left;">
 									订单号：<input type="text" id="orderNo_5" style='width:120px;' autocomplete="off"/>
 									收货人：<input type="text" id="userName_5" style='width:120px;' autocomplete="off"/>
 									收货地址：<input type="text" id="userAddress_5" style='width:120px;' autocomplete="off"/>
 									<button class='wst-btn-query' onclick="queryOrderPager(5,0)">查询</button>
+									<button class='wst-btn-query' style='width:80px;' onclick="batchPrint(5)">批量打印</button>
 									</th>
 								</tr>
-								<tr>
-									<th width='100'>订单号</th>
-									<th width='100'>收货人</th>
-									<th width='*'>取消/拒收原因</th>
-									<th width='70'>订单金额</th>
-									<th width='70'>实付金额</th>
-									<th width='130'>下单时间</th>
-									<th width='180'>操作</th>
+								<tr class="head">
+									<th width='20'><input type='checkbox' onclick='WST.checkChks(this,".chk_5")'/></th>
+									<th>订单详情</th>
+							        <th>取消/退款原因</th>
+							        <th>金额</th>
+							        <th>操作</th>
 								</tr>
 							</thead>
 							<tbody id="otbody5">
@@ -237,7 +228,7 @@
 							</tbody>
 							<tfoot>
 								<tr>
-									<td colspan='7' align='center' id="opage_5">
+									<td colspan='5' align='center' id="opage_5">
 										<div  id="wst-page-5" class="wst-page" style="float:right;padding-bottom:10px;"></div>
 									</td>
 								</tr>

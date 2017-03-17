@@ -16,7 +16,7 @@ class OrderSettlementsAction extends BaseAction{
     public function toSettlementIndex(){
     	$this->isShopLogin();  	
     	$this->assign("umark","toSettlementIndex");
-		$this->display("default/shops/orders/settlements");
+		$this->display("shops/orders/settlements");
 	}
 	/**
 	 * 订单结算列表

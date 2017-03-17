@@ -126,6 +126,59 @@ function delPckCatGoods(shopId,packageId,batchNo){
 	});
 }
 
+function getShopCoupons(shopId){
+	var obj = $("#coupon_box_"+shopId);
+	if(obj.is(":hidden")){
+		obj.show();
+		$("#cart_coupon_"+shopId).html("<div class='coupon-loading'><img src='"+WST.ROOT+"/Apps/Home/View/"+WST.WST_STYLE+"/images/loading.gif'/>正在加载数据</div>");
+		jQuery.post(Think.U('Home/Coupons/getShopCoupons') ,{shopId:shopId},function(data) {
+			var json = WST.toJson(data);
+			var html = [];
+			for(var i=0;i<json.length;i++){
+				
+				html.push('<li class="coupon">');
+					html.push('<div class="coupon-amount"><span class="rmb">¥</span>'+json[i]['couponMoney']+'</div>');
+					html.push('<div class="coupon-detail">');
+						html.push('<div class="coupon-info">');
+							html.push('<p class="coupon-title">满'+json[i]['spendMoney']+'减'+json[i]['couponMoney']+'</p>');
+							html.push('<p class="coupon-time">'+json[i]['validStartTime']+'至'+json[i]['validEndTime']+'</p>');
+							html.push('</div>');
+							html.push('<div class="coupon-op">');
+							if(json[i]['id']>0){
+								html.push('<button class="coupon-received">领取成功</button>');
+							}else{
+								html.push('<button class="coupon-unreceived" onclick="receiveCoupon(this,'+json[i]['couponId']+')">领取</button>');
+							}
+						html.push('</div>');
+					html.push('</div>');
+				html.push('</li>');
+			}
+			$("#cart_coupon_"+shopId).html(html.join(""))
+		});	
+	}else{
+		obj.hide();
+	}
+}
+
+function receiveCoupon(obj,couponId){
+	$(obj).attr("disabled",true);
+	$.post(Think.U('Home/Coupons/receiveCoupon'),{"id":couponId},function(data,textStatus){
+	    var json = WST.toJson(data);
+	    var result = 0;
+	    if(json.status=='1'){
+	    	$(obj).removeClass("coupon-unreceived").addClass("coupon-received").html("领取成功");
+	    	$(obj).removeAttr("onclick");
+	    }else{
+	    	$(obj).attr("disabled",false);
+	    	WST.msg('领取失败!',{icon:5,offset: '200px'});
+	    }
+	});
+}
+
+function closeCoupon(shopId){
+	 $("#coupon_box_"+shopId).hide();
+}
+
 jQuery(function(){
 	jQuery(".goodsStockFlag").each(function(){		
 		if($(this).val()==-1){

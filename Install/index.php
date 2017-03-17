@@ -69,7 +69,7 @@ timezone_set();
 			<div>WSTMall演示站：http://demo.wstmall.net</div>
 			<div>客服 Q Q：707563272</div>
 			<div>交流QQ群：50056937</div>
-			<div>联系电话: 020-85289921/18902295525</div>
+			<div>联系电话: 020-85289921/15918671994</div>
 			<div>联系邮箱: WSTMall@qq.com</div>
         	
         </div>

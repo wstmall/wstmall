@@ -47,11 +47,12 @@ class CashDrawsModel extends BaseModel {
 		$userId = (int)session('WST_USER.userId');
 		$rd = array('status'=>-1);
 		//验证支付密码
-		if(empty(I('payPwd'))){
+		$payPwd = I('payPwd');
+		if(empty($payPwd)){
 			$rd['msg'] = '请输入支付密码';
 			return $rd;
 		}
-		$sql = "select payPwd,loginSecret from __PREFIX__users where userId=".$userId;
+		$sql = "select payPwd,loginSecret,userMoney from __PREFIX__users where userId=".$userId;
 		$user = $this->queryRow($sql);
 		if($user['payPwd']!=md5(I("payPwd").$user['loginSecret'])){
 			$rd['msg'] = '支付密码不正确';
@@ -76,9 +77,7 @@ class CashDrawsModel extends BaseModel {
 			return $rd;
 		}
 		//判断提现金额是否允许
-		$sql = "select shopMoney from __PREFIX__shops where shopId=".$shopId;
-		$shop = $this->queryRow($sql);
-		if($shop['shopMoney']<$money){
+		if($user['userMoney']<$money){
 			$rd['msg'] = '对不起，您的可提现金额不足!';
 			return $rd;
 		}
@@ -103,13 +102,13 @@ class CashDrawsModel extends BaseModel {
 			$data["msgType"] = 0;
 			$data["sendUserId"] = 0;
 			$data["receiveUserId"] = $userId;
-			$data["msgContent"] = "商家您申请提现 ¥".$money."已提交，预计明天24点前到帐！";
+			$data["msgContent"] = "您申请提现 ¥".$money."已提交，预计明天24点前到帐！";
 			$data["msgStatus"] = 0;
 			$data["msgFlag"] = 1;
 			$data["createTime"] = date('Y-m-d H:i:s');
 			$m->add($data);
 			$rd['status']= 1;
-			$sql="update __PREFIX__shops set shopMoney=shopMoney-".$money.",lockMoney=lockMoney+".$money." where shopId=".$shopId;
+			$sql="update __PREFIX__users set userMoney=userMoney-".$money.",lockMoney=lockMoney+".$money." where userId=".$userId;
 			$this->execute($sql);
 		}else{
 			$rd['msg'] = $this->getError();
@@ -124,7 +123,8 @@ class CashDrawsModel extends BaseModel {
 		$userId = (int)session('WST_USER.userId');
 		$rd = array('status'=>-1);
 		//验证支付密码
-		if(empty(I('payPwd'))){
+		$payPwd = I('payPwd');
+		if(empty($payPwd)){
 			$rd['msg'] = '请输入支付密码';
 			return $rd;
 		}

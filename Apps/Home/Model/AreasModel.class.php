@@ -129,9 +129,8 @@ class AreasModel extends BaseModel {
 	  	}
 	  	//检验城市有效性
 	  	if($areaId2>0){
-	  		$sql ="SELECT areaId FROM __PREFIX__areas WHERE isShow=1 AND areaFlag = 1 AND areaType=1 AND areaId=".$areaId2;
-	  		$rs = $this->query($sql);
-	  		if($rs[0]['areaId']=='')$areaId2 = 0;
+	  		$rs = $this->where(array("isShow"=>1,"areaFlag"=>1,"areaType"=>1,"areaId"=>$areaId2))->field("areaId")->find();
+	  		if($rs['areaId']=='')$areaId2 = 0;
 	  	}else{
 	  		$areaId2 = (int)$_COOKIE['areaId2'];
 	  	}
@@ -155,6 +154,7 @@ class AreasModel extends BaseModel {
 	  			$areaId2 = $GLOBALS['CONFIG']['defaultCity'];
 	  		}
 	  	}
+	  	
 	  	session('areaId2',$areaId2);
 	  	setcookie("areaId2", $areaId2, time()+3600*24*90);
 	  	return $areaId2;
@@ -162,10 +162,7 @@ class AreasModel extends BaseModel {
 	  }
 	  
 	  public function getAreasByParentId($parentId){
-	  	$sql = "SELECT * FROM __PREFIX__areas WHERE parentId=$parentId  AND areaFlag = 1 AND isShow =1";
-	  	$rs = $this->query($sql);
-	  	return $rs;
-	  
+	  	return $this->where(array("parentId"=>$parentId,"areaFlag"=>1,"isShow"=>1))->select();
 	  }
 	  
 	  public function getAreasByExp($parentId){
@@ -200,10 +197,6 @@ class AreasModel extends BaseModel {
 	  		}
 	  		$m->addAll($dataAll);
 	  	}
-	  	
-	  	
 	  	return 1;
-	  	 
 	  }
-	   
 }

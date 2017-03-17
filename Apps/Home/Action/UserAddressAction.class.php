@@ -26,7 +26,7 @@ class UserAddressAction extends BaseAction{
 		$this->assign('areaList',$m->getProvinceList());
     	$this->assign('object',$object);
     	$this->assign("umark","addressQueryByPage");
-		$this->view->display('default/users/useraddress/edit');
+		$this->display('users/useraddress/edit');
 	}
 	/**
 	 * 新增/修改操作
@@ -62,7 +62,7 @@ class UserAddressAction extends BaseAction{
     	$list = $m->queryByList($USER['userId']);
     	$this->assign('List',$list);
     	$this->assign("umark","addressQueryByPage");
-        $this->display("default/users/useraddress/list");
+        $this->display("users/useraddress/list");
 	}
 	/**
 	 * 获取用户地址

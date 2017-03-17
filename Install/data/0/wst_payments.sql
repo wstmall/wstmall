@@ -25,3 +25,4 @@ INSERT INTO `wst_payments` VALUES ('1', 'cod', '货到付款', '开通城市', '
 INSERT INTO `wst_payments` VALUES ('2', 'alipay', '支付宝(及时到帐)', '支付宝(及时到帐)', '2', '', '0', '1', '1,2,4');
 INSERT INTO `wst_payments` VALUES ('3', 'weixin', '微信支付', '微信支付', '0', '', '0', '1', '1,3');
 INSERT INTO `wst_payments` VALUES ('4', 'app_weixin', '微信支付', 'App微信支付', '0', '', '0', '0', '4');
+INSERT INTO `wst_payments` VALUES ('5', 'balance', '余额支付', '余额支付', '4', '', '0', '1', '1,2,3,4');

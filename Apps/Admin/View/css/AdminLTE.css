@@ -3589,4 +3589,23 @@ label{display:inline;}
 .wstmall-login-tips p{margin:0px;}
 .wstmall-intro{color:#E9754F;}
 
+/***风格切换***/
+.style-main{padding:10px;}
+.style-box{width:200px;height:320px;border:1px solid #ddd;padding:5px;margin:5px;float:left;}
+.style-box .style-img{width:187px;height:200px;}
+.style-box .style-img img{width:187px;height:200px;}
+.style-box .style-txt,.style-box .style-author,.style-box .style-web{width:200px;height:25px;overflow:hidden;text-align:left;line-height:25px;}
+.style-box .style-op{height:30px;text-align: center;overflow:hidden;}
 
+/***微信自定义菜单***/
+.wst-views{float: left;width: 20%;height: 60%;}
+.wst-views .reveal{margin: 0 auto;width: 88%;min-height:460px;border: 1px solid #e7e7eb;position:relative;}
+.wst-views .revealt{position: absolute;left:0;top:0;width: 100%;height:65px;background: url(../img/img_topinfo.png) 0px 0px no-repeat;background-size: 100%;}
+.wst-views .revealb{position: absolute;left:0;bottom:0;width: 100%;height:46px;border-top: 1px solid #e7e7eb;}
+.wst-views .revealb i{float: left;width: 15%;height:46px;background: url(../img/img_dibu.png) -6px -10px no-repeat;}
+.wst-views .ui{float: right;width: 85%;height:46px;display: -webkit-box;}
+.wst-views .li{-webkit-box-flex: 1;display: block;line-height: 46px;text-align: center;border-left: 1px solid #e7e7eb;cursor:pointer;position:relative;}
+.wst-views .li:hover,.wst-views .li .list:hover{background: #eee;}
+.wst-views .selected{background: #eee;}
+.wst-views .li .lis{position: absolute;left:0;bottom:46px;width: 100%;border: 1px solid #e7e7eb;}
+.wst-views .li .list{float: left;width: 100%;border-bottom: 1px solid #e7e7eb;}

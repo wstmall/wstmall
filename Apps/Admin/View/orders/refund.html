@@ -6,28 +6,20 @@
 				   edit();
 			       return false;
 			}});
-	   $("#content").formValidator({onFocus:"请输入退款说明",onCorrect:"输入正确"}).inputValidator({min:1,max:200,onError:"你输入的长度不正确,请确认"});
+	   $("#content").formValidator({onFocus:"请输入退款说明",onCorrect:"输入正确"}).inputValidator({min:1,max:200,onError:"您输入的长度不正确,请确认"});
+	   $("#refundStatus").formValidator({onFocus:"请选择退款状态",onCorrect:"输入正确"}).inputValidator({min:1,max:200,onError:"退款状态"});
    });
    function edit(){
 	   var params = {};
 	   params.content = $.trim($('#content').val());
 	   params.id = $('#id').val();
+	   params.refundStatus = $('#refundStatus').val();
 	   Plugins.waitTips({title:'信息提示',content:'正在提交数据，请稍后...'});
 	   $.post("{:U('Admin/Orders/refund')}",params,function(data,textStatus){
 			var json = WST.toJson(data);
-			if(json.status=='1'){
-				Plugins.setWaitTipsMsg({ content:'操作成功',timeout:1000,callback:function(){
-					   location.href="{:U('Admin/Orders/queryRefundByPage')}";
-				}});
-			}else if(json.status=='-2'){
-				Plugins.setWaitTipsMsg({content:'操作失败，订单早已经退款！',timeout:1000,callback:function(){
-					location.href="{:U('Admin/Orders/queryRefundByPage')}";
-				}});
-			}else{
-				Plugins.setWaitTipsMsg({content:'操作失败！',timeout:1000,callback:function(){
-					location.href="{:U('Admin/Orders/queryRefundByPage')}";
-				}});
-			}
+			Plugins.setWaitTipsMsg({ content:json.msg,timeout:1000,callback:function(){
+				   location.href="{:U('Admin/Orders/queryRefundByPage')}";
+			}});
 		});
    }
    </script>
@@ -39,13 +31,28 @@
              <td>{$object['orderNo']}</td>
            </tr>
            <tr>
-             <th width='120' align='right'>订单金额：</th>
-             <td>订单总金额：<font color='red'>￥{$object['totalMoney']+$object['deliverMoney']}</font>&nbsp;(商品总金额：￥{$object['totalMoney']} + 运费：￥{$object['deliverMoney']})  </td>
+             <th width='120' align='right'>订单总金额：</th>
+             <td><font color='red'>￥{$object['totalMoney']+$object['deliverMoney']}</font>&nbsp;(商品总金额：￥{$object['totalMoney']} + 运费：￥{$object['deliverMoney']})  </td>
+           </tr>
+           <tr>
+             <th width='120' align='right'>退款金额：</th>
+             <td><font color='red'>￥{$object['backMoney']}</font></td>
            </tr>
            <tr>
              <th width='120' align='right'>退款说明：</th>
              <td>
              <textarea style='width:450px;height:100px' id='content' name='content'></textarea>
+             </td>
+           </tr> 
+           <tr>
+             <th width='120' align='right'>退款状态：</th>
+             <td>
+            	<select id="refundStatus" name="refundStatus">
+            		<option>请选择</option>
+            		<option value="1">退款给用户，订单结束</option>
+            		<option value="2">用户确认收货，结算给商家</option>
+            		<option value="3">维持订单现状，流程继续</option>
+            	</select>
              </td>
            </tr> 
            <tr>

@@ -1,0 +1,72 @@
+
+.wst-coupon-bg{
+	background: url("../../../View/default/images/coupon_bg.jpg") #210d15 no-repeat center 0;
+  	height: 371px;
+  	border-bottom: 1px dashed #000;
+  	
+}
+
+.wst-shop-logo{
+	height: 180px;
+	width: 180px;
+	border-radius: 1000px; 
+}
+
+
+
+.wst-coupon-left{float:left;width:560px;text-align: right;position:relative;  }
+.wst-coupon-right{float:right;width:560px;text-align: left;color:#fff;line-height:30px;}
+.wst-coupon-right .money{color:#FF0000;font-size: 15px;font-weight:bold; }
+.wst-coupon-right a{color:#ff0000;}
+.wst-coupon-right .receive-bnt,.wst-coupon-right .goshop-bnt{  display: inline-block;
+  height: 40px;
+  line-height: 38px;
+  border: 1px solid #710000;
+  color: #fff;
+  background: -webkit-gradient(linear,left top, left bottom, color-stop(0, #ae0606), color-stop(1, #8f2c00));
+  background: -moz-linear-gradient(top,#ae0606,#8f2c00);
+  background: -o-linear-gradient(top, #ae0606, #8f2c00);
+  background: -ms-linear-gradient(top, #ae0606, #8f2c00);
+  width: 92px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: bold;cursor: pointer;}
+  
+
+.wst-coupon-right .chkcoupon-bnt{
+  color: #a92121;
+  height: 38px;
+  line-height: 38px;
+  border: 0px;
+  border-left: 1px solid #ffffff;
+  width: 94px;
+  background-image: -webkit-gradient(linear,left top, left bottom, color-stop(0, #fefefe), color-stop(1, #d7d7d7));
+  background: -moz-linear-gradient(top,#fefefe,#d7d7d7);
+  background: -o-linear-gradient(top, #fefefe, #d7d7d7);
+  background: -ms-linear-gradient(top, #fefefe, #d7d7d7);
+  cursor: pointer;
+}
+.wst-coupon-split{border:1px solid #ddd;position:absolute;right:-46px;top:20px;height:156px; }
+
+.fail-box, .success-box{height: 35px;font-size:25px;}
+.fail-box-text {
+  	background: #ffec9f;
+  	border-radius: 5px;
+  	padding: 10px 20px;
+  	width: 180px;
+  	margin: 10px 0 30px 0;
+  	color: #943402;
+  	position: relative;
+	margin-bottom: 55px;
+}
+.fail-box-text:after {
+  	border: 10px solid #ffec9f;
+  	border-color: transparent transparent #ffec9f transparent;
+  	display: block;
+  	content: " ";
+  	height: 0px;
+  	width: 0px;
+  	position: absolute;
+  	top: -20px;
+}
+

@@ -1,0 +1,156 @@
+<!doctype html>
+<html>
+	<head>
+  		<meta charset="utf-8">
+      	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+      	<link rel="shortcut icon" href="favicon.ico"/>
+      	<meta http-equiv="cache-control" content="no-cache">
+      	<title>订单信息 - {$CONF['mallTitle']}</title>
+      	<meta name="keywords" content="{$CONF['mallKeywords']},订单信息" />
+      	<meta name="description" content="{$CONF['mallDesc']},订单信息" />
+      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/common.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/checkorderinfo.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/base.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/head.css" />
+   	</head>
+   	<body>
+	
+	<div style="position: relative;width:960px;margin:0 auto">
+		<button class="wst-print-btn" onclick="window.print()">打印</button>
+		<volist name="orders" id="orderInfo">
+		 <?php if($key>0){ ?>
+        <div class="wst-print-page"></div>
+        <?php } ?>
+        <div><br/>
+        	<div class="wst-odetal-box">
+        	<table cellspacing="0" cellpadding="0" class="wst-tab" width="960">
+        		<caption class="wst-tab-cpt">日志信息</caption>
+        		<tbody>
+	        		<volist name="orderInfo['logs']" id="log" key='key1'>
+	        		<tr>
+	        			<td width="200">{$log["logTime"]}</td>
+	        			<td class="wst-td-content">{$log["logContent"]}</td>
+	        		</tr>
+	        		</volist>
+        		</tbody>
+        	</table>
+        	</div>
+        	<br/><br/>
+        	<div class="wst-odetal-box">
+        	<table cellspacing="0" cellpadding="0" class="wst-tab" width="960">
+        		<caption class="wst-tab-cpt">订单信息</caption>
+        		<tbody>
+	        		<tr>
+	        			<td class="wst-td-title">订单编号：</td>
+	        			<td class="wst-td-content">{$orderInfo["order"]["orderNo"]}</td>
+	        		</tr>
+	        		<tr>
+	        			<td class="wst-td-title">支付方式：</td>
+	        			<td class="wst-td-content">{$orderInfo["order"]["payType"]==0?"货到付款":"在线支付"}</td>
+	        		</tr>
+	        		<tr>
+	        			<td class="wst-td-title">配送方式：</td>
+	        			<td class="wst-td-content">
+	        				<if condition='$orderInfo["order"]["isSelf"]==1'>
+	        					自提
+	        				<else/>
+	        					<if condition='$orderInfo["order"]["deliverType"]==0'>商城配送<else/>店铺配送</if>
+	        				</if>
+	        			</td>
+	        		</tr>
+	        		<tr>
+	        		    <td class="wst-td-title">买家留言：</td>
+	        		    <td class="wst-td-content">{$orderInfo["order"]["orderRemarks"]}</td>
+	        		</tr>
+	        		<tr>
+	        			<td class="wst-td-title">下单时间：</td>
+	        			<td class="wst-td-content">{$orderInfo["order"]["createTime"]}</td>
+	        		</tr>
+        		</tbody>
+        	</table>
+        	</div>
+        	<br/><br/>
+        	<div class="wst-odetal-box">
+        	<table cellspacing="0" cellpadding="0" class="wst-tab" width="960">
+        		<caption class="wst-tab-cpt">收货人信息</caption>
+        		<tbody>
+	        		<tr>
+	        			<td class="wst-td-title">收货人姓名：</td>
+	        			<td class="wst-td-content">{$orderInfo["order"]["userName"]}</td>
+	        		</tr>
+	        		<tr>
+	        			<td class="wst-td-title">地址：</td>
+	        			<td class="wst-td-content">{$orderInfo["order"]["userAddress"]}</td>
+	        		</tr>
+	        		<tr>
+	        			<td class="wst-td-title">固定电话：</td>
+	        			<td class="wst-td-content">{$orderInfo["order"]["userPhone"]} <if condition='$orderInfo["order"]["userTel"] neq ""'>| {$orderInfo["order"]["userTel"]}</if></td>
+	        		</tr>
+	        		<tr>
+	        			<td class="wst-td-title">期望送达时间：</td>
+	        			<td class="wst-td-content">{$orderInfo["order"]["requireTime"]}</td>
+	        		</tr>
+        		</tbody>
+        	</table>
+        	</div>
+        	<br/><br/>
+        	<notempty name='orderInfo["order"]["invoiceClient"]'>
+        	<div class="wst-odetal-box">
+        	<table cellspacing="0" cellpadding="0" class="wst-tab" width="960">
+        		<caption class="wst-tab-cpt">发票信息</caption>
+        		<tbody>
+	        		<tr>
+	        			<td class="wst-td-title">发票抬头：</td>
+	        			<td class="wst-td-content">{$orderInfo["order"]["invoiceClient"]}</td>
+	        		</tr>
+        		</tbody>
+        	</table>
+        	</div> 
+        	</notempty>       	
+        	<div class="wst-odetal-box" style='padding-bottom:5px;'>
+        	<table cellspacing="0" cellpadding="0" class="wst-tab" width="960" style="margin:0 auto;">
+        		<caption class="wst-tab-cpt">商品信息</caption>
+        		<tbody>
+	        		<tr>
+	        			<td width='500' class="wst-align-left" style='padding-left:5px'>商品</td>
+	        			<td width='80' class="wst-align-center">商品价格</td>
+	        			<td width='80' class="wst-align-center">商品数量</td>
+	        			<td width='100' class="wst-align-center">商品总金额</td>
+	        		</tr>
+	        		<volist name="orderInfo['goodsList']" id="goods" key='key1'>
+	        		<tr>
+	        			<td class="wst-align-left">
+	        			<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}" target="_blank">
+	        			   <img style='margin:5px;' class='lazyImg' src="__ROOT__/{$goods['goodsThums']}" width='50' height='50'/>
+	        			</a>
+	        			<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}" target="_blank">
+	        			{$goods["goodsName"]}
+	        			<if condition="$goods['goodsAttrName'] neq ''">【{$goods['goodsAttrName']}】</if>
+	        			</a>
+	        			</td>
+	        			<td class="wst-align-center">￥{$goods["shopPrice"]}</td>
+	        			<td class="wst-align-center">{$goods["goodsNums"]}</td>
+	        			<td class="wst-align-center">￥{$goods["shopPrice"]*$goods["goodsNums"]}</td>
+	        		</tr>
+	        		</volist>
+        		</tbody>
+        		<tr>
+        		   <td colspan='4' class='wst-cart-total-money'>
+        		  	 商品总金额： ￥{$orderInfo["order"]["totalMoney"]}<br/>
+        		   	+ 运费：￥{$orderInfo["order"]["deliverMoney"]}<br/>
+        		   	<if condition='$orderInfo["order"]["couponMoney"] gt 0'>店铺优惠：- ￥{$orderInfo["order"]["couponMoney"]}<br/></if>
+        		  	  订单总金额：<span class='wst-cart-order-money'>￥{$orderInfo["order"]["totalMoney"]+$orderInfo["order"]["deliverMoney"]-$orderInfo["order"]["couponMoney"]}</span><br/>
+        		 	<if condition='$orderInfo["order"]["useScore"] gt 0'>- 使用积分：{$orderInfo["order"]["useScore"]} 点（抵￥{$orderInfo["order"]["scoreMoney"]} ）<br/></if>
+        		   <span class='wst-cart-order-txt'>实付总金额：</span><span class='wst-cart-order-money'>￥{$orderInfo["order"]["realTotalMoney"]}</span></td>
+        		</tr>
+        	</table>
+        	</div>
+        </div>
+       
+        </volist>
+    </div>
+    <div class="wst-clear"></div>
+    <div style="height: 20px;"></div>
+</body>
+
+</html>

@@ -1,0 +1,250 @@
+.wst-te-cat{
+	margin: 0 auto;
+    width: 1200px;
+    padding:20px 0px 20px 0px;
+	border-bottom:1px solid #e5e5e5;
+}
+.wst-te-cat .catl{
+	float:left;
+	width: 100px;
+}
+.wst-te-cat .catl span{
+	float:left;
+	padding:8px 18px;
+	color:#ffffff;
+	font-weight: bold;
+	border-radius:25px;
+	background:#e01121;
+	border:2px solid #fddb00;
+}
+.wst-te-cat .catr{
+	float:right;
+	width: 1085px;
+	min-height:75px;
+}
+.wst-te-cat .catr span{
+	float: left;
+    margin: 3px 50px 0px 0px;
+    padding: 8px 5px;
+   	cursor:pointer;
+}
+.wst-te-cat .catr span:hover,.wst-te-cat .selected{
+	color:#e01121;
+}
+.wst-te-cat2{
+	box-shadow: 0px 4px 10px -6px;
+}
+.wst-te-cat2 .cats{
+	margin: 0 auto;
+	padding-top:5px;
+    width: 1200px;
+}
+.wst-te-cat2 .cats span{
+	float:left;
+	padding:9px 20px;
+	cursor:pointer;
+}
+.wst-te-cat2 .cats span:hover,.wst-te-cat2 .selected{
+	color:#e01121;
+	border-bottom:2px solid #e01121;
+}
+.wst-te-goods{
+	margin: 0 auto;
+    width: 1200px;
+    min-height:800px;
+}
+.wst-te-goods .goods{
+	float: left;
+	width: 266px;
+	margin: 20px 0px 0px 18px;
+    border: 1px solid #e0dfdf;
+}
+.wst-te-goods .top{
+	width: 250px;
+	padding:8px 8px 0px 8px;
+}
+.wst-te-goods .goods:hover{
+	border:1px solid #ddd;
+	-webkit-box-shadow:0 0 10px #ddd;
+	-moz-box-shadow:0 0 10px #ddd;
+	box-shadow:0 0 10px #ddd;
+}
+.wst-te-goods .img{
+	float: left;
+    width: 250px;
+    height: 250px;
+    text-align: center;
+    vertical-align: middle;
+    display: block;
+    position: relative;
+}
+.wst-te-goods .img a{
+	width: 250px;
+    height: 250px;
+    display: table-cell;
+    vertical-align: middle;
+}
+.wst-te-goods .img a img{
+	max-width: 250px;
+    max-height: 250px;
+}
+.wst-te-goods .name{
+	float: left;
+	height: 36px;
+	overflow: hidden;
+	padding:5px 0px;
+}
+.wst-te-goods .time{
+	float: left;
+	height: 30px;
+	line-height: 30px;
+	color:#7f7f7f;
+}
+.wst-te-goods .time i{
+	float: left;
+	width:27px;
+	height: 30px;
+	background:url(../images/icon_time.png) 0px 4px no-repeat;
+}
+.wst-te-goods .time b{
+	color:#fe4600;
+}
+.wst-te-goods .bottom{
+	display: block;
+	width: 266px;
+	height: 40px;
+	line-height: 40px;
+	background:#e23c3e;
+	position: relative;
+}
+.wst-te-goods .bottom .price{
+	margin-left:5px;
+	color:#ffffff;
+	font-weight: bold;
+	font-size: 18px;
+}
+.wst-te-goods .bottom .price2{
+	margin-left:5px;
+	color:#c8c8c8;
+	text-decoration: line-through;
+}
+.wst-te-goods .bottom .tobuy{
+	position: absolute;
+	top: -10px;
+    right: 8px;
+	display: block;
+	width:58px;
+	height: 60px;
+	background:url(../images/btn_lijicantuan.png) -1px 0px no-repeat;
+}
+
+/*即时抢购商品*/
+.wst-li-goods{
+	margin: 0px auto;
+    width: 1200px;
+    min-height:800px;
+}
+.wst-li-goods .goods{
+	float: left;
+	width: 276px;
+	margin: 20px 0px 0px 18px;
+    border: 1px solid #e0dfdf;
+    position: relative;
+}
+.wst-li-goods .top{
+	width: 260px;
+	padding:8px 8px 0px 8px;
+}
+.wst-li-goods .goods:hover{
+	border:1px solid #ddd;
+	-webkit-box-shadow:0 0 10px #ddd;
+	-moz-box-shadow:0 0 10px #ddd;
+	box-shadow:0 0 10px #ddd;
+}
+.wst-li-goods .img{
+	float: left;
+    width: 260px;
+    height: 260px;
+    text-align: center;
+    vertical-align: middle;
+    display: block;
+    position: relative;
+}
+.wst-li-goods .img a{
+	width: 260px;
+    height: 260px;
+    display: table-cell;
+    vertical-align: middle;
+}
+.wst-li-goods .img a img{
+	max-width: 260px;
+    max-height: 260px;
+}
+.wst-li-goods .name{
+	float: left;
+	height: 36px;
+	overflow: hidden;
+	padding:5px 0px;
+}
+.wst-li-goods .time{
+	position: absolute;
+	top:8px;
+	left:0px;
+	height: 30px;
+	line-height: 30px;
+	width: 170px;
+	color:#ffffff;
+	border-top-right-radius:25px;
+	border-bottom-right-radius:25px;
+	background:#e86364;
+}
+.wst-li-goods .time i{
+	float: left;
+	width:25px;
+	height: 30px;
+	margin-left:5px;
+	background:url(../images/icon_qgsj.png) 0px 4px no-repeat;
+}
+.wst-li-goods .bottom{
+	display: block;
+	width: 276px;
+	height: 66px;
+	background:#fddc1d;
+	position: relative;
+}
+.wst-li-goods .bottom .price{
+	float: left;
+	margin:10px 0px 0px 5px;
+	color:#e11222;
+	font-weight: bold;
+	font-size: 22px;
+}
+.wst-li-goods .bottom .volume{
+	float: left;
+	width:200px;
+	margin-left:5px;
+}
+.wst-li-goods .bottom .price .prices{
+	font-size: 13px;
+}
+.wst-li-goods .bottom .price2{
+	margin-left:5px;
+	color:#666550;
+	font-size: 13px;
+	text-decoration: line-through;
+}
+.wst-li-goods .bottom .tobuy{
+	position: absolute;
+	top: 9px;
+    right: 10px;
+	width: 90px;
+	height: 48px;
+	line-height: 48px;
+	color:#ffffff;
+	font-size: 18px;
+	padding-left: 10px;
+	background:url(../images/btn_ljag_red.png) 0px 0px no-repeat;
+}
+.wst-li-goods .bottom .tobuy:hover{
+	color:#fddc1d;
+}

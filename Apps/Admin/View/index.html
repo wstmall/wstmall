@@ -213,7 +213,22 @@
                             </a>
                             <ul class="treeview-menu">
                                 <php>if(in_array('dttj_00',$WST_STAFF['grant'])){</php>
-                                <li><a href="{:U('Admin/OrderRpts/index')}" target='pageContent' >订单统计</a></li>
+                                <li><a href="{:U('Admin/Reports/toStatOrders')}" target='pageContent' >销售订单统计</a></li>
+                                <php>}</php>
+                                <php>if(in_array('dttj_01',$WST_STAFF['grant'])){</php>
+                                <li><a href="{:U('Admin/Reports/statTopSaleGoods')}" target='pageContent' >商品销售统计</a></li>
+                                <php>}</php>
+                                 <php>if(in_array('dttj_02',$WST_STAFF['grant'])){</php>
+                                <li><a href="{:U('Admin/Reports/statShopSales')}" target='pageContent' >店铺销售统计</a></li>
+                                <php>}</php>
+                                 <php>if(in_array('dttj_03',$WST_STAFF['grant'])){</php>
+                                <li><a href="{:U('Admin/Reports/statSales')}" target='pageContent' >销售额统计</a></li>
+                                <php>}</php>
+                                 <php>if(in_array('dttj_04',$WST_STAFF['grant'])){</php>
+                                <li><a href="{:U('Admin/Reports/toStatNewUser')}" target='pageContent' >新增会员统计</a></li>
+                                <php>}</php>
+                                 <php>if(in_array('dttj_05',$WST_STAFF['grant'])){</php>
+                                <li><a href="{:U('Admin/Reports/toStatUserLogin')}" target='pageContent' >会员登录统计</a></li>
                                 <php>}</php>
                             </ul>
                         </li>
@@ -294,6 +309,23 @@
                             </ul>
                         </li>
                         <php>}</php>
+                        
+                        <php>if(in_array('cxgl_00',$WST_STAFF['grant'])){</php>
+                        <li class="treeview">
+                            <a href="#">
+                                <span>促销管理</span>
+                            </a>
+                            <ul class="treeview-menu">
+                            	<php>if(in_array('cxgl_01',$WST_STAFF['grant'])){</php>
+					            <li><a href="{:U('Admin/Groups/queryGroupGoods')}" target='pageContent'>团购管理</a></li>
+					            <php>}</php>
+					            <php>if(in_array('cxgl_02',$WST_STAFF['grant'])){</php>
+                            	<li><a href="{:U('Admin/Panics/queryPanicGoods')}" target='pageContent' >抢购管理</a></li>
+                            	<php>}</php>
+                            </ul>
+                        </li>
+                        <php>}</php>
+                        
                         <php>if(in_array('dqgl_00',$WST_STAFF['grant'])){</php>
                         <li class="treeview">
                             <a href="pages/calendar.html">
@@ -376,10 +408,23 @@
 					            <php>if(in_array('zfgl_00',$WST_STAFF['grant'])){</php>
 					            <li><a href="{:U('Admin/Payments/index')}" target='pageContent'>支付管理</a></li>
 					            <php>}</php>
-					            
+                                <php>if(in_array('fggl_00',$WST_STAFF['grant'])){</php>
+					            <li><a href="{:U('Admin/Styles/index')}" target='pageContent'>风格管理</a></li>
+                                <php>}</php>
                             </ul>
                         </li>
                         <php>}</php>
+                        <li class="treeview">
+                            <a href="#">
+                                <span>微信管理</span>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="{:U('Admin/WxMenus/index')}" target='pageContent' >自定义菜单</a></li>
+                                <li><a href="{:U('Admin/WxUsers/index')}" target='pageContent' >用户管理</a></li>
+                                <li><a href="{:U('Admin/WxPassiveReply/text')}" target='pageContent' >被动回复文本消息</a></li>
+                                <li><a href="{:U('Admin/WxPassiveReply/news')}" target='pageContent' >被动回复图文消息</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </section>
                 <!-- /.sidebar -->

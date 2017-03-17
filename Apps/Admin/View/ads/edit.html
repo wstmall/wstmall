@@ -54,6 +54,7 @@
 	   uploadFile({
 	    	  server:"{:U('Admin/Shops/uploadPic')}",
 	    	  pick:'#filePicker',
+	    	  compress:false,//默认不对图片进行压缩
 	    	  formData: {dir:'adspic'},
 	    	  callback:function(f){
 	    		  layer.close(uploading);

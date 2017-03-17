@@ -32,7 +32,7 @@ class GoodsAppraisesAction extends BaseAction{
     	$this->assign("shopCatId1",I('shopCatId1'));
     	$this->assign("goodsName",I('goodsName'));
     	$this->assign("umark","GoodsAppraises");
-        $this->display("default/shops/goodsappraises/list");
+        $this->display("shops/goodsappraises/list");
 	}
 	
 	
@@ -45,7 +45,7 @@ class GoodsAppraisesAction extends BaseAction{
     	$appraise = $m->getAppraise();
     	$this->assign('appraise',$appraise);
     	
-        $this->display("default/shops/goodsappraises/appraise");
+        $this->display("shops/goodsappraises/appraise");
 	}
 	/******************************************************************
 	 *                         会员操作
@@ -61,7 +61,7 @@ class GoodsAppraisesAction extends BaseAction{
     	$obj["orderId"] = (int)I("orderId");
 		$rs = $morders->getOrderAppraises($obj);
 		$this->assign("orderInfo",$rs);
-		$this->display("default/users/orders/appraise");
+		$this->display("users/orders/appraise");
 	}
 	/**
 	 * 添加评价
@@ -92,7 +92,7 @@ class GoodsAppraisesAction extends BaseAction{
 			$appraiseList['root'][$k]['appraisesAnnex'] = explode(',',$appraiseList['root'][$k]['appraisesAnnex']);
 		}
 		$this->assign("appraiseList",$appraiseList);
-		$this->display("default/users/orders/list_appraise_manage");
+		$this->display("users/orders/list_appraise_manage");
 	} 
 	/**
 	 * 获取前台评价列表

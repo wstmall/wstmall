@@ -22,11 +22,17 @@ function WSTNavigation($type=0){
 	    F('navigation/'.$areaId2,$rs);
 	}
 	foreach ($rs as $key =>$v){
-		$rs[$key]['url'] = $cururl;
+		
 		if(stripos($v['navUrl'],'https://')===false &&  stripos($v['navUrl'],'http://')===false){
 			$rs[$key]['navUrl'] = WSTDomain()."/".$rs[$key]['navUrl'];
 			//取出控制器名跟方法名
-			$rs[$key]['curUrl'] = str_replace('c=','',str_replace('&a=','/',strrchr($rs[$key]['navUrl'],'c=')));
+			if(strstr($rs[$key]['navUrl'],"c=")){
+				$rs[$key]['curUrl'] = str_replace('c=','',str_replace('&a=','/',strrchr($rs[$key]['navUrl'],'c=')));
+			}else{
+				$urls = explode('Home/',$rs[$key]['navUrl']);
+				$navUrls = explode(".",$urls[1]);
+				$rs[$key]['curUrl'] = $navUrls[0];
+			}
 		}
 		$rs[$key]['end'] = ($key==count($rs)-1)?1:0;
 	}
@@ -130,7 +136,6 @@ function WSTTarget(){
 	$target["targetType"] = $targetType;
 	return $target;
 }
-
 
 
 

@@ -16,7 +16,7 @@ class DistributsAction extends BaseAction {
 		$rs = $m->getDistributConf();
 		$this->assign("object",$rs);
 		$this->assign("umark","setDistributs");
-		$this->display("default/shops/distributs/set");
+		$this->display("shops/distributs/set");
 	}
 	
 	/**
@@ -53,7 +53,7 @@ class DistributsAction extends BaseAction {
 		$this->assign("shopCatId1",I('shopCatId1'));
 		$this->assign("goodsName",I('goodsName'));
 		$this->assign("distributConf",$distributConf);
-		$this->display("default/shops/distributs/list_goods");
+		$this->display("shops/distributs/list_goods");
 	}
 	
 	/**
@@ -73,7 +73,7 @@ class DistributsAction extends BaseAction {
 		$this->assign('settlementId',(int)I("settlementId",-999) );
 		$this->assign("umark","queryShopDistributMoneys");
 		
-		$this->display("default/shops/distributs/list_money");
+		$this->display("shops/distributs/list_money");
 	}
 	
 	/**
@@ -87,7 +87,7 @@ class DistributsAction extends BaseAction {
 		$page['pager'] = $pager->show();
 		$this->assign('Page',$page);
 		$this->assign("umark","queryShopDistributUsers");
-		$this->display("default/shops/distributs/list_user");
+		$this->display("shops/distributs/list_user");
 	}
 	
 	public function queryDistributUsers(){
@@ -98,7 +98,7 @@ class DistributsAction extends BaseAction {
 		$page['pager'] = $pager->show();
 		$this->assign('Page',$page);
 		$this->assign("umark","queryDistributUsers");
-		$this->display("default/users/distributs/list_user");
+		$this->display("users/distributs/list_user");
 	}
 	
 	/**
@@ -117,7 +117,7 @@ class DistributsAction extends BaseAction {
 		$this->assign('endDate',I('endDate'));
 		$this->assign("umark","queryUserDistributMoneys");
 	
-		$this->display("default/users/distributs/list_money");
+		$this->display("users/distributs/list_money");
 	}
 	
 }

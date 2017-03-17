@@ -4,6 +4,7 @@
     margin-left:10px; 
 	line-height:22px; 
 	vertical-align:middle;
+	display: inline-block;
 }
 .onFocus
 {
@@ -12,6 +13,7 @@
     margin-left:10px; 
 	line-height:22px; 
 	vertical-align:middle;
+	display: inline-block;
 }
 .onError
 {
@@ -20,6 +22,7 @@
     margin-left:10px; 
 	line-height:22px; 
 	vertical-align:middle;
+	display: inline-block;
 }
 .onCorrect
 {
@@ -28,15 +31,17 @@
     margin-left:10px; 
 	line-height:22px; 
 	vertical-align:middle;
+	display: inline-block;
 }
 .onLoad
 {
     background:url(../images/onLoad.gif) no-repeat 3px 3px;
     padding-left:25px;
-margin-left:10px; 
+	margin-left:10px; 
 	font-size: 12px;
 	line-height:22px; 
 	vertical-align:middle;
+	display: inline-block;
 } 
 
 .inputOnShow

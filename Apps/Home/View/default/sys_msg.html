@@ -8,10 +8,10 @@
 	<meta name="description" content="{$CONFIG['mallDesc']}" />
 	<meta name="Keywords" content="{$CONFIG['mallKeywords']}" />
 
-	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
-    <link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/ordersuccess.css" />
-    <link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
-	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />
+	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/common.css" />
+    <link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/ordersuccess.css" />
+    <link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/base.css" />
+	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/head.css" />
 </head>
 <body class="root61">
 	<include file="./Apps/Home/View/default/header_common.html" />
@@ -21,7 +21,7 @@
 					<div class="wst-sys-msg-cb">
 						<div class="wst-sys-msg-vb">
 							<if condition="count($orderInfos) gt 0">
-							<img src="__ROOT__/Apps/Home/View/default/images/icon-succ.png" alt="" />
+							<img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/icon-succ.png" alt="" />
 							</if>
 						</div>
 						<br/>
@@ -50,5 +50,5 @@
 </body>
 </html>
 <script src="__PUBLIC__/js/common.js"></script>
-<script src="__ROOT__/Apps/Home/View/default/js/index.js"></script>      	
-<script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
+<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/index.js"></script>      	
+<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/common.js"></script>

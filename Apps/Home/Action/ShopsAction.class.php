@@ -35,7 +35,11 @@ class ShopsAction extends BaseAction {
 		$shops["serviceStartTime"] = str_replace('.0',':00',$shops["serviceStartTime"]);
 		$this->assign('shops',$shops);
 
-		if(!empty($shops)){		
+		if(!empty($shops)){
+			$mc = D('Home/Coupons');
+			$coupons = $mc->getCouponsByShopId($shopId);
+			$this->assign('coupons',$coupons);
+			
 			$this->assign('shopId',$shopId);
 			$this->assign('ct1',(int)I("ct1"));
 			$this->assign('ct2',(int)I("ct2"));
@@ -66,7 +70,7 @@ class ShopsAction extends BaseAction {
 			$this->assign('isSelf',$shops["isSelf"]);
 		
 		}
-        $this->display("default/shop_home");
+        $this->display("shop_home");
 	}
 	/**
      * 跳到店铺街
@@ -87,7 +91,7 @@ class ShopsAction extends BaseAction {
   		$this->assign('areaId3',$obj["areaId3"]);
    		$this->assign('keyWords',I("keyWords"));
    		$this->assign('areaList',$areaList);
-        $this->display("default/shop_street");
+        $this->display("shop_street");
 	}
 	
 	/**
@@ -134,7 +138,7 @@ class ShopsAction extends BaseAction {
 		if(!empty($USER) && $USER['userType']==1){
 			$this->redirect("Shops/index");
 		}else{
-            $this->display("default/shop_login");
+            $this->display("shop_login");
 		}
 	}
 	
@@ -176,7 +180,7 @@ class ShopsAction extends BaseAction {
 		
 		$this->assign('shopInfo',$data);
 		
-		$this->display("default/shops/index");
+		$this->display("shops/index");
 	}
 	/**
 	 * 编辑商家资料
@@ -195,7 +199,7 @@ class ShopsAction extends BaseAction {
 		
 		$this->assign('object',$shop);
 		$this->assign("umark","toEdit");
-		$this->display("default/shops/edit_shop");
+		$this->display("shops/edit_shop");
 	}
 	
 	/**
@@ -208,7 +212,7 @@ class ShopsAction extends BaseAction {
 		$m = D('Home/Shops');
 		$this->assign('object',$m->getShopCfg((int)$USER['shopId']));
 		$this->assign("umark","setShop");
-		$this->display("default/shops/cfg_shop");
+		$this->display("shops/cfg_shop");
 	}
 	/**
 	 * 查询店铺名称是否存在
@@ -256,7 +260,7 @@ class ShopsAction extends BaseAction {
 		$user = $m->getUserById($obj);
 		$this->assign("pwdType",empty($user['payPwd'])?0:1);
 		$this->assign("umark","toEditPass");
-        $this->display("default/shops/edit_pass");
+        $this->display("shops/edit_pass");
 	}
 	
 	/**
@@ -288,21 +292,21 @@ class ShopsAction extends BaseAction {
 				$object['areaId1'] = $area['parentId'];
 				$object['areaId2'] = $area['areaId'];
 				$this->assign('object',$object);
-				$this->display("default/users/open_shop");
+				$this->display("users/open_shop");
 			}else{
 				if($shop["shopStatus"]==1){
 					$shops = $m->loadShopInfo((int)$USER['userId']);
 					$USER = array_merge($USER,$shops);
 					session('WST_USER',$USER);
 					$this->assign('msg','您的申请已通过，请刷新页面后点击右上角的"卖家中心"进入店铺界面.');
-					$this->display("default/users/user_msg");
+					$this->display("users/user_msg");
 				}else{
 					if($shop["shopStatus"]==-1){
 						$this->assign('msg','您的申请审核不通过【原因：'.$shop["statusRemarks"].'】,请<a style="color:blue;" href="'.U('Home/Shops/toEditShopByUser').'"> 点击这里 </a>进行修改！');
 					}else{
 						$this->assign('msg','您的申请正在审核中...');
 					}
-					$this->display("default/users/user_msg");
+					$this->display("users/user_msg");
 				}
 			}
 		}else{
@@ -339,7 +343,7 @@ class ShopsAction extends BaseAction {
 				$object = $sm->getShopByUser((int)$USER['userId']);
 
 				$this->assign('object',$object);
-				$this->display("default/users/open_shop");
+				$this->display("users/open_shop");
 			}
 		}else{
 			$this->redirect("Shops/index");
@@ -406,7 +410,7 @@ class ShopsAction extends BaseAction {
 		$this->assign('bankList',$m->queryByList(0));
 		$object = $m->getModel();
 		$this->assign('object',$object);
-		$this->display("default/open_shop");
+		$this->display("open_shop");
 
 	}
 	

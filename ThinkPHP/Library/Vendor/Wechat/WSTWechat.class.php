@@ -12,6 +12,41 @@ class WSTWechat{
 	public $secret;
 	private $tokenId;
 	private $error;
+	private $tpl = array(
+		'text' => "<xml>
+					<ToUserName><![CDATA[%s]]></ToUserName>
+					<FromUserName><![CDATA[%s]]></FromUserName>
+					<CreateTime>%s</CreateTime>
+					<MsgType><![CDATA[text]]></MsgType>
+					<Content><![CDATA[%s]]></Content>
+					<FuncFlag>0</FuncFlag>
+					</xml>",
+		'image' => " <xml>
+					 <ToUserName><![CDATA[%s]]></ToUserName>
+					 <FromUserName><![CDATA[%s]]></FromUserName>
+					 <CreateTime>%s</CreateTime>
+					 <MsgType><![CDATA[image]]></MsgType>
+					 <PicUrl><![CDATA[this is a url]]></PicUrl>
+					 <MediaId><![CDATA[media_id]]></MediaId>
+					 <MsgId>1234567890123456</MsgId>
+					 </xml>",
+		'news'  => '<xml>
+					<ToUserName><![CDATA[%s]]></ToUserName>
+					<FromUserName><![CDATA[%s]]></FromUserName>
+					<CreateTime>%s</CreateTime>
+					<MsgType><![CDATA[news]]></MsgType>
+					<ArticleCount>%s</ArticleCount>
+					<Articles>
+					%s
+					</Articles>
+					</xml> ',
+		'content' => '<item>
+						<Title><![CDATA[%s]]></Title> 
+						<Description><![CDATA[%s]]></Description>
+						<PicUrl><![CDATA[%s]]></PicUrl>
+						<Url><![CDATA[%s]]></Url>
+						</item>',
+	);
 	
 	/**
 	 * 初始微信配置信息
@@ -78,11 +113,56 @@ class WSTWechat{
 	}
 	
 	/**
-	 * 获取用户详细信息
+	 * 获取用户详细信息/微信
 	 */
 	public function UserInfo($wdata){
 		$url = 'https://api.weixin.qq.com/sns/userinfo?access_token='.$wdata['access_token'].'&openid='.$wdata['openid'].'&lang=zh_CN';
 		$data = $this->http($url);
+		return json_decode($data, true);
+	}
+	
+	/**
+	 * 创建自定义菜单
+	 */
+	public function wxMenuCreate($wdata){
+		$url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=".$this->getToken();
+		$data = $this->http($url,$wdata);
+		return json_decode($data, true);
+	}
+	
+	/**
+	 * 获取自定义菜单
+	 */
+	public function wxMenuGet(){
+		$url = "https://api.weixin.qq.com/cgi-bin/menu/get?access_token=".$this->getToken();
+		$data = $this->http($url);
+		return json_decode($data, true);
+	}
+	
+	/**
+	 * 获取用户基本信息/后台
+	 */
+	public function wxUserInfo($openid){
+		$url = 'https://api.weixin.qq.com/cgi-bin/user/info?access_token='.$this->getToken().'&openid='.$openid.'&lang=zh_CN';
+		$data = $this->http($url);
+		return json_decode($data, true);
+	}
+	
+	/**
+	 * 获取用户列表
+	 */
+	public function wxUserGet($nextOpenid=''){
+		$url = 'https://api.weixin.qq.com/cgi-bin/user/get?access_token='.$this->getToken().'&next_openid='.$nextOpenid;
+		$data = $this->http($url);
+		return json_decode($data, true);
+	}
+	
+	/**
+	 * 设置备注名
+	 */
+	public function wxUpdateremark($wdata){
+		$url = 'https://api.weixin.qq.com/cgi-bin/user/info/updateremark?access_token='.$this->getToken();
+		$data = $this->http($url,$wdata);
 		return json_decode($data, true);
 	}
 	
@@ -94,6 +174,77 @@ class WSTWechat{
 		return $this->http($url,$data);
 		//return json_decode($rdata, true);
 	}
+
+	// 响应用户操作
+	public function responseMsg()
+    {
+		//get post data, May be due to the different environments
+		$postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
+
+		$postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
+		//判断用户发送的什么类型的消息
+		switch($postObj->MsgType)
+		{
+			case 'event':
+				$this->_doEvent($postObj);
+				break;
+			case 'text':
+				$this->_doText($postObj);
+				break;
+			case 'image':
+				$this->_doImage($postObj);
+				break;
+			case 'voice':
+				$this->_doVoice($postObj);
+				break;
+			case 'video':
+				$this->_doVideo($postObj);
+				break;
+			case 'location':
+				$this->_doLocation($postObj);
+				break;
+			case 'shortvideo':
+				$this->_doShortVideo($postObj);
+				break;
+			case 'link':
+				$this->_doLink($postObj);
+				break;
+			default:exit;
+		}		
+    }
+	/*************** 被动回复消息 ****************/
+
+	public function _doText($postObj)
+	{
+		$time = time();            
+		$msgType = "text";
+		$keyword = trim($postObj->Content);// 用户发送过来的关键字
+		$keyword = "$keyword";
+		$m = M('wx_passive_replys');
+    	$msgType = $m->where(array('keyword'=>$keyword))->getField('msgType');
+
+		if($msgType=='text'){
+			$contentStr = $m->where(array('keyword'=>$keyword))->getField('content');
+			$resultStr = sprintf($this->tpl['text'], $postObj->FromUserName, $postObj->ToUserName, $time, $contentStr);
+			echo $resultStr;
+		}elseif($msgType=='news'){
+			// 多图文消息最多发送10条
+			$news = $m->field('title,description,picurl,url')->where(array('keyword'=>$keyword))->limit(10)->select();
+			$count = count($news);
+			$newC='';
+			for($i=0;$i<$count;++$i){
+				$newC .= sprintf($this->tpl['content'], $news[$i]['title'], $news[$i]['description'], $news[$i]['picurl'], $news[$i]['url']);
+			}
+			//将内容输出到新闻模板
+			$news = sprintf($this->tpl['news'], $postObj->FromUserName, $postObj->ToUserName, $time, $count, $newC);
+			echo $news;
+		}
+		exit;
+		
+	}
+
+
+
 	/*******************************************************************
 	 * 
 	 *                      JS SDK相关接口

@@ -3,8 +3,8 @@
     <head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <title>商品评价</title>
-        <link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
-        <link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/user.css">
+        <link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/common.css" />
+        <link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/user.css">
    		<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/webuploader/webuploader.css" />
 
 		<script src="__PUBLIC__/js/jquery.min.js"></script>
@@ -17,6 +17,7 @@
 	            "MODEL"  : ["{:C('URL_MODEL')}", "{:C('URL_CASE_INSENSITIVE')}", "{:C('URL_HTML_SUFFIX')}"],
 	            "VAR"    : ["{:C('VAR_MODULE')}", "{:C('VAR_CONTROLLER')}", "{:C('VAR_ACTION')}"],
 	            "DOMAIN" : "{:WSTDomain()}",
+	            "WST_STYLE" :"{$WST_STYLE}"
 	    }
 	    </script>
 	    <script src="__PUBLIC__/js/think.js"></script>
@@ -102,10 +103,6 @@
 								<div id="filePicker-{$goods['goodsId']}" style='margin-left:0px;width:300px;'>上传附件(最多5张)</div>
 								<div style="clear: both;"></div>
 							</div>
-
-
-
-
 							<div id="checkout" class="btn-box" >						
 								<a class="btn-submit" href="javascript:;" onclick="addGoodsAppraises({$orderInfo['order']['shopId']},{$goods['goodsId']},'{$goods['goodsAttrId']}',{$orderInfo['order']['orderId']})">
 									<button class='wst-btn-query'>评价</button>
@@ -126,14 +123,12 @@
     <script type="text/javascript" src="__PUBLIC__/plugins/webuploader/webuploader.js"></script>
     <script src="__PUBLIC__/js/common.js"></script>
 	     <script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
-	     <script src="__ROOT__/Apps/Home/View/default/js/usercom.js"></script>
+	     <script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/usercom.js"></script>
 	     <script type="text/javascript" src="__PUBLIC__/plugins/raty/jquery.raty.min.js"></script>
     	 <script type="text/javascript">
     	 	$(function(){
 			   appraiseInit({$goods['goodsId']});
 		   });
-
-
     	 	var shopId = "{$orderInfo['shopId']}";
 	   		//添加商品评价
 			

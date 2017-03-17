@@ -218,7 +218,6 @@ function editUser(){
 }
 
 function toPay(id){
-	
 	var params = {};
 	params.orderId = id;
 	jQuery.post(Think.U('Home/Orders/checkOrderPay') ,params,function(data) {
@@ -253,7 +252,7 @@ function showOrder(id){
 	});
 }
 function orderCancel(id,type){
-	if(type==1 || type==2){
+	if(type==1 || type==2 || type==3){
 		var w = layer.open({
 		    type: 1,
 		    title:"取消原因",
@@ -276,7 +275,7 @@ function orderCancel(id,type){
 					if(json.status>0){
 						window.location.reload();
 					}else if(json.status==-1){
-						WST.msg('操作失败，订单状态已发生改变，请刷新后再重试 !', {icon: 5});
+						WST.msg(json.msg, {icon: 5});
 					}else{
 						WST.msg('操作失败，请与商城管理员联系 !', {icon: 5});
 					}
@@ -339,7 +338,7 @@ function appraiseInit(id){
 	    if(json.status==1){
 			var tdiv = $("<div style='width:100px;float:left;margin-right:5px;'>"+
 			             "<img class='appraise_pic' width='100' height='100' src='"+WST.DOMAIN+"/"+json.file.savepath+json.file.savename+"'></div>");
-			var btn = $('<div style="position:relative;top:-115px;left:40px;cursor:pointer;" ><img src="'+WST.DOMAIN+'/Apps/Home/View/default/images/action_delete.gif"></div>');
+			var btn = $('<div style="position:relative;top:-115px;left:40px;cursor:pointer;" ><img src="'+WST.DOMAIN+'/Apps/Home/View/'+WST.WST_STYLE+'/images/action_delete.gif"></div>');
 			tdiv.append(btn);
 			$(picBox).append(tdiv);
 			btn.on('click','img',function(){
@@ -379,7 +378,7 @@ function complainInit(){
 	    if(json.status==1){
 			var tdiv = $("<div style='width:100px;float:left;margin-right:5px;'>"+
 			             "<img class='complain_pic' width='100' height='100' src='"+WST.DOMAIN+"/"+json.file.savepath+json.file.savename+"'></div>");
-			var btn = $('<div style="position:relative;top:-100px;left:80px;cursor:pointer;" ><img src="'+WST.DOMAIN+'/Apps/Home/View/default/images/action_delete.gif"></div>');
+			var btn = $('<div style="position:relative;top:-100px;left:80px;cursor:pointer;" ><img src="'+WST.DOMAIN+'/Apps/Home/View/'+WST.WST_STYLE+'/images/action_delete.gif"></div>');
 			tdiv.append(btn);
 			$(picBox).append(tdiv);
 			btn.on('click','img',function(){
@@ -477,54 +476,69 @@ function addGoodsAppraises(shopId,goodsId,goodsAttrId,orderId){
 	//});
 }
 
-function orderConfirm(id,type){
-	if(type==1){
-		layer.confirm('您确定已收货吗？',{icon: 3, title:'系统提示'}, function(tips){
-		    var ll = layer.load('数据处理中，请稍候...');
-		    $.post(Think.U('Home/Orders/orderConfirm'),{orderId:id,type:type},function(data){
-		    	layer.close(tips);
-		    	layer.close(ll);
-		    	var json = WST.toJson(data);
-				if(json.status>0){
-					location.reload();
-				}else if(json.status==-1){
-					WST.msg('操作失败，订单状态已发生改变，请刷新后再重试 !', {icon: 5});
-				}else{
-					WST.msg('操作失败，请与商城管理员联系 !', {icon: 5});
-				}
-		   });
+//退款
+function refund(id){
+   
+	$.post(WST.U('Home/Orders/toRefund'),{orderId:id},function(data){
+		var w = WST.open({
+			    type: 1,
+			    title:"申请退款",
+			    shade: [0.6, '#000'],
+			    border: [0],
+			    content: data,
+			    area: ['600px', '300px'],
+			    btn: ['提交', '关闭窗口'],
+		        yes: function(index, layero){
+		        	var params = {};
+		        	params.refundRemark = $.trim($('#refundRemark').val());
+		        	params.backMoney = $.trim($('#money').val());
+		        	params.orderId = id;
+		        	var realPay = $.trim($('#realPay').val());
+		        	if(params.refundRemark==''){
+		        		WST.msg('请输入原因',{icon:2});
+		        		return;
+		        	}
+		        	if(params.backMoney<=0 && realPay>0){
+		        		WST.msg('无效的退款金额',{icon:2});
+		        		return;
+		        	}
+		        	
+		        	ll = WST.msg('数据处理中，请稍候...');
+				    $.post(WST.U('Home/Orders/refund'),params,function(data){
+				    	layer.close(ll);
+				    	var json = WST.toJson(data);
+						if(json.status==1){
+							WST.msg(json.msg, {icon: 1});
+							layer.close(w);
+							location.href = location.href;
+						}else{
+							WST.msg(json.msg, {icon: 2});
+							layer.close(w);
+						}
+				   });
+		        }
+			});
+	});
+}
+
+function orderConfirm(id){
+	
+	layer.confirm('您确定已收货吗？',{icon: 3, title:'系统提示'}, function(tips){
+		var ll = layer.load('数据处理中，请稍候...');
+		$.post(Think.U('Home/Orders/orderConfirm'),{orderId:id},function(data){
+			layer.close(tips);
+			layer.close(ll);
+			var json = WST.toJson(data);
+			if(json.status>0){
+				location.reload();
+			}else if(json.status==-1){
+				WST.msg('操作失败，订单状态已发生改变，请刷新后再重试 !', {icon: 5});
+			}else{
+				WST.msg('操作失败，请与商城管理员联系 !', {icon: 5});
+			}
 		});
-	}else{
-		var w = layer.open({
-		    type: 1,
-		    title:"拒收原因",
-		    shade: [0.6, '#000'],
-		    border: [0],
-		    content: '<textarea id="rejectionRemarks" rows="8" style="width:96%" maxLength="100"></textarea>',
-		    area: ['500px', '260px'],
-		    btn: ['拒收订单', '关闭窗口'],
-	        yes: function(index, layero){
-	        	var rejectionRemarks = $.trim($('#rejectionRemarks').val());
-	        	if(rejectionRemarks==''){
-	        		WST.msg('请输入拒收原因 !', {icon: 5});
-	        		return;
-	        	}
-	        	var ll = layer.load('数据处理中，请稍候...');
-			    $.post(Think.U('Home/Orders/orderConfirm'),{orderId:id,type:type,rejectionRemarks:rejectionRemarks},function(data){
-			    	layer.close(w);
-			    	layer.close(ll);
-			    	var json = WST.toJson(data);
-					if(json.status>0){
-						location.reload();
-					}else if(json.status==-1){
-						WST.msg('操作失败，订单状态已发生改变，请刷新后再重试 !', {icon: 5});
-					}else{
-						WST.msg('操作失败，请与商城管理员联系 !', {icon: 5});
-					}
-			   });
-	        }
-		});
-	}
+	});
+
 }
 
 function getOrdersList(type){
@@ -790,7 +804,7 @@ function loadMoneys(p){
 		        	 cont: 'wst-page-0', 
 		        	 pages:json.data.totalPage, 
 		        	 curr: json.data.currPage,
-		        	 skin: '#add073',
+		        	 skin: '#e23e3d',
 		        	 groups: 3,
 		        	 jump: function(e, first){
 		        		    if(!first){
@@ -823,7 +837,7 @@ function loadDraws(p){
 		        	 cont: 'wst-page-1', 
 		        	 pages:json.data.totalPage, 
 		        	 curr: json.data.currPage,
-		        	 skin: '#add073',
+		        	 skin: '#e23e3d',
 		        	 groups: 3,
 		        	 jump: function(e, first){
 		        		    if(!first){
@@ -855,10 +869,12 @@ function loadConfs(p){
 }
 function changeMoneySrc(v){
 	switch(v){
-	   case '1':return '商家结算';break;
-	   case '2':return '订单管理';break;
-	   case '3':return '申请提现';break;
-	   case '4':return '分销佣金';break;
+	  case '1':return '商家结算';break;
+	  case '2':return '订单充值';break;
+	  case '3':return '申请提现';break;
+	  case '4':return '分销佣金';break;
+	  case '5':return '订单支出';break;
+	  case '6':return '订单退款';break;
 	}
 }
 function toEditConfig(id){

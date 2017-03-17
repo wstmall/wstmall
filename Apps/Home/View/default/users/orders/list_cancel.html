@@ -7,66 +7,100 @@
        <div class='wst-page-header'>买家中心 > 已取消订单</div>
        <div class='wst-page-content'>
        	<div style="padding-bottom:4px;">
-       		订单编号:<input id="orderNo" value="{$params['orderNo']}" style="width:80px;" autocomplete="off"/>
-       		店铺名称:<input id="shopName" value="{$params['shopName']}" style="width:80px;" autocomplete="off"/>
-       		收货人:<input id="userName" value="{$params['userName']}" style="width:80px;" autocomplete="off"/>
+       		订单编号:<input id="orderNo" value="{$params['orderNo']}" style="width:150px;" autocomplete="off"/>
+       		店铺名称:<input id="shopName" value="{$params['shopName']}" style="width:150px;" autocomplete="off"/>
        		<!--  
        		下单日期:<input id="sdate" value="{$params['sdate']}" style="width:80px;"/>-<input id="edate" value="{$params['edate']}" style="width:80px;"/>
        		-->
        		
        		<button class="wst-btn-query" onclick="javascript:getOrdersList(5)">查询</button>
        	</div>
-        <table class='wst-list' style="font-size:13px;">
-           <thead>
-             <tr>
-               <th width='80'>订单编号</th>
-               <th width='*'>商品信息</th>
-               <th width='100'>店铺名称</th>
-               <th width='100'>收货人</th>
-               <th width='70'>订单金额</th>
-               <th width='70'>实付金额</th>
-               <th width='140'>下单时间</th>
-               <th width='100'>状态</th>
-               <th width='100'>操作</th>
-             </tr>
-           </thead>
-           <tbody>
-            <volist name="receiveOrders['root']" id="order" key='key1'>
-             <tr>
-             	<td width='80' style="padding-top:10px;vertical-align:top;">{$order["orderNo"]}</td>
-                <td width='*'>
-					<volist name="order['goodslist']" id="goods" key='key2'>
-						<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}">
-							<img data-original="__ROOT__/{$goods['goodsThums']}" height="50" width="50" class='wst-goods-tb lazyImg'/>
-						</a>
-					</volist>
-				</td>
-				<td width='100' style="padding-top:10px;vertical-align:top;"><a href="{:U('Home/Shops/toShopHome/',array('shopId'=>$order['shopId']))}" target="_blank">{$order["shopName"]}</a></td>
-               	<td width='100'>{$order["userName"]}</td>
-               	<td width='70'>{$order["totalMoney"]}</td>
-               	<td width='70'><span style="font-weight: bold;">{$order["realTotalMoney"]}</span></td>
-               	<td width='140'><div style="line-height:20px;">{$order["createTime"]}</div></td>
-               	<td width='100'>用户已取消</if>
-               	</td>
-               	<td width='130' style="padding-top:10px;vertical-align:top;">
-					<a href="javascript:;" onclick="showOrder({$order['orderId']})">查看</a>
-				</td>
-             </tr>
-             </volist>
-             <if condition="$receiveOrders['totalPage'] gt 1">
-             <tfoot>
-             <tr>
-                <td colspan='8' align='center' style="height:30px;border-bottom: 0px;">
-					<div class="wst-page" style="float:right;padding-bottom:10px;">
+       	<table class="wst-order-list">
+	       <thead>
+		      <tr class="head">
+		         <th>订单详情</th>
+		         <th width='108'>支付方式/配送信息</th>
+		         <th>金额</th>
+		         <th>操作</th>
+		      </tr>
+		   </thead>
+		   <volist name="receiveOrders['root']" id="order" key='key1'>
+		 	<tbody class="j-order-row">          
+			 	<tr class="empty-row">             
+				 	<td colspan="4">&nbsp;</td>          
+				 </tr>          
+				 <tr class="order-head">             
+				 	<td colspan="4" align="right">               
+				 	<div class="time">{$order["createTime"]}</div>               
+				 	<div class="orderno">订单号：{$order["orderNo"]}
+				 		<if condition='$order["orderFrom"] eq 2'>
+				 		<img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/tuan.png" height="30" />
+				 		<elseif condition='$order["orderFrom"] eq 3'/>
+				 		<img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/qian.png" height="30" />
+				 		</if>
+				 	</div>               
+				 	<div class="shop"><a href="{:U('Home/Shops/toShopHome/',array('shopId'=>$order['shopId']))}" target="_blank">{$order["shopName"]}</a></div>               
+				 	<div class="link">
+				 		<if condition="$order['qqNo'] neq ''">
+							<a href="tencent://message/?uin={$order['qqNo']}&Site=QQ交谈&Menu=yes">
+								<img border="0" src="http://wpa.qq.com/pa?p=1:{$order['qqNo']}:7" alt="QQ交谈" width="71" height="24" />
+							</a>
+						</if>
+				 	</div>               
+				 	<div>
+						已取消
+					</div>             
+				 	</td>          
+				 </tr>
+				 <volist name="order['goodslist']" id="goods" key='key2'>                
+				 <tr class="goods-box">             
+				 	<td>                
+				 		<div class="goods-img">
+					 		<?php if($order['orderFrom']==2){ ?>
+                         		<a href="{:U('Home/Groups/getGoodsDetails/',array('id'=>$order['orderFromId']))}" target="_blank">
+                         	<?php }else if($order['orderFrom']==3){ ?>
+                         		<a href="{:U('Home/Panics/getGoodsDetails/',array('id'=>$order['orderFromId']))}" target="_blank">
+                       		<?php }else{ ?>
+                           		<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}">
+                         	<?php } ?>
+								<img data-original="__ROOT__/{$goods['goodsThums']}" class='lazyImg' title="{$goods['goodsName']}"/>
+							</a>
+				 		</div>
+				 		<div class="goods-name">
+					 		<div>{$goods['goodsName']}</div>
+					 		<div>{$goods['goodsAttrName']}</div>
+				 		</div>                
+				 		<div class="goods-extra">{$goods['goodsPrice']} x {$goods['goodsNums']}</div>             
+				 	</td>
+				 	<if condition="$key2==1">
+				 	<td rowspan="<?php echo count($order['goodslist']) ?>">                 
+					 	<div>{$order["payType"]==0?"货到付款":($order["payType"]==2?"钱包支付":"在线支付")}</div>             
+					 	<div>{$order["isSelf"]==1?"自提":"送货上门"}</div>
+				 	</td>             
+				 	<td rowspan="<?php echo count($order['goodslist']) ?>">                 
+					 	<div>商品金额：¥{$order["totalMoney"]}</div>                 
+					 	<div class="line">运费：¥{$order["deliverMoney"]}</div>                 
+					 	<div>实付金额：¥{$order["realTotalMoney"]}</div>             
+				 	</td>        
+				 	<td rowspan="<?php echo count($order['goodslist']) ?>">                 
+					 	<div><a href="javascript:;" onclick="showOrder({$order['orderId']})">【查看订单】</a></div>
+						<div><a href='{:U("Home/OrderComplains/complain",array("orderId"=>$order["orderId"]))}'>【投诉】</a></div>
+				 	</td>
+				 	</if>                    
+			 	</tr>
+			 	</volist>                
+		 	</tbody>                
+		 	</volist>
+	       <tbody><tr class="empty-row">
+	            <td colspan="4" id="pager" align="center" style="padding:5px 0px 5px 0px">
+	            	<div class="wst-page" style="float:right;padding-bottom:10px;">
 						<div id="wst-page-items"></div>
 					</div>
-				</td>
-             </tr>
-             </tfoot>
-             </if>
-           </tbody>
-        </table>
-       
+	            </td>
+	       </tr>
+	    </tbody>
+    </table>
+       	
     </div>
     <script>
     <if condition="$receiveOrders['totalPage'] gt 1">

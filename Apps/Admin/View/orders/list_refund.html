@@ -103,7 +103,7 @@
                <a class="btn btn-primary glyphicon" href="{:U('Admin/Orders/toRefundView',array('id'=>$vo['orderId']))}">查看</a>&nbsp;
                <if condition="$vo['isRefund'] ==0 ">
                <php>if(in_array('tk_04',$WST_STAFF['grant'])){</php>
-               <a class="btn btn-primary glyphicon" href='javascript:refund("{:U('Admin/Orders/toRefund',array('id'=>$vo['orderId']))}")'>退款</a>&nbsp;
+               <a class="btn btn-primary glyphicon" href='javascript:refund("{:U('Admin/Orders/toRefund',array('id'=>$vo['orderId']))}")'>操作退款</a>&nbsp;
                <php>}</php>
                </if>
                </td>

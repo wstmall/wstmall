@@ -16,11 +16,9 @@ var WST = ThinkPHP = window.Think = {
         "MALL_NAME" : "{$CONF['mallName']}",
         "SMS_VERFY"  : "{$CONF['smsVerfy']}",
         "PHONE_VERFY"  : "{$CONF['phoneVerfy']}",
-        "IS_LOGIN" :"{$WST_IS_LOGIN}"
+        "IS_LOGIN" :"{$WST_IS_LOGIN}",
+        "WST_STYLE" :"{$WST_STYLE}"
 }
-    $(function() {
-    	$('.lazyImg').lazyload({ effect: "fadeIn",failurelimit : 10,threshold: 200,placeholder:WST.DEFAULT_IMG});
-    });
 </script>
 <script src="__PUBLIC__/js/think.js"></script>
 <div id="wst-shortcut">
@@ -30,7 +28,7 @@ var WST = ThinkPHP = window.Think = {
 			<li class="fore4" id="biz-service" data-widget="dropdown" style='padding:0;'>
 				所在城市
 				【<span class='wst-city'>&nbsp;{$currArea["areaName"]}&nbsp;</span>】
-				<img src="__ROOT__/Apps/Home/View/default/images/icon_top_03.png"/>	
+				<img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/icon_top_03.png"/>	
 				&nbsp;&nbsp;<a href="javascript:;" onclick="toChangeCity();">切换城市</a><div class="wst-downicon">&nbsp;▼</div>
 			</li>
 		</ul>

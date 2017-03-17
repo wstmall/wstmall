@@ -1,0 +1,71 @@
+<extend name="./Apps/Home/View/default/shops/layout.html" />
+<block name="content">
+    <div class="wst-body"> 
+       <div class='wst-page-header'>卖家中心 > 销售额统计</div>
+       <div class='wst-page-content'>
+        <div class='wst-tbar-query'>
+	       	 统计时间：<input type='text' id='startDate' class='laydate-icon' name='startDate' value='{$startDate}' placeholder='开始日期'/>
+             <input type='text' id='endDate' class='laydate-icon' name='endDate' value='{$endDate}' style='' placeholder='结束日期'/>
+	      	<button class='wst-btn-query' onclick='javascript:statOrders()'>查询</button>
+        </div>
+        <div  class="wst-tab-content" style='width:99%;margin-bottom: 10px;'>
+        	<div id="container" style="min-width:700px;height:400px"></div>
+        	<table id='mainTable' class="table  wst-list wst-hide">
+				<thead>
+		      		<tr>
+						<th width='20'>&nbsp;&nbsp;</th>
+			        	<th width='100'>日期</th>
+			         	<th width='100'>取消订单</th>
+			         	<th width='130'>退款订单</th>
+			         	<th width='130'>正常订单</th>
+					</tr>
+	           	</thead>
+	           	<tbody id='list-box'></tbody>
+	           	<script id="stat-tblist" type="text/html">
+        		{{# for(var i = 0; i < d.length; i++){ }}
+            	<tr>
+              		<td>{{(i+1)}}</td>
+              		<td>{{ d[i].day }}</td>
+              		<td>{{ d[i].o3 }}</td>
+              		<td>{{ d[i].o1 }}</td>
+              		<td>{{ d[i].ou }}</td>
+            	</tr>
+        		{{# } }}
+        		</script>
+	        </table>
+        </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="__PUBLIC__/plugins/echarts/echarts.common.min.js"></script>
+    <script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/shops/reports.js"></script>
+    <script>
+    var startDate = {
+    		elem: '#startDate',
+    	  	format: 'YYYY-MM-DD',
+    	  	istime: true,
+    	  	istoday: false,
+    	  	choose: function(datas){
+    	  		endDate.min = datas; //开始日选好后，重置结束日的最小日期
+    	  		endDate.start = datas //将结束日的初始值设定为开始日
+    	  	}
+ 		};
+	var endDate = {
+    	  	elem: '#endDate',
+    	  	format: 'YYYY-MM-DD',
+    	  	min: '{$startDate}',
+    	  	istime: true,
+    	  	istoday: false,
+    	  	choose: function(datas){
+    	  		startDate.max = datas; //结束日选好后，重置开始日的最大日期
+    	  	}
+    	};
+    	
+    	laydate(startDate);
+    	laydate(endDate);
+    
+    
+	$(document).ready(function(){
+		statOrders();
+	});
+	</script>
+</block> 

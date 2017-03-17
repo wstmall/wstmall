@@ -258,7 +258,6 @@ function submitOrder(){
 		
 		for(var i=0;i<goodsInfo.length;i++){
 			var goods = goodsInfo[i];
-			
 			if(goods.isSale<1){
 				WST.msg('商品'+goods.goodsName+'已下架，请返回重新选购!', {icon: 5});
 				return;
@@ -318,12 +317,215 @@ function submitOrder(){
 			WST.msg("您选的商品不在配送区域内！", {icon: 5});
 			return ;
 		}
-
+		var coupons = [];
+		$(".coupons").each(function(){
+			var cid = $(this).val();
+			if(cid>0){
+				coupons.push(cid);
+			}
+		});
+		params.couponIds = coupons.join(",");
+		params.orderFrom = $("#orderFrom").val();
+		params.dataId = $("#dataId").val();
 		var ll = layer.msg('提交订单，请稍候...', {icon: 16,shade: [0.5, '#B3B3B3']});
 		jQuery.post(Think.U('Home/Orders/submitOrder') ,params,function(data) {
 			 var json = WST.toJson(data);	
 			 if(json.status==1){
-				 if(params.payway==1){
+				 if(params.payway==1 && json.isPay==0){
+					 location.href=Think.U('Home/Payments/toPay');
+				 }else{
+					 location.href=Think.U('Home/Orders/orderSuccess');
+				 }
+			 }else{
+				 WST.msg(json.msg, {icon: 5});
+			 }  
+		});
+	});
+}
+
+
+function submitGroupOrder(){
+	
+	var ll = layer.msg('正在提交订单，请稍候...', {icon: 16,shade: [0.5, '#B3B3B3']});
+	jQuery.post(Think.U('Home/Groups/checkGroupStock') ,{},function(data) {
+		var goodsInfo = WST.toJson(data);	
+		layer.close(ll);
+		
+		for(var i=0;i<goodsInfo.length;i++){
+			var goods = goodsInfo[i];
+			if(goods.isSale<1){
+				WST.msg('商品'+goods.goodsName+'已下架，请返回重新选购!', {icon: 5});
+				return;
+			}else if(parseInt(goods.goodsStock,10)<parseInt(goods.cnt,10)){
+				WST.msg('商品'+goods.goodsName+'库存不足，请返回重新选购!', {icon: 5});
+				return;
+			}else if(goods.shopAtive==0){
+				WST.msg('商铺'+goods.shopName+'在休息中，不能下单!', {icon: 5});
+				return;
+			}				
+
+		}
+		
+		var params = {};
+		params.consigneeId = $("#consigneeId").val();	
+		if(!$("#consignee2").is(":hidden")){
+			WST.msg("请先保存收货人信息",{icon: 5});
+			return;
+		}	
+		if(params.consigneeId<1){
+			WST.msg("请填写收货人地址", {icon: 5});
+			return ;
+		}
+		params.invoiceClient = $.trim($("#invoiceClient").val());	
+		var rdate = $("#requestdate").val();
+		var rtime = $("#requesttime").val();
+		params.requireTime = rdate+" "+rtime+":00";
+		params.payway = $('input:radio[name="payway"]:checked').val();
+		params.needreceipt = $('input:radio[name="needreceipt"]:checked').val();
+		params.isself = $('input:radio[name="isself"]:checked').val();
+		params.remarks = $.trim($("#remarks").val());
+		var d1 = params.requireTime;	
+		d1 = d1.replace(/-/g,"/");
+		var date1 = new Date(d1);
+		var d2 = addHour(1);	
+		d2 = d2.replace(/-/g,"/");
+		var date2 = new Date(d2);
+		params.isScorePay = 0;
+		if($("#isScorePay").length>0){
+			if($("#isScorePay").prop('checked')){
+				params.isScorePay = 1;
+			}
+		}
+		if($('input:radio[name="payway"]:checked').length==0){
+			WST.msg("请选择支付方式", {icon: 5});
+			return ;
+		}
+		if(params.needreceipt==1 && params.invoiceClient==""){
+			WST.msg("请输入抬头", {icon: 5});
+			return ;		
+		}
+		if(date1<date2){
+			WST.msg("亲，期望送达时间必须设定为下单时间1小时后哦！", {icon: 5});
+			return ;
+		}
+		if(!subCheckArea()){
+			WST.msg("您选的商品不在配送区域内！", {icon: 5});
+			return ;
+		}
+		var coupons = [];
+		$(".coupons").each(function(){
+			var cid = $(this).val();
+			if(cid>0){
+				coupons.push(cid);
+			}
+		});
+		params.couponIds = coupons.join(",");
+		params.orderFrom = $("#orderFrom").val();
+		params.dataId = $("#dataId").val();
+		var ll = layer.msg('提交订单，请稍候...', {icon: 16,shade: [0.5, '#B3B3B3']});
+	
+		jQuery.post(Think.U('Home/Groups/submitGroupOrder') ,params,function(data) {
+			 var json = WST.toJson(data);	
+			 if(json.status==1){
+				 if(params.payway==1 && json.isPay==0){
+					 location.href=Think.U('Home/Payments/toPay');
+				 }else{
+					 location.href=Think.U('Home/Orders/orderSuccess');
+				 }
+			 }else{
+				 WST.msg(json.msg, {icon: 5});
+			 }  
+		});
+	});
+}
+
+
+
+
+function submitPanicOrder(){
+	
+	var ll = layer.msg('正在提交订单，请稍候...', {icon: 16,shade: [0.5, '#B3B3B3']});
+	jQuery.post(Think.U('Home/Panics/checkPanicStock') ,{},function(data) {
+		var goodsInfo = WST.toJson(data);	
+		layer.close(ll);
+		
+		for(var i=0;i<goodsInfo.length;i++){
+			var goods = goodsInfo[i];
+			if(goods.isSale<1){
+				WST.msg('商品'+goods.goodsName+'已下架，请返回重新选购!', {icon: 5});
+				return;
+			}else if(parseInt(goods.goodsStock,10)<parseInt(goods.cnt,10)){
+				WST.msg('商品'+goods.goodsName+'库存不足，请返回重新选购!', {icon: 5});
+				return;
+			}else if(goods.shopAtive==0){
+				WST.msg('商铺'+goods.shopName+'在休息中，不能下单!', {icon: 5});
+				return;
+			}				
+
+		}
+		
+		var params = {};
+		params.consigneeId = $("#consigneeId").val();	
+		if(!$("#consignee2").is(":hidden")){
+			WST.msg("请先保存收货人信息",{icon: 5});
+			return;
+		}	
+		if(params.consigneeId<1){
+			WST.msg("请填写收货人地址", {icon: 5});
+			return ;
+		}
+		params.invoiceClient = $.trim($("#invoiceClient").val());	
+		var rdate = $("#requestdate").val();
+		var rtime = $("#requesttime").val();
+		params.requireTime = rdate+" "+rtime+":00";
+		params.payway = $('input:radio[name="payway"]:checked').val();
+		params.needreceipt = $('input:radio[name="needreceipt"]:checked').val();
+		params.isself = $('input:radio[name="isself"]:checked').val();
+		params.remarks = $.trim($("#remarks").val());
+		var d1 = params.requireTime;	
+		d1 = d1.replace(/-/g,"/");
+		var date1 = new Date(d1);
+		var d2 = addHour(1);	
+		d2 = d2.replace(/-/g,"/");
+		var date2 = new Date(d2);
+		params.isScorePay = 0;
+		if($("#isScorePay").length>0){
+			if($("#isScorePay").prop('checked')){
+				params.isScorePay = 1;
+			}
+		}
+		if($('input:radio[name="payway"]:checked').length==0){
+			WST.msg("请选择支付方式", {icon: 5});
+			return ;
+		}
+		if(params.needreceipt==1 && params.invoiceClient==""){
+			WST.msg("请输入抬头", {icon: 5});
+			return ;		
+		}
+		if(date1<date2){
+			WST.msg("亲，期望送达时间必须设定为下单时间1小时后哦！", {icon: 5});
+			return ;
+		}
+		if(!subCheckArea()){
+			WST.msg("您选的商品不在配送区域内！", {icon: 5});
+			return ;
+		}
+		var coupons = [];
+		$(".coupons").each(function(){
+			var cid = $(this).val();
+			if(cid>0){
+				coupons.push(cid);
+			}
+		});
+		params.couponIds = coupons.join(",");
+		params.orderFrom = $("#orderFrom").val();
+		params.dataId = $("#dataId").val();
+		var ll = layer.msg('提交订单，请稍候...', {icon: 16,shade: [0.5, '#B3B3B3']});
+	
+		jQuery.post(Think.U('Home/Panics/submitPanicOrder') ,params,function(data) {
+			 var json = WST.toJson(data);	
+			 if(json.status==1){
+				 if(params.payway==1 && json.isPay==0){
 					 location.href=Think.U('Home/Payments/toPay');
 				 }else{
 					 location.href=Think.U('Home/Orders/orderSuccess');
@@ -353,11 +555,7 @@ function getPayUrl(){
 	jQuery.post(Think.U('Home/Payments/get'+params.payCode+"URL") ,params,function(data) {
 		var json = WST.toJson(data);
 		if(json.status==1){
-			if(params.payCode=="weixin"){
-				location.href = json.url;
-			}else{
-				window.open(json.url);
-			}
+			location.href = json.url;
 		}else if(json.status==-2){
 			var rlist = json.rlist;
 			var garr = new Array();
@@ -376,7 +574,49 @@ function getPayUrl(){
 	});
 }
 
+function balancePay(){
+	var params = {};
+	params.payPwd = $.trim($("#payPwd").val());
+	if(params.payPwd==""){
+		WST.msg("请输入支付密码！", {icon: 5});
+		return;
+	}
+	params.pkey = $.trim($("#pkey").val());
+	var ll = layer.msg('数据处理中，请稍候...', {icon: 16,shade: [0.5, '#B3B3B3']});
+	jQuery.post(Think.U("Home/Balance/balancePay") ,params,function(data) {
+		var json = WST.toJson(data);
+		layer.close(ll);
+		if(json.status==1){
+			location.href = Think.U("Home/Payments/paySuccess");
+		}else{
+			WST.msg(json.msg, {icon: 5});
+		}
+	});
+}
+
+function changeCoupon(){
+	var totalCouponMoney = 0
+	$(".coupons").each(function(){
+		var objId = $(this).attr("id");
+		var vid = objId.split("_");
+		var shopId = vid[1];
+		
+		var couponMoney = parseFloat($("#"+objId+" option:selected").attr("data"),10);
+		totalCouponMoney += couponMoney;
+		$("#couponMoney_"+shopId).html(couponMoney);
+		var tobj = $("#tshopMoney_"+shopId);
+		var tshopMoney = parseFloat(tobj.attr("data"),10);
+		tobj.html(tshopMoney-couponMoney);
+		
+	});
+	var totalMoney = parseFloat($("#totalMoney").val(),10);
+	$("#totalMoney_span").html(totalMoney - totalCouponMoney);
+}
+
 $(function() {
+	
+	changeCoupon();
+	
 	$('input:radio[name="needreceipt"]').click(function(){
 		if($(this).val()==1){
 			$("#invoiceClientdiv").show();

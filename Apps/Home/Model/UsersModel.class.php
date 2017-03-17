@@ -95,6 +95,11 @@ class UsersModel extends BaseModel {
 			if($rs['loginPwd']!=md5($userPwd.$rs['loginSecret']))return $rv;
 			if($rs['userFlag'] == 1 && $rs['userStatus']==1){
 				$data = array();
+				$info = session('Binding_wx');
+				if($info){
+					$data['openId'] = $info['openId'];
+					$data['userFrom'] = $info['userFrom'];
+				}
 				$data['lastTime'] = date('Y-m-d H:i:s');
 				$data['lastIP'] = get_client_ip();
 		    	$this->where(" userId=".$rs['userId'])->data($data)->save();
@@ -245,6 +250,14 @@ class UsersModel extends BaseModel {
 		$data['userEmail'] = I("userEmail");
 	    $data['createTime'] = date('Y-m-d H:i:s');
 	    $data['userFlag'] = 1;
+	    $info = session('Binding_wx');
+	    if($info){
+	    	$data['userName'] = $info['userName'];
+	    	$data['openId'] = $info['openId'];
+	    	$data['userFrom'] = $info['userFrom'];
+	    	$data['userSex'] = $info['userSex'];
+	    	$data['userPhoto'] = $info['userPhoto'];
+	    }
 
 		$userId = $this->add($data);
 		if(false !== $userId){
@@ -254,7 +267,7 @@ class UsersModel extends BaseModel {
 	    	$data['lastTime'] = date('Y-m-d H:i:s');
 	    	$data['lastIP'] = get_client_ip();
 	    	$this->where(" userId=".$rd['userId'])->data($data)->save();	 	
-			D("distribut_users")->addDistributUusers($userId);
+			D("distribut_users")->addDistributUsers($userId);
 	    	
 	    	//记录登录日志
 		 	$data = array();
@@ -507,7 +520,7 @@ class UsersModel extends BaseModel {
 	    	$this->where(" userId=".$rd['userId'])->data($data)->save();	 		
 	    	
 	    	//添加分销用户记录
-	    	D("distribut_users")->addDistributUusers($userId);
+	    	D("distribut_users")->addDistributUsers($userId);
 	    	
 	    	//记录登录日志
 		 	$data = array();
@@ -558,8 +571,29 @@ class UsersModel extends BaseModel {
 	 * 获取指定对象的资料
 	 */
 	public function getSimpInfo($userId,$field =''){
-		$rs = $this->where("userId=".$userId)->field("userId,loginName,userName,userSex,userType,userPhoto,userScore".$field)->find();
+		$rs = $this->where("userId=".$userId)->field("userId,loginName,userName,userSex,userType,userPhoto,userScore,userMoney".$field)->find();
 		return $rs;
 	}
 	
+	/**
+	 * 检测支付密码
+	 */
+	public function checkPaypwd(){
+		$userId = (int)session('WST_USER.userId');
+		$rd = array('status'=>-1);
+		//验证支付密码
+		$payPwd = I('payPwd');
+		if(empty($payPwd)){
+			$rd['msg'] = '请输入支付密码';
+		}else{
+			$sql = "select userMoney,payPwd,loginSecret from __PREFIX__users where userId=".$userId;
+			$user = $this->queryRow($sql);
+			if($user['payPwd']!=md5(I("payPwd").$user['loginSecret'])){
+				$rd['msg'] = '支付密码不正确';
+			}else{
+				$rd["status"] = 1;
+			}
+		}
+		return $rd;
+	}
 }

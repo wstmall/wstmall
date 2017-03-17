@@ -25,15 +25,45 @@ class BaseAction extends Controller {
    		$this->assign('searchType',(int)I("searchType",1));
    		$this->assign('CONF',$GLOBALS['CONFIG']);
    		$this->assign('WST_REFERE',$_SERVER['HTTP_REFERER']);
+   		$this->assign('WST_STYLE',$GLOBALS['CONFIG']['wstHomeStyle']);
 		$this->footer(); //加入底部
 	}
+
+    /**
+     * 加载模板输出
+     * @access protected
+     * @param string $template 模板文件名
+     * @param array  $vars     模板输出变量
+     * @param array  $replace  模板替换
+     * @param array  $config   模板参数
+     * @return mixed
+     */
+    protected function fetch($templateFile='',$content='',$prefix='') {
+        $sysStyle = $GLOBALS['CONFIG']['wstHomeStyle'];
+        return $this->view->fetch($sysStyle."/".$templateFile,$content,$prefix);
+    }
+
+    /**
+     * 渲染内容输出
+     * @access protected
+     * @param string $content 模板内容
+     * @param array  $vars    模板输出变量
+     * @param array  $replace 替换内容
+     * @param array  $config  模板参数
+     * @return mixed
+     */
+    protected function display($templateFile='',$charset='',$contentType='',$content='',$prefix='') {
+    	$sysStyle = $GLOBALS['CONFIG']['wstHomeStyle'];
+        $this->view->display($sysStyle."/".$templateFile,$charset,$contentType,$content,$prefix);
+    }
+
 	
 	/**
 	 * 空操作处理
 	 */
     public function _empty($name){
         $this->assign('msg',"你的思想太飘忽，系统完全跟不上....");
-        $this->display('default/sys_msg');
+        $this->display('sys_msg');
     }
 	/**
      * ajax程序验证,只要不是会员都返回-999
@@ -162,7 +192,7 @@ class BaseAction extends Controller {
 	 */
 	public function getVerify(){
 		// 导入Image类库
-    	$Verify = new \Think\Verify();
+    	$Verify = new \Think\Verify(array("useCurve"=>false));
     	$Verify->length   = 4;
     	$Verify->entry();
     }

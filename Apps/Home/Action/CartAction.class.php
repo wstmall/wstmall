@@ -17,7 +17,7 @@ class CartAction extends BaseAction {
 		$cartInfo = $m->getCartInfo();
    		$pnow = (int)I("pnow",0);
    		$this->assign('cartInfo',$cartInfo);
-   		$this->display('default/cart_pay_list');
+   		$this->display('cart_pay_list');
 
     }
     
@@ -61,7 +61,7 @@ class CartAction extends BaseAction {
 			echo json_encode($cartInfo);
 		}else{
 			$this->assign('cartInfo',$cartInfo);
-			$this->display('default/cart_pay_list');
+			$this->display('cart_pay_list');
 		}
 		
 	}
@@ -164,7 +164,7 @@ class CartAction extends BaseAction {
 		$cartInfo = $m->getCartInfo();
 		$this->assign("cartInfo",$cartInfo);
 		
-		$this->display('default/cat_pay_list');
+		$this->display('cat_pay_list');
 	}
 	
 }

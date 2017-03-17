@@ -55,21 +55,21 @@ $(document).ready(function(){
                <td>
                	<div>商品评分：
                	<for start="0" end="$vo['goodsScore']">
-					<img src="__ROOT__/Apps/Home/View/default/images/icon_score_yes.png"/>
+					<img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/icon_score_yes.png"/>
 				</for>&nbsp;{$vo['goodsScore']} 分
 				</div>
 				</td>
 				<td>
 				<div>时效评分：
                	<for start="0" end="$vo['timeScore']">
-					<img src="__ROOT__/Apps/Home/View/default/images/icon_score_yes.png"/>
+					<img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/icon_score_yes.png"/>
 				</for>&nbsp;{$vo['goodsScore']} 分
 				</div>
                 </td>
                 <td>
               	<div>服务评分：
                	<for start="0" end="$vo['serviceScore']">
-					<img src="__ROOT__/Apps/Home/View/default/images/icon_score_yes.png"/>
+					<img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/icon_score_yes.png"/>
 				</for>&nbsp;{$vo['goodsScore']} 分
 				</div>
                </td>
@@ -80,7 +80,9 @@ $(document).ready(function(){
                		 
                		<div id="layer-photos-appraise{$c}"  style="margin-bottom:10px"> 
                		  <?php foreach($vo['appraisesAnnex'] as $q=>$v):?>
+               		  <?php if($v!=""){ ?>
 					  <img  layer-src="__ROOT__/<?php echo $v?>" width="50" src="__ROOT__/<?php echo str_replace('.','_thumb.',$v)?>" alt="{$vo['content']}">
+					  <?php } ?>
 					  <?php endforeach;?>
 					</div>
                </td>

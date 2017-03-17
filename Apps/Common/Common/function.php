@@ -1,6 +1,34 @@
 <?php
 
 /**
+ * 获取指定的全局配置
+ */
+function WSTConf($key,$v = ''){
+	if(is_null($v)){
+		if(array_key_exists('WSTMALLCONF',$GLOBALS) && array_key_exists($key,$GLOBALS['WSTMALLCONF'])){
+			unset($GLOBALS['WSTMALLCONF'][$key]);
+		}
+	}else if($v === ''){
+		if(array_key_exists('WSTMALLCONF',$GLOBALS)){
+			$conf = $GLOBALS['WSTMALLCONF'];
+			$ks = explode(".",$key);
+			for($i=0,$k=count($ks);$i<$k;$i++){
+				if(array_key_exists($ks[$i],$conf)){
+					$conf = $conf[$ks[$i]];
+				}else{
+					return null;
+				}
+			}
+			return $conf;
+		}
+	}else{
+		return $GLOBALS['WSTMALLCONF'][$key] = $v;
+	}
+	return null;
+}
+
+
+/**
  * 判断是否手机访问
  */
 function WSTIsMobile() {
@@ -546,3 +574,59 @@ function WSTIPAddress(){
     }
     return array();
 }
+
+
+
+/**
+ * 发送商城消息
+ * @param int 	$to 接受者d
+ * @param string $content 内容
+ */
+function WSTSendMsg($to,$content){
+	$message = array();
+	$message['msgType'] = 0;
+	$message['sendUserId'] = 1;
+	$message['createTime'] = date('Y-m-d H:i:s');
+	$message['msgStatus'] = 0;
+	$message['msgFlag'] = 1;
+
+	$message['receiveUserId'] = $to;
+	$message['msgContent'] = $content;
+	M("messages")->add($message);
+
+}
+
+/**
+ * 订单日志
+ * @param int 	$orderId 订单ID
+ * @param string $content 内容
+ * @param int 	$userId 用户ID
+ * @param int 	$logType 
+ */
+function WSTOrderLog($orderId,$content,$userId,$logType=0){
+	
+	$data = array();
+	$data["orderId"] = $orderId;
+	$data["logContent"] = $content;
+	$data["logUserId"] = $userId;
+	$data["logType"] = $logType;
+	$data["logTime"] = date('Y-m-d H:i:s');
+	M('log_orders')->add($data);
+
+}
+
+function WSTMoneyLog($targetType,$targetId,$moneyRemark,$dataSrc,$dataId,$money,$transactionId,$payType,$moneyType){
+	$data = array();//推广者
+	$data["targetType"] = $targetType;
+	$data["targetId"] = $targetId;
+	$data["moneyRemark"] = $moneyRemark;
+	$data["dataSrc"] = $dataSrc;
+	$data["dataId"] = $dataId;
+	$data["money"] = $money;
+	$data["transactionId"] = $transactionId;
+	$data["payType"] = $payType;
+	$data["moneyType"] = $moneyType;
+	$data["createTime"] = date('Y-m-d H:i:s');
+	M('log_moneys')->add($data);
+}
+

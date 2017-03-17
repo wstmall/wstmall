@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+   <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>{$CONF['mallTitle']}后台管理中心</title>
+      <link href="__PUBLIC__/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <link href="__ROOT__/Apps/Admin/View/css/AdminLTE.css" rel="stylesheet" type="text/css" />
+      <link rel="stylesheet" href="__ROOT__/Apps/Admin/View/css/daterangepicker/daterangepicker-bs3.css">
+      <!--[if lt IE 9]>
+      <script src="__PUBLIC__/js/html5shiv.min.js"></script>
+      <script src="__PUBLIC__/js/respond.min.js"></script>
+      <![endif]-->
+      <script src="__PUBLIC__/js/jquery.min.js"></script>
+      <script src="__PUBLIC__/plugins/bootstrap/js/bootstrap.min.js"></script>
+      <script src="__ROOT__/Apps/Admin/View/js/daterangepicker.js"></script>
+      <script src="__PUBLIC__/js/common.js"></script>
+      <script src="__PUBLIC__/plugins/plugins/plugins.js"></script>
+      <style type="text/css">
+		#preview{border:1px solid #cccccc; background:#CCC;color:#fff; padding:5px; display:none; position:absolute;}
+	  </style>
+   </head>
+   <script>
+  
+
+   $.fn.imagePreview = function(options){
+		var defaults = {}; 
+		var opts = $.extend(defaults, options);
+		var t = this;
+		xOffset = 5;
+		yOffset = 20;
+		if(!$('#preview')[0])$("body").append("<div id='preview'><img width='200' src=''/></div>");
+		$(this).hover(function(e){
+			   $('#preview img').attr('src',"__ROOT__/"+$(this).attr('img'));      
+			   $("#preview").css("top",(e.pageY - xOffset) + "px").css("left",(e.pageX + yOffset) + "px").show();      
+		  },
+		  function(){
+			$("#preview").hide();
+		}); 
+		$(this).mousemove(function(e){
+			   $("#preview").css("top",(e.pageY - xOffset) + "px").css("left",(e.pageX + yOffset) + "px");
+		});
+	}
+   function getAreaList(objId,parentId,t,id){
+	   var params = {};
+	   params.parentId = parentId;
+	   $('#'+objId).empty();
+	   if(t<1){
+		   $('#areaId2').html('<option value="">请选择</option>');
+		   if(parentId==0)return;
+	   }
+	   var html = [];
+	   $.post("{:U('Admin/Areas/queryByList')}",params,function(data,textStatus){
+		    html.push('<option value="">请选择</option>');
+			var json = WST.toJson(data);
+			if(json.status=='1' && json.list.length>0){
+				var opts = null;
+				for(var i=0;i<json.list.length;i++){
+					opts = json.list[i];
+					html.push('<option value="'+opts.areaId+'" '+((id==opts.areaId)?'selected':'')+'>'+opts.areaName+'</option>');
+				}
+			}
+			$('#'+objId).html(html.join(''));
+	   });
+   }
+   function getCatList(objId,parentId,t,id){
+	   var params = {};
+	   params.id = parentId;
+	   $('#'+objId).empty();
+	   if(t<1){
+		   $('#goodsCatId3').empty();
+		   $('#goodsCatId3').html('<option value="0">请选择</option>');
+		   if(parentId==0){
+			   $('#goodsCatId2').html('<option value="0">请选择</option>');
+			   return;
+		   }
+	   }
+	   var html = [];
+	   $.post("{:U('Home/GoodsCats/queryByList')}",params,function(data,textStatus){
+		    html.push('<option value="0">请选择</option>');
+			var json = WST.toJson(data);
+			if(json.status=='1' && json.list){
+				var opts = null;
+				for(var i=0;i<json.list.length;i++){
+					opts = json.list[i];
+					html.push('<option value="'+opts.catId+'" '+((id==opts.catId)?'selected':'')+'>'+opts.catName+'</option>');
+				}
+			}
+			$('#'+objId).html(html.join(''));
+	   });
+  }
+  $(document).ready(function(){
+	    $('.imgPreview').imagePreview();
+	    <notempty name='areaId1'>
+		getAreaList("areaId2",'{$areaId1}',0,'{$areaId2}');
+		</notempty>
+		<if condition="$goodsCatId1  neq 0 ">
+		getCatList("goodsCatId2",{$goodsCatId1},0,{$goodsCatId2});
+		</if>
+		<if condition="$goodsCatId2 neq 0 ">
+		getCatList("goodsCatId3",{$goodsCatId2},1,{$goodsCatId3});
+		</if>
+		$('#queryDate').daterangepicker({format:'YYYY-MM-DD',separator:' -> '});
+  });
+   </script>
+   <body class='wst-page'>
+    	<form method='post' action='{:U("Admin/Reports/statTopSaleGoods")}'>
+	       	<div class='wst-tbar'> 
+	      	地区：<select id='areaId1' name='areaId1' onchange='javascript:getAreaList("areaId2",this.value,0)'>
+	               <option value=''>请选择</option>
+	               <volist name="areaList" id="vo">
+	               <option value='{$vo['areaId']}' <if condition="$areaId1 == $vo['areaId'] ">selected</if>>{$vo['areaName']}</option>
+	               </volist>
+	             </select>
+	             <select id='areaId2' name='areaId2'>
+	               <option value=''>请选择</option>
+	             </select>
+	  		商城分类：<select id='goodsCatId1' name='goodsCatId1' onchange='javascript:getCatList("goodsCatId2",this.value,0)'>
+		                <option value='0'>请选择</option>
+		                <volist name="goodsCatsList" id="vo">
+		                <option value='{$vo['catId']}' <if condition="$goodsCatId1 == $vo['catId'] ">selected</if>>{$vo['catName']}</option>
+		                </volist>
+		             </select>
+		             <select id='goodsCatId2' name='goodsCatId2' onchange='javascript:getCatList("goodsCatId3",this.value,1);'>
+		                <option value='0'>请选择</option>
+		             </select>
+		             <select id='goodsCatId3' name='goodsCatId3'>
+		                <option value='0'>请选择</option>
+		             </select>
+	   		</div>
+	   		<div class='wst-tbar'>             
+		       	所属店铺：<input type='text' id='shopName' name='shopName' value='{$shopName}'/>
+		       	统计时间：<input type='text' id='queryDate' name='queryDate' class="form-control" readonly='true' style='width:200px' value='{$startDate} -> {$endDate}'/>
+		  		<button type="submit" class="btn btn-primary glyphicon glyphicon-search">查询</button> 
+			</div>
+       	</form>
+       	<div class='wst-body'>
+	        <table class="table table-hover table-striped table-bordered wst-list">
+	           <thead>
+	             <tr>
+	               <th width='40'>序号</th>
+	               <th >商品名称</th>
+	               <th width='100'>商品编号</th>
+	               <th width='280'>店铺</th>
+	               <th width='100'>销量</th>
+	               <th width='100'>操作</th>
+	             </tr>
+	           </thead>
+	           <tbody>
+	            <volist name="Page['root']" id="vo" key='i'>
+	             <tr>
+	               <td>{$i}</td>
+	               <td img='{$vo['goodsThums']}' class='imgPreview'>
+		               <img src='__ROOT__/{$vo['goodsThums']}' width='50'/>
+		               {$vo['goodsName']}
+	               </td>
+	               <td>{$vo['goodsSn']}&nbsp;</td>
+	               <td>{$vo['shopName']}&nbsp;</td>
+	               <td>{$vo['goodsNums']}</td>
+	               <td>
+	               	<a class="btn btn-primary glyphicon" href='{:U("Admin/Goods/toView",array("id"=>$vo["goodsId"]))}'>查看</a> 
+	               </td>
+	             </tr>
+	             </volist>
+	             <tr>
+	                <td colspan='6' align='center'>{$Page['pager']}</td>
+	             </tr>
+	           </tbody>
+	        </table>
+       	</div>
+   </body>
+</html>

@@ -74,8 +74,9 @@ INSERT INTO `wst_sys_configs` VALUES ('1', '0', '商城名称', 'mallName', 'tex
 ('54', '5', '微信 APP KEY', 'WeiXinAppKey', 'text', '', '', '', '', '3'),
 ('55', '5', '微信验证代码', 'WeiXinAppCode', 'text', '', '', '', '', '4'),
 ('56', '6', '是否开启分销', 'isDistribut', 'radio', '开||关', '1,0', '0', '注：请确保已开启在线支付', '0'),
-('57', '6', '成为分销商条件', 'distributDeal', 'radio', '直接成为分销商||购买商品后成为分销商', '1,0', '1', null, '0'),
+('57', '6', '成为分销商条件', 'distributDeal', 'radio', '直接成为分销商||购买商品后成为分销商', '1,2', '1', null, '0'),
 ('58', '6', '商品分享标题', 'goodsShareTitle', 'text', '', '', 'WSTMall 商城', null, '0'),
 ('59', '6', '店铺分享标题', 'shopShareTitle', 'text', '', '', 'WSTMall 商城', null, '0'),
 ('60', '6', '商城分享标题', 'mallShareTitle', 'text', '', '', 'WSTMall 商城', null, '0'),
-('61', '3', '最少提现金额', 'cashStartMoney', 'text', '', '', '1000', '（提现金额少于该金额将不能提现）', '0');
+('61', '3', '最少提现金额', 'cashStartMoney', 'text', '', '', '1000', '（提现金额少于该金额将不能提现）', '0'),
+('62', '0', '高德地图key', 'cashStartMoney', 'text', '', '', '', '', '15');

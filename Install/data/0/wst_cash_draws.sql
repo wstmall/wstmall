@@ -11,7 +11,7 @@ CREATE TABLE `wst_cash_draws` (
   `targetId` int(11) NOT NULL,
   `money` float(11,2) NOT NULL DEFAULT '0.00',
   `accType` tinyint(4) DEFAULT '0',
-  `accTarget` varchar(255) DEFAULT '0',
+  `accTargetId` varchar(255) DEFAULT '0',
   `accNo` varchar(30) DEFAULT NULL,
   `accUser` varchar(100) DEFAULT NULL,
   `cashSatus` tinyint(4) NOT NULL DEFAULT '0',

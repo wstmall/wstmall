@@ -316,6 +316,44 @@ input, textarea {
 	border: 1px solid #ddd;
 	background: #FFF;
 }
+
+
+/**订单列表**/
+.wst-order-list{width:100%;border-color:grey;border-collapse:separate;border-spacing: 0;}
+.wst-order-list .head{height: 32px;line-height: 32px;text-align: center;background: #f5f5f5;color: #666;font-weight: 400;}
+.wst-order-list .empty-row{font-size:0;height:4px;}
+.wst-order-list .order-head{background: #f5f5f5;height: 31px;line-height: 31px;color: #aaa;overflow: hidden;}
+.wst-order-list .order-head td{padding-left:5px;padding-right:5px;border:1px solid #e5e5e5;border-bottom:0px;}
+
+
+.wst-order-list .goods-box td:first-child{
+	border-left:1px solid #e5e5e5;
+}
+.wst-order-list .goods-box td{
+	padding:5px;
+	border:1px solid #e5e5e5;
+	border-top:0px;
+	border-left:0px;
+
+}
+
+.wst-order-list .time{float:left;margin-right:30px;}
+.wst-order-list .orderno{float:left;margin-right:30px;width:200px;text-align:left;}
+.wst-order-list .shop{float:left;margin-right:20px;width:150px;text-align:left}
+.wst-order-list .link{float:left;}
+
+.wst-order-list .goods-img{width:60px; height:60px;text-align:center;vertical-align:middle;display:block;position:relative;float:left;}
+.wst-order-list .goods-img a{display:table-cell;vertical-align:middle;width:60px;height:60px;} 
+.wst-order-list .goods-img a img{max-width:60px;max-height:60px;}
+
+
+.wst-order-list .goods-name{float:left;margin-left:5px;line-height:25px;width:500px;}
+.wst-order-list .goods-extra{float:right;margin-left:5px;}
+.wst-order-list .line{border-bottom:1px solid #ddd;margin-bottom:2px;padding-bottom:2px;}
+.order-box{margin-bottom:5px;border-bottom:1px solid #ddd;}
+.order-box .box-head{font-weight:bold;height:30px;line-height:30px}
+
+.wst-order-paytype{border-top:1px dotted #d2d2d2;}
 .wst-appraise-box{margin: 0 auto; margin-top:20px;margin-bottom :10px;}
 .wst-appraise-box .appraise-title{margin-top: 10px;font-weight: bold;text-align:left;padding-left:30px;padding-bottom:10px;}
 .wst-appraise-box .appraise-title .tips{font-weight:normal;color:#999999;}
@@ -352,3 +390,19 @@ input, textarea {
 
 .wst-appsaler{text-align: center;}
 #startDate, #endDate{width:100px;line-height:16px;height:auto;}
+
+.wst-coupon-shopbox{border: 1px solid #ddd;}
+.wst-coupon-shopbox .cempty{line-height: 100px;text-align: center;font-size: 18px;}
+.wst-coupon-shopbox .title{background: #f5f5f5;height: 35px;line-height:35px;font-weight:bold;padding:0 10px;}
+
+.wst-coupon-pbox{padding: 10px;}
+.wst-coupon-box{float:left;width:276px;color:#fff;position:relative;padding: 15px;margin-bottom:10px;margin-right:10px;background-color: #F18B8B;}
+.wst-coupon-box .money{float:left;width:140px;font-size: 65px;}
+.wst-coupon-box a{color:#fff;}
+.wst-coupon-box a:hover{text-decoration: underline;font-weight:bold; }
+.wst-coupon-box .tip{background: #FF0000;color: #fff;border-radius: 100px; width: 18px;height: 18px;display: inline-block;position: absolute;top: 0; right: -25px;font-size: 12px;line-height: 18px; text-align: center;}
+.wst-coupon-box .allshop{  position: absolute;right: 17px;top: 25px;cursor: pointer;font-size: 16px }
+.wst-coupon-box:hover{ -webkit-box-shadow:0 0 10px #FF6666;  -moz-box-shadow:0 0 10px #FF6666;  box-shadow:0 0 10px #FF6666; }
+.wst-coupon-box .delbox{position:absolute;right:4px;top:2px;display:none;cursor: pointer;width: 17px;height: 17px; }
+.wst-coupon-box:hover .delbox{display:block;}
+.spend-money{color:#e8f30c;font-weight:bold;}

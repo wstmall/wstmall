@@ -21,13 +21,20 @@ class SystemModel extends BaseModel {
 			$configs = array();
 			if(count($rs)>0){
 				foreach ($rs as $key=>$v){
-					
 					if($v['fieldCode']=="hotSearchs"){
 						$fieldValue = str_replace("，",",",$v['fieldValue']);
 						$configs[$v['fieldCode']] = explode(",",$fieldValue);
 					}else{
 						$configs[$v['fieldCode']] = $v['fieldValue'];
 					}
+				}
+			}
+			//获取风格设置
+			$rs = M('Styles')->where(array('isUse'=>1))->field('styleSys,stylePath,id')->select();
+			if(!empty($rs)){
+				foreach($rs as $key => $v){
+					$configs['wst'.$v['styleSys'].'Style'] = $v['stylePath'];
+		            $configs['wst'.$v['styleSys'].'StyleId'] = $v['id'];
 				}
 			}
 			unset($rs);

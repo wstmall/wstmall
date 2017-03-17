@@ -1,0 +1,329 @@
+<!doctype html>
+<html>
+	<head>
+  		<meta charset="utf-8">
+      	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+      	<link rel="shortcut icon" href="favicon.ico"/>
+      	<title>{$goodsDetails["goodsName"]} - {$CONF['mallTitle']}</title>
+      	<meta name="keywords" content="{$goodsDetails['goodsKeywords']}" />
+      	<meta name="description" content="{$goodsDetails['goodsName']},{$CONF['mallDesc']}" />
+      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/common.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/goodsdetails.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/base.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/head.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/pslocation.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/magnifier.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/panicsdetails.css" />
+		<style type="text/css">
+		
+		
+		</style>
+   	</head>
+   	<body>
+		<include file="./Apps/Home/View/default/header_common.html" />
+		<input id="shopId" type="hidden" value="{$goodsDetails['shopId']}"/>
+		<input id="goodsId" type="hidden" value="{$goodsDetails['goodsId']}"/>
+		<?php if($panic['buyStatus']==-1){ ?>
+			<input id="times" type="hidden" dataId="{$panic['id']}" value="{$panic['startTime']}"/>
+		<?php }else{ ?>
+			<input id="times" type="hidden" dataId="{$panic['id']}" value="{$panic['endTime']}"/>
+		<?php } ?>
+		
+		<!----加载商品楼层start----->
+		<div class="wst-container">
+			<div class="wst-nvg-title">
+				<a href="{:U('Home/Goods/getGoodsList/',array('c1Id'=>$goodsNav[0]['catId']))}">{$goodsNav[0]["catName"]}</a>&nbsp;>&nbsp;
+				<a href="{:U('Home/Goods/getGoodsList/',array('c1Id'=>$goodsNav[0]['catId'],'c2Id'=>$goodsNav[1]['catId']))}">{$goodsNav[1]["catName"]}</a>&nbsp;>&nbsp;
+				<a href="{:U('Home/Goods/getGoodsList/',array('c1Id'=>$goodsNav[0]['catId'],'c2Id'=>$goodsNav[1]['catId'],'c3Id'=>$goodsNav[2]['catId']))}">{$goodsNav[2]["catName"]}</a>
+			</div>
+			<div class="wst-goods-details">
+				<div class="details-left">
+					<div class="goods-img-box">
+						 <!--产品参数开始-->
+						  <div>
+						    <div id="preview" class="spec-preview"> 
+							    <span class="jqzoom">
+							    	<img jqimg="__ROOT__/{$goodsDetails['goodsImg']}" class='lazyImg' data-original="__ROOT__/{$goodsDetails['goodsImg']}" height="400" width="400"/>
+							    </span> 
+						    </div>
+						    <!--缩图开始-->
+						    <div class="spec-scroll"> <a class="prev">&lt;</a> <a class="next">&gt;</a>
+						      <div class="items">
+						        <ul>
+						        	<li><img alt="" bimg="__ROOT__/{$goodsDetails['goodsImg']}" class='lazyImg' data-original="__ROOT__/{$goodsDetails['goodsImg']}" onmousemove="preview(this);"></li>
+						        	<volist name="goodsImgs" key="k" id="vo">
+						          		<li><img alt="" bimg="__ROOT__/{$vo['goodsImg']}" class='lazyImg' data-original="__ROOT__/{$vo['goodsThumbs']}" onmousemove="preview(this);"></li>
+						          	</volist>
+						        </ul>
+						      </div>
+						    </div>
+						    <!--缩图结束-->
+						  </div>
+						  <!--产品参数结束-->
+						  
+						  <div class="wst-clear"></div>
+					</div>
+					<div class="goods-des-box">
+						<table class="goods-des-tab">
+							<tbody>
+								<tr>
+									<td colspan="2">
+										<div class="des-title" style="word-break:break-all;">
+											{$goodsDetails["goodsName"]}
+										</div>
+										<div >{$goodsDetails["goodsSpec"]|htmlspecialchars_decode}</div>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<div class="wst-li-des">
+											<span style="font-weight: bold;">抢购说明：</span>{$panic["panicDes"]}
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<div class="wst-te-buy">
+											<div class="price"><span>￥</span>{$panic["panicMoney"]}</div>
+											<div class="shprice">市场价<span>￥{$goodsDetails["shopPrice"]}</span></div>
+											<div class="buy">商品评价：{$appraiseCnt}</div>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<div class="wst-li-chux wst-ter-chux">
+											<i></i><b>{$panic['buyStatus']==-1?"距离开始时间":"距离结束仅剩"}
+											</b>
+											<b class="time time_{$panic['id']}">00天00小时00分00秒</b>
+										    <p class="sold">已售<span>{$panic['buyStatus']==-1?0:$panic["virtualBuyCnt"]}</span>件</p>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td width="70"><span class="des-title-span">配送至：</span></td>
+									<td>
+										<if condition="$goodsDetails['isDistributAll'] eq 1">
+										全国各地
+										<else/>
+										<li id="summary-stock">
+											<div class="dd">
+												<div id="store-selector">
+													<div class="text">
+														<div></div>
+														<b></b>
+													</div>
+												</div><!--store-selector end-->
+												<div id="store-prompt">
+													<strong></strong>
+												</div><!--store-prompt end--->
+											</div>
+										</li>
+										<div class="wst-clear"></div>
+										</if>
+									</td>
+								</tr>
+								<tr>
+									<td width="70"><span class="des-title-span">运费：</span></td>
+									<td>{$goodsDetails["deliveryStartMoney"]}元起，配送费{$goodsDetails["deliveryMoney"]}元，{$goodsDetails["deliveryFreeMoney"]}元起免配送费</td>
+								</tr>
+								<tr>
+									<td width="70"><span class="des-title-span">服务：</span></td>
+									<td>由
+									<if condition="$goodsDetails['deliveryType'] eq 1">
+										{$CONF['mallName']}
+									<else/>
+										<a href="{:U('Home/Shops/toShopHome/',array('shopId'=>$goodsDetails['shopId']))}">{$goodsDetails['shopName']}</a>
+									</if>
+									配送，并提供售后服务</td>
+								</tr>
+								<if condition=" count($goodsAttrs['priceAttrs']) gt 0">
+								<tr style='height:15px;border-top:1px dashed #ddd;'>
+								   <td colspan='2'></td>
+								</tr>
+								<tr class="goods-attr">
+									<td width="70"><span class="des-title-span">{$goodsAttrs["priceAttrName"]}：</span></td>
+									<td>
+									 <volist name="goodsAttrs['priceAttrs']" id="avo">
+									 <span class='wst-goods-attrs <if condition=" $goodsDetails['goodsAttrId'] eq $avo['id']">wst-goods-attrs-on</if>' dataId='{$avo["id"]}' onclick='javascript:checkStock(this)'>{$avo['attrVal']}</span>
+									 </volist>
+									</td>
+								</tr>
+								</if>
+								<if condition="$goodsDetails['shopServiceStatus'] eq 1">
+								<tr>
+									<td colspan="2">
+										<div class="wst-li-purchase">
+											<?php if($panic['buyStatus']==1){ ?>
+											<a href="{:U('Home/Panics/checkPanic',array('id'=>$panic['id']))}" class="purchase">马上抢</a>
+											<?php }else if($panic['buyStatus']==-1){ ?>
+											<a href="javascript:;" class="unpurchase">即将开始</a>
+											<?php }else if($panic['buyStatus']==-2){ ?>
+											<a href="javascript:;" class="unpurchase">已结束</a>
+											<?php }else if($panic['buyStatus']==-3){ ?>
+											<a href="javascript:;" class="unpurchase">已抢完</a>
+											<?php } ?>
+										</div>
+									</td>
+								</tr>
+								<else/>
+								<tr>
+									<td colspan="2">
+										<div class="wst-gdetail-wait">休息中,暂停营业</div>
+									</td>
+								</tr>
+								</if>
+								<tr>
+									<td colspan="2">
+										<div class='wst-short-tool'>
+										    <!-- JiaThis Button BEGIN -->
+											<div class="jiathis_style_24x24">
+												<a class="jiathis_button_qzone"></a>
+												<a class="jiathis_button_tsina"></a>
+												<a class="jiathis_button_tqq"></a>
+												<a class="jiathis_button_weixin"></a>
+												<a class="jiathis_button_cqq"></a>
+												<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+											</div>
+											<!-- JiaThis Button END -->
+											<div class="code"><i><div id='qrcode' class='wst-qrcode hide'></div></i>微信端扫购有惊喜
+												
+											</div>
+											<div class="wst-favorite">
+													<div class='num3'>
+												         <a href='javascript:favoriteGoods({$goodsDetails['goodsId']})'>
+												         <b></b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+												         <span id='f0_txt' f='{$favoriteGoodsId}'>
+												         <if condition="$favoriteGoodsId gt 0">已关注<else/>关注商品</if>
+												         </span>
+												         </a>
+												    </div>
+												</div>
+										  </div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						
+					</div>
+				</div>
+				<div class="wst-clear"></div>
+			</div>
+			
+			<div class="wst-goods-pdetails">
+				<div class="wst-goods-pdetails-left">
+					{:W('Goods/getHotGoods',array('shopId'=>$goodsDetails['shopId']))}
+					{:W('Goods/getViewGoods')}
+				</div>
+				<div id="wst-goods-pdetails-right" class="wst-goods-pdetails-right">
+					<div class="goods-nvg">
+						<ul class="tab">
+							<li onclick="tabs('#wst-goods-pdetails-right',0)" class="curr">商品介绍</li>
+							<if condition=" count($goodsAttrs['attrs']) gt 0">
+							<li onclick="tabs('#wst-goods-pdetails-right',1)">商品属性</li>
+							<li onclick="tabs('#wst-goods-pdetails-right',2)">商品评价</li>
+							<else/>
+							<li onclick="tabs('#wst-goods-pdetails-right',1)">商品评价</li>
+							</if>
+						</ul>
+						<div class="wst-clear"></div>
+					</div>
+					<div class="tabcon">
+						<div id="wst_goods_desc" style="font-weight:bolder;height:auto;line-height:30px;padding-left:8px;">
+						{$goodsDetails["goodsDesc"]}
+						</div>
+					</div>
+					<if condition=" count($goodsAttrs['attrs']) gt 0">
+					<div class="tabcon" style="display:none;">
+						<table class='wst-attrs-list'>
+						  <volist name="goodsAttrs['attrs']" id="vo">
+						  <if condition="$vo['attrContent'] !='' ">
+						  <tr>
+						    <th nowrap>{$vo['attrName']}：</th>
+						    <td>{$vo['attrContent']}</td>
+						  </tr>
+						  </if>
+						  </volist>
+						</table>
+					</div>
+					</if>
+					<div class="tabcon"  style="display:none;">						
+						<table id="appraiseTab" width="100%">
+							<tr>
+								<td>
+		                      	 	<div style="margin-top: 10px;" id="allgoodsppraises">
+		                           		 请稍等...
+		                        	</div>
+		                        </td>
+		                	</tr>
+	                   	</table>  
+	                   	<div id="wst-page-items" style="text-align:center;margin-top:5px;"></div>                  
+					</div>
+					<div class="wst-clear"></div>
+				</div>
+				<div class="wst-clear"></div>
+			</div>
+			<div class="wst-clear"></div>
+		</div>
+		
+		<!-- JiaThis Button BEGIN -->
+			<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+			<script type="text/javascript">
+			var jiathis_config = {
+				url: "{:U('Home/Goods/getGoodsDetails',array('goodsId'=>$goodsDetails['goodsId'],'shareUserId'=>base64_encode($WST_USER['userId'])),true,true)}",
+				title:"{$goodsDetails['goodsName']}",
+				summary:"{$GLOBALS['CONFIG']['goodsShareTitle']}",
+				slide:{
+					divid:'jiathis_main',
+					pos:'left'
+				}
+			};
+			</script>
+		<!-- JiaThis Button END -->
+		
+		<include file="./Apps/Home/View/default/footer.html" />
+		<include file="./Apps/Home/View/default/right_cart.html" />
+   	</body>
+  
+
+<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/goods.js"></script>
+<script src="__PUBLIC__/js/common.js"></script>
+<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/head.js" type="text/javascript"></script>
+<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/common.js" type="text/javascript"></script>
+<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/pslocation.js" type="text/javascript"></script>
+<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/jquery.jqzoom.js" type="text/javascript"></script>
+<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/magnifier.js" type="text/javascript"></script>
+<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/jquery.tabso.js" type="text/javascript"></script>
+
+<script src="__PUBLIC__/js/qrcode.js"></script>
+<script>
+$(function(){
+	var qr = qrcode(10, 'M');
+	var url = "{:U('WeChat/Goods/goodsDetails',array('goodsId'=>$goodsDetails['goodsId'],'shareUserId'=>base64_encode($WST_USER['userId'])),true,true)}";
+	qr.addData(url);
+	qr.make();
+	$('#qrcode').html(qr.createImgTag());
+	getGoodsappraises('{$goodsDetails["goodsId"]}',0);
+	$("#wst_goods_desc img").each(function(){
+		if($(this).width()>940){
+			$(this).width(940);
+		}
+	});
+	
+	$("#store-selector").hover(function() {
+	}, function(){
+		$("#store-selector").removeClass("hover");
+	});
+	
+	//左右滑动选项卡切换
+	$("#move-animate-left").tabso({
+		cntSelect:"#leftcon",
+		tabEvent:"mouseover",
+		tabStyle:"move-animate",
+		direction : "left"
+	});
+});
+setTimeout("goods_time()",1000);
+</script>
+   	
+</html>

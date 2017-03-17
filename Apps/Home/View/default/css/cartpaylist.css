@@ -392,3 +392,100 @@
     text-align: right;
 }
 .wst-cart-totalmoney{font-size: 20px;font-weight: bold;}
+.wst-shop-coupon{
+	border: 1px dotted #f86247;padding:2px 4px;color:#f86247;cursor: pointer;display: inline-block;position:relative;
+}
+.shop-coupon-box{position: absolute;top: 20px;left:0px;display: none;}
+.wst-cart-coupon-box{
+	background-color:#fff;
+  	border: 1px solid #f86247;
+  	padding: 10px 0px;
+  	width: 342px;
+  	margin: 15px 0 30px 0;
+  	color: #f86247;
+  	position: relative;
+	min-height: 60px;
+}
+.wst-cart-coupon-box:after {
+  	border: 10px solid #f86247;
+  	border-color: transparent transparent #f86247 transparent;
+  	display: block;
+  	content: " ";
+  	height: 0px;
+  	width: 0px;
+  	position: absolute;
+  	top: -20px;
+  	left:18px;
+}
+.coupon-loading{line-height: 60px;text-align: center;}
+.coupon-close{  position: absolute;
+  color: #ddd;
+  font-weight: bold;
+  font-size: 25px;
+  right: 8px;
+  top: 8px;
+  z-index: 10;}
+li.coupon {
+  overflow: hidden;
+  padding-left: 65px;
+  position: relative;
+  margin: 15px 20px 20px 18px;
+}
+.coupon-amount {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50px;
+  height: 31px;
+  line-height: 31px;
+  background-color: #e9278d;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  font-family: Arial;
+  padding-left: 8px;
+}
+.coupon-amount .rmb {
+  font-weight: 400;
+  padding-right: 2px;
+  font-size: 12px;
+}
+.coupon-detail {
+  overflow: hidden;
+}
+.coupon-detail .coupon-info {
+  float: left;
+  width: 180px;
+  line-height: 1;
+}
+.coupon-detail .coupon-info .coupon-title {
+  margin-bottom: 5px;
+  color: #6D6D6D;
+}
+.coupon-detail .coupon-info .coupon-time {
+  color: #A5A5A5;
+  font-family: Tahoma;
+}
+.coupon-detail .coupon-op {
+  float: left;
+}	
+.coupon-detail .coupon-op .coupon-received {
+  color: #C9C9C9;
+  border-color: transparent;
+  _border-color: #fff;
+  width: 58px;
+  border-width: 1px 0;
+}
+.coupon-detail .coupon-op .coupon-unreceived {
+  color: #666;
+  cursor: pointer;
+}
+.coupon-detail .coupon-op span,.coupon-detail .coupon-op button {
+  display: block;
+  width: 58px;
+  height: 30px;
+  border: 1px solid #E9E9E9;
+  line-height: 30px;
+  text-align: center;
+  background-color: #fff;
+}

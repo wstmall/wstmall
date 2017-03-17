@@ -1,0 +1,94 @@
+<!DOCTYPE>
+<html lang="zh-cn">
+	<head>
+  		<meta charset="utf-8">
+      	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+      	<link rel="shortcut icon" href="favicon.ico"/>
+      	<title>抢购 - {$CONF['mallTitle']}</title>
+      	<meta name="keywords" content="{$shops['shopKeywords']},首页" />
+      	<meta name="description" content="{$CONF['mallDesc']},{$shops['shopDesc']}" />
+      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/common.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/panic.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/base.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/head.css" />
+		<link href="__PUBLIC__/plugins/slide/css/slide.css" type="text/css" media="all" rel="stylesheet" />
+   	</head>
+   	<body>
+		<include file="./Apps/Home/View/default/header_common.html" />
+		<div class="wst-slide" id="wst-slide">
+			<div id="wst-panic-slide-items" class="slideBox">
+	
+			  <ul class="items">
+				<volist name=":WSTAds(-9)" id="vo" key="k">
+					<li style="z-index: 1;  background: url(__ROOT__/{$vo['adFile']}) 50% 0% / cover no-repeat scroll;" onclick="addAccess({$vo['adId']});goBack(this)" data='{$vo['adURL']}'>
+					<a target="_blank" onclick="addAccess({$vo['adId']})" href="{$vo['adURL']}"></a>
+					</li>
+				</volist>
+			  </ul>
+			</div>
+		</div>
+		<div class="wst-te-more more1"><a href="{:U('Home/Panics/panicList',array('panicType'=>1))}"><span>更多</span></a></div>
+		<div class="wst-te-goods">
+			<volist name="pglist['inlist']" key="k1" id="vo">
+			<div class="goods">
+				<div class="top">
+					<div class="img"><a href="{:U('Home/Panics/getGoodsDetails',array('id'=>$vo['id']))}"><img class='lazyImg' data-original="__ROOT__/{$vo['goodsThums']}"></a></div>
+					<p class="name">{$vo['goodsName']}</p>
+					<div class="wst-clear"></div>
+				</div>
+				<div class="bottom">
+					<p class="price"><span class="prices">￥</span>{$vo['panicMoney']}<span class="price2">￥{$vo['shopPrice']}</span></p>
+					<p class="volume">成交量：{$vo['virtualBuyCnt']}件</p>
+					<p id="tobuy_{$vo['id']}" class="tobuyb"></p>
+					<a id="tobuy_go_{$vo['id']}" href="{:U('Home/Panics/checkPanic',array('id'=>$vo['id']))}" class="tobuy">立即抢购</a>
+				</div>
+				<div class="time times" dataId="{$vo['id']}" times="{$vo['endTime']}"><i></i>
+				    <b class="time_{$vo['id']}">00天00小时00分00秒</b>
+				</div>
+			</div>
+			</volist>
+			<div class="wst-clear"></div>
+		</div>
+		
+		<div class="wst-te-more more2"><a href="{:U('Home/Panics/panicList',array('panicType'=>2))}"><span>更多</span></a></div>
+		<div class="wst-te-goods">
+			<volist name="pglist['nextlist']" key="k1" id="vo">
+			<div class="goods">
+				<div class="top">
+					<div class="img"><a href="{:U('Home/Panics/getGoodsDetails',array('id'=>$vo['id']))}"><img class='lazyImg' data-original="__ROOT__/{$vo['goodsThums']}"></a></div>
+					<p class="name">{$vo['goodsName']}</p>
+					<div class="wst-clear"></div>
+				</div>
+				<div class="bottom">
+					<p class="price"><span class="prices">￥</span>{$vo['panicMoney']}<span class="price2">￥{$vo['shopPrice']}</span></p>
+					<p class="volume">成交量：0件</p>
+					<p  id="tobuy_{$vo['id']}" class="tobuyc"></p>
+					<a  id="tobuy_go_{$vo['id']}" href="javascript:void(0);" class="tobuy">立即抢购</a>
+				</div>
+				<div class="time times" dataId="{$vo['id']}" times="{$vo['startTime']}"><i></i>
+				    <b class="time_{$vo['id']}">00天00小时00分00秒</b>
+				</div>
+			</div>
+			</volist>
+			<div class="wst-clear"></div>
+		</div>
+		<include file="./Apps/Home/View/default/footer.html" />
+   	</body>
+   	
+   	<script src="__PUBLIC__/plugins/layer/layer.min.js"></script>
+	<script src="__PUBLIC__/js/common.js"></script>
+	<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/panic.js" type="text/javascript"></script>
+	<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/head.js" type="text/javascript"></script>
+	<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/common.js" type="text/javascript"></script>
+	<script src="__PUBLIC__/plugins/slide/js/slide.js"></script>
+	<script>
+	setTimeout("list_time()",1000);
+	$('#wst-panic-slide-items').slideBox({
+		duration : 0.3,//滚动持续时间，单位：秒
+		easing : 'linear',//swing,linear//滚动特效
+		delay : 5,//滚动延迟时间，单位：秒
+		hideClickBar : false,//不自动隐藏点选按键
+		clickBarRadius : 10
+	});
+	</script>
+</html>

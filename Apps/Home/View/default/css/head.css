@@ -90,7 +90,7 @@ body {
 	text-decoration: none;
 }
 
-.headNav .navCon .navCon-cate .cateMenu1 {
+.headNav .navCon .navCon-cate .wst-cate-menu1 {
 	position: absolute;
 	left: 0px;
 	font-family: "微软雅黑";
@@ -99,21 +99,21 @@ body {
 	cursor: pointer;
 }
 
-.headNav .navCon .navCon-cate .cateMenu1 li {
+.headNav .navCon .navCon-cate .wst-cate-menu1 li {
 	height: 60px;
 	width: 210px;
 	overflow: hidden;
 	border-top: 1px solid #a40000;
 }
 
-.headNav .navCon .navCon-cate .cateMenu1 li .cate-tag {
+.headNav .navCon .navCon-cate .wst-cate-menu1 li .cate-tag {
 	width: 190px;
 	padding: 0px 5px 10px 10px;
 	overflow: hidden;
 	line-height: 25px;
 }
 
-.headNav .navCon .navCon-cate .cateMenu1 li .cate-tag strong {
+.headNav .navCon .navCon-cate .wst-cate-menu1 li .cate-tag strong {
 	height: 25px;
 	line-height: 25px;
 	width: 172px;
@@ -121,22 +121,22 @@ body {
 	text-indent: 0px;
 }
 
-.headNav .navCon .navCon-cate .cateMenu1 li .cate-tag strong a {
+.headNav .navCon .navCon-cate .wst-cate-menu1 li .cate-tag strong a {
 	font-size: 14px;
 	font-weight: bold;
 	color: #333333;
 }
 
-.headNav .navCon .navCon-cate .cateMenu1 li .cate-tag .listModel {
+.headNav .navCon .navCon-cate .wst-cate-menu1 li .cate-tag .listModel {
 	text-indent: 0px;
 }
 
-.headNav .navCon .navCon-cate .cateMenu1 li .cate-tag .listModel p {
+.headNav .navCon .navCon-cate .wst-cate-menu1 li .cate-tag .listModel p {
 	height: 26px;
 	overflow:hidden;
 }
 
-.headNav .navCon .navCon-cate .cateMenu1 li .cate-tag .listModel a {
+.headNav .navCon .navCon-cate .wst-cate-menu1 li .cate-tag .listModel a {
 	font-size: 12px;
 	font-weight: normal;
 	color: #4e4e4e;
@@ -144,18 +144,18 @@ body {
 	padding: 0 11px 0 0;
 }
 
-.headNav .navCon .navCon-cate .cateMenu1 .on {
+.headNav .navCon .navCon-cate .wst-cate-menu1 .on {
 	background: #e23c3d;
 	/*background:url(../../../View/default/images/nvgbg.png) no-repeat;*/
 	background-size: 100% 100%;
 	*margin-bottom: -4px;
 }
 
-.headNav .navCon .navCon-cate .cateMenu1 .on .cate-tag .listModel a {
+.headNav .navCon .navCon-cate .wst-cate-menu1 .on .cate-tag .listModel a {
 	color: #FFFFFF;
 }
 
-.headNav .navCon .navCon-cate .cateMenu2 {
+.headNav .navCon .navCon-cate .wst-cate-menu2 {
 	position: absolute;
 	left: 0px;
 	font-family: "微软雅黑";
@@ -164,21 +164,21 @@ body {
 	cursor: pointer;
 }
 
-.headNav .navCon .navCon-cate .cateMenu2 li {
+.headNav .navCon .navCon-cate .wst-cate-menu2 li {
 	height: 60px;
 	width: 210px;
 	overflow: hidden;
 	border-top: 1px solid #a40000;
 }
 
-.headNav .navCon .navCon-cate .cateMenu2 li .cate-tag {
+.headNav .navCon .navCon-cate .wst-cate-menu2 li .cate-tag {
 	width: 190px;
 	padding: 0px 5px 0px 15px;
 	overflow: hidden;
 	line-height: 25px;
 }
 
-.headNav .navCon .navCon-cate .cateMenu2 li .cate-tag strong {
+.headNav .navCon .navCon-cate .wst-cate-menu2 li .cate-tag strong {
 	height: 25px;
 	line-height: 25px;
 	width: 172px;
@@ -196,21 +196,21 @@ body {
 	
 }
 
-.headNav .navCon .navCon-cate .cateMenu2 li .cate-tag strong a {
+.headNav .navCon .navCon-cate .wst-cate-menu2 li .cate-tag strong a {
 	font-size: 14px;
 	font-weight: bold;
 	color: #333333;
 }
 
-.headNav .navCon .navCon-cate .cateMenu2 li .cate-tag .listModel {
+.headNav .navCon .navCon-cate .wst-cate-menu2 li .cate-tag .listModel {
 	text-indent: 0px;
 }
 
-.headNav .navCon .navCon-cate .cateMenu2 li .cate-tag .listModel p {
+.headNav .navCon .navCon-cate .wst-cate-menu2 li .cate-tag .listModel p {
 	height: 26px;
 }
 
-.headNav .navCon .navCon-cate .cateMenu2 li .cate-tag .listModel a {
+.headNav .navCon .navCon-cate .wst-cate-menu2 li .cate-tag .listModel a {
 	font-size: 12px;
 	font-weight: normal;
 	color: #4e4e4e;
@@ -218,13 +218,13 @@ body {
 	padding: 0 11px 0 0;
 }
 
-.headNav .navCon .navCon-cate .cateMenu2 .on {
+.headNav .navCon .navCon-cate .wst-cate-menu2 .on {
 	background: #e23c3d;
 	background-size: 100% 100%;
 	*margin-bottom: -4px;
 }
 
-.headNav .navCon .navCon-cate .cateMenu2 .on .cate-tag .listModel a {
+.headNav .navCon .navCon-cate .wst-cate-menu2 .on .cate-tag .listModel a {
 	color: #FFFFFF;
 }
 
@@ -247,7 +247,7 @@ body {
 	color: #ffffff;
 }
 
-.headNav .navCon .navCon-cate .cateMenu1 .list-item {
+.headNav .navCon .navCon-cate .wst-cate-menu1 .list-item {
 	width: 750px;
 	padding: 10px 10px 20px 10px;
 	border: 1px solid #A7A7A7;
@@ -260,21 +260,21 @@ body {
 	top: 0px;
 }
 
-.headNav .navCon .navCon-cate .cateMenu1 .list-item .itemleft {
+.headNav .navCon .navCon-cate .wst-cate-menu1 .list-item .itemleft {
 	width: 510px;
 	float: left;
 }
 
-.headNav .navCon .navCon-cate .cateMenu1 .list-item .itemright {
+.headNav .navCon .navCon-cate .wst-cate-menu1 .list-item .itemright {
 	width: 220px;
 	float: right;
 }
 
-.headNav .navCon .navCon-cate .cateMenu1 .list-item dl {
+.headNav .navCon .navCon-cate .wst-cate-menu1 .list-item dl {
 	padding-left: 10px;
 }
 
-.headNav .navCon .navCon-cate .cateMenu1 .list-item dt {
+.headNav .navCon .navCon-cate .wst-cate-menu1 .list-item dt {
 	color: #665446;
 	font-size: 14px;
 	text-indent: 0px;
@@ -283,7 +283,7 @@ body {
 	font-family: "微软雅黑";
 }
 
-.headNav .navCon .navCon-cate .cateMenu1 .list-item dd {
+.headNav .navCon .navCon-cate .wst-cate-menu1 .list-item dd {
 	font-size: 12px;
 	font-weight: normal;
 	text-indent: 0px;
@@ -291,7 +291,7 @@ body {
 	font-family: "微软雅黑";
 }
 
-.headNav .navCon .navCon-cate .cateMenu1 .list-item dd a {
+.headNav .navCon .navCon-cate .wst-cate-menu1 .list-item dd a {
 	color: #646464;
 	margin-right: 5px;
 	width: 75px;
@@ -302,16 +302,16 @@ body {
 	margin-bottom: 5px;
 }
 
-.headNav .navCon .navCon-cate .cateMenu1 .list-item dd a:hover {
+.headNav .navCon .navCon-cate .wst-cate-menu1 .list-item dd a:hover {
 	color: #000;
 }
 
-.headNav .navCon .navCon-cate .cateMenu1 .list-item .itemright .news-list
+.headNav .navCon .navCon-cate .wst-cate-menu1 .list-item .itemright .news-list
 	{
 	padding-left: 10px;
 }
 
-.headNav .navCon .navCon-cate .cateMenu1 .list-item .itemright .news-list p
+.headNav .navCon .navCon-cate .wst-cate-menu1 .list-item .itemright .news-list p
 	{
 	line-height: 24px;
 	text-indent: 0px;
@@ -320,22 +320,22 @@ body {
 	color: #000;
 }
 
-.headNav .navCon .navCon-cate .cateMenu1 .list-item .itemright .news-list p a
+.headNav .navCon .navCon-cate .wst-cate-menu1 .list-item .itemright .news-list p a
 	{
 	color: #646464;
 }
 
-.headNav .navCon .navCon-cate .cateMenu1 .list-item .itemright .news-list p a:hover
+.headNav .navCon .navCon-cate .wst-cate-menu1 .list-item .itemright .news-list p a:hover
 	{
 	color: #000;
 }
 
-.headNav .navCon .navCon-cate .cateMenu1 .list-item .itemright .ad-list
+.headNav .navCon .navCon-cate .wst-cate-menu1 .list-item .itemright .ad-list
 	{
 	padding-left: 10px;
 }
 
-.headNav .navCon .navCon-cate .cateMenu1 .list-item .itemright .ad-list a
+.headNav .navCon .navCon-cate .wst-cate-menu1 .list-item .itemright .ad-list a
 	{
 	display: block;
 	width: 210px;
@@ -345,7 +345,7 @@ body {
 	overflow: hidden;
 }
 
-.headNav .navCon .navCon-cate .cateMenu2 .list-item {
+.headNav .navCon .navCon-cate .wst-cate-menu2 .list-item {
 	width: 750px;
 	padding: 10px 10px 20px 10px;
 	border: 1px solid #A7A7A7;
@@ -358,21 +358,21 @@ body {
 	top: 0px;
 }
 
-.headNav .navCon .navCon-cate .cateMenu2 .list-item .itemleft {
+.headNav .navCon .navCon-cate .wst-cate-menu2 .list-item .itemleft {
 	width: 510px;
 	float: left;
 }
 
-.headNav .navCon .navCon-cate .cateMenu2 .list-item .itemright {
+.headNav .navCon .navCon-cate .wst-cate-menu2 .list-item .itemright {
 	width: 220px;
 	float: right;
 }
 
-.headNav .navCon .navCon-cate .cateMenu2 .list-item dl {
+.headNav .navCon .navCon-cate .wst-cate-menu2 .list-item dl {
 	padding-left: 10px;
 }
 
-.headNav .navCon .navCon-cate .cateMenu2 .list-item dt {
+.headNav .navCon .navCon-cate .wst-cate-menu2 .list-item dt {
 	color: #665446;
 	font-size: 14px;
 	text-indent: 0px;
@@ -381,7 +381,7 @@ body {
 	font-family: "微软雅黑";
 }
 
-.headNav .navCon .navCon-cate .cateMenu2 .list-item dd {
+.headNav .navCon .navCon-cate .wst-cate-menu2 .list-item dd {
 	font-size: 12px;
 	font-weight: normal;
 	text-indent: 0px;
@@ -389,7 +389,7 @@ body {
 	font-family: "微软雅黑";
 }
 
-.headNav .navCon .navCon-cate .cateMenu2 .list-item dd a {
+.headNav .navCon .navCon-cate .wst-cate-menu2 .list-item dd a {
 	color: #646464;
 	margin-right: 5px;
 	width: 75px;
@@ -400,16 +400,16 @@ body {
 	margin-bottom: 5px;
 }
 
-.headNav .navCon .navCon-cate .cateMenu2 .list-item dd a:hover {
+.headNav .navCon .navCon-cate .wst-cate-menu2 .list-item dd a:hover {
 	color: #000;
 }
 
-.headNav .navCon .navCon-cate .cateMenu2 .list-item .itemright .news-list
+.headNav .navCon .navCon-cate .wst-cate-menu2 .list-item .itemright .news-list
 	{
 	padding-left: 10px;
 }
 
-.headNav .navCon .navCon-cate .cateMenu2 .list-item .itemright .news-list p
+.headNav .navCon .navCon-cate .wst-cate-menu2 .list-item .itemright .news-list p
 	{
 	line-height: 24px;
 	text-indent: 0px;
@@ -418,22 +418,22 @@ body {
 	color: #000;
 }
 
-.headNav .navCon .navCon-cate .cateMenu2 .list-item .itemright .news-list p a
+.headNav .navCon .navCon-cate .wst-cate-menu2 .list-item .itemright .news-list p a
 	{
 	color: #646464;
 }
 
-.headNav .navCon .navCon-cate .cateMenu2 .list-item .itemright .news-list p a:hover
+.headNav .navCon .navCon-cate .wst-cate-menu2 .list-item .itemright .news-list p a:hover
 	{
 	color: #000;
 }
 
-.headNav .navCon .navCon-cate .cateMenu2 .list-item .itemright .ad-list
+.headNav .navCon .navCon-cate .wst-cate-menu2 .list-item .itemright .ad-list
 	{
 	padding-left: 10px;
 }
 
-.headNav .navCon .navCon-cate .cateMenu2 .list-item .itemright .ad-list a
+.headNav .navCon .navCon-cate .wst-cate-menu2 .list-item .itemright .ad-list a
 	{
 	display: block;
 	width: 210px;
@@ -613,16 +613,7 @@ body {
     background-size:100% 100%;
 }
 
-.cateMenu1 li s1, .cateMenu2 li s1, .cateMenu1 li:hover s1, .cateMenu2 li:hover s1,
-.cateMenu1 li s2, .cateMenu2 li s2, .cateMenu1 li:hover s2, .cateMenu2 li:hover s2, 
-.cateMenu1 li s3, .cateMenu2 li s3, .cateMenu1 li:hover s3, .cateMenu2 li:hover s3,
-.cateMenu1 li s4, .cateMenu2 li s4, .cateMenu1 li:hover s4, .cateMenu2 li:hover s4,
-.cateMenu1 li s5, .cateMenu2 li s5, .cateMenu1 li:hover s5, .cateMenu2 li:hover s5,
-.cateMenu1 li s6, .cateMenu2 li s6, .cateMenu1 li:hover s6, .cateMenu2 li:hover s6,
-.cateMenu1 li s7, .cateMenu2 li s7, .cateMenu1 li:hover s7, .cateMenu2 li:hover s7,
-.cateMenu1 li s8, .cateMenu2 li s8, .cateMenu1 li:hover s8, .cateMenu2 li:hover s8,
-.cateMenu1 li s9, .cateMenu2 li s9, .cateMenu1 li:hover s9, .cateMenu2 li:hover s9,
-.cateMenu1 li s10, .cateMenu2 li s10, .cateMenu1 li s10, .cateMenu2 li s10{
+.wst-cate-menu1 li s, .wst-cate-menu2 li s{
 	background: url("../../../View/default/images/nav_icon.png") no-repeat;
     display: inline-block;
     height: 20px;
@@ -630,66 +621,66 @@ body {
     top:4px;
     width: 20px;
 }
-.cateMenu1 li s1, .cateMenu2 li s1{
+.wst-cate-menu1 li .s1, .wst-cate-menu2 li .s1{
 	background-position: -31px -25px;
 }
-.cateMenu1 li s2, .cateMenu2 li s2{
+.wst-cate-menu1 li .s2, .wst-cate-menu2 li .s2{
 	background-position: -31px -64px;
 }
-.cateMenu1 li s3, .cateMenu2 li s3{
+.wst-cate-menu1 li .s3, .wst-cate-menu2 li .s3{
 	background-position: -31px -105px;
 }
-.cateMenu1 li s4, .cateMenu2 li s4{
+.wst-cate-menu1 li .s4, .wst-cate-menu2 li .s4{
 	background-position: -31px -145px;
 }
-.cateMenu1 li s5, .cateMenu2 li s5{
+.wst-cate-menu1 li .s5, .wst-cate-menu2 li .s5{
 	background-position: -31px -183px;
 }
-.cateMenu1 li s6, .cateMenu2 li s6{
+.wst-cate-menu1 li .s6, .wst-cate-menu2 li .s6{
 	background-position: -31px -223px;
 }
-.cateMenu1 li s7, .cateMenu2 li s7{
+.wst-cate-menu1 li .s7, .wst-cate-menu2 li .s7{
 	background-position: -31px -262px;
 }
-.cateMenu1 li s8, .cateMenu2 li s8{
+.wst-cate-menu1 li .s8, .wst-cate-menu2 li .s8{
 	    background-position: -31px -298px;
 }
-.cateMenu1 li s9, .cateMenu2 li s9{
+.wst-cate-menu1 li .s9, .wst-cate-menu2 li .s9{
 	background-position: -31px -333px;
 }
-.cateMenu1 li s10, .cateMenu2 li s10{
+.wst-cate-menu1 li .s10, .wst-cate-menu2 li .s10{
 	background-position: -31px -366px;
 }
 
 
-.cateMenu1 li:hover s1, .cateMenu2 li:hover s1{
+.wst-cate-menu1 li:hover .s1, .wst-cate-menu2 li:hover .s1{
 	background-position: -82px -25px;
 }
-.cateMenu1 li:hover s2, .cateMenu2 li:hover s2{
+.wst-cate-menu1 li:hover .s2, .wst-cate-menu2 li:hover .s2{
 	background-position: -82px -64px;
 }
-.cateMenu1 li:hover s3, .cateMenu2 li:hover s3{
+.wst-cate-menu1 li:hover .s3, .wst-cate-menu2 li:hover .s3{
 	background-position: -82px -105px;
 }
-.cateMenu1 li:hover s4, .cateMenu2 li:hover s4{
+.wst-cate-menu1 li:hover .s4, .wst-cate-menu2 li:hover .s4{
 	background-position: -82px -145px;
 }
-.cateMenu1 li:hover s5, .cateMenu2 li:hover s5{
+.wst-cate-menu1 li:hover .s5, .wst-cate-menu2 li:hover .s5{
 	background-position: -82px -183px;
 }
-.cateMenu1 li:hover s6, .cateMenu2 li:hover s6{
+.wst-cate-menu1 li:hover .s6, .wst-cate-menu2 li:hover .s6{
 	background-position: -82px -223px;
 }
-.cateMenu1 li:hover s7, .cateMenu2 li:hover s7{
+.wst-cate-menu1 li:hover .s7, .wst-cate-menu2 li:hover .s7{
 	background-position: -82px -262px;
 }
-.cateMenu1 li:hover s8, .cateMenu2 li:hover s8{
+.wst-cate-menu1 li:hover .s8, .wst-cate-menu2 li:hover .s8{
 	    background-position: -82px -298px;
 }
-.cateMenu1 li:hover s9, .cateMenu2 li:hover s9{
+.wst-cate-menu1 li:hover .s9, .wst-cate-menu2 li:hover .s9{
 	background-position: -82px -333px;
 }
-.cateMenu1 li:hover s10, .cateMenu2 li:hover s10{
+.wst-cate-menu1 li:hover .s10, .wst-cate-menu2 li:hover .s10{
 	background-position: -82px -366px;
 }
 

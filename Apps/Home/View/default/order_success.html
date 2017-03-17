@@ -6,12 +6,12 @@
         <title>{$CONF['mallTitle']} - <if condition="count($orderInfos) gt 0">订单提交成功<else/>不能重复提交订单</if></title>
       	<meta name="keywords" content="{$CONF['mallKeywords']},订单提交" />
       	<meta name="description" content="{$CONF['mallDesc']},订单提交" />
-	    <link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
-     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/ordersuccess.css" />
-     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
-		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />
-		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/pslocation.css" />
-		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/magnifier.css" />
+	    <link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/common.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/ordersuccess.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/base.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/head.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/pslocation.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/magnifier.css" />
 </head>
 
 <body class="root61">
@@ -23,7 +23,7 @@
                     <div class="success2" style="margin: 0 auto;">
                         <div class="wst-ods-success-blank"></div>
                         <div class="wst-ods-success-step">
-                            <img src="__ROOT__/Apps/Home/View/default/images/step3.png" alt="" /><br />
+                            <img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/step3.png" alt="" /><br />
                             <span class="wst-ods-success-step1">1.我的购物车</span>
                             <span class="wst-ods-success-step2">2.填写核对订单信息</span>
                             <span class="wst-ods-success-step3">3.成功提交订单</span>
@@ -37,7 +37,7 @@
 					<div class="wst-ods-success-tc">
 						<div class="wst-ods-success-td">
 							<if condition="count($orderInfos['list']) gt 0">
-							<img src="__ROOT__/Apps/Home/View/default/images/icon-succ.png" alt="" />
+							<img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/icon-succ.png" alt="" />
 							</if>
 						</div>
 						<div class="wst-ods-success-tf">
@@ -49,7 +49,9 @@
 								    <if condition="($key gt 1) AND ($orderInfos['isMoreOrder'] eq 1)">、</if>
 									<a href="javascript:;" onclick="getOrderInfo({$order['orderId']});"><span class="wst-ods-success-th">{$order['orderNo']}</span></a>&nbsp;
 								</volist>
+								<?php if($orderInfos['payType']==0){ ?>
 								 应付金额：<span class="wst-ods-success-ti">{$orderInfos['realTotalMoney']}</span> 元
+								 <?php } ?>
 	   							</if>
 	   						</div>							
 						</div>
@@ -74,8 +76,8 @@
     
 	<include file="./Apps/Home/View/default/footer.html" />
 	<script src="__PUBLIC__/js/common.js"></script>
-  	<script src="__ROOT__/Apps/Home/View/default/js/index.js"></script>      	
- 	<script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
- 	<script src="__ROOT__/Apps/Home/View/default/js/orders.js"></script>
+  	<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/index.js"></script>      	
+ 	<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/common.js"></script>
+ 	<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/orders.js"></script>
 </body>
 </html>

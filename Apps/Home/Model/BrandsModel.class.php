@@ -20,7 +20,7 @@ class BrandsModel extends BaseModel {
 		$sql = "SELECT bs.brandId,bs.brandName,bs.brandIco FROM __PREFIX__brands bs,__PREFIX__shops sp,__PREFIX__goods g,__PREFIX__goods_cat_brands gcb
 						WHERE bs.brandId=g.brandId AND g.shopId=sp.shopId AND gcb.brandId=bs.brandId AND bs.brandFlag = 1";
 		if($areaId3>0){
-			$sql .= " AND sp.areaId3 = $areaId3";
+			$sql .= " AND (sp.areaId3 = $areaId3 or sp.isDistributAll=1) ";
 		}
 		if($brandName!=""){
 			$sql .= " AND bs.brandName like '%$brandName%'";

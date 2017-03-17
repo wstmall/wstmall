@@ -79,7 +79,7 @@ function createAudio(){
 	document.body.appendChild(audio);
 	for(var j=0;j<2;j++){
 		var sour = document.createElement("source");		
-		sour.src=ThinkPHP.DOMAIN+"/Apps/Home/View/default/audio/sound"+(j==0?".mp3":".ogg");					
+		sour.src=ThinkPHP.DOMAIN+"/Apps/Home/View/"+WST.WST_STYLE+"/audio/sound"+(j==0?".mp3":".ogg");					
 		if(sour.src.indexOf('.ogg')>-1){
 			sour.type = 'audio/ogg';
 		}else{
@@ -100,12 +100,12 @@ function playsound(){
 	if((jQuery.browser.msie && (!$.support.leadingWhitespace))){	
 		currAudioId = "player";		
 		var audio = document.getElementById("player");		
-		audio.url = ThinkPHP.DOMAIN+"/Apps/Home/View/default/audio/sound.mp3";		
+		audio.url = ThinkPHP.DOMAIN+"/Apps/Home/View/"+WST.WST_STYLE+"/audio/sound.mp3";		
 		audio.controls.play();
 		
 	}else if(/i(Phone|P(o|a)d)/.test(navigator.userAgent)){		
 		currAudioId = "soundplay";
-		g_audio.push({song_id:"soundplay",song_fileUrl:ThinkPHP.DOMAIN+"/Apps/Home/View/default/audio/sound.mp3"});	
+		g_audio.push({song_id:"soundplay",song_fileUrl:ThinkPHP.DOMAIN+"/Apps/Home/View/"+WST.WST_STYLE+"/audio/sound.mp3"});	
 	}else{		
 		currAudioId = "soundplay";
 		audio = document.getElementById("soundplay");		

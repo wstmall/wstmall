@@ -76,6 +76,15 @@ class UserAddressModel extends BaseModel {
 		
 		if($this->checkEmpty($data,true)){	
 			$m = M('user_address');
+			
+			if(I("areaId1")){
+				$data["areaId1"] = (int)I("areaId1");
+			}else{
+				$sql ="SELECT parentId FROM __PREFIX__areas WHERE areaId='".$data["areaId2"]."' AND areaFlag=1";
+				$ars = $this->queryRow($sql);
+				$data["areaId1"] = $ars["parentId"];
+			}
+			
 			$data["userPhone"] = I("userPhone");
 			$data["userTel"] = I("userTel");
 			$data["isDefault"] = (int)I("isDefault");

@@ -8,10 +8,10 @@
       	<title>订单信息 - {$CONF['mallTitle']}</title>
       	<meta name="keywords" content="{$CONF['mallKeywords']},订单信息" />
       	<meta name="description" content="{$CONF['mallDesc']},订单信息" />
-      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css" />
-     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/checkorderinfo.css" />
-     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/base.css" />
-		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />
+      	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/common.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/checkorderinfo.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/base.css" />
+		<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/head.css" />
    	</head>
    	<body>
 	<include file="./Apps/Home/View/default/header_common.html" />
@@ -55,7 +55,7 @@
 	        		</tr>
 	        		<tr>
 	        			<td class="wst-td-title">支付方式：</td>
-	        			<td class="wst-td-content"><if condition='$orderInfo["order"]["payType"]==0'>货到付款<else/>在线支付</if></td>
+	        			<td class="wst-td-content">{$orderInfo["order"]["payType"]==0?"货到付款":"在线支付"}</td>
 	        		</tr>
 	        		<tr>
 	        			<td class="wst-td-title">配送方式：</td>
@@ -130,10 +130,22 @@
 	        		<volist name="orderInfo['goodsList']" id="goods" key='key1'>
 	        		<tr>
 	        			<td class="wst-align-left">
-	        			<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}" target="_blank">
+	        			<?php if($orderInfo['order']['orderFrom']==2){ ?>
+	                    	<a href="{:U('Home/Groups/getGoodsDetails/',array('id'=>$orderInfo['order']['orderFromId']))}" target="_blank">
+	                 	<?php }else if($orderInfo['order']['orderFrom']==3){ ?>
+	                     	<a href="{:U('Home/Panics/getGoodsDetails/',array('id'=>$orderInfo['order']['orderFromId']))}" target="_blank">
+	                  	<?php }else{ ?>
+	                     	<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}" target="_blank">
+	                  	<?php } ?>
 	        			   <img style='margin:5px;' class='lazyImg' data-original="__ROOT__/{$goods['goodsThums']}" width='50' height='50'/>
 	        			</a>
-	        			<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}" target="_blank">
+	        			<?php if($orderInfo['order']['orderFrom']==2){ ?>
+	                    	<a href="{:U('Home/Groups/getGoodsDetails/',array('id'=>$orderInfo['order']['orderFromId']))}" target="_blank">
+	                 	<?php }else if($orderInfo['order']['orderFrom']==3){ ?>
+	                     	<a href="{:U('Home/Panics/getGoodsDetails/',array('id'=>$orderInfo['order']['orderFromId']))}" target="_blank">
+	                  	<?php }else{ ?>
+	                     	<a href="{:U('Home/Goods/getGoodsDetails/',array('goodsId'=>$goods['goodsId']))}" target="_blank">
+	                  	<?php } ?>
 	        			{$goods["goodsName"]}
 	        			<if condition="$goods['goodsAttrName'] neq ''">【{$goods['goodsAttrName']}】</if>
 	        			</a>
@@ -146,9 +158,10 @@
         		</tbody>
         		<tr>
         		   <td colspan='4' class='wst-cart-total-money'>
-        		  	 商品总金额： ￥{$orderInfo["order"]["totalMoney"]}  <br/>
+        		  	 商品总金额： ￥{$orderInfo["order"]["totalMoney"]}<br/>
         		   	+ 运费：￥{$orderInfo["order"]["deliverMoney"]}<br/>
-        		  	  订单总金额：<span class='wst-cart-order-money'>￥{$orderInfo["order"]["totalMoney"]+$orderInfo["order"]["deliverMoney"]}</span><br/>
+        		   	<if condition='$orderInfo["order"]["couponMoney"] gt 0'>店铺优惠：- ￥{$orderInfo["order"]["couponMoney"]}<br/></if>
+        		  	  订单总金额：<span class='wst-cart-order-money'>￥{$orderInfo["order"]["totalMoney"]+$orderInfo["order"]["deliverMoney"]-$orderInfo["order"]["couponMoney"]}</span><br/>
         		 	<if condition='$orderInfo["order"]["useScore"] gt 0'>- 使用积分：{$orderInfo["order"]["useScore"]} 点（抵￥{$orderInfo["order"]["scoreMoney"]} ）<br/></if>
         		   <span class='wst-cart-order-txt'>实付总金额：</span><span class='wst-cart-order-money'>￥{$orderInfo["order"]["realTotalMoney"]}</span></td>
         		</tr>
@@ -161,7 +174,7 @@
 	<include file="./Apps/Home/View/default/footer.html" />
 </body>
 <script src="__PUBLIC__/js/common.js"></script>
-<script src="__ROOT__/Apps/Home/View/default/js/index.js"></script>
-<script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
-<script src="__ROOT__/Apps/Home/View/default/js/orders.js"></script>
+<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/index.js"></script>
+<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/common.js"></script>
+<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/orders.js"></script>
 </html>

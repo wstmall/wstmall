@@ -1,6 +1,6 @@
 <?php
 namespace Home\Widget;
-use Think\Controller;
+use Home\Action\BaseAction;
 /**
  * ============================================================================
  * WSTMall开源商城
@@ -9,7 +9,7 @@ use Think\Controller;
  * ============================================================================
  * 
  */
-class GoodsWidget extends Controller {
+class GoodsWidget extends BaseAction {
 	/**
 	 * 查看商品历史记录
 	 */
@@ -17,7 +17,7 @@ class GoodsWidget extends Controller {
 		$m = D('Home/Goods');
 		$goodslist = $m->getViewGoods();
 		$this->assign("goodslist",$goodslist);
-		$this->display("default/widget/view_history");
+		$this->display("widget/view_history");
 	}
 	
 	/**
@@ -27,7 +27,7 @@ class GoodsWidget extends Controller {
 		$m = D('Home/Goods');
 		$hotgoods = $m->getHotGoods($shopId);
 		$this->assign("hotgoods",$hotgoods);
-		$this->display("default/widget/hot_goods");
+		$this->display("widget/hot_goods");
 	}
 	
 }

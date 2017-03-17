@@ -1,0 +1,52 @@
+<extend name="./Apps/Home/View/default/users/layout.html" />
+<block name="content">
+	
+	 <div class="wst-body"> 
+	     <div class='wst-page-header'>买家中心 > 我的优惠券</div>
+	     <div class='wst-page-content'> 
+		   
+		   <div id='tab' class="wst-tab-box">
+			
+			
+				<div class='wst-tab-item'>
+				    
+					<div class="wst-coupon-shopbox">
+						<?php if(count($coupons)>0){ ?>
+						
+					
+							<div class="wst-coupon-pbox">
+								<volist name="coupons" id="vo">
+									<div class="wst-coupon-box" style=" ">
+										<div class="delbox" onclick="delCoupon(this,{$vo['id']});"><img src="__ROOT__/Apps/Home/View/{$WST_STYLE}/images/action_delete.gif"/></div>
+										<div class="money">
+											<span style="position:relative;">{$vo['couponMoney']}
+												<span class="tip" style="">￥</span>
+											</span>
+										</div>
+										<div class="allshop"><span onclick="goBack(this)" data="{:U('Home/Shops/toShopHome',array('shopId'=>$vo['shopId']))}">全店通用</span></div>
+										<div style='clear:both;'></div>
+										<div style="line-height: 22px;">
+											<div class="des"><span>使用条件：满&nbsp;<span class="spend-money">{$vo['spendMoney']}</span>&nbsp;元使用</span></div>
+											<div >有效期：{$vo['validStartTime']}&nbsp;至&nbsp;{$vo['validEndTime']}</div>
+											<div >发行店铺：<a href="{:U('Home/Shops/toShopHome',array('shopId'=>$vo['shopId']))}">{$vo["shopName"]}</a></div>
+										</div>
+									</div>
+								</volist>
+								<div style='clear:both;'></div>
+							</div>
+					
+						</volist>
+						<?php }else{ ?>
+						<div class='cempty'>您还没有领取优惠券哦！</div>
+						<?php } ?>
+					</div>
+					<div style='clear:both;'></div>
+				</div>
+			
+			</div>
+		</div>
+	</div>
+</block>
+<block name="js">
+<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/users/coupons.js"></script>
+</block>  

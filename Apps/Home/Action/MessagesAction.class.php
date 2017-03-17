@@ -22,9 +22,9 @@ class MessagesAction extends BaseAction{
     	$this->assign('Page',$page);
     	$this->assign("umark","queryMessageByPage");
     	if($USER['loginTarget']=='User'){
-            $this->display("default/users/messages/list");
+            $this->display("users/messages/list");
     	}else{
-    		$this->display("default/shops/messages/list");
+    		$this->display("shops/messages/list");
     	}
 	}
 
@@ -36,9 +36,9 @@ class MessagesAction extends BaseAction{
         $USER = session('WST_USER');
         $this->assign('info',$info);
         if($USER['loginTarget']=='User'){
-            $this->display("default/users/messages/show");
+            $this->display("users/messages/show");
         }else{
-            $this->display("default/shops/messages/show");
+            $this->display("shops/messages/show");
         }
     }
 

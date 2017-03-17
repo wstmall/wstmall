@@ -61,7 +61,7 @@ class ShopsCatsAction extends BaseAction{
       	$List = $m->getCatAndChild($USER['shopId'],(int)I('parentId',0));
     	$this->assign('List',$List);
     	$this->assign("umark","index");
-        $this->display("default/shops/shopscats/list");
+        $this->display("shops/shopscats/list");
 	}
 	/**
 	 * 列表查询

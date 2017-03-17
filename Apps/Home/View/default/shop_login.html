@@ -7,9 +7,9 @@
       	<title>卖家登录 - {$CONF['mallTitle']}</title>
       	<meta name="keywords" content="{$CONF['mallKeywords']}" />
       	<meta name="description" content="{$CONF['mallDesc']},卖家登录" />
-     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/common.css">
-     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/head.css" />
-     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/default/css/login.css">
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/common.css">
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/head.css" />
+     	<link rel="stylesheet" href="__ROOT__/Apps/Home/View/{$WST_STYLE}/css/login.css">
    	</head>
    	<body>
    		<include file="./Apps/Home/View/default/header_common.html" />
@@ -39,7 +39,7 @@
 		                    <div class="item-ifo">
 		                        <input id="verify" style="ime-mode:disabled" name="verify" class="text text-1" tabindex="6" autocomplete="off" maxlength="6" type="text"/>
 			                    <label class="img">
-			                		<img style='vertical-align:middle;cursor:pointer;height:39px;' class='verifyImg' src='__ROOT__/Apps/Home/View/default/images/clickForVerify.png' title='刷新验证码' onclick='javascript:getVerify()'/> 
+			                		<img style='vertical-align:middle;cursor:pointer;height:39px;' class='verifyImg' src='{$WST_STYLE}/images/clickForVerify.png' title='刷新验证码' onclick='javascript:getVerify()'/> 
 								</label>      	
 			              		<label class="ftx23">&nbsp;看不清？<a href="javascript:getVerify()" class="flk13">换一张</a></label>
 		                    </div>
@@ -64,6 +64,6 @@
 		<include file="./Apps/Home/View/default/footer.html" />
    	</body>
    	<script src="__PUBLIC__/js/common.js"></script>
-    <script src="__ROOT__/Apps/Home/View/default/js/common.js"></script>
-   	<script src="__ROOT__/Apps/Home/View/default/js/shoplogin.js"></script>
+    <script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/common.js"></script>
+   	<script src="__ROOT__/Apps/Home/View/{$WST_STYLE}/js/shoplogin.js"></script>
 </html> 

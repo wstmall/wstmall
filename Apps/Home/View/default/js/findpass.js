@@ -11,7 +11,7 @@ $("#getPhoneVerify").click(function(){
 			var html = [];
 			html.push('<table class="wst-smsverfy"><tr><td width="80" align="right">');
 			html.push('验证码：</td><td><input type="text" id="smsVerfy" size="12" class="wst-text" maxLength="8">');
-			html.push('<img style="vertical-align:middle;cursor:pointer;height:39px;" class="verifyImg" src="'+WST.DOMAIN+'/Apps/Home/View/default/images/clickForVerify.png" title="刷新验证码" onclick="javascript:getVerify()"/>');
+			html.push('<img style="vertical-align:middle;cursor:pointer;height:39px;" class="verifyImg" src="'+WST.DOMAIN+'/Apps/Home/View/'+WST.WST_STYLE+'/images/clickForVerify.png" title="刷新验证码" onclick="javascript:getVerify()"/>');
 			html.push('</td></tr></table>');
 			layer.open({
 				title:'请输入验证码',
@@ -101,7 +101,7 @@ $("#getPhoneVerifyp").click(function(){
 			var html = [];
 			html.push('<table class="wst-smsverfy"><tr><td width="80" align="right">');
 			html.push('验证码：</td><td><input type="text" id="smsVerfy" size="12" class="wst-text" maxLength="8">');
-			html.push('<img style="vertical-align:middle;cursor:pointer;height:39px;" class="verifyImg" src="'+WST.DOMAIN+'/Apps/Home/View/default/images/clickForVerify.png" title="刷新验证码" onclick="javascript:getVerify()"/>');
+			html.push('<img style="vertical-align:middle;cursor:pointer;height:39px;" class="verifyImg" src="'+WST.DOMAIN+'/Apps/Home/View/'+WST.WST_STYLE+'/images/clickForVerify.png" title="刷新验证码" onclick="javascript:getVerify()"/>');
 			html.push('</td></tr></table>');
 			layer.open({
 				title:'请输入验证码',

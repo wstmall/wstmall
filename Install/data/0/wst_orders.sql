@@ -50,10 +50,13 @@ CREATE TABLE `wst_orders` (
   `promoterRate` int(11) DEFAULT '0',
   `buyerRate` int(11) DEFAULT '0',
   `totalCommission` decimal(11,2) DEFAULT '0.00',
+  `couponMoney` int(11) DEFAULT '0',
+  `backMoney` decimal(11,2) DEFAULT '0.00',
+  `refundSrcStatus` tinyint(4) DEFAULT '0',
+  `orderFrom` tinyint(4) DEFAULT '0',
+  `orderFromId` int(11) DEFAULT '0',
   PRIMARY KEY (`orderId`),
   KEY `shopId` (`shopId`,`orderFlag`),
   KEY `userId` (`userId`,`orderFlag`),
   KEY `isRefund` (`isRefund`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
-
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

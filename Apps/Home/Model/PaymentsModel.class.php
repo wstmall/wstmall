@@ -149,12 +149,22 @@ class PaymentsModel extends BaseModel {
     	
     	$orderType = (int)$obj["order_type"];
     	$payMoney = 0;
+    	$dataId = 0;
+    	$orderNos = "";
     	if($orderType==1){
-    		
     		$orderId = (int)$obj["out_trade_no"];
+    		$dataId = $orderId;
+    		$orderNos = M("orders")->where(array("orderId"=>$orderId))->getField("orderNo");
     	}else{
-    		
     		$orderunique = WSTAddslashes($obj["out_trade_no"]);
+    		$dataId = $orderunique;
+    		
+    		$nolist = array();
+			$orders = M("orders")->where(array("orderunique"=>$orderunique))->field("orderNo")->select();
+			for($i=0,$k=count($orders);$i<$k;$i++){
+				$nolist[] = $orders[$i]["orderNo"];
+			}
+			$orderNos = implode("、",$nolist);
     	}
 		$userId = (int)$obj["userId"];
 		$payFrom = (int)$obj["payFrom"];
@@ -174,10 +184,10 @@ class PaymentsModel extends BaseModel {
 		
 		if($orderType==1){
 			$sqlv = "select sum(needPay) needPay from __PREFIX__orders where userId=$userId and orderId = $orderId and payType = 1 and needPay > 0 and orderFlag=1 and orderStatus=-2";
-			$sql = "select og.orderId,og.goodsId,og.goodsNums,og.goodsAttrId from __PREFIX__order_goods og, __PREFIX__orders o where o.userId=$userId and og.orderId = o.orderId AND o.orderId = $orderId and o.payType = 1 and o.needPay > 0 and o.orderFlag=1 and o.orderStatus=-2";
+			$sql = "select og.orderId,og.goodsId,og.goodsNums,og.goodsAttrId,orderFrom,orderFromId from __PREFIX__order_goods og, __PREFIX__orders o where o.userId=$userId and og.orderId = o.orderId AND o.orderId = $orderId and o.payType = 1 and o.needPay > 0 and o.orderFlag=1 and o.orderStatus=-2";
 		}else{
 			$sqlv = "select sum(needPay) needPay from __PREFIX__orders where userId=$userId and orderunique = '$orderunique' and payType = 1 and needPay > 0 and orderFlag=1 and orderStatus=-2";
-			$sql = "select og.orderId,og.goodsId,og.goodsNums,og.goodsAttrId from __PREFIX__order_goods og, __PREFIX__orders o where o.userId=$userId and og.orderId = o.orderId AND o.orderunique = '$orderunique' and o.payType = 1 and o.needPay > 0 and o.orderFlag=1 and o.orderStatus=-2";
+			$sql = "select og.orderId,og.goodsId,og.goodsNums,og.goodsAttrId,orderFrom,orderFromId from __PREFIX__order_goods og, __PREFIX__orders o where o.userId=$userId and og.orderId = o.orderId AND o.orderunique = '$orderunique' and o.payType = 1 and o.needPay > 0 and o.orderFlag=1 and o.orderStatus=-2";
 		}
 		$opay = $this->queryRow($sqlv);
 		$needPay = (float)$opay["needPay"];
@@ -185,32 +195,80 @@ class PaymentsModel extends BaseModel {
 			return $rd;
 		}
 		
+		$data = array();
+		$data["userMoney"] = array("exp", "userMoney+".$payMoney);
+		M("users")->where(array("userId"=>$userId))->save($data);
+		$moneyRemark = "订单【".$orderNos."】充值";
+		WSTMoneyLog(0, $userId, $moneyRemark, 2, $dataId, $payMoney, $trade_no, $payFrom, 1);
+		
+		$om = M('orders');
+		
 		$goodslist = $this->query($sql);
+		$orderFrom = $goodslist[0]["orderFrom"];
+		$orderFromId = $goodslist[0]["orderFromId"];
+		$porderId = $goodslist[0]["orderId"];
+		$goodsNums = $goodslist[0]['goodsNums'];
+		$gpRd = array("status"=>1);
+		if($orderFrom==2){//团购
+			$gm = D("Common/Groups");
+			$gpRd = $gm->checkGroupPay($orderFromId,$goodsNums);
+			
+		}else if($orderFrom==3){//抢购
+			$pm = D("Common/Panics");
+			$gpRd = $pm->checkPanicPay($orderFromId,$goodsNums);
+		}
+		
+		if($gpRd["status"]==-1){
+			WSTSendMsg($userId, "订单【".$orderNos."】".$groupRd["msg"]);
+			$content = "订单已关闭，支付的金额已返回您的钱包";
+			WSTOrderLog($porderId, $content, $userId,0);
+			if($orderType==1){
+				$om->where("orderId = $orderId and payType = 1 and needPay > 0 and orderFlag=1 and orderStatus=-2")->save(array("orderStatus"=>-11));
+			}else{
+				$om->where("orderunique = '$orderunique' and payType = 1 and needPay > 0 and orderFlag=1 and orderStatus=-2")->save(array("orderStatus"=>-11));
+			}
+			return $groupRd;
+		}
+		
 		$data = array();
 		$data["needPay"] = 0;
 		$data["isPay"] = 1;
 		$data["orderStatus"] = 0;
 		$data["tradeNo"] = $trade_no;
 		$data["payFrom"] = $payFrom;
-		
-		$om = M('orders');
 		if($orderType==1){
 			$rs = $om->where("orderId = $orderId and payType = 1 and needPay > 0 and orderFlag=1 and orderStatus=-2")->save($data);
 		}else{
 			$rs = $om->where("orderunique = '$orderunique' and payType = 1 and needPay > 0 and orderFlag=1 and orderStatus=-2")->save($data);
 		}
 		if(false !== $rs){
+			$data = array();
+			$data["userMoney"] = array("exp", "userMoney-".$payMoney);
+			M("users")->where(array("userId"=>$userId))->save($data);
+			$moneyRemark = "支付【".$orderNos."】订单";
+			WSTMoneyLog(0, $userId, $moneyRemark, 5, $dataId, $payMoney, $trade_no, $payFrom, 0);
+			
 			$rd['status']= 1;
 			//修改库存
 			foreach ($goodslist as $key=> $sgoods){
-				$goodsId = $sgoods['goodsId'];
+				$orderFrom = $sgoods["orderFrom"];
+				$orderFromId = $sgoods["orderFromId"];
 				$goodsNums = $sgoods['goodsNums'];
-				$goodsAttrId = $sgoods['goodsAttrId'];
-				$sql="update __PREFIX__goods set goodsStock=goodsStock-".$goodsNums." where goodsId=".$goodsId;
-				$this->execute($sql);
-				if((int)$goodsAttrId>0){
-					$sql="update __PREFIX__goods_attributes set attrStock=attrStock-".$goodsNums." where id=".$goodsAttrId;
+				if($orderFrom==2){
+					$sql="update __PREFIX__groups_goods set goodsStock=goodsStock-".$goodsNums." where id=".$orderFromId;
 					$this->execute($sql);
+				}else if($orderFrom==3){
+					$sql="update __PREFIX__panics_goods set goodsStock=goodsStock-".$goodsNums." where id=".$orderFromId;
+					$this->execute($sql);
+				}else{
+					$goodsId = $sgoods['goodsId'];
+					$goodsAttrId = $sgoods['goodsAttrId'];
+					$sql="update __PREFIX__goods set goodsStock=goodsStock-".$goodsNums." where goodsId=".$goodsId;
+					$this->execute($sql);
+					if((int)$goodsAttrId>0){
+						$sql="update __PREFIX__goods_attributes set attrStock=attrStock-".$goodsNums." where id=".$goodsAttrId;
+						$this->execute($sql);
+					}
 				}
 			}
 			if($orderType==1){
@@ -254,7 +312,7 @@ class PaymentsModel extends BaseModel {
     		$return_res['info'] = '签名验证失败';
     		return $return_res;
     	}
-    	if ($request['trade_status'] == 'TRADE_SUCCESS' || $request['trade_status'] == 'TRADE_FINISHED' || $request['trade_status'] == 'WAIT_SELLER_SEND_GOODS' || $request['trade_status'] == 'WAIT_BUYER_CONFIRM_GOODS'){
+    	if ($request['trade_status'] == 'TRADE_SUCCESS' || $request['trade_status'] == 'TRADE_FINISHED'){
     		$return_res['status'] = true;
     	}
     	return $return_res;

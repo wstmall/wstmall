@@ -27,7 +27,7 @@ class AttributesAction extends BaseAction{
 		$this->assign('cat',$m->get((int)$object['catId']));
     	$this->assign('object',$object);
     	$this->assign('umark',"AttributeCats");
-		$this->view->display('default/shops/attributes/edit');
+		$this->display('shops/attributes/edit');
 	}
 	/**
 	 * 新增/修改操作
@@ -60,7 +60,7 @@ class AttributesAction extends BaseAction{
     	$list = $m->queryByPage();
     	$this->assign('List',$list);
     	$this->assign('umark',"AttributeCats");
-        $this->display("default/shops/attributes/list");
+        $this->display("shops/attributes/list");
 	}
 	
 	/**

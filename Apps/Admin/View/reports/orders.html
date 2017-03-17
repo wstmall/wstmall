@@ -41,7 +41,7 @@
 			$('#'+objId).html(html.join(''));
 	   });
    }
-   function queryByMonthAndDays(){
+   function statOrders(){
 	   var style,option;
 	   var params = {};
 	   var date = $('#queryDate').val().split(' -> ');
@@ -62,7 +62,7 @@
 				  }
 	   }
 	   $('#container').show();
-	   $.post("{:U('Admin/OrderRpts/queryByMonthAndDays')}",params,function(data,textStatus){
+	   $.post("{:U('Admin/Reports/statOrders')}",params,function(data,textStatus){
 			 var json = WST.toJson(data);
 		     if(json.status=='1'){
 		    	 if(json.list){
@@ -79,7 +79,7 @@
 		    		 }
 		    		 option = {
 		   			        	title : {
-		   			        	    text: '订单统计'
+		   			        	    text: '销售订单统计'
 		   			        	},
 		   			        	tooltip : {
 		   			        	    trigger: 'axis'
@@ -87,6 +87,16 @@
 		   			        	legend: {
 		   			        	    data:['有效订单']
 		   			        	},
+		   			        	toolbox: {
+		   					    	show : true,
+		   					    	feature : {
+		   					    		mark : {show: true},
+		   					    		dataView : {show: false, readOnly: false},
+		   					    		magicType : {show: true, type: ['line', 'bar']},
+		   					    		restore : {show: true},
+		   					    		saveAsImage : {show: true}
+		   					    	}
+		   					 	},
 		   			        	calculable : true,
 		   			        	xAxis : [
 		   			        	    {
@@ -130,11 +140,11 @@
    }
    $(function(){
 	   $('#queryDate').daterangepicker({format:'YYYY-MM-DD',separator:' -> '});
-	   queryByMonthAndDays();
+	   statOrders();
    });
    </script>
    <body class='wst-page'>
-      <form method="post" action='{:U("Admin/Orders/index")}'>
+      <form method="post">
        <div class='wst-tbar'>
                              地区：<select name='areaId1' id='areaId1' onchange='javascript:getAreaList("areaId2",this.value,0)'>
              <option value=''>请选择</option>
@@ -153,11 +163,11 @@
              <option value='1'>按月统计</option>
           </select>
           <input type='text' id='queryDate' class="form-control" readonly='true' style='width:200px' value='{$startDate} -> {$endDate}'/>
-          <input type="button" class="btn btn-primary glyphicon glyphicon-search" onclick='javascript:queryByMonthAndDays()' value='查询'/>
+          <input type="button" class="btn btn-primary glyphicon glyphicon-search" onclick='javascript:statOrders()' value='查询'/>
        </div>
        </form>
        <div class="wst-body"> 
-	       <div id="container" style="min-width:700px;height:400px"></div>
+	       <div id="container" style="min-width:700px;height:800px"></div>
        </div>
    </body>
 </html>

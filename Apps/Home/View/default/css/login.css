@@ -868,6 +868,12 @@ a:hover,a:active {
 	height: 354px;
 }
 
+#entry .form2 {
+	right: 30%;
+	top: 120px;
+	height: 500px;
+}
+
 #entry .lheight .form {
 	height: 354px;
 }
@@ -1055,8 +1061,10 @@ a:hover,a:active {
 }
 
 #entry .img img {
-	height: 26px;
-	margin: 0 5px;
+  vertical-align: middle;
+  cursor: pointer;
+  height: 55px;
+  margin: 0 0 0 5px;
 }
 
 #entry .succeed {
@@ -1119,7 +1127,7 @@ a:hover,a:active {
 }
 
 #entry .checkbox {
-	margin-top: 3px;
+	margin-top: 6px;
 	*margin-top: 2px;
 }
 
@@ -1234,4 +1242,81 @@ a:hover,a:active {
 	text-align: center;
 	cursor: pointer;
 	margin: 15px auto 0;
+}
+
+.wst-wx-bin{
+	height: 32px;
+	width: 600px;
+	margin: 0 auto;
+	padding:30px 0px 10px 0px;
+}
+.wst-wx-bin .bin{
+	float: left;
+	height: 30px;
+	line-height: 30px;
+	width: 300px;
+	cursor: pointer;
+    font-size: 18px;
+    text-align: center;
+	border-bottom: 2px solid #e8e8e8;
+}
+.wst-wx-bin .selected{
+	border-bottom: 2px solid #ef2323;
+}
+.wst-wx-info{
+	width: 350px;
+	margin: 0 auto;
+	height: 48px;
+	line-height: 48px;
+	overflow: hidden;
+}
+.wst-wx-info img{
+	width: 30px;
+	border-radius: 30px;
+}
+#entry .btn-binding {
+	width: 307px;
+	height: 34px;
+	line-height: 34px;
+	color: #FFF;
+	font-family: "微软雅黑";
+	overflow: hidden;
+	font-size: 16px;
+	background:#e43d40 none repeat scroll 0 0;
+}
+#entry .btn-binding:hover {
+	background:#ec4245 none repeat scroll 0 0;
+}
+#namelist {
+    background-color: white;
+    display: none;
+    position: absolute;
+    width: 305px;
+    top: 52px;
+    left: 0px;
+    border: 1px solid #CCCCCC;
+}
+#namelist div {
+    height: 22px;
+    line-height: 22px;
+    font-size: 14px;
+    padding: 2px;
+    cursor: pointer;
+}
+a.blue{
+	color: #005AA0;
+}
+.wst-wx-btn{
+	margin-left: 10px;
+    border: 1px solid #dddddd;
+    padding: 0;
+    width: 166px;
+    height: 32px;
+    background: #f4f4f4;
+    margin-top: 0;
+    text-align: center;
+    line-height: 32px;
+    color: #333;
+    text-decoration: none;
+    display: inline-block;
 }
